@@ -77,7 +77,7 @@ function generateEmailHTML(applicantData: any): string {
             <li>After payment verification, you can begin your personalized learning journey</li>
           </ol>
 
-          <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@alfalaah.co.nz">admin@alfalaah.co.nz</a>.</p>
+          <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
 
           <p>May Allah bless your journey of seeking knowledge.</p>
 

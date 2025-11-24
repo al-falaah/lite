@@ -48,7 +48,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Al-Falaah Institute <noreply@alfalaah.edu>',
+        from: 'Al-Falaah Academy <onboarding@resend.dev>',
         to: [ADMIN_EMAIL],
         subject: `New Application: ${application.full_name}`,
         html: `
@@ -88,7 +88,7 @@ serve(async (req) => {
             </div>
 
             <div style="margin: 30px 0;">
-              <a href="${Deno.env.get('APP_URL') || 'https://alfalaah.edu'}/admin"
+              <a href="${Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'}/admin"
                  style="display: inline-block; background-color: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
                 Review Application in Admin Dashboard
               </a>

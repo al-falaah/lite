@@ -20,9 +20,8 @@ const EMAIL_STYLES = `
 function generateEmailHTML(studentData: any, baseUrl: string): string {
   const { full_name, email, student_number, program_type } = studentData;
 
-  const programName = program_type === 'foundational'
-    ? '1-Year Foundational Certificate'
-    : '3-Year Essentials Program';
+  // Currently only offering the 2-year program
+  const programName = '2-Year Essential Islamic Studies Course';
 
   return `
     <!DOCTYPE html>
@@ -34,7 +33,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🌟 Welcome to Al-Falaah!</h1>
+          <h1>🌟 Welcome to Al-Falaah Academy!</h1>
           <p>Your Journey Begins Now</p>
         </div>
 
@@ -86,7 +85,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
             <li>Keep your contact information up to date</li>
           </ul>
 
-          <p>If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@alfalaah.co.nz">admin@alfalaah.co.nz</a>.</p>
+          <p>If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
 
           <p>May Allah make this journey beneficial for you and grant you success in your studies.</p>
 
