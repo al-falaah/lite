@@ -1,4 +1,4 @@
-# 🕌 Al-Falaah Islamic Institute - Management System
+# 🕌 Al-Falaah Academy - Management System
 
 > A comprehensive web-based platform for managing Islamic education programs, student enrollments, payments, and learning materials.
 
@@ -10,7 +10,7 @@
 
 ## 📖 Project Vision
 
-Al-Falaah Islamic Institute aims to provide accessible, high-quality Islamic education to students worldwide. This management system streamlines the entire student journey from application to graduation, making it easier for both administrators and students to focus on what matters most: learning.
+Al-Falaah Academy aims to provide accessible, high-quality Islamic education to students worldwide. This management system streamlines the entire student journey from application to graduation, making it easier for both administrators and students to focus on what matters most: learning.
 
 ### Core Values
 - **Authenticity**: Pristine curriculum based on the Qur'an and Sunnah
@@ -396,7 +396,7 @@ Visit http://localhost:5173
 
 ## 🤝 Contributing
 
-This is a private project for Al-Falaah Islamic Institute. For internal team members:
+This is a private project for Al-Falaah Academy. For internal team members:
 
 1. Create a feature branch
 2. Make your changes
@@ -421,7 +421,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 ## 📝 License
 
-Copyright © 2025 Al-Falaah Islamic Institute. All rights reserved.
+Copyright © 2025 Al-Falaah Academy. All rights reserved.
 
 ---
 

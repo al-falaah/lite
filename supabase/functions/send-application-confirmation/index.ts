@@ -30,14 +30,14 @@ function generateEmailHTML(applicantData: any): string {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🕌 Al-Falaah Islamic Institute</h1>
+          <h1>🕌 Al-Falaah Academy</h1>
           <p>Application Received</p>
         </div>
 
         <div class="content">
           <h2>Assalaamu 'alaykum ${full_name},</h2>
 
-          <p>Thank you for your interest in Al-Falaah Islamic Institute. We have received your application for the <strong>2-Year Essential Islamic Studies Course</strong> and will review it shortly.</p>
+          <p>Thank you for your interest in Al-Falaah Academy. We have received your application for the <strong>2-Year Essential Islamic Studies Course</strong> and will review it shortly.</p>
 
           <div class="info-box">
             <h3>Application Summary</h3>
@@ -86,7 +86,7 @@ function generateEmailHTML(applicantData: any): string {
         </div>
 
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Islamic Institute. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
           <p>New Zealand</p>
         </div>
       </div>
@@ -121,7 +121,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: applicantData.email,
-      subject: '✅ Application Received - Al-Falaah Islamic Institute',
+      subject: '✅ Application Received - Al-Falaah Academy',
       html: emailHTML,
     });
 

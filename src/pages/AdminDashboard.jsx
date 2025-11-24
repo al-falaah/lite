@@ -229,7 +229,7 @@ const AdminDashboard = () => {
               <BookOpen className="h-8 w-8 text-emerald-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
-            <p className="text-gray-600">Al-Falaah Islamic Institute</p>
+            <p className="text-gray-600">Al-Falaah Academy</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">

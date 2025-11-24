@@ -41,7 +41,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
         <div class="content">
           <h2>Assalaamu 'alaykum ${full_name},</h2>
 
-          <p>Welcome to Al-Falaah Islamic Institute! We are thrilled to have you join our community of learners.</p>
+          <p>Welcome to Al-Falaah Academy! We are thrilled to have you join our community of learners.</p>
 
           <div class="info-box">
             <h3>Your Enrollment Details</h3>
@@ -95,7 +95,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
         </div>
 
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Islamic Institute. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
           <p>New Zealand</p>
         </div>
       </div>
@@ -131,7 +131,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: studentData.email,
-      subject: '🌟 Welcome to Al-Falaah Islamic Institute!',
+      subject: '🌟 Welcome to Al-Falaah Academy!',
       html: emailHTML,
     });
 

@@ -188,7 +188,7 @@ serve(async (req) => {
           </div>
 
           <div class="footer">
-            <p>© ${new Date().getFullYear()} Al-Falaah Islamic Institute • New Zealand</p>
+            <p>© ${new Date().getFullYear()} Al-Falaah Academy • New Zealand</p>
             <p>This is an automated digest from your admin system</p>
           </div>
         </div>

@@ -7,15 +7,13 @@ echo "🔄 Email Domain Update Script"
 echo "=============================="
 echo ""
 
-# Check if domain parameter is provided
+# Default to alfalaah-academy.nz if no parameter provided
 if [ -z "$1" ]; then
-  echo "Usage: ./update-email-domain.sh yourdomain.co.nz"
-  echo ""
-  echo "Example: ./update-email-domain.sh alfalaah.co.nz"
-  exit 1
+  DOMAIN="alfalaah-academy.nz"
+  echo "Using default domain: $DOMAIN"
+else
+  DOMAIN=$1
 fi
-
-DOMAIN=$1
 echo "Updating all email functions to use: $DOMAIN"
 echo ""
 

@@ -343,7 +343,7 @@ const LandingPage = () => {
                 "We envision a generation of Muslims deeply connected to their faith, equipped with authentic knowledge,
                 and empowered to live Islam with confidence and wisdom in every aspect of life."
               </p>
-              <p className="text-emerald-700 font-bold mb-0">— Founder, Al-Falaah Islamic Institute</p>
+              <p className="text-emerald-700 font-bold mb-0">— Founder, Al-Falaah Academy</p>
             </div>
 
             <p className="text-lg leading-relaxed text-gray-600">
@@ -400,7 +400,7 @@ const LandingPage = () => {
 
           <div className="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} Al-Falaah Islamic Institute. All rights reserved.
+              © {new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
             </p>
             <p className="text-gray-600 text-sm italic font-arabic">
               وَقُل رَّبِّ زِدْنِي عِلْمًا

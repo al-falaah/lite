@@ -164,7 +164,7 @@ const ApplicationPage = () => {
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Application Submitted!</h2>
               <p className="text-gray-600 mb-4">
-                Thank you for applying to the <strong>2-Year Essential Islamic Studies Course</strong> at Al-Falaah Islamic Institute.
+                Thank you for applying to the <strong>2-Year Essential Islamic Studies Course</strong> at Al-Falaah Academy.
               </p>
               <p className="text-gray-600 mb-6">
                 We've received your application and will review it shortly.
