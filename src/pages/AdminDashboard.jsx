@@ -67,9 +67,14 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = async () => {
-    await signOut();
-    toast.success('Logged out successfully');
-    navigate('/');
+    try {
+      await signOut();
+      // Use window.location to ensure clean page reload after logout
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to logout');
+    }
   };
 
   const handleViewApplication = (app) => {
