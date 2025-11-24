@@ -204,7 +204,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Al-Falaah Admin <onboarding@resend.dev>',
+        from: 'Al-Falaah Admin <noreply@alfalaah-academy.nz>',
         to: [ADMIN_EMAIL],
         subject: `${digestType} Digest: ${applicationCount} New Application${applicationCount !== 1 ? 's' : ''}, ${paymentCount} Payment${paymentCount !== 1 ? 's' : ''} to Review`,
         html: emailHTML,
