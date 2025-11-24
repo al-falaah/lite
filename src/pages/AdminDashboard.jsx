@@ -14,7 +14,8 @@ import {
   Check,
   X,
   Send,
-  Copy
+  Copy,
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -34,6 +35,7 @@ const AdminDashboard = () => {
   const [reviewModal, setReviewModal] = useState(false);
   const [reviewAction, setReviewAction] = useState(null);
   const [reviewNotes, setReviewNotes] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   // Login form state
   const [email, setEmail] = useState('');
@@ -122,6 +124,7 @@ const AdminDashboard = () => {
   const submitReview = async () => {
     if (!selectedApplication || !reviewAction) return;
 
+    setSubmittingReview(true);
     try {
       const updates = {
         status: reviewAction,
@@ -162,6 +165,8 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error reviewing application:', error);
       toast.error('An error occurred');
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -590,6 +595,7 @@ const AdminDashboard = () => {
                     setReviewAction(null);
                     setReviewNotes('');
                   }}
+                  disabled={submittingReview}
                   fullWidth
                 >
                   Cancel
@@ -597,10 +603,17 @@ const AdminDashboard = () => {
                 <Button
                   variant={reviewAction === 'approved' ? 'primary' : 'secondary'}
                   onClick={submitReview}
-                  disabled={reviewAction === 'rejected' && !reviewNotes.trim()}
+                  disabled={submittingReview || (reviewAction === 'rejected' && !reviewNotes.trim())}
                   fullWidth
                 >
-                  {reviewAction === 'approved' ? 'Approve' : 'Reject'} Application
+                  {submittingReview ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      {reviewAction === 'approved' ? 'Creating Student...' : 'Processing...'}
+                    </span>
+                  ) : (
+                    `${reviewAction === 'approved' ? 'Approve' : 'Reject'} Application`
+                  )}
                 </Button>
               </div>
             </div>
