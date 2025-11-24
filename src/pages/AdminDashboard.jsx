@@ -72,7 +72,7 @@ const AdminDashboard = () => {
     try {
       await signOut();
       // Use window.location to ensure clean page reload after logout
-      window.location.href = '/';
+      window.location.href = '/admin';
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Failed to logout');

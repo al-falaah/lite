@@ -113,7 +113,7 @@ const ApplicationPage = () => {
         status: 'pending'
       };
 
-      const { error: applicationError } = await applications.create(applicationData);
+      const { data: newApplication, error: applicationError } = await applications.create(applicationData);
 
       if (applicationError) {
         toast.error('Failed to submit application');
@@ -142,6 +142,24 @@ const ApplicationPage = () => {
       }).catch(error => {
         console.error('Error invoking email function:', error);
       });
+
+      // Send notification email to admin (non-blocking)
+      if (newApplication?.id) {
+        console.log('Sending admin notification for application:', newApplication.id);
+        supabase.functions.invoke('send-application-notification', {
+          body: {
+            applicationId: newApplication.id
+          }
+        }).then(({ data, error }) => {
+          if (error) {
+            console.error('Failed to send admin notification:', error);
+          } else {
+            console.log('Admin notification sent successfully:', data);
+          }
+        }).catch(error => {
+          console.error('Error invoking admin notification function:', error);
+        });
+      }
     } catch (error) {
       console.error('Submission error:', error);
       toast.error('An unexpected error occurred');
