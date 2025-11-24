@@ -8,6 +8,7 @@ import LandingPage from './pages/LandingPage';
 import ApplicationPage from './pages/ApplicationPage';
 import PaymentUploadPage from './pages/PaymentUploadPage';
 import AdminDashboard from './pages/AdminDashboard';
+import NotFoundPage from './pages/NotFoundPage';
 
 // Layout
 import AdminRoute from './components/common/AdminRoute';
@@ -33,8 +34,8 @@ function App() {
               }
             />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Fallback - 404 Page */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
 
           <ToastContainer
