@@ -13,8 +13,10 @@ ON CONFLICT (id) DO UPDATE SET public = true;
 
 -- Drop existing policies if any
 DROP POLICY IF EXISTS "Anyone can upload payment proofs" ON storage.objects;
+DROP POLICY IF EXISTS "Anyone can view payment proofs" ON storage.objects;
 DROP POLICY IF EXISTS "Admins can view all payment proofs" ON storage.objects;
 DROP POLICY IF EXISTS "Admins can delete payment proofs" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can update payment proofs" ON storage.objects;
 
 -- 1. Allow anyone (anon/authenticated) to upload to payment-proofs folder
 CREATE POLICY "Anyone can upload payment proofs"
