@@ -34,10 +34,12 @@ serve(async (req) => {
       .select(`
         *,
         students (
+          id,
           full_name,
           email,
           student_id,
-          balance_remaining
+          balance_remaining,
+          status
         )
       `)
       .eq('id', paymentId)
@@ -45,6 +47,55 @@ serve(async (req) => {
 
     if (paymentError || !payment) {
       throw new Error('Payment not found')
+    }
+
+    const isFirstPayment = payment.students.status === 'pending_payment'
+    const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
+
+    // If this is the first payment, enroll the student
+    if (isFirstPayment) {
+      console.log('First payment verified - enrolling student:', payment.students.student_id)
+
+      const { error: updateError } = await supabaseClient
+        .from('students')
+        .update({ status: 'enrolled' })
+        .eq('id', payment.students.id)
+
+      if (updateError) {
+        console.error('Error updating student status:', updateError)
+        // Don't throw - continue with email
+      } else {
+        console.log('Student enrolled successfully')
+      }
+
+      // Send welcome email for first payment
+      try {
+        const welcomeResponse = await supabaseClient.functions.invoke('send-welcome-email', {
+          body: {
+            studentData: {
+              full_name: payment.students.full_name,
+              email: payment.students.email,
+              student_number: payment.students.student_id,
+              program_type: 'essentials'
+            },
+            baseUrl: appUrl
+          }
+        })
+
+        if (welcomeResponse.error) {
+          console.error('Failed to send welcome email:', welcomeResponse.error)
+        } else {
+          console.log('Welcome email sent successfully')
+        }
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError)
+      }
+
+      // Return success for first payment (welcome email already sent)
+      return new Response(
+        JSON.stringify({ success: true, message: 'Student enrolled and welcome email sent' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
     // Send email using Resend
@@ -55,9 +106,9 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Al-Falaah Institute <noreply@alfalaah.edu>',
+        from: 'Al-Falaah Academy <noreply@alfalaah-academy.nz>',
         to: [payment.students.email],
-        subject: 'Payment Verified - Al-Falaah Islamic Institute',
+        subject: 'Payment Verified - Al-Falaah Academy',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #059669;">Payment Verified ✓</h2>
@@ -76,7 +127,7 @@ serve(async (req) => {
 
             <p>Thank you for your prompt payment. If you have any questions, please don't hesitate to contact us.</p>
 
-            <p style="margin-top: 30px;">Best regards,<br>Al-Falaah Islamic Institute</p>
+            <p style="margin-top: 30px;">Best regards,<br>Al-Falaah Academy</p>
 
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
             <p style="font-size: 12px; color: #6b7280;">

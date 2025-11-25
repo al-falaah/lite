@@ -145,13 +145,13 @@ const AdminDashboard = () => {
         return;
       }
 
-      // If approved, create student record
+      // If approved, create student record (status: pending_payment)
       if (reviewAction === 'approved') {
         try {
           await createStudentFromApplication(selectedApplication);
-          toast.success('Application approved and student created!');
+          toast.success('Application approved! Payment instructions sent to applicant.');
         } catch (error) {
-          toast.warning('Application approved but student creation failed. Please create manually.');
+          toast.warning('Application approved but failed to send payment instructions.');
         }
       } else {
         toast.success('Application rejected');

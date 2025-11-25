@@ -79,7 +79,7 @@ serve(async (req) => {
         date_of_birth: application.date_of_birth,
         gender: application.gender,
         application_id: application.id,
-        status: 'enrolled',
+        status: 'pending_payment', // Will be changed to 'enrolled' after payment verification
         enrolled_date: new Date().toISOString().split('T')[0],
         total_fees: 600.00, // $300/year x 2 years
         installments_per_year: 4, // Students can pay in up to 4 installments per year
@@ -107,31 +107,30 @@ serve(async (req) => {
       throw new Error('Failed to generate payment installments')
     }
 
-    // Send welcome/approval email to student
-    console.log('Sending approval email to:', student.email)
+    // Send payment instructions to applicant (not welcome email yet - that comes after payment)
+    console.log('Sending payment instructions to:', student.email)
     const appUrl = Deno.env.get('APP_URL') || 'http://localhost:5173'
 
     try {
-      const emailResponse = await supabaseClient.functions.invoke('send-welcome-email', {
+      const emailResponse = await supabaseClient.functions.invoke('send-payment-instructions', {
         body: {
-          studentData: {
+          applicantData: {
             full_name: student.full_name,
             email: student.email,
-            student_number: student.student_id,
-            program_type: 'essentials' // 2-year program
+            student_id: student.student_id
           },
-          baseUrl: appUrl
+          appUrl: appUrl
         }
       })
 
       if (emailResponse.error) {
-        console.error('Failed to send approval email:', emailResponse.error)
+        console.error('Failed to send payment instructions:', emailResponse.error)
         // Don't throw - student is created, email is non-critical
       } else {
-        console.log('Approval email sent successfully')
+        console.log('Payment instructions sent successfully')
       }
     } catch (emailError) {
-      console.error('Error sending approval email:', emailError)
+      console.error('Error sending payment instructions:', emailError)
       // Don't throw - student is created, email is non-critical
     }
 
