@@ -12,7 +12,8 @@ import {
   X as XIcon,
   ChevronRight,
   BarChart3,
-  ExternalLink
+  ExternalLink,
+  Users
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import Button from '../components/common/Button';
