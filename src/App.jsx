@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import LandingPage from './pages/LandingPage';
 import ApplicationPage from './pages/ApplicationPage';
 import PaymentUploadPage from './pages/PaymentUploadPage';
+import StripePaymentPage from './pages/StripePaymentPage';
 import AdminDashboard from './pages/AdminDashboard';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -22,7 +23,8 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/apply" element={<ApplicationPage />} />
-            <Route path="/payment" element={<PaymentUploadPage />} />
+            <Route path="/payment" element={<StripePaymentPage />} />
+            <Route path="/payment-upload" element={<PaymentUploadPage />} />
 
             {/* Admin Route - Login and Dashboard */}
             <Route

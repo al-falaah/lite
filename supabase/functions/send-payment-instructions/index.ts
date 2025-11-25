@@ -42,65 +42,51 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
 
           <div class="highlight-box">
             <h3 style="margin-top: 0; color: #92400e;">📋 Next Step: Payment</h3>
-            <p style="margin-bottom: 0;">To complete your enrollment, please make your first payment and upload proof of payment.</p>
+            <p style="margin-bottom: 0;">Choose your payment plan and complete your enrollment instantly with Stripe.</p>
           </div>
 
           <div class="info-box">
-            <h3>Payment Details</h3>
+            <h3>Choose Your Payment Plan</h3>
             <table>
               <tr>
                 <td class="label">Program:</td>
                 <td>2-Year Essential Islamic Studies Course</td>
               </tr>
               <tr>
-                <td class="label">Annual Fee:</td>
-                <td>$300 NZD/year</td>
+                <td class="label">Option 1 - Monthly:</td>
+                <td><strong>$25 NZD/month</strong> (auto-renewing)</td>
+              </tr>
+              <tr>
+                <td class="label">Option 2 - Annual:</td>
+                <td><strong>$275 NZD/year</strong> (save $25!)</td>
               </tr>
               <tr>
                 <td class="label">Total (2 years):</td>
-                <td>$600 NZD</td>
-              </tr>
-              <tr>
-                <td class="label">Payment Options:</td>
-                <td>
-                  • Full payment: $600<br>
-                  • Annual payment: $300/year<br>
-                  • Installments: Up to 4 installments per year ($75 each)
-                </td>
-              </tr>
-              <tr>
-                <td class="label">First Payment:</td>
-                <td><strong>Minimum $75 NZD</strong> to begin enrollment</td>
+                <td>Monthly: $600 | Annual: $550</td>
               </tr>
             </table>
           </div>
 
-          <div class="info-box">
-            <h3>Bank Transfer Details</h3>
-            <p><strong>Please contact us for bank account details:</strong></p>
-            <p>Email: <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a></p>
-            <p style="font-size: 12px; color: #6b7280;">We'll provide you with our bank account information for the transfer.</p>
+          <div class="info-box" style="background: #e0f2fe; border-color: #0284c7;">
+            <h3>✨ Instant Enrollment with Stripe</h3>
+            <p style="margin-bottom: 10px;">Pay securely online and get enrolled immediately:</p>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>Secure payment processing by Stripe</li>
+              <li>Instant enrollment confirmation</li>
+              <li>Automatic welcome email with student details</li>
+              <li>Choose monthly or annual payment</li>
+            </ul>
           </div>
 
-          <p><strong>How to Complete Payment:</strong></p>
-          <ol>
-            <li>Contact us to get bank account details</li>
-            <li>Make your payment via bank transfer</li>
-            <li>Upload proof of payment (receipt/screenshot) using the link below</li>
-            <li>Wait for payment verification (usually 1-2 business days)</li>
-            <li>Receive your enrollment confirmation and student details</li>
-          </ol>
-
           <center>
-            <a href="${appUrl}/payment" class="button">Upload Payment Receipt →</a>
+            <a href="${appUrl}/payment?student_id=${applicantData.student_id || ''}" class="button" style="font-size: 18px; padding: 16px 40px;">
+              💳 Choose Payment Plan & Pay Now →
+            </a>
           </center>
 
-          <p style="margin-top: 30px;"><strong>Important Notes:</strong></p>
-          <ul>
-            <li>Please include your full name in the payment reference</li>
-            <li>Upload a clear photo or screenshot of your payment receipt</li>
-            <li>Your enrollment will be activated once payment is verified</li>
-          </ul>
+          <p style="margin-top: 30px; font-size: 14px; color: #6b7280; text-align: center;">
+            Secure payment powered by <strong>Stripe</strong> • No credit card fees • Instant enrollment
+          </p>
 
           <p>If you have any questions about payment, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
 
