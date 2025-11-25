@@ -16,7 +16,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ success: boole
     return { success: false, error: 'Email service not configured' };
   }
 
-  const fromEmail = options.from || 'Al-Falaah <onboarding@resend.dev>';
+  const fromEmail = options.from || 'Al-Falaah Academy <noreply@alfalaah-academy.nz>';
 
   try {
     const response = await fetch('https://api.resend.com/emails', {

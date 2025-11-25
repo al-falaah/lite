@@ -48,7 +48,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Al-Falaah Academy <onboarding@resend.dev>',
+        from: 'Al-Falaah Academy <noreply@alfalaah-academy.nz>',
         to: [ADMIN_EMAIL],
         subject: `New Application: ${application.full_name}`,
         html: `
