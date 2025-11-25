@@ -17,9 +17,9 @@ serve(async (req) => {
     const body = await req.text()
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
 
-    // Verify webhook signature
+    // Verify webhook signature (using async method for Deno)
     const event = webhookSecret
-      ? stripe.webhooks.constructEvent(body, signature, webhookSecret)
+      ? await stripe.webhooks.constructEventAsync(body, signature, webhookSecret)
       : JSON.parse(body)
 
     console.log('Webhook event:', event.type)
