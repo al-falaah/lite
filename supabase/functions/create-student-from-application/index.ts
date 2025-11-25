@@ -79,10 +79,10 @@ serve(async (req) => {
         date_of_birth: application.date_of_birth,
         gender: application.gender,
         application_id: application.id,
-        status: 'pending_payment', // Will be changed to 'enrolled' after payment verification
+        status: 'pending_payment', // Will be changed to 'enrolled' after Stripe payment
         enrolled_date: new Date().toISOString().split('T')[0],
-        total_fees: 600.00, // $300/year x 2 years
-        installments_per_year: 4, // Students can pay in up to 4 installments per year
+        total_fees: 600.00, // Monthly: $25/month x 24 months OR Annual: $275/year x 2 years ($550)
+        installments_per_year: null, // Not used with Stripe - payments handled via Stripe
         total_paid: 0,
         balance_remaining: 600.00
       })
@@ -94,18 +94,8 @@ serve(async (req) => {
       throw new Error('Failed to create student record')
     }
 
-    // Generate payment installments using helper function
-    // Default to 4 installments per year (students can pay full year upfront or in up to 4 installments)
-    const { error: installmentsError } = await supabaseClient
-      .rpc('generate_installment_payments', {
-        p_student_id: student.id,
-        p_installments_per_year: 4
-      })
-
-    if (installmentsError) {
-      console.error('Error generating installments:', installmentsError)
-      throw new Error('Failed to generate payment installments')
-    }
+    // Note: With Stripe integration, payments are handled automatically
+    // No need to generate installments - Stripe handles monthly/annual subscriptions
 
     // Send payment instructions to applicant (not welcome email yet - that comes after payment)
     console.log('Sending payment instructions to:', student.email)
