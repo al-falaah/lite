@@ -138,7 +138,7 @@ serve(async (req) => {
         payment_method: 'bank_transfer',
         status: 'pending',
         academic_year: parseInt(academicYear),
-        proof_url: publicUrl,
+        proof_of_payment_url: publicUrl,
         proof_uploaded_at: new Date().toISOString(),
         student_notes: studentNotes || null,
       })
