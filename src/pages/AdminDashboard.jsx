@@ -6,7 +6,7 @@ import {
   LogOut,
   FileText,
   Users,
-  DollarSign,
+  Calendar,
   CheckCircle,
   Clock,
   XCircle,
@@ -21,7 +21,7 @@ import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import AdminPaymentVerification from './AdminPaymentVerification';
+import AdminClassScheduling from './AdminClassScheduling';
 import AdminStudentsList from './AdminStudentsList';
 
 const AdminDashboard = () => {
@@ -353,15 +353,15 @@ const AdminDashboard = () => {
               Students
             </button>
             <button
-              onClick={() => setActiveTab('payments')}
+              onClick={() => setActiveTab('scheduling')}
               className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
-                activeTab === 'payments'
+                activeTab === 'scheduling'
                   ? 'border-emerald-600 text-emerald-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              <DollarSign className="h-5 w-5" />
-              Payments
+              <Calendar className="h-5 w-5" />
+              Class Scheduling
             </button>
           </div>
         </div>
@@ -547,7 +547,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'students' && <AdminStudentsList />}
 
-        {activeTab === 'payments' && <AdminPaymentVerification />}
+        {activeTab === 'scheduling' && <AdminClassScheduling />}
       </div>
 
       {/* Review Modal */}

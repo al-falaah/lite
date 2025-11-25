@@ -87,11 +87,18 @@ serve(async (req) => {
               <p><strong>Submitted:</strong> ${new Date(application.submitted_at).toLocaleString()}</p>
             </div>
 
-            <div style="margin: 30px 0;">
+            <div style="margin: 30px 0; text-align: center;">
               <a href="${Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'}/admin"
-                 style="display: inline-block; background-color: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-                Review Application in Admin Dashboard
+                 style="display: inline-block; background-color: #059669; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600;">
+                📋 Review Application in Admin Dashboard
               </a>
+            </div>
+
+            <div style="margin: 20px 0; text-align: center; padding: 15px; background-color: #f3f4f6; border-radius: 6px;">
+              <p style="margin: 0; color: #6b7280; font-size: 14px;">
+                Or copy this link: <br>
+                <strong style="color: #059669;">${Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'}/admin</strong>
+              </p>
             </div>
 
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
