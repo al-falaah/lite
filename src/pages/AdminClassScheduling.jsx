@@ -166,12 +166,16 @@ const AdminClassScheduling = () => {
         }
       }
 
-      // Insert all schedules in batch
-      const { error } = await supabase
-        .from('class_schedules')
-        .insert(schedulesToCreate);
+      // Insert in batches of 50 to avoid size limits
+      const batchSize = 50;
+      for (let i = 0; i < schedulesToCreate.length; i += batchSize) {
+        const batch = schedulesToCreate.slice(i, i + batchSize);
+        const { error } = await supabase
+          .from('class_schedules')
+          .insert(batch);
 
-      if (error) throw error;
+        if (error) throw error;
+      }
 
       toast.success('Full schedule generated successfully! (208 classes created)');
       setShowGenerateModal(false);
