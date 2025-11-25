@@ -420,7 +420,19 @@ const PaymentUploadPage = () => {
                   </div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                {student.status === 'pending_payment' && (
+                <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-4">
+                  <div className="flex gap-3">
+                    <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-amber-900">
+                      <p className="font-bold mb-1">⚠️ Minimum First Payment Required</p>
+                      <p>A minimum of <strong>$75 NZD</strong> is required to activate your enrollment. You can make multiple payments until you reach $75.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex gap-3">
                     <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div className="text-sm text-blue-800">
