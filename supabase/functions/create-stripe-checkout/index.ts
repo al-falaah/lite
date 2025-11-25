@@ -13,9 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const { studentId, planType } = await req.json() // planType: 'monthly' or 'annual'
+    const { email, planType } = await req.json() // planType: 'monthly' or 'annual'
 
-    if (!studentId || !planType) {
+    if (!email || !planType) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -27,17 +27,18 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Get student details by student_id (e.g., STU-2025-00001)
+    // Get student details by email (student_id not assigned yet)
     const { data: student, error: studentError } = await supabaseClient
       .from('students')
       .select('*')
-      .eq('student_id', studentId)
+      .eq('email', email)
+      .eq('status', 'pending_payment') // Only pending payment students
       .single()
 
     if (studentError || !student) {
       console.error('Student lookup error:', studentError)
       return new Response(
-        JSON.stringify({ error: `Student not found: ${studentId}` }),
+        JSON.stringify({ error: `No pending payment found for: ${email}` }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }

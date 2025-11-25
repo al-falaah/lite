@@ -8,15 +8,22 @@ import Card from '../components/common/Card';
 
 const StripePaymentPage = () => {
   const [searchParams] = useSearchParams();
-  const studentIdFromUrl = searchParams.get('student_id');
+  const emailFromUrl = searchParams.get('email');
 
-  const [studentId, setStudentId] = useState(studentIdFromUrl || '');
+  const [email, setEmail] = useState(emailFromUrl || '');
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
 
   const handlePayment = async (planType) => {
-    if (!studentId) {
-      toast.error('Please enter your Student ID');
+    if (!email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address');
       return;
     }
 
@@ -34,7 +41,7 @@ const StripePaymentPage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            studentId,
+            email, // Use email instead of student_id
             planType, // 'monthly' or 'annual'
           }),
         }
@@ -86,21 +93,21 @@ const StripePaymentPage = () => {
           </p>
         </div>
 
-        {/* Student ID Input */}
-        {!studentIdFromUrl && (
+        {/* Email Input */}
+        {!emailFromUrl && (
           <Card className="mb-8">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Student ID
+                Email Address
               </label>
               <p className="text-sm text-gray-500 mb-3">
-                Enter your Student ID (e.g., STU-2025-00001)
+                Enter the email address you used for your application
               </p>
               <input
-                type="text"
-                value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
-                placeholder="STU-2025-00001"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your.email@example.com"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>

@@ -72,11 +72,43 @@ serve(async (req) => {
         console.error('Error creating payment record:', paymentError)
       }
 
-      // If student is pending_payment, enroll them
+      // If student is pending_payment, generate student ID and enroll them
       if (student.status === 'pending_payment') {
+        // Generate random 6-digit student ID: STU-NNNNNN
+        let generatedStudentId = ''
+        let isUnique = false
+        let attempts = 0
+        const maxAttempts = 10
+
+        while (!isUnique && attempts < maxAttempts) {
+          // Generate random 6-digit number (100000 to 999999)
+          const randomNumber = Math.floor(100000 + Math.random() * 900000)
+          generatedStudentId = `STU-${randomNumber}`
+
+          // Check if this ID already exists
+          const { data: existingStudent } = await supabaseClient
+            .from('students')
+            .select('id')
+            .eq('student_id', generatedStudentId)
+            .single()
+
+          if (!existingStudent) {
+            isUnique = true
+          }
+          attempts++
+        }
+
+        if (!isUnique) {
+          console.error('Failed to generate unique student ID after', maxAttempts, 'attempts')
+          throw new Error('Failed to generate unique student ID')
+        }
+
+        console.log(`Generated random student ID: ${generatedStudentId}`)
+
         const { error: updateError } = await supabaseClient
           .from('students')
           .update({
+            student_id: generatedStudentId,
             status: 'enrolled',
             stripe_subscription_id: session.subscription || null,
           })
@@ -85,9 +117,9 @@ serve(async (req) => {
         if (updateError) {
           console.error('Error enrolling student:', updateError)
         } else {
-          console.log('Student enrolled:', studentId)
+          console.log('Student enrolled:', studentId, 'with ID:', generatedStudentId)
 
-          // Send welcome email
+          // Send welcome email with the newly generated student ID
           try {
             const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
             await supabaseClient.functions.invoke('send-welcome-email', {
@@ -95,13 +127,13 @@ serve(async (req) => {
                 studentData: {
                   full_name: student.full_name,
                   email: student.email,
-                  student_number: student.student_id,
+                  student_number: generatedStudentId,
                   program_type: 'essentials',
                 },
                 baseUrl: appUrl,
               },
             })
-            console.log('Welcome email sent')
+            console.log('Welcome email sent with student ID:', generatedStudentId)
           } catch (emailError) {
             console.error('Error sending welcome email:', emailError)
           }

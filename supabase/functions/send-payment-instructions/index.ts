@@ -79,7 +79,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
           </div>
 
           <center>
-            <a href="${appUrl}/payment?student_id=${applicantData.student_id || ''}" class="button" style="font-size: 18px; padding: 16px 40px;">
+            <a href="${appUrl}/payment?email=${encodeURIComponent(email)}" class="button" style="font-size: 18px; padding: 16px 40px;">
               💳 Choose Payment Plan & Pay Now →
             </a>
           </center>

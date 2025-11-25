@@ -59,20 +59,14 @@ serve(async (req) => {
       )
     }
 
-    // Generate student ID
-    const year = new Date().getFullYear()
-    const { count } = await supabaseClient
-      .from('students')
-      .select('id', { count: 'exact', head: true })
+    // Note: Student ID will be generated AFTER payment, not before
+    // Students who haven't paid yet don't get official student IDs
 
-    const studentNumber = String((count || 0) + 1).padStart(5, '0')
-    const studentId = `STU-${year}-${studentNumber}`
-
-    // Create student record
+    // Create student record without student_id
     const { data: student, error: studentError } = await supabaseClient
       .from('students')
       .insert({
-        student_id: studentId,
+        student_id: null, // Will be assigned after payment
         full_name: application.full_name,
         email: application.email,
         phone: application.phone,
@@ -107,7 +101,7 @@ serve(async (req) => {
           applicantData: {
             full_name: student.full_name,
             email: student.email,
-            student_id: student.student_id
+            student_id: null // No student ID until payment
           },
           appUrl: appUrl
         }
