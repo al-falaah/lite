@@ -27,16 +27,17 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Get student details
+    // Get student details by student_id (e.g., STU-2025-00001)
     const { data: student, error: studentError } = await supabaseClient
       .from('students')
       .select('*')
-      .eq('id', studentId)
+      .eq('student_id', studentId)
       .single()
 
     if (studentError || !student) {
+      console.error('Student lookup error:', studentError)
       return new Response(
-        JSON.stringify({ error: 'Student not found' }),
+        JSON.stringify({ error: `Student not found: ${studentId}` }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -63,7 +64,7 @@ serve(async (req) => {
       await supabaseClient
         .from('students')
         .update({ stripe_customer_id: customerId })
-        .eq('id', studentId)
+        .eq('id', student.id)
     }
 
     const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
