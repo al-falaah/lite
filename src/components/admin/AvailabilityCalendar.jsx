@@ -26,11 +26,51 @@ const AvailabilityCalendar = () => {
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const times = [
-    { label: 'Morning', range: '6:00 AM - 12:00 PM', hours: [6, 7, 8, 9, 10, 11] },
-    { label: 'Afternoon', range: '12:00 PM - 5:00 PM', hours: [12, 13, 14, 15, 16] },
-    { label: 'Evening', range: '5:00 PM - 9:00 PM', hours: [17, 18, 19, 20] },
-    { label: 'Night', range: '9:00 PM - 12:00 AM', hours: [21, 22, 23] }
+    { label: 'Morning', range: '6:00 AM - 12:00 PM', hours: [6, 7, 8, 9, 10, 11], totalHours: 6 },
+    { label: 'Afternoon', range: '12:00 PM - 5:00 PM', hours: [12, 13, 14, 15, 16], totalHours: 5 },
+    { label: 'Evening', range: '5:00 PM - 9:00 PM', hours: [17, 18, 19, 20], totalHours: 4 },
+    { label: 'Night', range: '9:00 PM - 12:00 AM', hours: [21, 22, 23], totalHours: 3 }
   ];
+
+  // Helper to format time in 12-hour format
+  const formatTime = (time24) => {
+    if (!time24) return '';
+    const [hour, minute] = time24.split(':').map(Number);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${hour12}:${minute.toString().padStart(2, '0')} ${period}`;
+  };
+
+  // Calculate which hours are booked and which are free within a time slot
+  const getSlotUtilization = (day, timeSlot, bookedClasses) => {
+    const bookedHours = new Set();
+
+    bookedClasses.forEach(schedule => {
+      if (schedule.class_time) {
+        const [startHour] = schedule.class_time.split(':').map(Number);
+        const duration = schedule.class_type === 'main' ? 2 : 0.5; // 2 hours or 30 min
+
+        // Mark hours as booked
+        for (let i = 0; i < duration; i++) {
+          bookedHours.add(startHour + i);
+        }
+      }
+    });
+
+    const freeHours = timeSlot.hours.filter(h => !bookedHours.has(h));
+    const bookedCount = bookedHours.size;
+    const freeCount = freeHours.length;
+    const utilizationPercent = (bookedCount / timeSlot.totalHours) * 100;
+
+    return {
+      bookedHours: Array.from(bookedHours).sort((a, b) => a - b),
+      freeHours,
+      bookedCount,
+      freeCount,
+      utilizationPercent,
+      hasPartialAvailability: freeCount > 0 && bookedCount > 0
+    };
+  };
 
   useEffect(() => {
     loadData();
@@ -311,20 +351,29 @@ const AvailabilityCalendar = () => {
                     <Clock className="h-5 w-5 text-emerald-600" />
                     Weekly Availability Overview
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    <span className="inline-flex items-center gap-1">
-                      <span className="w-3 h-3 bg-emerald-200 border-2 border-emerald-500 rounded"></span>
-                      Applicant available
-                    </span>
-                    <span className="inline-flex items-center gap-1 ml-4">
-                      <span className="w-3 h-3 bg-blue-200 border-2 border-blue-500 rounded"></span>
-                      Currently booked
-                    </span>
-                    <span className="inline-flex items-center gap-1 ml-4">
-                      <span className="w-3 h-3 bg-purple-200 border-2 border-purple-500 rounded"></span>
-                      Both (conflict!)
-                    </span>
-                  </p>
+                  <div className="mt-2 space-y-2">
+                    <p className="text-sm text-gray-600">
+                      Each cell shows exact booking times and available hours within the time slot
+                    </p>
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-3 h-3 bg-emerald-200 border-2 border-emerald-500 rounded"></span>
+                        <span className="text-gray-700">Applicant available</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-3 h-3 bg-blue-200 border-2 border-blue-500 rounded"></span>
+                        <span className="text-gray-700">Currently booked</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-3 h-3 bg-purple-200 border-2 border-purple-500 rounded"></span>
+                        <span className="text-gray-700">Conflict (check for partial availability)</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-3 h-3 bg-gradient-to-br from-purple-100 to-emerald-50 border-2 border-purple-400 rounded"></span>
+                        <span className="text-gray-700">Partial conflict (some hours free!)</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -354,53 +403,119 @@ const AvailabilityCalendar = () => {
                             const otherApplicants = getApplicantsForSlot(day, timeSlot).filter(
                               app => app.id !== selectedApplicant.id
                             );
+                            const utilization = getSlotUtilization(day, timeSlot, bookedClasses);
                             const hasBoth = bookedClasses.length > 0 && applicantAvailable;
+                            const hasPartialAvailability = utilization.hasPartialAvailability;
 
                             let bgColor = 'bg-white';
                             let borderColor = 'border-gray-200';
                             let textColor = 'text-gray-400';
 
                             if (hasBoth) {
-                              bgColor = 'bg-purple-100';
-                              borderColor = 'border-purple-400';
-                              textColor = 'text-purple-900';
+                              // Conflict: applicant wants this but it's booked
+                              if (hasPartialAvailability) {
+                                // Partial conflict - some hours free
+                                bgColor = 'bg-gradient-to-br from-purple-100 to-emerald-50';
+                                borderColor = 'border-purple-400';
+                                textColor = 'text-purple-900';
+                              } else {
+                                // Full conflict - all hours booked
+                                bgColor = 'bg-purple-100';
+                                borderColor = 'border-purple-400';
+                                textColor = 'text-purple-900';
+                              }
                             } else if (applicantAvailable) {
-                              bgColor = 'bg-emerald-100';
-                              borderColor = 'border-emerald-400';
+                              if (hasPartialAvailability) {
+                                // Applicant available, some hours booked
+                                bgColor = 'bg-gradient-to-br from-emerald-100 to-blue-50';
+                                borderColor = 'border-emerald-400';
+                              } else {
+                                // Applicant available, fully free
+                                bgColor = 'bg-emerald-100';
+                                borderColor = 'border-emerald-400';
+                              }
                               textColor = 'text-emerald-900';
                             } else if (bookedClasses.length > 0) {
-                              bgColor = 'bg-blue-100';
-                              borderColor = 'border-blue-400';
+                              if (hasPartialAvailability) {
+                                // Partially booked
+                                bgColor = 'bg-blue-50';
+                                borderColor = 'border-blue-300';
+                              } else {
+                                // Fully booked
+                                bgColor = 'bg-blue-100';
+                                borderColor = 'border-blue-400';
+                              }
                               textColor = 'text-blue-900';
                             }
 
                             return (
                               <td
                                 key={day}
-                                className={`border-2 ${borderColor} ${bgColor} px-3 py-4 text-center text-sm transition-all hover:opacity-80 cursor-pointer`}
+                                className={`border-2 ${borderColor} ${bgColor} px-2 py-3 text-center text-sm transition-all hover:opacity-80 cursor-pointer relative`}
                                 title={
                                   hasBoth
-                                    ? `⚠️ Conflict: ${bookedClasses.length} booked + applicant available`
+                                    ? `⚠️ Conflict: ${utilization.bookedCount}h booked, ${utilization.freeCount}h free | Applicant wants this slot`
                                     : applicantAvailable
-                                    ? `✓ Applicant available${otherApplicants.length > 0 ? ` (+${otherApplicants.length} others)` : ''}`
+                                    ? `✓ Applicant available | ${utilization.freeCount}h free${otherApplicants.length > 0 ? ` | +${otherApplicants.length} others` : ''}`
                                     : bookedClasses.length > 0
-                                    ? `${bookedClasses.length} class(es) booked`
+                                    ? `${utilization.bookedCount}h booked, ${utilization.freeCount}h free`
                                     : 'No bookings or availability'
                                 }
                               >
-                                {hasBoth && (
-                                  <div>
-                                    <AlertCircle className="h-5 w-5 mx-auto mb-1 text-purple-700" />
-                                    <div className="text-xs font-bold text-purple-900">CONFLICT</div>
-                                    <div className="text-xs text-purple-700 mt-1">
-                                      {bookedClasses.length} booked
-                                    </div>
+                                {/* Utilization bar at top */}
+                                {bookedClasses.length > 0 && (
+                                  <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200">
+                                    <div
+                                      className="h-full bg-blue-500"
+                                      style={{ width: `${utilization.utilizationPercent}%` }}
+                                    />
                                   </div>
                                 )}
+
+                                {hasBoth && (
+                                  <div className="space-y-1">
+                                    <div className="flex items-center justify-center gap-1">
+                                      <AlertCircle className="h-4 w-4 text-purple-700" />
+                                      <span className="text-xs font-bold text-purple-900">CONFLICT</span>
+                                    </div>
+                                    {bookedClasses.map((schedule, idx) => (
+                                      <div key={idx} className="text-xs bg-white/50 rounded px-1 py-0.5">
+                                        <div className="font-semibold text-purple-900">
+                                          {formatTime(schedule.class_time)}
+                                        </div>
+                                        <div className="text-purple-700 truncate">
+                                          {schedule.students?.full_name?.split(' ')[0]}
+                                        </div>
+                                      </div>
+                                    ))}
+                                    {utilization.freeCount > 0 && (
+                                      <div className="text-xs text-emerald-700 font-medium mt-1">
+                                        ✓ {utilization.freeCount}h available
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+
                                 {!hasBoth && applicantAvailable && (
-                                  <div>
-                                    <CheckCircle className="h-5 w-5 mx-auto mb-1 text-emerald-700" />
-                                    <div className="text-xs font-semibold text-emerald-900">Available</div>
+                                  <div className="space-y-1">
+                                    <div className="flex items-center justify-center gap-1">
+                                      <CheckCircle className="h-4 w-4 text-emerald-700" />
+                                      <span className="text-xs font-semibold text-emerald-900">Available</span>
+                                    </div>
+                                    {bookedClasses.length > 0 && (
+                                      <div className="space-y-0.5 mt-1">
+                                        {bookedClasses.map((schedule, idx) => (
+                                          <div key={idx} className="text-xs bg-blue-100 rounded px-1 py-0.5">
+                                            <div className="font-medium text-blue-900">
+                                              {formatTime(schedule.class_time)}
+                                            </div>
+                                          </div>
+                                        ))}
+                                        <div className="text-xs text-emerald-700 font-medium">
+                                          {utilization.freeCount}h free
+                                        </div>
+                                      </div>
+                                    )}
                                     {otherApplicants.length > 0 && (
                                       <div className="text-xs text-emerald-700 mt-1">
                                         +{otherApplicants.length} others
@@ -408,17 +523,32 @@ const AvailabilityCalendar = () => {
                                     )}
                                   </div>
                                 )}
+
                                 {!hasBoth && !applicantAvailable && bookedClasses.length > 0 && (
-                                  <div>
-                                    <div className="text-lg font-bold text-blue-900">{bookedClasses.length}</div>
-                                    <div className="text-xs text-blue-700">
-                                      {bookedClasses.slice(0, 2).map(c => c.students?.full_name?.split(' ')[0] || 'Student').join(', ')}
-                                      {bookedClasses.length > 2 && '...'}
-                                    </div>
+                                  <div className="space-y-1">
+                                    {bookedClasses.map((schedule, idx) => (
+                                      <div key={idx} className="text-xs bg-white/60 rounded px-1 py-0.5">
+                                        <div className="font-bold text-blue-900">
+                                          {formatTime(schedule.class_time)}
+                                        </div>
+                                        <div className="text-blue-700 truncate">
+                                          {schedule.students?.full_name?.split(' ')[0] || 'Student'}
+                                        </div>
+                                        <div className="text-xs text-blue-600">
+                                          {schedule.class_type === 'main' ? '2h' : '30m'}
+                                        </div>
+                                      </div>
+                                    ))}
+                                    {utilization.freeCount > 0 && (
+                                      <div className="text-xs text-blue-700 font-medium bg-white/40 rounded px-1 py-0.5">
+                                        {utilization.freeCount}h available
+                                      </div>
+                                    )}
                                   </div>
                                 )}
+
                                 {!hasBoth && !applicantAvailable && bookedClasses.length === 0 && (
-                                  <div className={textColor}>-</div>
+                                  <div className={`${textColor} text-xl`}>-</div>
                                 )}
                               </td>
                             );
