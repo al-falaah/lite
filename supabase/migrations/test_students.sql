@@ -15,16 +15,11 @@ INSERT INTO students (
   email,
   phone,
   gender,
-  date_of_birth,
-  can_read_quran,
-  tajweed_level,
-  has_studied_arabic,
-  arabic_level,
   status,
   enrolled_date,
   created_at
 ) VALUES
-  -- Student 1: Male, can read Quran with basic tajweed
+  -- Student 1
   (
     gen_random_uuid(),
     CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT), -- Random 6-digit ID
@@ -32,17 +27,12 @@ INSERT INTO students (
     'ahmed.test@example.com',
     '+64 21 123 4567',
     'male',
-    '1995-03-15',
-    true,
-    'basic',
-    false,
-    null,
     'enrolled',
     CURRENT_DATE - INTERVAL '30 days', -- Enrolled 30 days ago
     NOW()
   ),
 
-  -- Student 2: Female, can read Quran with advanced tajweed, studied Arabic
+  -- Student 2
   (
     gen_random_uuid(),
     CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
@@ -50,17 +40,12 @@ INSERT INTO students (
     'fatima.test@example.com',
     '+64 21 234 5678',
     'female',
-    '1992-07-22',
-    true,
-    'advanced',
-    true,
-    'intermediate',
     'enrolled',
     CURRENT_DATE - INTERVAL '60 days', -- Enrolled 60 days ago
     NOW()
   ),
 
-  -- Student 3: Male, cannot read Quran yet
+  -- Student 3
   (
     gen_random_uuid(),
     CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
@@ -68,17 +53,12 @@ INSERT INTO students (
     'omar.test@example.com',
     '+64 21 345 6789',
     'male',
-    '2000-11-08',
-    false,
-    null,
-    false,
-    null,
     'enrolled',
     CURRENT_DATE - INTERVAL '15 days', -- Enrolled 15 days ago
     NOW()
   ),
 
-  -- Student 4: Female, intermediate Quran reading
+  -- Student 4
   (
     gen_random_uuid(),
     CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
@@ -86,17 +66,12 @@ INSERT INTO students (
     'aisha.test@example.com',
     '+64 21 456 7890',
     'female',
-    '1998-05-30',
-    true,
-    'intermediate',
-    true,
-    'basic',
     'enrolled',
     CURRENT_DATE - INTERVAL '45 days', -- Enrolled 45 days ago
     NOW()
   ),
 
-  -- Student 5: Male, beginner level
+  -- Student 5
   (
     gen_random_uuid(),
     CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
@@ -104,11 +79,6 @@ INSERT INTO students (
     'yusuf.test@example.com',
     '+64 21 567 8901',
     'male',
-    '1997-09-12',
-    true,
-    'basic',
-    false,
-    null,
     'enrolled',
     CURRENT_DATE - INTERVAL '7 days', -- Enrolled 7 days ago
     NOW()
@@ -123,10 +93,10 @@ SELECT
   student_id,
   full_name,
   email,
+  gender,
   status,
   enrolled_date,
-  can_read_quran,
-  tajweed_level
+  created_at
 FROM students
 WHERE email LIKE '%test@example.com'
 ORDER BY enrolled_date DESC;
