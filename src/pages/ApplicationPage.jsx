@@ -28,7 +28,13 @@ const ApplicationPage = () => {
     tajweedLevel: '',
     hasStudiedArabic: '',
     arabicLevel: '',
-    motivation: '' // Combined: why interested + goals
+    motivation: '', // Combined: why interested + goals
+
+    // Step 3: Availability Preferences
+    preferredDays: [], // Array of selected days
+    preferredTimes: [], // Array of selected time slots
+    timezone: 'Pacific/Auckland', // Default NZ timezone
+    availabilityNotes: '' // Additional notes about availability
   });
 
   const handleChange = (e) => {
@@ -36,6 +42,19 @@ const ApplicationPage = () => {
     setFormData({
       ...formData,
       [e.target.name]: value
+    });
+  };
+
+  // Handle checkbox arrays (for days and times)
+  const handleCheckboxChange = (name, value) => {
+    const currentArray = formData[name];
+    const newArray = currentArray.includes(value)
+      ? currentArray.filter(item => item !== value)
+      : [...currentArray, value];
+
+    setFormData({
+      ...formData,
+      [name]: newArray
     });
   };
 
@@ -75,6 +94,16 @@ const ApplicationPage = () => {
           return false;
         }
         break;
+      case 3:
+        if (formData.preferredDays.length === 0) {
+          toast.error('Please select at least one preferred day for classes');
+          return false;
+        }
+        if (formData.preferredTimes.length === 0) {
+          toast.error('Please select at least one preferred time slot for classes');
+          return false;
+        }
+        break;
     }
     return true;
   };
@@ -92,7 +121,7 @@ const ApplicationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateStep(2)) {
+    if (!validateStep(3)) {
       return;
     }
 
@@ -110,6 +139,10 @@ const ApplicationPage = () => {
         has_studied_arabic: formData.hasStudiedArabic === 'true',
         arabic_level: formData.hasStudiedArabic === 'true' ? formData.arabicLevel : null,
         motivation: formData.motivation + (formData.islamicBackground ? `\n\nIslamic Background: ${formData.islamicBackground}` : ''),
+        preferred_days: formData.preferredDays,
+        preferred_times: formData.preferredTimes,
+        timezone: formData.timezone,
+        availability_notes: formData.availabilityNotes || null,
         status: 'pending'
       };
 
@@ -170,7 +203,8 @@ const ApplicationPage = () => {
 
   const steps = [
     { number: 1, title: 'Personal Information' },
-    { number: 2, title: 'Background & Motivation' }
+    { number: 2, title: 'Background & Motivation' },
+    { number: 3, title: 'Class Availability' }
   ];
 
   if (submitted) {
@@ -466,6 +500,112 @@ const ApplicationPage = () => {
               </div>
             )}
 
+            {/* Step 3: Class Availability */}
+            {currentStep === 3 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Class Availability</h2>
+                <p className="text-gray-600 mb-6">
+                  Help us schedule your personalized classes by indicating your preferred days and times.
+                  Classes are one-on-one (2 hours per week).
+                </p>
+
+                {/* Preferred Days */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Preferred Days <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-sm text-gray-500 mb-3">Select all days that work for you</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                      <label
+                        key={day}
+                        className={`flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                          formData.preferredDays.includes(day)
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-900'
+                            : 'border-gray-300 hover:border-emerald-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.preferredDays.includes(day)}
+                          onChange={() => handleCheckboxChange('preferredDays', day)}
+                          className="sr-only"
+                        />
+                        <span className="font-medium">{day}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Preferred Times */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Preferred Time Slots <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-sm text-gray-500 mb-3">Select all time slots that work for you (NZ time)</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { value: 'Morning', label: 'Morning (6:00 AM - 12:00 PM)', emoji: '🌅' },
+                      { value: 'Afternoon', label: 'Afternoon (12:00 PM - 5:00 PM)', emoji: '☀️' },
+                      { value: 'Evening', label: 'Evening (5:00 PM - 9:00 PM)', emoji: '🌆' },
+                      { value: 'Night', label: 'Night (9:00 PM - 12:00 AM)', emoji: '🌙' }
+                    ].map(time => (
+                      <label
+                        key={time.value}
+                        className={`flex items-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                          formData.preferredTimes.includes(time.value)
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-900'
+                            : 'border-gray-300 hover:border-emerald-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.preferredTimes.includes(time.value)}
+                          onChange={() => handleCheckboxChange('preferredTimes', time.value)}
+                          className="sr-only"
+                        />
+                        <span className="text-xl mr-3">{time.emoji}</span>
+                        <span className="font-medium">{time.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Timezone */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Timezone
+                  </label>
+                  <select
+                    name="timezone"
+                    value={formData.timezone}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="Pacific/Auckland">New Zealand (Pacific/Auckland)</option>
+                    <option value="Australia/Sydney">Australia - Sydney</option>
+                    <option value="Australia/Melbourne">Australia - Melbourne</option>
+                    <option value="Pacific/Fiji">Fiji</option>
+                    <option value="Asia/Dubai">Dubai</option>
+                    <option value="Asia/Riyadh">Saudi Arabia</option>
+                    <option value="Europe/London">United Kingdom</option>
+                    <option value="America/New_York">USA - Eastern</option>
+                    <option value="America/Los_Angeles">USA - Pacific</option>
+                  </select>
+                </div>
+
+                {/* Additional Notes */}
+                <Textarea
+                  label="Additional Availability Notes (Optional)"
+                  name="availabilityNotes"
+                  value={formData.availabilityNotes}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Any specific scheduling preferences or constraints we should know about..."
+                />
+              </div>
+            )}
+
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8 pt-6 border-t">
               {currentStep > 1 && (
@@ -476,7 +616,7 @@ const ApplicationPage = () => {
               )}
 
               <div className="ml-auto">
-                {currentStep < 2 ? (
+                {currentStep < 3 ? (
                   <Button type="button" onClick={nextStep}>
                     Next
                     <ChevronRight className="h-4 w-4 ml-1" />

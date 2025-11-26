@@ -14,9 +14,18 @@ DROP CONSTRAINT IF EXISTS students_student_id_key;
 
 -- Add a new unique constraint that allows NULLs
 -- (multiple students can have NULL student_id, but non-NULL values must be unique)
-CREATE UNIQUE INDEX students_student_id_unique
-ON students(student_id)
-WHERE student_id IS NOT NULL;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_indexes
+    WHERE indexname = 'students_student_id_unique'
+  ) THEN
+    CREATE UNIQUE INDEX students_student_id_unique
+    ON students(student_id)
+    WHERE student_id IS NOT NULL;
+  END IF;
+END $$;
 
 -- =============================================
 -- SUCCESS

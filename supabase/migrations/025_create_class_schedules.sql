@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS class_schedules (
 );
 
 -- Create indexes for faster queries
-CREATE INDEX idx_schedules_student ON class_schedules(student_id);
-CREATE INDEX idx_schedules_status ON class_schedules(status);
-CREATE INDEX idx_schedules_week ON class_schedules(academic_year, week_number);
-CREATE INDEX idx_schedules_upcoming ON class_schedules(day_of_week, class_time) WHERE status = 'scheduled';
+CREATE INDEX IF NOT EXISTS idx_schedules_student ON class_schedules(student_id);
+CREATE INDEX IF NOT EXISTS idx_schedules_status ON class_schedules(status);
+CREATE INDEX IF NOT EXISTS idx_schedules_week ON class_schedules(academic_year, week_number);
+CREATE INDEX IF NOT EXISTS idx_schedules_upcoming ON class_schedules(day_of_week, class_time) WHERE status = 'scheduled';
 
 -- Add trigger to update updated_at
 CREATE OR REPLACE FUNCTION update_class_schedule_updated_at()
@@ -45,13 +45,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS class_schedules_updated_at ON class_schedules;
 CREATE TRIGGER class_schedules_updated_at
   BEFORE UPDATE ON class_schedules
   FOR EACH ROW
   EXECUTE FUNCTION update_class_schedule_updated_at();
 
 -- Create view for student progress
-CREATE OR REPLACE VIEW student_class_progress AS
+DROP VIEW IF EXISTS student_class_progress;
+CREATE VIEW student_class_progress AS
 SELECT
   s.id as student_id,
   s.student_id as student_number,

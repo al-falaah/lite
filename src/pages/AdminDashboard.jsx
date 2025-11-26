@@ -23,6 +23,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import AdminClassScheduling from './AdminClassScheduling';
 import AdminStudentsList from './AdminStudentsList';
+import AvailabilityCalendar from '../components/admin/AvailabilityCalendar';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -363,6 +364,17 @@ const AdminDashboard = () => {
               <Calendar className="h-5 w-5" />
               Class Scheduling
             </button>
+            <button
+              onClick={() => setActiveTab('availability')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                activeTab === 'availability'
+                  ? 'border-emerald-600 text-emerald-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+              }`}
+            >
+              <Clock className="h-5 w-5" />
+              Availability
+            </button>
           </div>
         </div>
       </div>
@@ -548,6 +560,8 @@ const AdminDashboard = () => {
         {activeTab === 'students' && <AdminStudentsList />}
 
         {activeTab === 'scheduling' && <AdminClassScheduling />}
+
+        {activeTab === 'availability' && <AvailabilityCalendar />}
       </div>
 
       {/* Review Modal */}
