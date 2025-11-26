@@ -6,13 +6,15 @@ import {
   Mail,
   Phone,
   Calendar,
-  DollarSign,
   CheckCircle,
   Clock,
   AlertCircle,
-  XCircle
+  XCircle,
+  Search,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
-import { students, payments } from '../services/supabase';
+import { students } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
@@ -21,13 +23,19 @@ const AdminStudentsList = () => {
   const [studentsData, setStudentsData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [studentPayments, setStudentPayments] = useState([]);
-  const [loadingPayments, setLoadingPayments] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
 
   useEffect(() => {
     loadStudents();
   }, []);
+
+  // Reset to page 1 when search or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
 
   const loadStudents = async () => {
     try {
@@ -49,30 +57,9 @@ const AdminStudentsList = () => {
     }
   };
 
-  const loadStudentPayments = async (studentId) => {
-    try {
-      setLoadingPayments(true);
-      const { data, error } = await payments.getByStudent(studentId);
-
-      if (error) {
-        console.error('Error loading payments:', error);
-        toast.error('Failed to load payment history');
-        return;
-      }
-
-      setStudentPayments(data || []);
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('An error occurred loading payments');
-    } finally {
-      setLoadingPayments(false);
-    }
-  };
-
   const handleViewStudent = async (student) => {
     setSelectedStudent(student);
     setShowModal(true);
-    await loadStudentPayments(student.id);
   };
 
   const handleUpdateStatus = async (studentId, newStatus) => {
@@ -98,7 +85,6 @@ const AdminStudentsList = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedStudent(null);
-    setStudentPayments([]);
   };
 
   const getStatusColor = (status) => {
@@ -140,16 +126,27 @@ const AdminStudentsList = () => {
     });
   };
 
-  const getPaymentStatus = (student) => {
-    if (student.balance_remaining <= 0) {
-      return { label: 'Paid in Full', color: 'text-green-600' };
-    }
-    return { label: `$${student.balance_remaining.toFixed(2)} remaining`, color: 'text-orange-600' };
-  };
-
-  const filteredStudents = statusFilter === 'all'
+  // Filter students by status
+  const statusFilteredStudents = statusFilter === 'all'
     ? studentsData
     : studentsData.filter(s => s.status === statusFilter);
+
+  // Filter students by search query
+  const searchFilteredStudents = statusFilteredStudents.filter(student => {
+    const query = searchQuery.toLowerCase();
+    return (
+      student.full_name?.toLowerCase().includes(query) ||
+      student.email?.toLowerCase().includes(query) ||
+      student.student_id?.toLowerCase().includes(query) ||
+      student.phone?.toLowerCase().includes(query)
+    );
+  });
+
+  // Paginate students
+  const totalPages = Math.ceil(searchFilteredStudents.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedStudents = searchFilteredStudents.slice(startIndex, endIndex);
 
   const stats = {
     total: studentsData.length,
@@ -172,7 +169,7 @@ const AdminStudentsList = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Students Management</h2>
           <p className="text-gray-600 mt-1">
-            View and manage all enrolled students
+            View and manage all students
           </p>
         </div>
       </div>
@@ -220,6 +217,20 @@ const AdminStudentsList = () => {
         </Card>
       </div>
 
+      {/* Search Bar */}
+      <Card>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, email, student ID, or phone..."
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          />
+        </div>
+      </Card>
+
       {/* Filters */}
       <div className="flex gap-2">
         {['all', 'applicant', 'enrolled', 'graduated', 'dropout'].map((filter) => (
@@ -238,17 +249,16 @@ const AdminStudentsList = () => {
       </div>
 
       {/* Students List */}
-      {filteredStudents.length === 0 ? (
+      {paginatedStudents.length === 0 ? (
         <Card>
           <p className="text-center text-gray-600 py-8">
-            No students found
+            {searchQuery ? 'No students found matching your search' : 'No students found'}
           </p>
         </Card>
       ) : (
-        <div className="grid gap-4">
-          {filteredStudents.map((student) => {
-            const paymentStatus = getPaymentStatus(student);
-            return (
+        <>
+          <div className="grid gap-4">
+            {paginatedStudents.map((student) => (
               <Card key={student.id} className="hover:shadow-lg transition-shadow">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -264,7 +274,7 @@ const AdminStudentsList = () => {
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-4 gap-4 text-sm text-gray-600">
+                    <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4" />
                         {student.email}
@@ -275,13 +285,7 @@ const AdminStudentsList = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
-                        Enrolled: {formatDate(student.enrollment_date)}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4" />
-                        <span className={paymentStatus.color + ' font-semibold'}>
-                          {paymentStatus.label}
-                        </span>
+                        Enrolled: {formatDate(student.enrolled_date)}
                       </div>
                     </div>
 
@@ -302,9 +306,55 @@ const AdminStudentsList = () => {
                   </div>
                 </div>
               </Card>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Card>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-600">
+                  Showing {startIndex + 1}-{Math.min(endIndex, searchFilteredStudents.length)} of {searchFilteredStudents.length} students
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Previous
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-8 h-8 rounded-lg text-sm font-medium ${
+                          currentPage === page
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
+        </>
       )}
 
       {/* Student Details Modal */}
@@ -342,10 +392,6 @@ const AdminStudentsList = () => {
                     <p className="font-semibold">{selectedStudent.phone}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Date of Birth</p>
-                    <p className="font-semibold">{formatDate(selectedStudent.date_of_birth)}</p>
-                  </div>
-                  <div>
                     <p className="text-gray-600">Gender</p>
                     <p className="font-semibold capitalize">{selectedStudent.gender}</p>
                   </div>
@@ -360,7 +406,7 @@ const AdminStudentsList = () => {
                 <div className="grid md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-gray-600">Enrollment Date</p>
-                    <p className="font-semibold">{formatDate(selectedStudent.enrollment_date)}</p>
+                    <p className="font-semibold">{formatDate(selectedStudent.enrolled_date)}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">Status</p>
@@ -374,82 +420,11 @@ const AdminStudentsList = () => {
                 </div>
               </div>
 
-              {/* Financial Info */}
-              <div className="bg-blue-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <DollarSign className="h-5 w-5" />
-                  Financial Information
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-gray-600">Total Fee</p>
-                    <p className="text-2xl font-bold text-blue-600">
-                      ${selectedStudent.total_fees.toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Balance Remaining</p>
-                    <p className={`text-2xl font-bold ${
-                      selectedStudent.balance_remaining <= 0 ? 'text-green-600' : 'text-orange-600'
-                    }`}>
-                      ${selectedStudent.balance_remaining.toFixed(2)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Total Paid</p>
-                    <p className="text-xl font-semibold text-green-600">
-                      ${selectedStudent.total_paid.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment History */}
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-3">Payment History</h3>
-                {loadingPayments ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
-                  </div>
-                ) : studentPayments.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">No payment records</p>
-                ) : (
-                  <div className="space-y-2">
-                    {studentPayments.map((payment) => (
-                      <div key={payment.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold">${payment.amount.toFixed(2)}</span>
-                            <span className="text-sm text-gray-600">
-                              - Year {payment.academic_year}
-                            </span>
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            Due: {formatDate(payment.due_date)}
-                          </div>
-                        </div>
-                        <div>
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                            payment.status === 'verified'
-                              ? 'bg-green-100 text-green-800'
-                              : payment.status === 'pending'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {payment.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {/* Update Status */}
               {selectedStudent.status !== 'graduated' && (
                 <div className="border-t pt-4">
                   <h3 className="font-semibold text-gray-900 mb-3">Update Status</h3>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 flex-wrap">
                     {selectedStudent.status !== 'enrolled' && (
                       <Button
                         variant="primary"
