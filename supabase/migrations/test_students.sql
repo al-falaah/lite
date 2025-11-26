@@ -82,9 +82,7 @@ INSERT INTO students (
     'enrolled',
     CURRENT_DATE - INTERVAL '7 days', -- Enrolled 7 days ago
     NOW()
-  )
-
-ON CONFLICT (student_id) DO NOTHING; -- Skip if student_id already exists
+  );
 
 -- =============================================
 -- Verify Test Students Created
