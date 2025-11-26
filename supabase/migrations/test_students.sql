@@ -1,13 +1,12 @@
 -- =============================================
--- Create Test Students (Enrolled Status)
+-- Delete All Students and Create 12 Test Students
 -- =============================================
--- Use this to quickly create test students without going through Stripe
+-- This script clears all students and generates 12 random test students
 
--- Clear existing test data (optional - comment out if you want to keep existing data)
--- DELETE FROM class_schedules;
--- DELETE FROM students WHERE email LIKE '%test@example.com';
+-- Step 1: Delete all existing students (this will cascade to class_schedules)
+DELETE FROM students;
 
--- Insert 5 test students with enrolled status
+-- Step 2: Insert 12 test students with enrolled status
 INSERT INTO students (
   id,
   student_id,
@@ -22,13 +21,13 @@ INSERT INTO students (
   -- Student 1
   (
     gen_random_uuid(),
-    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT), -- Random 6-digit ID
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
     'Ahmed Ibrahim',
     'ahmed.test@example.com',
     '+64 21 123 4567',
     'male',
     'enrolled',
-    CURRENT_DATE - INTERVAL '30 days', -- Enrolled 30 days ago
+    CURRENT_DATE - INTERVAL '45 days',
     NOW()
   ),
 
@@ -41,7 +40,7 @@ INSERT INTO students (
     '+64 21 234 5678',
     'female',
     'enrolled',
-    CURRENT_DATE - INTERVAL '60 days', -- Enrolled 60 days ago
+    CURRENT_DATE - INTERVAL '30 days',
     NOW()
   ),
 
@@ -54,7 +53,7 @@ INSERT INTO students (
     '+64 21 345 6789',
     'male',
     'enrolled',
-    CURRENT_DATE - INTERVAL '15 days', -- Enrolled 15 days ago
+    CURRENT_DATE - INTERVAL '60 days',
     NOW()
   ),
 
@@ -67,7 +66,7 @@ INSERT INTO students (
     '+64 21 456 7890',
     'female',
     'enrolled',
-    CURRENT_DATE - INTERVAL '45 days', -- Enrolled 45 days ago
+    CURRENT_DATE - INTERVAL '15 days',
     NOW()
   ),
 
@@ -80,7 +79,98 @@ INSERT INTO students (
     '+64 21 567 8901',
     'male',
     'enrolled',
-    CURRENT_DATE - INTERVAL '7 days', -- Enrolled 7 days ago
+    CURRENT_DATE - INTERVAL '90 days',
+    NOW()
+  ),
+
+  -- Student 6
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Mariam Khan',
+    'mariam.test@example.com',
+    '+64 21 678 9012',
+    'female',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '20 days',
+    NOW()
+  ),
+
+  -- Student 7
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Hassan Mohammed',
+    'hassan.test@example.com',
+    '+64 21 789 0123',
+    'male',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '75 days',
+    NOW()
+  ),
+
+  -- Student 8
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Zainab Ahmed',
+    'zainab.test@example.com',
+    '+64 21 890 1234',
+    'female',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '10 days',
+    NOW()
+  ),
+
+  -- Student 9
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Ibrahim Malik',
+    'ibrahim.test@example.com',
+    '+64 21 901 2345',
+    'male',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '50 days',
+    NOW()
+  ),
+
+  -- Student 10
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Khadija Hussain',
+    'khadija.test@example.com',
+    '+64 21 012 3456',
+    'female',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '25 days',
+    NOW()
+  ),
+
+  -- Student 11
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Abdullah Farooq',
+    'abdullah.test@example.com',
+    '+64 21 111 2222',
+    'male',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '5 days',
+    NOW()
+  ),
+
+  -- Student 12
+  (
+    gen_random_uuid(),
+    CAST(FLOOR(100000 + RANDOM() * 900000) AS TEXT),
+    'Sumaya Khalid',
+    'sumaya.test@example.com',
+    '+64 21 222 3333',
+    'female',
+    'enrolled',
+    CURRENT_DATE - INTERVAL '35 days',
     NOW()
   );
 
@@ -100,7 +190,11 @@ WHERE email LIKE '%test@example.com'
 ORDER BY enrolled_date DESC;
 
 -- =============================================
--- Quick Cleanup Query (if needed later)
+-- Notes
 -- =============================================
--- To remove all test students and their schedules:
--- DELETE FROM students WHERE email LIKE '%test@example.com';
+-- * All 12 students have 'enrolled' status
+-- * Mix of 6 male and 6 female students
+-- * Varied enrollment dates from 5 to 90 days ago
+-- * Random 6-digit student IDs
+-- * Test email addresses for easy identification
+-- * Deleting students will cascade to class_schedules (no orphaned records)
