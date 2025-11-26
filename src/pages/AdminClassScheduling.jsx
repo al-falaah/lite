@@ -587,7 +587,7 @@ const AdminClassScheduling = () => {
           <div className="lg:col-span-1">
             <Card>
               <h3 className="font-semibold text-gray-900 mb-4">Students</h3>
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[calc(100vh-16rem)] overflow-y-auto pr-2">
                 {students.map((student) => (
                   <button
                     key={student.id}
