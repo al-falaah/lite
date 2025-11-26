@@ -582,15 +582,103 @@ const ApplicationPage = () => {
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
-                    <option value="Pacific/Auckland">New Zealand (Pacific/Auckland)</option>
-                    <option value="Australia/Sydney">Australia - Sydney</option>
-                    <option value="Australia/Melbourne">Australia - Melbourne</option>
-                    <option value="Pacific/Fiji">Fiji</option>
-                    <option value="Asia/Dubai">Dubai</option>
-                    <option value="Asia/Riyadh">Saudi Arabia</option>
-                    <option value="Europe/London">United Kingdom</option>
-                    <option value="America/New_York">USA - Eastern</option>
-                    <option value="America/Los_Angeles">USA - Pacific</option>
+                    <optgroup label="🌏 Pacific / Oceania">
+                      <option value="Pacific/Auckland">New Zealand</option>
+                      <option value="Australia/Sydney">Australia - Sydney</option>
+                      <option value="Australia/Melbourne">Australia - Melbourne</option>
+                      <option value="Australia/Brisbane">Australia - Brisbane</option>
+                      <option value="Australia/Perth">Australia - Perth</option>
+                      <option value="Pacific/Fiji">Fiji</option>
+                      <option value="Pacific/Tongatapu">Tonga</option>
+                      <option value="Pacific/Samoa">Samoa</option>
+                    </optgroup>
+
+                    <optgroup label="🌏 Asia - East & Southeast">
+                      <option value="Asia/Tokyo">Japan</option>
+                      <option value="Asia/Seoul">South Korea</option>
+                      <option value="Asia/Shanghai">China</option>
+                      <option value="Asia/Hong_Kong">Hong Kong</option>
+                      <option value="Asia/Singapore">Singapore</option>
+                      <option value="Asia/Kuala_Lumpur">Malaysia</option>
+                      <option value="Asia/Jakarta">Indonesia - Jakarta</option>
+                      <option value="Asia/Manila">Philippines</option>
+                      <option value="Asia/Bangkok">Thailand</option>
+                      <option value="Asia/Ho_Chi_Minh">Vietnam</option>
+                    </optgroup>
+
+                    <optgroup label="🌏 Asia - South & Central">
+                      <option value="Asia/Karachi">Pakistan</option>
+                      <option value="Asia/Kolkata">India</option>
+                      <option value="Asia/Dhaka">Bangladesh</option>
+                      <option value="Asia/Colombo">Sri Lanka</option>
+                      <option value="Asia/Kathmandu">Nepal</option>
+                      <option value="Asia/Tashkent">Uzbekistan</option>
+                    </optgroup>
+
+                    <optgroup label="🕌 Middle East">
+                      <option value="Asia/Riyadh">Saudi Arabia</option>
+                      <option value="Asia/Dubai">UAE</option>
+                      <option value="Asia/Qatar">Qatar</option>
+                      <option value="Asia/Kuwait">Kuwait</option>
+                      <option value="Asia/Bahrain">Bahrain</option>
+                      <option value="Asia/Muscat">Oman</option>
+                      <option value="Asia/Tehran">Iran</option>
+                      <option value="Asia/Baghdad">Iraq</option>
+                      <option value="Asia/Damascus">Syria</option>
+                      <option value="Asia/Beirut">Lebanon</option>
+                      <option value="Asia/Jerusalem">Palestine/Israel</option>
+                      <option value="Asia/Amman">Jordan</option>
+                      <option value="Europe/Istanbul">Turkey</option>
+                    </optgroup>
+
+                    <optgroup label="🌍 Africa">
+                      <option value="Africa/Cairo">Egypt</option>
+                      <option value="Africa/Johannesburg">South Africa</option>
+                      <option value="Africa/Lagos">Nigeria</option>
+                      <option value="Africa/Nairobi">Kenya</option>
+                      <option value="Africa/Casablanca">Morocco</option>
+                      <option value="Africa/Tunis">Tunisia</option>
+                      <option value="Africa/Algiers">Algeria</option>
+                      <option value="Africa/Tripoli">Libya</option>
+                      <option value="Africa/Khartoum">Sudan</option>
+                    </optgroup>
+
+                    <optgroup label="🇪🇺 Europe">
+                      <option value="Europe/London">United Kingdom</option>
+                      <option value="Europe/Paris">France</option>
+                      <option value="Europe/Berlin">Germany</option>
+                      <option value="Europe/Rome">Italy</option>
+                      <option value="Europe/Madrid">Spain</option>
+                      <option value="Europe/Amsterdam">Netherlands</option>
+                      <option value="Europe/Brussels">Belgium</option>
+                      <option value="Europe/Vienna">Austria</option>
+                      <option value="Europe/Stockholm">Sweden</option>
+                      <option value="Europe/Oslo">Norway</option>
+                      <option value="Europe/Copenhagen">Denmark</option>
+                      <option value="Europe/Warsaw">Poland</option>
+                      <option value="Europe/Moscow">Russia - Moscow</option>
+                    </optgroup>
+
+                    <optgroup label="🌎 North America">
+                      <option value="America/New_York">USA - Eastern (New York)</option>
+                      <option value="America/Chicago">USA - Central (Chicago)</option>
+                      <option value="America/Denver">USA - Mountain (Denver)</option>
+                      <option value="America/Los_Angeles">USA - Pacific (Los Angeles)</option>
+                      <option value="America/Anchorage">USA - Alaska</option>
+                      <option value="Pacific/Honolulu">USA - Hawaii</option>
+                      <option value="America/Toronto">Canada - Eastern (Toronto)</option>
+                      <option value="America/Vancouver">Canada - Pacific (Vancouver)</option>
+                      <option value="America/Mexico_City">Mexico</option>
+                    </optgroup>
+
+                    <optgroup label="🌎 Central & South America">
+                      <option value="America/Sao_Paulo">Brazil - São Paulo</option>
+                      <option value="America/Buenos_Aires">Argentina</option>
+                      <option value="America/Santiago">Chile</option>
+                      <option value="America/Lima">Peru</option>
+                      <option value="America/Bogota">Colombia</option>
+                      <option value="America/Caracas">Venezuela</option>
+                    </optgroup>
                   </select>
                 </div>
 
