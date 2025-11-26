@@ -395,56 +395,60 @@ const AdminClassScheduling = () => {
   return (
     <div className="space-y-6">
       {/* Header with View Mode Toggle */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">Class Scheduling</h2>
-            <p className="text-gray-600">Manage student class schedules and track progress</p>
-          </div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Class Scheduling</h2>
+          <p className="text-gray-600">Manage student class schedules and track progress</p>
+        </div>
 
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-2 ml-8">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setViewMode('student')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
                 viewMode === 'student'
                   ? 'bg-emerald-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               <Users className="h-4 w-4" />
-              By Student
+              <span className="hidden sm:inline">By Student</span>
+              <span className="sm:hidden">Student</span>
             </button>
             <button
               onClick={() => setViewMode('day')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
                 viewMode === 'day'
                   ? 'bg-emerald-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               <Calendar className="h-4 w-4" />
-              By Day
+              <span className="hidden sm:inline">By Day</span>
+              <span className="sm:hidden">Day</span>
             </button>
           </div>
-        </div>
 
-        {/* Action Buttons (only in By Student view) */}
-        {viewMode === 'student' && selectedStudent && (
-          <div>
-            {schedules.length === 0 ? (
-              <Button onClick={() => setShowGenerateModal(true)} variant="primary">
-                <Zap className="h-4 w-4 mr-2" />
-                Generate Full Schedule
-              </Button>
-            ) : (
-              <Button onClick={() => openScheduleModal()} variant="secondary">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Single Class
-              </Button>
-            )}
-          </div>
-        )}
+          {/* Action Buttons (only in By Student view) */}
+          {viewMode === 'student' && selectedStudent && (
+            <div className="w-full sm:w-auto">
+              {schedules.length === 0 ? (
+                <Button onClick={() => setShowGenerateModal(true)} variant="primary" className="w-full sm:w-auto">
+                  <Zap className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Generate Full Schedule</span>
+                  <span className="sm:hidden">Generate Schedule</span>
+                </Button>
+              ) : (
+                <Button onClick={() => openScheduleModal()} variant="secondary" className="w-full sm:w-auto">
+                  <Plus className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Add Single Class</span>
+                  <span className="sm:hidden">Add Class</span>
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Modern Day Filter Pills (only in By Day view) */}
