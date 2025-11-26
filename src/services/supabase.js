@@ -494,6 +494,82 @@ export const attendance = {
   }
 };
 
+// Class schedules helpers
+export const classSchedules = {
+  getAll: async () => {
+    const { data, error } = await supabase
+      .from('class_schedules')
+      .select(`
+        *,
+        students (
+          id,
+          student_id,
+          full_name,
+          email,
+          phone
+        )
+      `)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  getByStudent: async (studentId) => {
+    const { data, error } = await supabase
+      .from('class_schedules')
+      .select('*')
+      .eq('student_id', studentId)
+      .order('academic_year', { ascending: true })
+      .order('week_number', { ascending: true });
+    return { data, error };
+  },
+
+  getScheduled: async () => {
+    const { data, error } = await supabase
+      .from('class_schedules')
+      .select(`
+        *,
+        students (
+          id,
+          student_id,
+          full_name,
+          email,
+          phone
+        )
+      `)
+      .eq('status', 'scheduled')
+      .order('day_of_week', { ascending: true })
+      .order('class_time', { ascending: true });
+    return { data, error };
+  },
+
+  create: async (schedule) => {
+    const { data, error } = await supabase
+      .from('class_schedules')
+      .insert(schedule)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  update: async (scheduleId, updates) => {
+    const { data, error } = await supabase
+      .from('class_schedules')
+      .update(updates)
+      .eq('id', scheduleId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  delete: async (scheduleId) => {
+    const { error } = await supabase
+      .from('class_schedules')
+      .delete()
+      .eq('id', scheduleId);
+    return { error };
+  }
+};
+
 // Payment settings helpers (bank account details)
 export const paymentSettings = {
   getActive: async () => {
