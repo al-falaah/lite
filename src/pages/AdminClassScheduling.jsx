@@ -37,7 +37,6 @@ const AdminClassScheduling = () => {
   const [editingSchedule, setEditingSchedule] = useState(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
-  const [activeYear, setActiveYear] = useState(1);
   const [globalDayFilter, setGlobalDayFilter] = useState(() => DAYS_OF_WEEK[new Date().getDay()]);
   const [viewMode, setViewMode] = useState('student'); // 'student' or 'day'
 
@@ -333,45 +332,47 @@ const AdminClassScheduling = () => {
     setShowScheduleModal(true);
   };
 
-  // Get the current active week (first incomplete week)
-  const getCurrentActiveWeek = (yearSchedules) => {
+  // Get the current active week and year
+  const getCurrentActiveWeekAndYear = () => {
+    if (schedules.length === 0) return { year: 1, week: 1 };
+
     const weekMap = {};
 
-    yearSchedules.forEach(schedule => {
-      if (!weekMap[schedule.week_number]) {
-        weekMap[schedule.week_number] = [];
+    schedules.forEach(schedule => {
+      const key = `${schedule.academic_year}-${schedule.week_number}`;
+      if (!weekMap[key]) {
+        weekMap[key] = [];
       }
-      weekMap[schedule.week_number].push(schedule);
+      weekMap[key].push(schedule);
     });
 
-    // Find first week that is not fully completed
+    // Check Year 1 first
     for (let weekNum = 1; weekNum <= 52; weekNum++) {
-      const weekClasses = weekMap[weekNum];
-      if (!weekClasses) return 1; // No classes yet, week 1 is active
+      const weekClasses = weekMap[`1-${weekNum}`];
+      if (!weekClasses || weekClasses.length === 0) {
+        return { year: 1, week: weekNum }; // First week without classes
+      }
 
       const allCompleted = weekClasses.every(c => c.status === 'completed');
       if (!allCompleted) {
-        return weekNum;
+        return { year: 1, week: weekNum }; // First incomplete week in Year 1
       }
     }
 
-    return 53; // All weeks completed
-  };
-
-  // Group schedules by week for the active year
-  const getWeeklySchedules = () => {
-    const yearSchedules = schedules.filter(s => s.academic_year === activeYear);
-
-    // Group by week
-    const weekMap = {};
-    yearSchedules.forEach(schedule => {
-      if (!weekMap[schedule.week_number]) {
-        weekMap[schedule.week_number] = [];
+    // Year 1 complete, check Year 2
+    for (let weekNum = 1; weekNum <= 52; weekNum++) {
+      const weekClasses = weekMap[`2-${weekNum}`];
+      if (!weekClasses || weekClasses.length === 0) {
+        return { year: 2, week: weekNum };
       }
-      weekMap[schedule.week_number].push(schedule);
-    });
 
-    return weekMap;
+      const allCompleted = weekClasses.every(c => c.status === 'completed');
+      if (!allCompleted) {
+        return { year: 2, week: weekNum };
+      }
+    }
+
+    return { year: 2, week: 52 }; // All complete
   };
 
   if (loading) {
@@ -382,11 +383,14 @@ const AdminClassScheduling = () => {
     );
   }
 
-  const weeklySchedules = viewMode === 'student' ? getWeeklySchedules() : {};
-  const weekNumbers = Object.keys(weeklySchedules).sort((a, b) => parseInt(a) - parseInt(b));
-  const currentActiveWeek = viewMode === 'student' && schedules.length > 0
-    ? getCurrentActiveWeek(schedules.filter(s => s.academic_year === activeYear))
-    : 1;
+  const currentActive = viewMode === 'student' && schedules.length > 0
+    ? getCurrentActiveWeekAndYear()
+    : { year: 1, week: 1 };
+
+  // Get current week's classes
+  const currentWeekClasses = schedules.filter(
+    s => s.academic_year === currentActive.year && s.week_number === currentActive.week
+  );
 
   return (
     <div className="space-y-6">
@@ -674,7 +678,7 @@ const AdminClassScheduling = () => {
                   )}
                 </Card>
 
-                {/* Schedule List */}
+                {/* Current Week Schedule */}
                 {schedules.length === 0 ? (
                   <Card>
                     <div className="text-center py-12 text-gray-500">
@@ -689,220 +693,174 @@ const AdminClassScheduling = () => {
                   </Card>
                 ) : (
                   <Card>
-                    <div className="flex items-center justify-between mb-4">
-                      {/* Year Tabs */}
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setActiveYear(1)}
-                          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                            activeYear === 1
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          Year 1
-                        </button>
-                        <button
-                          onClick={() => setActiveYear(2)}
-                          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                            activeYear === 2
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          Year 2
-                        </button>
+                    {/* Current Week Header */}
+                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">
+                          Week {currentActive.week} of 52
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {currentActive.year === 1 ? (
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              Year 1
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                              Year 2
+                            </span>
+                          )}
+                        </p>
                       </div>
-
-                      <div className="text-sm text-gray-600">
-                        Current Active Week: <span className="font-semibold text-emerald-600">Week {currentActiveWeek}</span>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600">Progress</p>
+                        <p className="text-2xl font-bold text-emerald-600">
+                          {Math.round(((currentActive.year - 1) * 52 + currentActive.week - 1) / 104 * 100)}%
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {(currentActive.year - 1) * 52 + currentActive.week - 1} of 104 weeks
+                        </p>
                       </div>
                     </div>
 
-                    {/* Weekly Schedule Cards */}
-                    <div className="space-y-4">
-                      {weekNumbers.length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
-                          <p>No classes found</p>
-                        </div>
-                      ) : (
-                        weekNumbers.map(weekNum => {
-                          const weekClasses = weeklySchedules[weekNum];
-                          const mainClass = weekClasses.find(c => c.class_type === 'main');
-                          const shortClass = weekClasses.find(c => c.class_type === 'short');
-                          const isActive = parseInt(weekNum) === currentActiveWeek;
-                          const isLocked = parseInt(weekNum) > currentActiveWeek;
-
-                          return (
-                            <div
-                              key={`${activeYear}-${weekNum}`}
-                              className={`border rounded-lg p-4 transition-shadow ${
-                                isActive
-                                  ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                                  : isLocked
-                                  ? 'border-gray-200 bg-gray-50 opacity-60'
-                                  : 'border-gray-200 hover:shadow-md'
-                              }`}
-                            >
-                              <div className="flex items-start justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <h4 className="font-semibold text-gray-900">
-                                    Week {weekNum}
-                                  </h4>
-                                  {isActive && (
-                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-600 text-white">
-                                      Current Week
-                                    </span>
-                                  )}
-                                  {isLocked && (
-                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-400 text-white">
-                                      <Lock className="h-3 w-3 mr-1" />
-                                      Locked
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  {mainClass?.status === 'completed' && shortClass?.status === 'completed' && (
-                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                      <CheckCircle className="h-3 w-3 mr-1" />
-                                      Week Complete
-                                    </span>
-                                  )}
-                                </div>
+                    {/* Current Week Classes */}
+                    {currentWeekClasses.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500">
+                        <p>No classes scheduled for this week</p>
+                      </div>
+                    ) : (
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {/* Main Class */}
+                        {currentWeekClasses.find(c => c.class_type === 'main') && (
+                          <div className="bg-blue-50 p-5 rounded-lg border-2 border-blue-200">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-blue-600" />
+                                <span className="text-base font-semibold text-blue-900">
+                                  Main Class (2 hrs)
+                                </span>
                               </div>
-
-                              <div className="grid md:grid-cols-2 gap-3">
-                                {/* Main Class */}
-                                {mainClass && (
-                                  <div className="bg-blue-50 p-3 rounded-lg">
-                                    <div className="flex items-center justify-between mb-2">
-                                      <div className="flex items-center gap-2">
-                                        <Clock className="h-4 w-4 text-blue-600" />
-                                        <span className="text-sm font-medium text-blue-900">
-                                          Main Class (2 hrs)
-                                        </span>
-                                      </div>
-                                      <span className={`text-xs px-2 py-1 rounded-full ${
-                                        mainClass.status === 'completed'
-                                          ? 'bg-green-100 text-green-800'
-                                          : 'bg-yellow-100 text-yellow-800'
-                                      }`}>
-                                        {mainClass.status}
-                                      </span>
-                                    </div>
-                                    <div className="text-sm text-blue-800 mb-1">
-                                      {mainClass.day_of_week} • {mainClass.class_time || 'No time set'}
-                                    </div>
-                                    {mainClass.meeting_link && (
-                                      <a
-                                        href={mainClass.meeting_link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center text-xs text-blue-600 hover:text-blue-700 mb-2"
-                                      >
-                                        <Video className="h-3 w-3 mr-1" />
-                                        Join Meeting
-                                      </a>
-                                    )}
-                                    <div className="flex items-center gap-2 mt-2">
-                                      <button
-                                        onClick={() => openScheduleModal(mainClass)}
-                                        disabled={isLocked}
-                                        className={`text-xs flex items-center ${
-                                          isLocked
-                                            ? 'text-gray-400 cursor-not-allowed'
-                                            : 'text-blue-600 hover:text-blue-700'
-                                        }`}
-                                      >
-                                        <Edit2 className="h-3 w-3 mr-1" />
-                                        Edit
-                                      </button>
-                                      {mainClass.status === 'scheduled' && (
-                                        <button
-                                          onClick={() => handleMarkCompleted(mainClass.id)}
-                                          disabled={isLocked}
-                                          className={`text-xs flex items-center ${
-                                            isLocked
-                                              ? 'text-gray-400 cursor-not-allowed'
-                                              : 'text-green-600 hover:text-green-700'
-                                          }`}
-                                        >
-                                          <CheckCircle className="h-3 w-3 mr-1" />
-                                          Mark Done
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Short Class */}
-                                {shortClass && (
-                                  <div className="bg-purple-50 p-3 rounded-lg">
-                                    <div className="flex items-center justify-between mb-2">
-                                      <div className="flex items-center gap-2">
-                                        <Clock className="h-4 w-4 text-purple-600" />
-                                        <span className="text-sm font-medium text-purple-900">
-                                          Short Class (30 min)
-                                        </span>
-                                      </div>
-                                      <span className={`text-xs px-2 py-1 rounded-full ${
-                                        shortClass.status === 'completed'
-                                          ? 'bg-green-100 text-green-800'
-                                          : 'bg-yellow-100 text-yellow-800'
-                                      }`}>
-                                        {shortClass.status}
-                                      </span>
-                                    </div>
-                                    <div className="text-sm text-purple-800 mb-1">
-                                      {shortClass.day_of_week} • {shortClass.class_time || 'No time set'}
-                                    </div>
-                                    {shortClass.meeting_link && (
-                                      <a
-                                        href={shortClass.meeting_link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center text-xs text-purple-600 hover:text-purple-700 mb-2"
-                                      >
-                                        <Video className="h-3 w-3 mr-1" />
-                                        Join Meeting
-                                      </a>
-                                    )}
-                                    <div className="flex items-center gap-2 mt-2">
-                                      <button
-                                        onClick={() => openScheduleModal(shortClass)}
-                                        disabled={isLocked}
-                                        className={`text-xs flex items-center ${
-                                          isLocked
-                                            ? 'text-gray-400 cursor-not-allowed'
-                                            : 'text-purple-600 hover:text-purple-700'
-                                        }`}
-                                      >
-                                        <Edit2 className="h-3 w-3 mr-1" />
-                                        Edit
-                                      </button>
-                                      {shortClass.status === 'scheduled' && (
-                                        <button
-                                          onClick={() => handleMarkCompleted(shortClass.id)}
-                                          disabled={isLocked}
-                                          className={`text-xs flex items-center ${
-                                            isLocked
-                                              ? 'text-gray-400 cursor-not-allowed'
-                                              : 'text-green-600 hover:text-green-700'
-                                          }`}
-                                        >
-                                          <CheckCircle className="h-3 w-3 mr-1" />
-                                          Mark Done
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
+                              <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                currentWeekClasses.find(c => c.class_type === 'main').status === 'completed'
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {currentWeekClasses.find(c => c.class_type === 'main').status}
+                              </span>
+                            </div>
+                            <div className="space-y-2 mb-4">
+                              <div className="text-sm text-blue-800">
+                                <span className="font-medium">Day:</span> {currentWeekClasses.find(c => c.class_type === 'main').day_of_week}
+                              </div>
+                              <div className="text-sm text-blue-800">
+                                <span className="font-medium">Time:</span> {currentWeekClasses.find(c => c.class_type === 'main').class_time || 'Not set'}
                               </div>
                             </div>
-                          );
-                        })
-                      )}
-                    </div>
+                            {currentWeekClasses.find(c => c.class_type === 'main').meeting_link && (
+                              <a
+                                href={currentWeekClasses.find(c => c.class_type === 'main').meeting_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-sm text-blue-700 hover:text-blue-800 font-medium mb-3"
+                              >
+                                <Video className="h-4 w-4 mr-2" />
+                                Join Meeting
+                              </a>
+                            )}
+                            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-blue-200">
+                              <button
+                                onClick={() => openScheduleModal(currentWeekClasses.find(c => c.class_type === 'main'))}
+                                className="text-sm text-blue-700 hover:text-blue-800 flex items-center font-medium"
+                              >
+                                <Edit2 className="h-4 w-4 mr-1" />
+                                Reschedule
+                              </button>
+                              {currentWeekClasses.find(c => c.class_type === 'main').status === 'scheduled' && (
+                                <button
+                                  onClick={() => handleMarkCompleted(currentWeekClasses.find(c => c.class_type === 'main').id)}
+                                  className="text-sm text-green-700 hover:text-green-800 flex items-center font-medium ml-auto"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Mark Complete
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Short Class */}
+                        {currentWeekClasses.find(c => c.class_type === 'short') && (
+                          <div className="bg-purple-50 p-5 rounded-lg border-2 border-purple-200">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-purple-600" />
+                                <span className="text-base font-semibold text-purple-900">
+                                  Short Class (30 min)
+                                </span>
+                              </div>
+                              <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                currentWeekClasses.find(c => c.class_type === 'short').status === 'completed'
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {currentWeekClasses.find(c => c.class_type === 'short').status}
+                              </span>
+                            </div>
+                            <div className="space-y-2 mb-4">
+                              <div className="text-sm text-purple-800">
+                                <span className="font-medium">Day:</span> {currentWeekClasses.find(c => c.class_type === 'short').day_of_week}
+                              </div>
+                              <div className="text-sm text-purple-800">
+                                <span className="font-medium">Time:</span> {currentWeekClasses.find(c => c.class_type === 'short').class_time || 'Not set'}
+                              </div>
+                            </div>
+                            {currentWeekClasses.find(c => c.class_type === 'short').meeting_link && (
+                              <a
+                                href={currentWeekClasses.find(c => c.class_type === 'short').meeting_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-sm text-purple-700 hover:text-purple-800 font-medium mb-3"
+                              >
+                                <Video className="h-4 w-4 mr-2" />
+                                Join Meeting
+                              </a>
+                            )}
+                            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-purple-200">
+                              <button
+                                onClick={() => openScheduleModal(currentWeekClasses.find(c => c.class_type === 'short'))}
+                                className="text-sm text-purple-700 hover:text-purple-800 flex items-center font-medium"
+                              >
+                                <Edit2 className="h-4 w-4 mr-1" />
+                                Reschedule
+                              </button>
+                              {currentWeekClasses.find(c => c.class_type === 'short').status === 'scheduled' && (
+                                <button
+                                  onClick={() => handleMarkCompleted(currentWeekClasses.find(c => c.class_type === 'short').id)}
+                                  className="text-sm text-green-700 hover:text-green-800 flex items-center font-medium ml-auto"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Mark Complete
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Week Completion Note */}
+                    {currentWeekClasses.every(c => c.status === 'completed') && currentWeekClasses.length > 0 && (
+                      <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle className="h-6 w-6 text-green-600" />
+                          <div>
+                            <p className="font-semibold text-green-900">Week {currentActive.week} Complete!</p>
+                            <p className="text-sm text-green-700">
+                              Great job! Next week will unlock automatically.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </Card>
                 )}
               </>
