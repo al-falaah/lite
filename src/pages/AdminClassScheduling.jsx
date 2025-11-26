@@ -18,7 +18,10 @@ import {
   Filter,
   Lock,
   List,
-  Grid
+  Grid,
+  Search,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import Button from '../components/common/Button';
@@ -39,6 +42,8 @@ const AdminClassScheduling = () => {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [globalDayFilter, setGlobalDayFilter] = useState(() => DAYS_OF_WEEK[new Date().getDay()]);
   const [viewMode, setViewMode] = useState('student'); // 'student' or 'day'
+  const [showStudentList, setShowStudentList] = useState(true); // For collapsible student list
+  const [studentSearchQuery, setStudentSearchQuery] = useState(''); // Search students
 
   // Form state for individual schedule edit
   const [scheduleForm, setScheduleForm] = useState({
@@ -590,24 +595,92 @@ const AdminClassScheduling = () => {
           {/* Student List */}
           <div className="lg:col-span-1">
             <Card>
-              <h3 className="font-semibold text-gray-900 mb-4">Students</h3>
-              <div className="space-y-2 max-h-[calc(100vh-16rem)] overflow-y-auto pr-2">
-                {students.map((student) => (
-                  <button
-                    key={student.id}
-                    onClick={() => setSelectedStudent(student)}
-                    className={`w-full text-left p-3 rounded-lg transition-colors ${
-                      selectedStudent?.id === student.id
-                        ? 'bg-emerald-100 border-2 border-emerald-500'
-                        : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
-                    }`}
-                  >
-                    <div className="font-medium text-gray-900">{student.full_name}</div>
-                    <div className="text-sm text-gray-600">{student.student_id}</div>
-                    <div className="text-xs text-gray-500 capitalize">{student.status}</div>
-                  </button>
-                ))}
+              {/* Header with Collapse Toggle */}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Students ({students.filter(s =>
+                    s.full_name?.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
+                    s.student_id?.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
+                    s.email?.toLowerCase().includes(studentSearchQuery.toLowerCase())
+                  ).length})
+                </h3>
+                <button
+                  onClick={() => setShowStudentList(!showStudentList)}
+                  className="text-gray-600 hover:text-emerald-600 transition-colors p-1 rounded-lg hover:bg-emerald-50"
+                  aria-label={showStudentList ? "Collapse student list" : "Expand student list"}
+                >
+                  {showStudentList ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )}
+                </button>
               </div>
+
+              {/* Search Bar */}
+              {showStudentList && (
+                <div className="relative mb-4">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    value={studentSearchQuery}
+                    onChange={(e) => setStudentSearchQuery(e.target.value)}
+                    placeholder="Search students..."
+                    className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  />
+                  {studentSearchQuery && (
+                    <button
+                      onClick={() => setStudentSearchQuery('')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      <XIcon className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Student List */}
+              {showStudentList && (
+                <div className="space-y-2 max-h-[calc(100vh-20rem)] overflow-y-auto pr-2">
+                  {students
+                    .filter(student => {
+                      const query = studentSearchQuery.toLowerCase();
+                      return (
+                        student.full_name?.toLowerCase().includes(query) ||
+                        student.student_id?.toLowerCase().includes(query) ||
+                        student.email?.toLowerCase().includes(query)
+                      );
+                    })
+                    .map((student) => (
+                      <button
+                        key={student.id}
+                        onClick={() => setSelectedStudent(student)}
+                        className={`w-full text-left p-3 rounded-lg transition-colors ${
+                          selectedStudent?.id === student.id
+                            ? 'bg-emerald-100 border-2 border-emerald-500'
+                            : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'
+                        }`}
+                      >
+                        <div className="font-medium text-gray-900">{student.full_name}</div>
+                        <div className="text-sm text-gray-600">{student.student_id}</div>
+                        <div className="text-xs text-gray-500 capitalize">{student.status}</div>
+                      </button>
+                    ))}
+                  {students.filter(student => {
+                    const query = studentSearchQuery.toLowerCase();
+                    return (
+                      student.full_name?.toLowerCase().includes(query) ||
+                      student.student_id?.toLowerCase().includes(query) ||
+                      student.email?.toLowerCase().includes(query)
+                    );
+                  }).length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <p className="text-sm">No students found</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </Card>
           </div>
 
