@@ -390,7 +390,7 @@ const AdminClassScheduling = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header with View Mode Toggle and Global Day Filter */}
+      {/* Header with View Mode Toggle */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div>
@@ -425,127 +425,152 @@ const AdminClassScheduling = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          {/* Global Day Filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-500" />
-            <select
-              value={globalDayFilter}
-              onChange={(e) => setGlobalDayFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium"
-            >
-              {DAYS_OF_WEEK.map(day => (
-                <option key={day} value={day}>{day}</option>
-              ))}
-            </select>
+        {/* Action Buttons (only in By Student view) */}
+        {viewMode === 'student' && selectedStudent && (
+          <div>
+            {schedules.length === 0 ? (
+              <Button onClick={() => setShowGenerateModal(true)} variant="primary">
+                <Zap className="h-4 w-4 mr-2" />
+                Generate Full Schedule
+              </Button>
+            ) : (
+              <Button onClick={() => openScheduleModal()} variant="secondary">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Single Class
+              </Button>
+            )}
           </div>
-
-          {viewMode === 'student' && selectedStudent && (
-            <div>
-              {schedules.length === 0 ? (
-                <Button onClick={() => setShowGenerateModal(true)} variant="primary">
-                  <Zap className="h-4 w-4 mr-2" />
-                  Generate Full Schedule
-                </Button>
-              ) : (
-                <Button onClick={() => openScheduleModal()} variant="secondary">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Single Class
-                </Button>
-              )}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
-      {/* By Day View */}
+      {/* Modern Day Filter Pills (only in By Day view) */}
       {viewMode === 'day' && (
         <Card>
-          <div className="mb-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm font-medium text-gray-700">Select Day:</span>
+            {DAYS_OF_WEEK.map(day => (
+              <button
+                key={day}
+                onClick={() => setGlobalDayFilter(day)}
+                className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+                  globalDayFilter === day
+                    ? 'bg-emerald-600 text-white shadow-md scale-105'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                }`}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* By Day View - Student Cards */}
+      {viewMode === 'day' && (
+        <Card>
+          <div className="mb-6">
             <h3 className="text-lg font-bold text-gray-900">
-              Classes on {globalDayFilter}
+              Students with classes on {globalDayFilter}
             </h3>
-            <p className="text-sm text-gray-600">All students scheduled for this day</p>
+            <p className="text-sm text-gray-600">Click on a student to view their full schedule</p>
           </div>
 
           {allSchedules.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <Calendar className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-              <p>No classes scheduled for {globalDayFilter}</p>
+              <p>No students have classes scheduled for {globalDayFilter}</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {allSchedules.map(schedule => (
-                <div
-                  key={schedule.id}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h4 className="font-semibold text-gray-900">
-                          {schedule.students?.full_name || 'Unknown Student'}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Group schedules by student and show unique student cards */}
+              {Object.entries(
+                allSchedules.reduce((acc, schedule) => {
+                  const studentId = schedule.student_id;
+                  if (!acc[studentId]) {
+                    acc[studentId] = {
+                      student: schedule.students,
+                      classes: []
+                    };
+                  }
+                  acc[studentId].classes.push(schedule);
+                  return acc;
+                }, {})
+              ).map(([studentId, { student, classes }]) => {
+                const mainClass = classes.find(c => c.class_type === 'main');
+                const shortClass = classes.find(c => c.class_type === 'short');
+                const hasCompletedClasses = classes.some(c => c.status === 'completed');
+                const hasScheduledClasses = classes.some(c => c.status === 'scheduled');
+
+                return (
+                  <button
+                    key={studentId}
+                    onClick={() => {
+                      setSelectedStudent(students.find(s => s.id === studentId));
+                      setViewMode('student');
+                    }}
+                    className="bg-white border-2 border-gray-200 rounded-lg p-5 hover:border-emerald-500 hover:shadow-lg transition-all text-left group"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-lg group-hover:text-emerald-600 transition-colors">
+                          {student?.full_name || 'Unknown Student'}
                         </h4>
-                        <span className="text-xs text-gray-500">
-                          {schedule.students?.student_id}
-                        </span>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          schedule.class_type === 'main'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-purple-100 text-purple-800'
-                        }`}>
-                          {schedule.class_type === 'main' ? '2 Hours' : '30 Min'}
-                        </span>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          schedule.status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {schedule.status}
-                        </span>
+                        <p className="text-sm text-gray-600">{student?.student_id}</p>
                       </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          {schedule.class_time}
-                        </div>
-                        <div>Year {schedule.academic_year} - Week {schedule.week_number}</div>
-                        {schedule.meeting_link && (
-                          <a
-                            href={schedule.meeting_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center text-emerald-600 hover:text-emerald-700"
-                          >
-                            <Video className="h-4 w-4 mr-1" />
-                            Join Meeting
-                          </a>
-                        )}
-                      </div>
+                      <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600 transition-colors" />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedStudent(students.find(s => s.id === schedule.student_id));
-                          setViewMode('student');
-                        }}
-                        className="text-xs text-emerald-600 hover:text-emerald-700"
-                      >
-                        View Student
-                      </button>
-                      {schedule.status === 'scheduled' && (
-                        <button
-                          onClick={() => handleMarkCompleted(schedule.id)}
-                          className="text-xs text-green-600 hover:text-green-700 flex items-center"
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Mark Done
-                        </button>
+
+                    {/* Class Times */}
+                    <div className="space-y-2 mb-3">
+                      {mainClass && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="h-4 w-4 text-blue-600" />
+                          <span className="font-medium text-blue-900">
+                            {mainClass.class_time}
+                          </span>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                            2 hrs
+                          </span>
+                        </div>
+                      )}
+                      {shortClass && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Clock className="h-4 w-4 text-purple-600" />
+                          <span className="font-medium text-purple-900">
+                            {shortClass.class_time}
+                          </span>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                            30 min
+                          </span>
+                        </div>
                       )}
                     </div>
-                  </div>
-                </div>
-              ))}
+
+                    {/* Status Badges */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {hasCompletedClasses && (
+                        <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Has completed classes
+                        </span>
+                      )}
+                      {hasScheduledClasses && (
+                        <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
+                          <Clock className="h-3 w-3 mr-1" />
+                          {classes.filter(c => c.status === 'scheduled').length} scheduled
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Total Classes Count */}
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <p className="text-xs text-gray-600">
+                        {classes.length} class{classes.length !== 1 ? 'es' : ''} on {globalDayFilter}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           )}
         </Card>
