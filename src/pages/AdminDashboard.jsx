@@ -88,8 +88,8 @@ const AdminDashboard = () => {
       if (error) {
         throw error;
       }
-      // Navigate to home page after successful logout
-      navigate('/');
+      // Navigate to admin login page after successful logout
+      navigate('/admin');
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Failed to logout');
