@@ -67,42 +67,41 @@ const ApplicationPage = () => {
 
   // Get time range in user's timezone
   const getTimeRangeInUserTimezone = (nzStartHour, nzEndHour) => {
-    // Create a date object for a sample date in NZ timezone
-    // Use a date in NZ summer to properly handle DST
-    const sampleDate = new Date('2025-01-15T00:00:00');
-
-    // Create times in NZ timezone and convert to user timezone
+    // Convert NZ hour to user's timezone
     const convertHour = (hour) => {
-      // Create a UTC timestamp for the given hour in NZ
-      const nzTimeString = `2025-01-15T${hour.toString().padStart(2, '0')}:00:00`;
-      const utcDate = new Date(nzTimeString + 'Z'); // Z suffix treats it as UTC
+      // Handle hour 24 as midnight of next day
+      const actualHour = hour === 24 ? 0 : hour;
+      const dayOffset = hour === 24 ? 1 : 0;
 
-      // Get NZ offset for this date (handles DST)
-      const nzDateStr = utcDate.toLocaleString('en-US', { timeZone: 'Pacific/Auckland' });
-      const nzDate = new Date(nzDateStr);
+      // Create a date in NZ timezone (using January 15, 2025 as reference for NZDT)
+      const nzDate = new Date(2025, 0, 15 + dayOffset, actualHour, 0, 0);
 
-      // Calculate the offset
-      const nzOffsetMs = new Date(new Date(nzDateStr).toLocaleString('en-US', { timeZone: 'UTC' })).getTime() - nzDate.getTime();
-
-      // Create actual NZ time
-      const actualNZTime = new Date(`2025-01-15T${hour.toString().padStart(2, '0')}:00:00`);
-
-      // Convert to user timezone
-      const userTimeString = actualNZTime.toLocaleString('en-US', {
-        timeZone: formData.timezone,
-        hour: 'numeric',
-        hour12: false,
-        timeZoneName: 'short'
+      // Get the time string in NZ timezone
+      const nzTimeString = nzDate.toLocaleString('en-US', {
+        timeZone: 'Pacific/Auckland',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
       });
 
-      // Simple offset calculation
-      const testDate = new Date(Date.UTC(2025, 0, 15, hour - 13, 0, 0)); // NZ is UTC+13 in summer
-      const userHour = parseInt(testDate.toLocaleString('en-US', {
+      // Parse it back to get UTC time
+      const [datePart, timePart] = nzTimeString.split(', ');
+      const [month, day, year] = datePart.split('/');
+      const [hourStr, minute, second] = timePart.split(':');
+      const nzDateParsed = new Date(year, month - 1, day, parseInt(hourStr), parseInt(minute), parseInt(second));
+
+      // Now convert to user's timezone
+      const userTimeString = nzDateParsed.toLocaleString('en-US', {
         timeZone: formData.timezone,
         hour: 'numeric',
         hour12: false
-      }));
+      });
 
+      const userHour = parseInt(userTimeString);
       return userHour;
     };
 
@@ -110,8 +109,10 @@ const ApplicationPage = () => {
     const userEndHour = convertHour(nzEndHour);
 
     const formatHour = (hour) => {
-      const period = hour >= 12 ? 'PM' : 'AM';
-      const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      // Normalize hour to 0-23 range
+      const normalizedHour = hour % 24;
+      const period = normalizedHour >= 12 ? 'PM' : 'AM';
+      const displayHour = normalizedHour === 0 ? 12 : normalizedHour > 12 ? normalizedHour - 12 : normalizedHour;
       return `${displayHour}:00 ${period}`;
     };
 
