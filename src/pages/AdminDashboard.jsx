@@ -774,6 +774,61 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
+                {/* Availability Preferences */}
+                {(selectedApplication.preferred_days?.length > 0 || selectedApplication.preferred_times?.length > 0) && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      Availability Preferences
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {selectedApplication.preferred_days?.length > 0 && (
+                        <div>
+                          <label className="text-sm text-gray-600">Preferred Days</label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {selectedApplication.preferred_days.map((day) => (
+                              <span
+                                key={day}
+                                className="px-3 py-1 bg-emerald-100 text-emerald-800 text-sm rounded-full font-medium"
+                              >
+                                {day}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {selectedApplication.preferred_times?.length > 0 && (
+                        <div>
+                          <label className="text-sm text-gray-600">Preferred Time Slots</label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {selectedApplication.preferred_times.map((time) => (
+                              <span
+                                key={time}
+                                className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full font-medium"
+                              >
+                                {time}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {selectedApplication.timezone && (
+                        <div>
+                          <label className="text-sm text-gray-600">Timezone</label>
+                          <p className="font-medium mt-1">{selectedApplication.timezone}</p>
+                        </div>
+                      )}
+                      {selectedApplication.availability_notes && (
+                        <div className="md:col-span-2">
+                          <label className="text-sm text-gray-600">Additional Notes</label>
+                          <p className="mt-1 p-3 bg-gray-50 rounded-lg text-sm">
+                            {selectedApplication.availability_notes}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Status */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">Status</h3>
