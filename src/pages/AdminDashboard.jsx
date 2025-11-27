@@ -15,7 +15,8 @@ import {
   X,
   Send,
   Copy,
-  Loader2
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -29,7 +30,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, profile, signIn, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('applications');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [applicationsData, setApplicationsData] = useState([]);
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -37,6 +38,7 @@ const AdminDashboard = () => {
   const [reviewAction, setReviewAction] = useState(null);
   const [reviewNotes, setReviewNotes] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   // Login form state
   const [email, setEmail] = useState('');
@@ -44,13 +46,20 @@ const AdminDashboard = () => {
   const [loggingIn, setLoggingIn] = useState(false);
 
   useEffect(() => {
-    // Only load applications when on the applications tab
-    if (activeTab === 'applications') {
+    // Only load applications when on the applications tab AND not already loaded
+    if (activeTab === 'applications' && !dataLoaded) {
       loadApplications();
     }
-  }, [statusFilter, activeTab]);
+  }, [activeTab]);
 
-  const loadApplications = async () => {
+  // Reload when status filter changes
+  useEffect(() => {
+    if (activeTab === 'applications' && dataLoaded) {
+      loadApplications();
+    }
+  }, [statusFilter]);
+
+  const loadApplications = async (force = false) => {
     setLoading(true);
     try {
       const { data, error } = await applications.getAll(
@@ -64,6 +73,7 @@ const AdminDashboard = () => {
       }
 
       setApplicationsData(data || []);
+      setDataLoaded(true);
     } catch (error) {
       console.error('Error loading applications:', error);
       toast.error('An error occurred while loading applications');
@@ -440,20 +450,31 @@ const AdminDashboard = () => {
             </div>
 
             {/* Filters */}
-            <div className="mb-6 flex gap-2">
-              {['all', 'pending', 'approved', 'rejected'].map((filter) => (
-                <button
-                  key={filter}
-                  onClick={() => setStatusFilter(filter)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
-                    statusFilter === filter
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  {filter}
-                </button>
-              ))}
+            <div className="mb-6 flex justify-between items-center">
+              <div className="flex gap-2">
+                {['all', 'pending', 'approved', 'rejected'].map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setStatusFilter(filter)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
+                      statusFilter === filter
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => loadApplications()}
+                disabled={loading}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Refresh applications"
+              >
+                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
             </div>
 
             {/* Applications List */}
