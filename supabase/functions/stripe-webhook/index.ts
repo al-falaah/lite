@@ -74,34 +74,16 @@ serve(async (req) => {
 
       // If student is pending_payment, generate student ID and enroll them
       if (student.status === 'pending_payment') {
-        // Generate random 6-digit student ID: STU-NNNNNN
-        let generatedStudentId = ''
-        let isUnique = false
-        let attempts = 0
-        const maxAttempts = 10
+        // Generate random 6-digit numeric student ID using database function
+        const { data: idResult, error: idError } = await supabaseClient
+          .rpc('generate_random_student_id')
 
-        while (!isUnique && attempts < maxAttempts) {
-          // Generate random 6-digit number (100000 to 999999)
-          const randomNumber = Math.floor(100000 + Math.random() * 900000)
-          generatedStudentId = `STU-${randomNumber}`
-
-          // Check if this ID already exists
-          const { data: existingStudent } = await supabaseClient
-            .from('students')
-            .select('id')
-            .eq('student_id', generatedStudentId)
-            .single()
-
-          if (!existingStudent) {
-            isUnique = true
-          }
-          attempts++
-        }
-
-        if (!isUnique) {
-          console.error('Failed to generate unique student ID after', maxAttempts, 'attempts')
+        if (idError || !idResult) {
+          console.error('Failed to generate unique student ID:', idError)
           throw new Error('Failed to generate unique student ID')
         }
+
+        const generatedStudentId = idResult
 
         console.log(`Generated random student ID: ${generatedStudentId}`)
 

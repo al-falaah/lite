@@ -11,10 +11,12 @@ import {
   ChevronUp,
   MapPin,
   Mail,
-  Phone
+  Phone,
+  Plus
 } from 'lucide-react';
 import { applications, classSchedules, students } from '../../services/supabase';
 import Card from '../common/Card';
+import { toast } from 'react-toastify';
 
 const AvailabilityCalendar = () => {
   const [applicants, setApplicants] = useState([]);
@@ -25,6 +27,16 @@ const AvailabilityCalendar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showApplicantList, setShowApplicantList] = useState(true);
   const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
+
+  // Scheduling modal state
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [scheduleForm, setScheduleForm] = useState({
+    student_id: '',
+    day_of_week: '',
+    class_time: '',
+    class_type: 'main', // main or makeup
+    status: 'scheduled'
+  });
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const times = [
@@ -72,6 +84,57 @@ const AvailabilityCalendar = () => {
       utilizationPercent,
       hasPartialAvailability: freeCount > 0 && bookedCount > 0
     };
+  };
+
+  // Open scheduling modal with pre-filled data
+  const openScheduleModal = (day, timeSlot) => {
+    // Only allow scheduling for enrolled students
+    if (viewMode !== 'students' || !selectedApplicant) {
+      toast.error('Please select an enrolled student to schedule a class');
+      return;
+    }
+
+    // Find a free hour in the time slot
+    const bookedClasses = getScheduledClassesForSlot(day, timeSlot);
+    const utilization = getSlotUtilization(day, timeSlot, bookedClasses);
+
+    if (utilization.freeHours.length === 0) {
+      toast.error('No free hours in this time slot');
+      return;
+    }
+
+    // Use the first free hour
+    const suggestedHour = utilization.freeHours[0];
+    const suggestedTime = `${suggestedHour.toString().padStart(2, '0')}:00`;
+
+    setScheduleForm({
+      student_id: selectedApplicant.id,
+      day_of_week: day,
+      class_time: suggestedTime,
+      class_type: 'main',
+      status: 'scheduled'
+    });
+    setShowScheduleModal(true);
+  };
+
+  // Create a new class schedule
+  const handleCreateSchedule = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await classSchedules.create(scheduleForm);
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      toast.success('Class scheduled successfully!');
+      setShowScheduleModal(false);
+      loadData(); // Reload to show the new schedule
+    } catch (error) {
+      console.error('Error creating schedule:', error);
+      toast.error('Failed to create schedule: ' + error.message);
+    }
   };
 
   useEffect(() => {
@@ -519,17 +582,22 @@ const AvailabilityCalendar = () => {
                               textColor = 'text-blue-900';
                             }
 
+                            const canSchedule = viewMode === 'students' && selectedApplicant && utilization.freeCount > 0;
+
                             return (
                               <td
                                 key={day}
-                                className={`border-2 ${borderColor} ${bgColor} px-2 py-3 text-center text-sm transition-all hover:opacity-80 cursor-pointer relative`}
+                                onClick={() => canSchedule && openScheduleModal(day, timeSlot)}
+                                className={`border-2 ${borderColor} ${bgColor} px-2 py-3 text-center text-sm transition-all relative group ${
+                                  canSchedule ? 'cursor-pointer hover:ring-2 hover:ring-emerald-500 hover:ring-offset-1' : ''
+                                }`}
                                 title={
                                   hasBoth
-                                    ? `⚠️ Conflict: ${utilization.bookedCount}h booked, ${utilization.freeCount}h free | Applicant wants this slot`
+                                    ? `⚠️ Conflict: ${utilization.bookedCount}h booked, ${utilization.freeCount}h free | Applicant wants this slot${canSchedule ? ' | Click to schedule' : ''}`
                                     : applicantAvailable
-                                    ? `✓ Applicant available | ${utilization.freeCount}h free${otherApplicants.length > 0 ? ` | +${otherApplicants.length} others` : ''}`
+                                    ? `✓ Applicant available | ${utilization.freeCount}h free${otherApplicants.length > 0 ? ` | +${otherApplicants.length} others` : ''}${canSchedule ? ' | Click to schedule' : ''}`
                                     : bookedClasses.length > 0
-                                    ? `${utilization.bookedCount}h booked, ${utilization.freeCount}h free`
+                                    ? `${utilization.bookedCount}h booked, ${utilization.freeCount}h free${canSchedule ? ' | Click to schedule' : ''}`
                                     : 'No bookings or availability'
                                 }
                               >
@@ -540,6 +608,15 @@ const AvailabilityCalendar = () => {
                                       className="h-full bg-blue-500"
                                       style={{ width: `${utilization.utilizationPercent}%` }}
                                     />
+                                  </div>
+                                )}
+
+                                {/* Schedule button on hover */}
+                                {canSchedule && (
+                                  <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="bg-emerald-600 text-white rounded-full p-1">
+                                      <Plus className="h-3 w-3" />
+                                    </div>
                                   </div>
                                 )}
 
@@ -668,6 +745,105 @@ const AvailabilityCalendar = () => {
           )}
         </div>
       </div>
+
+      {/* Scheduling Modal */}
+      {showScheduleModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Schedule Class</h3>
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <XIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateSchedule} className="space-y-4">
+              {/* Student Info */}
+              <div className="p-3 bg-emerald-50 rounded-lg">
+                <p className="text-sm font-medium text-emerald-900">
+                  {selectedApplicant?.full_name}
+                </p>
+                <p className="text-xs text-emerald-700 mt-1">
+                  {selectedApplicant?.email}
+                </p>
+                {selectedApplicant?.student_id && (
+                  <p className="text-xs text-emerald-700">
+                    ID: {selectedApplicant.student_id}
+                  </p>
+                )}
+              </div>
+
+              {/* Day */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Day of Week
+                </label>
+                <select
+                  value={scheduleForm.day_of_week}
+                  onChange={(e) => setScheduleForm({ ...scheduleForm, day_of_week: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  required
+                >
+                  {days.map(day => (
+                    <option key={day} value={day}>{day}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Class Time
+                </label>
+                <input
+                  type="time"
+                  value={scheduleForm.class_time}
+                  onChange={(e) => setScheduleForm({ ...scheduleForm, class_time: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">Main classes are 2 hours long</p>
+              </div>
+
+              {/* Class Type */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Class Type
+                </label>
+                <select
+                  value={scheduleForm.class_type}
+                  onChange={(e) => setScheduleForm({ ...scheduleForm, class_type: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  required
+                >
+                  <option value="main">Main Class (2 hours)</option>
+                  <option value="makeup">Makeup Class (30 min)</option>
+                </select>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowScheduleModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                >
+                  Schedule Class
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,25 +10,23 @@ ORDER BY created_at DESC;
 DO $$
 DECLARE
   v_student_id TEXT;
-  v_random_num INTEGER;
   v_student_record RECORD;
 BEGIN
-  -- Generate random 6-digit student ID
-  v_random_num := 100000 + floor(random() * 900000)::INTEGER;
-  v_student_id := 'STU-' || v_random_num;
-  
+  -- Generate random 6-digit numeric student ID using database function
+  v_student_id := generate_random_student_id();
+
   -- Get student details
-  SELECT * INTO v_student_record 
-  FROM students 
+  SELECT * INTO v_student_record
+  FROM students
   WHERE email = 'STUDENT_EMAIL_HERE' AND status = 'pending_payment';
-  
+
   IF FOUND THEN
     -- Update student
-    UPDATE students 
+    UPDATE students
     SET student_id = v_student_id,
         status = 'enrolled'
     WHERE id = v_student_record.id;
-    
+
     RAISE NOTICE 'Student enrolled with ID: %', v_student_id;
     RAISE NOTICE 'Student UUID: %', v_student_record.id;
     RAISE NOTICE 'Student Name: %', v_student_record.full_name;

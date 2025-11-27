@@ -29,13 +29,13 @@ const PaymentUploadPage = () => {
       return 'email';
     }
 
-    // Check if it's a student ID (STU-YYYY-XXXXX)
-    if (trimmed.toUpperCase().startsWith('STU-')) {
+    // Check if it's a student ID (6-digit numeric)
+    if (/^\d{6}$/.test(trimmed)) {
       return 'student_id';
     }
 
-    // Check if it's a phone number (contains only digits, spaces, +, -, ())
-    if (/^[\d\s\+\-\(\)]+$/.test(trimmed)) {
+    // Check if it's a phone number (contains only digits, spaces, +, -, () but NOT exactly 6 digits)
+    if (/^[\d\s\+\-\(\)]+$/.test(trimmed) && !/^\d{6}$/.test(trimmed)) {
       return 'phone';
     }
 
@@ -276,7 +276,7 @@ const PaymentUploadPage = () => {
                   type="text"
                   value={lookupValue}
                   onChange={(e) => setLookupValue(e.target.value)}
-                  placeholder="e.g., student@example.com or STU-2025-00001"
+                  placeholder="e.g., student@example.com or 123456"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   required
                 />
