@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ChevronLeft, ChevronRight, CheckCircle, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, BookOpen, Clock, Globe } from 'lucide-react';
 import { applications, supabase } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -36,6 +36,95 @@ const ApplicationPage = () => {
     timezone: 'Pacific/Auckland', // Default NZ timezone
     availabilityNotes: '' // Additional notes about availability
   });
+
+  const [currentNZTime, setCurrentNZTime] = useState('');
+  const [currentUserTime, setCurrentUserTime] = useState('');
+
+  // Update current times every minute
+  useEffect(() => {
+    const updateTimes = () => {
+      const now = new Date();
+      const nzTime = now.toLocaleTimeString('en-NZ', {
+        timeZone: 'Pacific/Auckland',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      const userTime = now.toLocaleTimeString('en-US', {
+        timeZone: formData.timezone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      setCurrentNZTime(nzTime);
+      setCurrentUserTime(userTime);
+    };
+
+    updateTimes();
+    const interval = setInterval(updateTimes, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, [formData.timezone]);
+
+  // Get time range in user's timezone
+  const getTimeRangeInUserTimezone = (nzStartHour, nzEndHour) => {
+    // Create a date object for a sample date in NZ timezone
+    // Use a date in NZ summer to properly handle DST
+    const sampleDate = new Date('2025-01-15T00:00:00');
+
+    // Create times in NZ timezone and convert to user timezone
+    const convertHour = (hour) => {
+      // Create a UTC timestamp for the given hour in NZ
+      const nzTimeString = `2025-01-15T${hour.toString().padStart(2, '0')}:00:00`;
+      const utcDate = new Date(nzTimeString + 'Z'); // Z suffix treats it as UTC
+
+      // Get NZ offset for this date (handles DST)
+      const nzDateStr = utcDate.toLocaleString('en-US', { timeZone: 'Pacific/Auckland' });
+      const nzDate = new Date(nzDateStr);
+
+      // Calculate the offset
+      const nzOffsetMs = new Date(new Date(nzDateStr).toLocaleString('en-US', { timeZone: 'UTC' })).getTime() - nzDate.getTime();
+
+      // Create actual NZ time
+      const actualNZTime = new Date(`2025-01-15T${hour.toString().padStart(2, '0')}:00:00`);
+
+      // Convert to user timezone
+      const userTimeString = actualNZTime.toLocaleString('en-US', {
+        timeZone: formData.timezone,
+        hour: 'numeric',
+        hour12: false,
+        timeZoneName: 'short'
+      });
+
+      // Simple offset calculation
+      const testDate = new Date(Date.UTC(2025, 0, 15, hour - 13, 0, 0)); // NZ is UTC+13 in summer
+      const userHour = parseInt(testDate.toLocaleString('en-US', {
+        timeZone: formData.timezone,
+        hour: 'numeric',
+        hour12: false
+      }));
+
+      return userHour;
+    };
+
+    const userStartHour = convertHour(nzStartHour);
+    const userEndHour = convertHour(nzEndHour);
+
+    const formatHour = (hour) => {
+      const period = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      return `${displayHour}:00 ${period}`;
+    };
+
+    // Handle day boundary crossing
+    let timeRange = `${formatHour(userStartHour)} - ${formatHour(userEndHour)}`;
+
+    // Check if we cross midnight
+    if (userStartHour > userEndHour || (userStartHour === userEndHour && nzStartHour !== nzEndHour)) {
+      timeRange += ' (next day)';
+    }
+
+    return timeRange;
+  };
 
   const handleChange = (e) => {
     const value = e.target.type === 'radio' ? e.target.value : e.target.value;
@@ -509,72 +598,11 @@ const ApplicationPage = () => {
                   Classes are one-on-one (2 hours per week).
                 </p>
 
-                {/* Preferred Days */}
+                {/* Timezone Selection - Moved to top */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Preferred Days <span className="text-red-500">*</span>
-                  </label>
-                  <p className="text-sm text-gray-500 mb-3">Select all days that work for you</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
-                      <label
-                        key={day}
-                        className={`flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
-                          formData.preferredDays.includes(day)
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-900'
-                            : 'border-gray-300 hover:border-emerald-300'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.preferredDays.includes(day)}
-                          onChange={() => handleCheckboxChange('preferredDays', day)}
-                          className="sr-only"
-                        />
-                        <span className="font-medium">{day}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Preferred Times */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Preferred Time Slots <span className="text-red-500">*</span>
-                  </label>
-                  <p className="text-sm text-gray-500 mb-3">Select all time slots that work for you (NZ time)</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {[
-                      { value: 'Morning', label: 'Morning (6:00 AM - 12:00 PM)', emoji: '🌅' },
-                      { value: 'Afternoon', label: 'Afternoon (12:00 PM - 5:00 PM)', emoji: '☀️' },
-                      { value: 'Evening', label: 'Evening (5:00 PM - 9:00 PM)', emoji: '🌆' },
-                      { value: 'Night', label: 'Night (9:00 PM - 12:00 AM)', emoji: '🌙' }
-                    ].map(time => (
-                      <label
-                        key={time.value}
-                        className={`flex items-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
-                          formData.preferredTimes.includes(time.value)
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-900'
-                            : 'border-gray-300 hover:border-emerald-300'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.preferredTimes.includes(time.value)}
-                          onChange={() => handleCheckboxChange('preferredTimes', time.value)}
-                          className="sr-only"
-                        />
-                        <span className="text-xl mr-3">{time.emoji}</span>
-                        <span className="font-medium">{time.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Timezone */}
-                <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Your Timezone
+                    <Globe className="inline h-4 w-4 mr-1" />
+                    Your Timezone <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="timezone"
@@ -680,6 +708,119 @@ const ApplicationPage = () => {
                       <option value="America/Caracas">Venezuela</option>
                     </optgroup>
                   </select>
+
+                  {/* Current Time Display */}
+                  {formData.timezone !== 'Pacific/Auckland' && (
+                    <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Clock className="h-4 w-4 text-blue-600" />
+                        <span className="font-medium text-blue-900">Time Difference:</span>
+                      </div>
+                      <div className="mt-2 grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <div className="text-gray-600">Your Time</div>
+                          <div className="font-semibold text-gray-900">{currentUserTime}</div>
+                        </div>
+                        <div>
+                          <div className="text-gray-600">NZ Time</div>
+                          <div className="font-semibold text-gray-900">{currentNZTime}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Preferred Days */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Preferred Days <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-sm text-gray-500 mb-3">Select all days that work for you</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                      <label
+                        key={day}
+                        className={`flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                          formData.preferredDays.includes(day)
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-900'
+                            : 'border-gray-300 hover:border-emerald-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={formData.preferredDays.includes(day)}
+                          onChange={() => handleCheckboxChange('preferredDays', day)}
+                          className="sr-only"
+                        />
+                        <span className="font-medium">{day}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Preferred Times */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Preferred Time Slots <span className="text-red-500">*</span>
+                  </label>
+                  <p className="text-sm text-gray-500 mb-3">
+                    Select all time slots that work for you
+                    {formData.timezone !== 'Pacific/Auckland' && ' (times shown in your timezone and NZ time)'}
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { value: 'Morning', nzStart: 6, nzEnd: 12, label: 'Morning', emoji: '🌅' },
+                      { value: 'Afternoon', nzStart: 12, nzEnd: 17, label: 'Afternoon', emoji: '☀️' },
+                      { value: 'Evening', nzStart: 17, nzEnd: 21, label: 'Evening', emoji: '🌆' },
+                      { value: 'Night', nzStart: 21, nzEnd: 24, label: 'Night', emoji: '🌙' }
+                    ].map(time => {
+                      const userTimeRange = formData.timezone !== 'Pacific/Auckland'
+                        ? getTimeRangeInUserTimezone(time.nzStart, time.nzEnd)
+                        : null;
+
+                      return (
+                        <label
+                          key={time.value}
+                          className={`flex items-start px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
+                            formData.preferredTimes.includes(time.value)
+                              ? 'border-emerald-600 bg-emerald-50'
+                              : 'border-gray-300 hover:border-emerald-300'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.preferredTimes.includes(time.value)}
+                            onChange={() => handleCheckboxChange('preferredTimes', time.value)}
+                            className="sr-only"
+                          />
+                          <span className="text-xl mr-3 mt-0.5">{time.emoji}</span>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-900">{time.label}</div>
+                            {formData.timezone !== 'Pacific/Auckland' ? (
+                              <div className="mt-1 space-y-1 text-sm">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-emerald-700 font-medium">Your time:</span>
+                                  <span className="text-emerald-900">{userTimeRange}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-gray-600">NZ time:</span>
+                                  <span className="text-gray-700">
+                                    {time.nzStart === 12 ? '12:00' : `${time.nzStart > 12 ? time.nzStart - 12 : time.nzStart}:00`} {time.nzStart >= 12 ? 'PM' : 'AM'} -
+                                    {time.nzEnd === 12 ? ' 12:00' : ` ${time.nzEnd > 12 ? time.nzEnd - 12 : time.nzEnd}:00`} {time.nzEnd >= 12 ? 'PM' : 'AM'}
+                                  </span>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="text-sm text-gray-600 mt-1">
+                                {time.nzStart === 12 ? '12:00' : `${time.nzStart > 12 ? time.nzStart - 12 : time.nzStart}:00`} {time.nzStart >= 12 ? 'PM' : 'AM'} -
+                                {time.nzEnd === 12 ? ' 12:00' : ` ${time.nzEnd > 12 ? time.nzEnd - 12 : time.nzEnd}:00`} {time.nzEnd >= 12 ? 'PM' : 'AM'}
+                              </div>
+                            )}
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Additional Notes */}
