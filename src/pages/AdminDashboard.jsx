@@ -44,8 +44,11 @@ const AdminDashboard = () => {
   const [loggingIn, setLoggingIn] = useState(false);
 
   useEffect(() => {
-    loadApplications();
-  }, [statusFilter]);
+    // Only load applications when on the applications tab
+    if (activeTab === 'applications') {
+      loadApplications();
+    }
+  }, [statusFilter, activeTab]);
 
   const loadApplications = async () => {
     setLoading(true);
@@ -71,9 +74,12 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await signOut();
-      // Use window.location to ensure clean page reload after logout
-      window.location.href = '/admin';
+      const { error } = await signOut();
+      if (error) {
+        throw error;
+      }
+      // Navigate to home page after successful logout
+      navigate('/');
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Failed to logout');
