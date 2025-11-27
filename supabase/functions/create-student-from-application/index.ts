@@ -78,7 +78,12 @@ serve(async (req) => {
         total_fees: 600.00, // Monthly: $25/month x 24 months OR Annual: $275/year x 2 years ($550)
         installments_per_year: null, // Not used with Stripe - payments handled via Stripe
         total_paid: 0,
-        balance_remaining: 600.00
+        balance_remaining: 600.00,
+        // Copy availability preferences from application
+        preferred_days: application.preferred_days,
+        preferred_times: application.preferred_times,
+        timezone: application.timezone || 'Pacific/Auckland',
+        availability_notes: application.availability_notes
       })
       .select()
       .single()

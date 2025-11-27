@@ -13,16 +13,18 @@ import {
   Mail,
   Phone
 } from 'lucide-react';
-import { applications, classSchedules } from '../../services/supabase';
+import { applications, classSchedules, students } from '../../services/supabase';
 import Card from '../common/Card';
 
 const AvailabilityCalendar = () => {
   const [applicants, setApplicants] = useState([]);
+  const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [scheduledClasses, setScheduledClasses] = useState([]);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showApplicantList, setShowApplicantList] = useState(true);
+  const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const times = [
@@ -80,9 +82,10 @@ const AvailabilityCalendar = () => {
     try {
       setLoading(true);
 
-      // Load both applications and scheduled classes
-      const [appsResponse, schedulesResponse] = await Promise.all([
+      // Load applications, students, and scheduled classes
+      const [appsResponse, studentsResponse, schedulesResponse] = await Promise.all([
         applications.getAll(),
+        students.getAll(),
         classSchedules.getScheduled()
       ]);
 
@@ -95,9 +98,24 @@ const AvailabilityCalendar = () => {
         );
         setApplicants(pendingApplicants);
 
-        // Auto-select first applicant
-        if (pendingApplicants.length > 0 && !selectedApplicant) {
+        // Auto-select first applicant if in applicants mode
+        if (viewMode === 'applicants' && pendingApplicants.length > 0 && !selectedApplicant) {
           setSelectedApplicant(pendingApplicants[0]);
+        }
+      }
+
+      if (studentsResponse.error) {
+        console.error('Error loading students:', studentsResponse.error);
+      } else {
+        // Filter enrolled students with availability data
+        const studentsWithAvailability = studentsResponse.data.filter(
+          student => student.status === 'enrolled' && student.preferred_days && student.preferred_days.length > 0
+        );
+        setEnrolledStudents(studentsWithAvailability);
+
+        // Auto-select first student if in students mode
+        if (viewMode === 'students' && studentsWithAvailability.length > 0 && !selectedApplicant) {
+          setSelectedApplicant(studentsWithAvailability[0]);
         }
       }
 
@@ -113,10 +131,11 @@ const AvailabilityCalendar = () => {
     }
   };
 
-  // Filter applicants based on search
-  const filteredApplicants = applicants.filter(app =>
-    app.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter applicants or students based on search and view mode
+  const currentList = viewMode === 'applicants' ? applicants : enrolledStudents;
+  const filteredList = currentList.filter(item =>
+    item.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Get scheduled classes for a specific day/time
@@ -133,7 +152,7 @@ const AvailabilityCalendar = () => {
     });
   };
 
-  // Check if selected applicant is available for this slot
+  // Check if selected applicant/student is available for this slot
   const isApplicantAvailable = (day, timeSlot) => {
     if (!selectedApplicant) return false;
     return (
@@ -142,18 +161,19 @@ const AvailabilityCalendar = () => {
     );
   };
 
-  // Get all applicants available for a slot (for showing count)
+  // Get all applicants/students available for a slot (for showing count)
   const getApplicantsForSlot = (day, timeSlot) => {
-    return applicants.filter(
-      app =>
-        app.preferred_days?.includes(day) &&
-        app.preferred_times?.includes(timeSlot.label)
+    return currentList.filter(
+      item =>
+        item.preferred_days?.includes(day) &&
+        item.preferred_times?.includes(timeSlot.label)
     );
   };
 
   // Calculate summary statistics
   const stats = {
     totalApplicants: applicants.length,
+    totalStudents: enrolledStudents.length,
     totalBookings: scheduledClasses.length,
     selectedApplicantSlots: selectedApplicant
       ? (selectedApplicant.preferred_days?.length || 0) *
@@ -181,8 +201,42 @@ const AvailabilityCalendar = () => {
             Availability Planner
           </h2>
           <p className="text-gray-600 mt-1">
-            View applicant availability vs. current class bookings
+            View applicant/student availability vs. current class bookings
           </p>
+        </div>
+
+        {/* View Mode Toggle */}
+        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+          <button
+            onClick={() => {
+              setViewMode('applicants');
+              setSelectedApplicant(applicants[0] || null);
+              setSearchQuery('');
+            }}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              viewMode === 'applicants'
+                ? 'bg-white text-emerald-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <AlertCircle className="h-4 w-4 inline mr-1" />
+            Applicants ({stats.totalApplicants})
+          </button>
+          <button
+            onClick={() => {
+              setViewMode('students');
+              setSelectedApplicant(enrolledStudents[0] || null);
+              setSearchQuery('');
+            }}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              viewMode === 'students'
+                ? 'bg-white text-emerald-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Users className="h-4 w-4 inline mr-1" />
+            Students ({stats.totalStudents})
+          </button>
         </div>
       </div>
 
@@ -191,10 +245,18 @@ const AvailabilityCalendar = () => {
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Pending Applicants</p>
-              <p className="text-2xl font-bold text-amber-600">{stats.totalApplicants}</p>
+              <p className="text-sm text-gray-600">
+                {viewMode === 'applicants' ? 'Pending Applicants' : 'Enrolled Students'}
+              </p>
+              <p className="text-2xl font-bold text-amber-600">
+                {viewMode === 'applicants' ? stats.totalApplicants : stats.totalStudents}
+              </p>
             </div>
-            <AlertCircle className="h-8 w-8 text-amber-600" />
+            {viewMode === 'applicants' ? (
+              <AlertCircle className="h-8 w-8 text-amber-600" />
+            ) : (
+              <Users className="h-8 w-8 text-emerald-600" />
+            )}
           </div>
         </Card>
         <Card>
@@ -210,7 +272,7 @@ const AvailabilityCalendar = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">
-                {selectedApplicant ? `${selectedApplicant.full_name?.split(' ')[0]}'s Slots` : 'Select Applicant'}
+                {selectedApplicant ? `${selectedApplicant.full_name?.split(' ')[0]}'s Slots` : `Select ${viewMode === 'applicants' ? 'Applicant' : 'Student'}`}
               </p>
               <p className="text-2xl font-bold text-emerald-600">{stats.selectedApplicantSlots}</p>
             </div>
@@ -221,19 +283,23 @@ const AvailabilityCalendar = () => {
 
       {/* Main Content: Split View */}
       <div className="grid lg:grid-cols-4 gap-6">
-        {/* Left: Applicants List */}
+        {/* Left: Applicants/Students List */}
         <div className="lg:col-span-1">
           <Card>
             {/* Header with Collapse Toggle */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Applicants ({filteredApplicants.length})
+                {viewMode === 'applicants' ? (
+                  <AlertCircle className="h-5 w-5 text-amber-600" />
+                ) : (
+                  <Users className="h-5 w-5 text-emerald-600" />
+                )}
+                {viewMode === 'applicants' ? 'Applicants' : 'Students'} ({filteredList.length})
               </h3>
               <button
                 onClick={() => setShowApplicantList(!showApplicantList)}
                 className="text-gray-600 hover:text-emerald-600 transition-colors p-1 rounded-lg hover:bg-emerald-50"
-                aria-label={showApplicantList ? 'Collapse applicant list' : 'Expand applicant list'}
+                aria-label={showApplicantList ? 'Collapse list' : 'Expand list'}
               >
                 {showApplicantList ? (
                   <ChevronUp className="h-5 w-5" />
@@ -265,34 +331,39 @@ const AvailabilityCalendar = () => {
               </div>
             )}
 
-            {/* Applicant List */}
+            {/* List */}
             {showApplicantList && (
               <div className="space-y-2 max-h-[calc(100vh-25rem)] overflow-y-auto pr-2">
-                {filteredApplicants.map((applicant) => (
+                {filteredList.map((item) => (
                   <button
-                    key={applicant.id}
-                    onClick={() => setSelectedApplicant(applicant)}
+                    key={item.id}
+                    onClick={() => setSelectedApplicant(item)}
                     className={`w-full text-left p-3 rounded-lg transition-all ${
-                      selectedApplicant?.id === applicant.id
+                      selectedApplicant?.id === item.id
                         ? 'bg-emerald-100 border-2 border-emerald-500 shadow-sm'
                         : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-gray-300'
                     }`}
                   >
-                    <div className="font-medium text-gray-900">{applicant.full_name}</div>
-                    <div className="text-xs text-gray-600 mt-1">{applicant.email}</div>
+                    <div className="font-medium text-gray-900">{item.full_name}</div>
+                    <div className="text-xs text-gray-600 mt-1">{item.email}</div>
                     <div className="flex items-center gap-2 mt-2">
                       <div className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
-                        {applicant.preferred_days?.length || 0} days
+                        {item.preferred_days?.length || 0} days
                       </div>
                       <div className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
-                        {applicant.timezone || 'NZ'}
+                        {item.timezone || 'NZ'}
                       </div>
+                      {viewMode === 'students' && item.student_id && (
+                        <div className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                          {item.student_id}
+                        </div>
+                      )}
                     </div>
                   </button>
                 ))}
-                {filteredApplicants.length === 0 && (
+                {filteredList.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
-                    <p className="text-sm">No applicants found</p>
+                    <p className="text-sm">No {viewMode === 'applicants' ? 'applicants' : 'students'} found</p>
                   </div>
                 )}
               </div>
