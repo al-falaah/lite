@@ -35,7 +35,8 @@ const AvailabilityCalendar = () => {
     day_of_week: '',
     class_time: '',
     class_type: 'main', // main or makeup
-    status: 'scheduled'
+    status: 'scheduled',
+    academic_year: 1 // Default to year 1
   });
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -112,7 +113,8 @@ const AvailabilityCalendar = () => {
       day_of_week: day,
       class_time: suggestedTime,
       class_type: 'main',
-      status: 'scheduled'
+      status: 'scheduled',
+      academic_year: 1
     });
     setShowScheduleModal(true);
   };
@@ -261,10 +263,10 @@ const AvailabilityCalendar = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900 flex items-center">
             <Calendar className="h-6 w-6 mr-2 text-emerald-600" />
-            Availability Planner
+            Scheduling & Availability
           </h2>
           <p className="text-gray-600 mt-1">
-            View applicant/student availability vs. current class bookings
+            View availability, schedule classes, and manage bookings
           </p>
         </div>
 
@@ -407,20 +409,20 @@ const AvailabilityCalendar = () => {
                         : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-gray-300'
                     }`}
                   >
-                    <div className="font-medium text-gray-900">{item.full_name}</div>
-                    <div className="text-xs text-gray-600 mt-1">{item.email}</div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                    <div className="font-medium text-gray-900 truncate">{item.full_name}</div>
+                    <div className="text-xs text-gray-600 mt-1 truncate">{item.email}</div>
+                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                      <div className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 whitespace-nowrap">
                         {item.preferred_days?.length || 0} days
                       </div>
-                      <div className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
-                        {item.timezone || 'NZ'}
-                      </div>
                       {viewMode === 'students' && item.student_id && (
-                        <div className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                        <div className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 whitespace-nowrap font-mono">
                           {item.student_id}
                         </div>
                       )}
+                      <div className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 whitespace-nowrap truncate max-w-[120px]" title={item.timezone || 'Pacific/Auckland'}>
+                        {(item.timezone || 'Pacific/Auckland').split('/').pop()}
+                      </div>
                     </div>
                   </button>
                 ))}
