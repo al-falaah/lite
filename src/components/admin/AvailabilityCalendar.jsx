@@ -12,9 +12,12 @@ import {
   MapPin,
   Mail,
   Phone,
-  Plus
+  Plus,
+  BarChart3,
+  Zap
 } from 'lucide-react';
 import { applications, classSchedules, students } from '../../services/supabase';
+import { supabase } from '../../services/supabase';
 import Card from '../common/Card';
 import { toast } from 'react-toastify';
 
@@ -27,6 +30,8 @@ const AvailabilityCalendar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showApplicantList, setShowApplicantList] = useState(true);
   const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
+  const [progress, setProgress] = useState(null);
+  const [generating, setGenerating] = useState(false);
 
   // Scheduling modal state
   const [showScheduleModal, setShowScheduleModal] = useState(false);
@@ -39,7 +44,18 @@ const AvailabilityCalendar = () => {
     academic_year: 1 // Default to year 1
   });
 
+  // Generate Full Schedule modal state
+  const [showGenerateModal, setShowGenerateModal] = useState(false);
+  const [generateForm, setGenerateForm] = useState({
+    main_day_of_week: '',
+    short_day_of_week: '',
+    main_class_time: '',
+    short_class_time: '',
+    meeting_link: ''
+  });
+
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const times = [
     { label: 'Morning', range: '6:00 AM - 12:00 PM', hours: [6, 7, 8, 9, 10, 11], totalHours: 6 },
     { label: 'Afternoon', range: '12:00 PM - 5:00 PM', hours: [12, 13, 14, 15, 16], totalHours: 5 },
@@ -119,6 +135,146 @@ const AvailabilityCalendar = () => {
     setShowScheduleModal(true);
   };
 
+  // Load student progress
+  const loadStudentProgress = async (studentId) => {
+    try {
+      const { data, error } = await supabase
+        .from('student_class_progress')
+        .select('*')
+        .eq('student_id', studentId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      setProgress(data);
+    } catch (error) {
+      console.error('Error loading progress:', error);
+    }
+  };
+
+  // Get the current active week and year for a student
+  const getCurrentActiveWeekAndYear = () => {
+    if (!selectedApplicant) return { year: 1, week: 1 };
+
+    const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant.id);
+    if (studentSchedules.length === 0) return { year: 1, week: 1 };
+
+    const weekMap = {};
+
+    studentSchedules.forEach(schedule => {
+      const key = `${schedule.academic_year}-${schedule.week_number}`;
+      if (!weekMap[key]) {
+        weekMap[key] = [];
+      }
+      weekMap[key].push(schedule);
+    });
+
+    // Check Year 1 first
+    for (let weekNum = 1; weekNum <= 52; weekNum++) {
+      const weekClasses = weekMap[`1-${weekNum}`];
+      if (!weekClasses || weekClasses.length === 0) {
+        return { year: 1, week: weekNum }; // First week without classes
+      }
+
+      const allCompleted = weekClasses.every(c => c.status === 'completed');
+      if (!allCompleted) {
+        return { year: 1, week: weekNum }; // First incomplete week in Year 1
+      }
+    }
+
+    // Year 1 complete, check Year 2
+    for (let weekNum = 1; weekNum <= 52; weekNum++) {
+      const weekClasses = weekMap[`2-${weekNum}`];
+      if (!weekClasses || weekClasses.length === 0) {
+        return { year: 2, week: weekNum };
+      }
+
+      const allCompleted = weekClasses.every(c => c.status === 'completed');
+      if (!allCompleted) {
+        return { year: 2, week: weekNum };
+      }
+    }
+
+    return { year: 2, week: 52 }; // All complete
+  };
+
+  // Generate full schedule for a student
+  const handleGenerateFullSchedule = async () => {
+    if (!selectedApplicant) {
+      toast.error('Please select a student');
+      return;
+    }
+
+    if (!generateForm.main_day_of_week || !generateForm.short_day_of_week ||
+        !generateForm.main_class_time || !generateForm.short_class_time) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      // Generate 104 weeks of schedules (52 weeks × 2 years)
+      const schedulesToCreate = [];
+
+      for (let year = 1; year <= 2; year++) {
+        for (let week = 1; week <= 52; week++) {
+          // Main class (2 hours) - can be on different day
+          schedulesToCreate.push({
+            student_id: selectedApplicant.id,
+            academic_year: year,
+            week_number: week,
+            class_type: 'main',
+            day_of_week: generateForm.main_day_of_week,
+            class_time: generateForm.main_class_time,
+            meeting_link: generateForm.meeting_link || null,
+            status: 'scheduled'
+          });
+
+          // Short class (30 minutes) - can be on different day
+          schedulesToCreate.push({
+            student_id: selectedApplicant.id,
+            academic_year: year,
+            week_number: week,
+            class_type: 'short',
+            day_of_week: generateForm.short_day_of_week,
+            class_time: generateForm.short_class_time,
+            meeting_link: generateForm.meeting_link || null,
+            status: 'scheduled'
+          });
+        }
+      }
+
+      // Insert in batches of 50 to avoid size limits
+      const batchSize = 50;
+      for (let i = 0; i < schedulesToCreate.length; i += batchSize) {
+        const batch = schedulesToCreate.slice(i, i + batchSize);
+        const { error } = await supabase
+          .from('class_schedules')
+          .insert(batch);
+
+        if (error) throw error;
+      }
+
+      toast.success('Full schedule generated successfully! (208 classes created)');
+      setShowGenerateModal(false);
+      setGenerateForm({
+        main_day_of_week: '',
+        short_day_of_week: '',
+        main_class_time: '',
+        short_class_time: '',
+        meeting_link: ''
+      });
+      loadData(); // Reload data
+      if (selectedApplicant) {
+        loadStudentProgress(selectedApplicant.id);
+      }
+    } catch (error) {
+      console.error('Error generating schedule:', error);
+      toast.error(error.message || 'Failed to generate schedule');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   // Create a new class schedule
   const handleCreateSchedule = async (e) => {
     e.preventDefault();
@@ -133,6 +289,9 @@ const AvailabilityCalendar = () => {
       toast.success('Class scheduled successfully!');
       setShowScheduleModal(false);
       loadData(); // Reload to show the new schedule
+      if (selectedApplicant) {
+        loadStudentProgress(selectedApplicant.id);
+      }
     } catch (error) {
       console.error('Error creating schedule:', error);
       toast.error('Failed to create schedule: ' + error.message);
@@ -142,6 +301,12 @@ const AvailabilityCalendar = () => {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (selectedApplicant && viewMode === 'students') {
+      loadStudentProgress(selectedApplicant.id);
+    }
+  }, [selectedApplicant, viewMode]);
 
   const loadData = async () => {
     try {
@@ -478,7 +643,125 @@ const AvailabilityCalendar = () => {
                     <p className="text-sm text-gray-600 italic">{selectedApplicant.availability_notes}</p>
                   </div>
                 )}
+
+                {/* Progress Bars (Students view only) */}
+                {viewMode === 'students' && progress && (
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <div className="space-y-4">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium text-blue-900">Year 1</span>
+                            <BarChart3 className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div className="text-2xl font-bold text-blue-900">
+                            {progress.year1_completed}/{progress.year1_total}
+                          </div>
+                          <div className="text-sm text-blue-700">{progress.year1_progress_pct}% Complete</div>
+                          <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full transition-all"
+                              style={{ width: `${progress.year1_progress_pct}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="bg-purple-50 p-4 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium text-purple-900">Year 2</span>
+                            <BarChart3 className="h-4 w-4 text-purple-600" />
+                          </div>
+                          <div className="text-2xl font-bold text-purple-900">
+                            {progress.year2_completed}/{progress.year2_total}
+                          </div>
+                          <div className="text-sm text-purple-700">{progress.year2_progress_pct}% Complete</div>
+                          <div className="mt-2 w-full bg-purple-200 rounded-full h-2">
+                            <div
+                              className="bg-purple-600 h-2 rounded-full transition-all"
+                              style={{ width: `${progress.year2_progress_pct}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="bg-emerald-50 p-4 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium text-emerald-900">Overall</span>
+                            <CheckCircle className="h-4 w-4 text-emerald-600" />
+                          </div>
+                          <div className="text-2xl font-bold text-emerald-900">
+                            {progress.total_completed}/{progress.total_classes}
+                          </div>
+                          <div className="text-sm text-emerald-700">{progress.overall_progress_pct}% Complete</div>
+                          <div className="mt-2 w-full bg-emerald-200 rounded-full h-2">
+                            <div
+                              className="bg-emerald-600 h-2 rounded-full transition-all"
+                              style={{ width: `${progress.overall_progress_pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Current Week Tracking (Students view only) */}
+                {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length > 0 && (() => {
+                  const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant?.id);
+                  const currentActive = getCurrentActiveWeekAndYear();
+                  const progressPercent = Math.round(((currentActive.year - 1) * 52 + currentActive.week - 1) / 104 * 100);
+
+                  return (
+                    <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg border border-emerald-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">Current Week</p>
+                          <p className="text-2xl font-bold text-emerald-900">
+                            Week {currentActive.week} of 52
+                          </p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {currentActive.year === 1 ? (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                Year 1
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                Year 2
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-600">Progress</p>
+                          <p className="text-3xl font-bold text-emerald-600">
+                            {progressPercent}%
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {(currentActive.year - 1) * 52 + currentActive.week - 1} of 104 weeks
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </Card>
+
+              {/* Show Generate Full Schedule button if student has no schedules */}
+              {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length === 0 && (
+                <Card>
+                  <div className="text-center py-12 text-gray-500">
+                    <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                    <p className="text-lg font-medium mb-2">No schedule generated yet</p>
+                    <p className="text-sm mb-6">Generate a full 2-year schedule with one click</p>
+                    <button
+                      onClick={() => setShowGenerateModal(true)}
+                      className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                    >
+                      <Zap className="h-5 w-5 mr-2" />
+                      Generate Full Schedule
+                    </button>
+                  </div>
+                </Card>
+              )}
 
               {/* Weekly Calendar */}
               <Card>
@@ -843,6 +1126,149 @@ const AvailabilityCalendar = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Generate Full Schedule Modal */}
+      {showGenerateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Generate Full Schedule</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Create 208 classes (2 years × 52 weeks × 2 classes per week)
+                </p>
+              </div>
+              <button
+                onClick={() => setShowGenerateModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <XIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Main Class Day (2 hrs) <span className="text-red-600">*</span>
+                  </label>
+                  <select
+                    value={generateForm.main_day_of_week}
+                    onChange={(e) => setGenerateForm({ ...generateForm, main_day_of_week: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    required
+                  >
+                    <option value="">Select day</option>
+                    {DAYS_OF_WEEK.map(day => (
+                      <option key={day} value={day}>{day}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Short Class Day (30 min) <span className="text-red-600">*</span>
+                  </label>
+                  <select
+                    value={generateForm.short_day_of_week}
+                    onChange={(e) => setGenerateForm({ ...generateForm, short_day_of_week: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    required
+                  >
+                    <option value="">Select day</option>
+                    {DAYS_OF_WEEK.map(day => (
+                      <option key={day} value={day}>{day}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Main Class Time <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="time"
+                    value={generateForm.main_class_time}
+                    onChange={(e) => setGenerateForm({ ...generateForm, main_class_time: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Short Class Time <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="time"
+                    value={generateForm.short_class_time}
+                    onChange={(e) => setGenerateForm({ ...generateForm, short_class_time: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Meeting Link (Zoom/Meet)
+                </label>
+                <input
+                  type="url"
+                  value={generateForm.meeting_link}
+                  onChange={(e) => setGenerateForm({ ...generateForm, meeting_link: e.target.value })}
+                  placeholder="https://zoom.us/j/..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Same meeting link will be used for all classes
+                </p>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-blue-900">
+                  This will create <strong>208 classes</strong> for {selectedApplicant?.full_name}:
+                </p>
+                <ul className="text-sm text-blue-800 mt-2 space-y-1 ml-4 list-disc">
+                  <li>Year 1: 52 weeks × 2 classes = 104 classes</li>
+                  <li>Year 2: 52 weeks × 2 classes = 104 classes</li>
+                  <li>Main classes on {generateForm.main_day_of_week || '[Day]'}</li>
+                  <li>Short classes on {generateForm.short_day_of_week || '[Day]'}</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowGenerateModal(false)}
+                disabled={generating}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleGenerateFullSchedule}
+                disabled={generating}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium disabled:opacity-50 inline-flex items-center"
+              >
+                {generating ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="h-4 w-4 mr-2" />
+                    Generate Schedule
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
