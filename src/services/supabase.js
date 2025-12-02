@@ -536,7 +536,9 @@ export const classSchedules = {
           phone
         )
       `)
-      .eq('status', 'scheduled')
+      // Don't filter by status - we need ALL classes (scheduled AND completed) for week progression
+      .order('academic_year', { ascending: true })
+      .order('week_number', { ascending: true })
       .order('day_of_week', { ascending: true })
       .order('class_time', { ascending: true });
     return { data, error };
