@@ -759,18 +759,14 @@ const AvailabilityCalendar = () => {
 
                       if (error) throw error;
 
-                      // Update local state without full reload
-                      setScheduledClasses(prev =>
-                        prev.map(schedule =>
-                          schedule.id === classId
-                            ? { ...schedule, status: 'completed', completed_at: new Date().toISOString() }
-                            : schedule
-                        )
-                      );
-
                       toast.success('Class marked as completed');
 
-                      // Only reload progress data
+                      // Reload schedules and progress to show updated week
+                      const schedulesResponse = await classSchedules.getScheduled();
+                      if (!schedulesResponse.error) {
+                        setScheduledClasses(schedulesResponse.data || []);
+                      }
+
                       if (selectedApplicant) {
                         loadStudentProgress(selectedApplicant.id);
                       }
