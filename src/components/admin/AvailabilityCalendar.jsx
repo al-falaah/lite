@@ -704,42 +704,151 @@ const AvailabilityCalendar = () => {
                   </div>
                 )}
 
-                {/* Current Week Tracking (Students view only) */}
+                {/* Current Week Classes (Students view only) */}
                 {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length > 0 && (() => {
                   const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant?.id);
                   const currentActive = getCurrentActiveWeekAndYear();
                   const progressPercent = Math.round(((currentActive.year - 1) * 52 + currentActive.week - 1) / 104 * 100);
 
+                  // Get current week's classes
+                  const currentWeekClasses = studentSchedules.filter(
+                    s => s.academic_year === currentActive.year && s.week_number === currentActive.week
+                  );
+
+                  const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
+                  const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
+
+                  const handleMarkComplete = async (classId) => {
+                    try {
+                      const { error } = await supabase
+                        .from('class_schedules')
+                        .update({ status: 'completed' })
+                        .eq('id', classId);
+
+                      if (error) throw error;
+
+                      toast.success('Class marked as completed!');
+                      loadData();
+                      if (selectedApplicant) {
+                        loadStudentProgress(selectedApplicant.id);
+                      }
+                    } catch (error) {
+                      console.error('Error marking complete:', error);
+                      toast.error('Failed to mark class as completed');
+                    }
+                  };
+
                   return (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg border border-emerald-200">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-gray-700">Current Week</p>
-                          <p className="text-2xl font-bold text-emerald-900">
-                            Week {currentActive.week} of 52
-                          </p>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {currentActive.year === 1 ? (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                Year 1
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                Year 2
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm text-gray-600">Progress</p>
-                          <p className="text-3xl font-bold text-emerald-600">
-                            {progressPercent}%
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {(currentActive.year - 1) * 52 + currentActive.week - 1} of 104 weeks
-                          </p>
+                    <div className="mt-4 space-y-3">
+                      {/* Current Week Header */}
+                      <div className="p-4 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg border border-emerald-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-gray-700">Current Week</p>
+                            <p className="text-2xl font-bold text-emerald-900">
+                              Week {currentActive.week} of 52
+                            </p>
+                            <p className="text-sm text-gray-600 mt-1">
+                              {currentActive.year === 1 ? (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  Year 1
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                  Year 2
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-gray-600">Progress</p>
+                            <p className="text-3xl font-bold text-emerald-600">
+                              {progressPercent}%
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {(currentActive.year - 1) * 52 + currentActive.week - 1} of 104 weeks
+                            </p>
+                          </div>
                         </div>
                       </div>
+
+                      {/* Current Week Classes */}
+                      {currentWeekClasses.length > 0 && (
+                        <div className="bg-white rounded-lg border border-gray-200 p-4">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">This Week's Classes</h4>
+                          <div className="space-y-2">
+                            {mainClass && (
+                              <div className={`flex items-center justify-between p-3 rounded-lg border-2 ${
+                                mainClass.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'
+                              }`}>
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                    mainClass.status === 'completed' ? 'bg-emerald-500 text-white' : 'bg-blue-500 text-white'
+                                  }`}>
+                                    {mainClass.status === 'completed' ? (
+                                      <CheckCircle className="h-5 w-5" />
+                                    ) : (
+                                      <Clock className="h-5 w-5" />
+                                    )}
+                                  </div>
+                                  <div>
+                                    <p className="font-medium text-gray-900">Main Class (2 hours)</p>
+                                    <p className="text-sm text-gray-600">
+                                      {mainClass.day_of_week} at {formatTime(mainClass.class_time)}
+                                    </p>
+                                  </div>
+                                </div>
+                                {mainClass.status !== 'completed' && (
+                                  <button
+                                    onClick={() => handleMarkComplete(mainClass.id)}
+                                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                                  >
+                                    Mark Complete
+                                  </button>
+                                )}
+                                {mainClass.status === 'completed' && (
+                                  <span className="text-emerald-600 font-medium text-sm">Completed ✓</span>
+                                )}
+                              </div>
+                            )}
+
+                            {shortClass && (
+                              <div className={`flex items-center justify-between p-3 rounded-lg border-2 ${
+                                shortClass.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'
+                              }`}>
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                    shortClass.status === 'completed' ? 'bg-emerald-500 text-white' : 'bg-purple-500 text-white'
+                                  }`}>
+                                    {shortClass.status === 'completed' ? (
+                                      <CheckCircle className="h-5 w-5" />
+                                    ) : (
+                                      <Clock className="h-5 w-5" />
+                                    )}
+                                  </div>
+                                  <div>
+                                    <p className="font-medium text-gray-900">Short Class (30 minutes)</p>
+                                    <p className="text-sm text-gray-600">
+                                      {shortClass.day_of_week} at {formatTime(shortClass.class_time)}
+                                    </p>
+                                  </div>
+                                </div>
+                                {shortClass.status !== 'completed' && (
+                                  <button
+                                    onClick={() => handleMarkComplete(shortClass.id)}
+                                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                                  >
+                                    Mark Complete
+                                  </button>
+                                )}
+                                {shortClass.status === 'completed' && (
+                                  <span className="text-emerald-600 font-medium text-sm">Completed ✓</span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}
@@ -905,83 +1014,102 @@ const AvailabilityCalendar = () => {
                                   </div>
                                 )}
 
-                                {hasBoth && (
+                                {/* Show summary for students, detailed view for applicants */}
+                                {viewMode === 'students' && bookedClasses.length > 0 ? (
+                                  // Simple summary for students with schedules
                                   <div className="space-y-1">
                                     <div className="flex items-center justify-center gap-1">
-                                      <AlertCircle className="h-4 w-4 text-purple-700" />
-                                      <span className="text-xs font-bold text-purple-900">CONFLICT</span>
+                                      <CheckCircle className="h-4 w-4 text-blue-700" />
+                                      <span className="text-xs font-semibold text-blue-900">
+                                        {bookedClasses.length} class{bookedClasses.length !== 1 ? 'es' : ''}
+                                      </span>
                                     </div>
-                                    {bookedClasses.map((schedule, idx) => (
-                                      <div key={idx} className="text-xs bg-white/50 rounded px-1 py-0.5">
-                                        <div className="font-semibold text-purple-900">
-                                          {formatTime(schedule.class_time)}
-                                        </div>
-                                        <div className="text-purple-700 truncate">
-                                          {schedule.students?.full_name?.split(' ')[0]}
-                                        </div>
-                                      </div>
-                                    ))}
-                                    {utilization.freeCount > 0 && (
-                                      <div className="text-xs text-emerald-700 font-medium mt-1">
-                                        ✓ {utilization.freeCount}h available
-                                      </div>
-                                    )}
+                                    <div className="text-xs text-gray-600">
+                                      {utilization.freeCount > 0 ? `${utilization.freeCount}h free` : 'Fully booked'}
+                                    </div>
                                   </div>
-                                )}
-
-                                {!hasBoth && applicantAvailable && (
-                                  <div className="space-y-1">
-                                    <div className="flex items-center justify-center gap-1">
-                                      <CheckCircle className="h-4 w-4 text-emerald-700" />
-                                      <span className="text-xs font-semibold text-emerald-900">Available</span>
-                                    </div>
-                                    {bookedClasses.length > 0 && (
-                                      <div className="space-y-0.5 mt-1">
+                                ) : (
+                                  // Detailed view for applicants or empty slots
+                                  <>
+                                    {hasBoth && (
+                                      <div className="space-y-1">
+                                        <div className="flex items-center justify-center gap-1">
+                                          <AlertCircle className="h-4 w-4 text-purple-700" />
+                                          <span className="text-xs font-bold text-purple-900">CONFLICT</span>
+                                        </div>
                                         {bookedClasses.map((schedule, idx) => (
-                                          <div key={idx} className="text-xs bg-blue-100 rounded px-1 py-0.5">
-                                            <div className="font-medium text-blue-900">
+                                          <div key={idx} className="text-xs bg-white/50 rounded px-1 py-0.5">
+                                            <div className="font-semibold text-purple-900">
                                               {formatTime(schedule.class_time)}
+                                            </div>
+                                            <div className="text-purple-700 truncate">
+                                              {schedule.students?.full_name?.split(' ')[0]}
                                             </div>
                                           </div>
                                         ))}
-                                        <div className="text-xs text-emerald-700 font-medium">
-                                          {utilization.freeCount}h free
-                                        </div>
+                                        {utilization.freeCount > 0 && (
+                                          <div className="text-xs text-emerald-700 font-medium mt-1">
+                                            ✓ {utilization.freeCount}h available
+                                          </div>
+                                        )}
                                       </div>
                                     )}
-                                    {otherApplicants.length > 0 && (
-                                      <div className="text-xs text-emerald-700 mt-1">
-                                        +{otherApplicants.length} others
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
 
-                                {!hasBoth && !applicantAvailable && bookedClasses.length > 0 && (
-                                  <div className="space-y-1">
-                                    {bookedClasses.map((schedule, idx) => (
-                                      <div key={idx} className="text-xs bg-white/60 rounded px-1 py-0.5">
-                                        <div className="font-bold text-blue-900">
-                                          {formatTime(schedule.class_time)}
+                                    {!hasBoth && applicantAvailable && (
+                                      <div className="space-y-1">
+                                        <div className="flex items-center justify-center gap-1">
+                                          <CheckCircle className="h-4 w-4 text-emerald-700" />
+                                          <span className="text-xs font-semibold text-emerald-900">Available</span>
                                         </div>
-                                        <div className="text-blue-700 truncate">
-                                          {schedule.students?.full_name?.split(' ')[0] || 'Student'}
-                                        </div>
-                                        <div className="text-xs text-blue-600">
-                                          {schedule.class_type === 'main' ? '2h' : '30m'}
-                                        </div>
-                                      </div>
-                                    ))}
-                                    {utilization.freeCount > 0 && (
-                                      <div className="text-xs text-blue-700 font-medium bg-white/40 rounded px-1 py-0.5">
-                                        {utilization.freeCount}h available
+                                        {bookedClasses.length > 0 && (
+                                          <div className="space-y-0.5 mt-1">
+                                            {bookedClasses.map((schedule, idx) => (
+                                              <div key={idx} className="text-xs bg-blue-100 rounded px-1 py-0.5">
+                                                <div className="font-medium text-blue-900">
+                                                  {formatTime(schedule.class_time)}
+                                                </div>
+                                              </div>
+                                            ))}
+                                            <div className="text-xs text-emerald-700 font-medium">
+                                              {utilization.freeCount}h free
+                                            </div>
+                                          </div>
+                                        )}
+                                        {otherApplicants.length > 0 && (
+                                          <div className="text-xs text-emerald-700 mt-1">
+                                            +{otherApplicants.length} others
+                                          </div>
+                                        )}
                                       </div>
                                     )}
-                                  </div>
-                                )}
 
-                                {!hasBoth && !applicantAvailable && bookedClasses.length === 0 && (
-                                  <div className={`${textColor} text-xl`}>-</div>
+                                    {!hasBoth && !applicantAvailable && bookedClasses.length > 0 && (
+                                      <div className="space-y-1">
+                                        {bookedClasses.map((schedule, idx) => (
+                                          <div key={idx} className="text-xs bg-white/60 rounded px-1 py-0.5">
+                                            <div className="font-bold text-blue-900">
+                                              {formatTime(schedule.class_time)}
+                                            </div>
+                                            <div className="text-blue-700 truncate">
+                                              {schedule.students?.full_name?.split(' ')[0] || 'Student'}
+                                            </div>
+                                            <div className="text-xs text-blue-600">
+                                              {schedule.class_type === 'main' ? '2h' : '30m'}
+                                            </div>
+                                          </div>
+                                        ))}
+                                        {utilization.freeCount > 0 && (
+                                          <div className="text-xs text-blue-700 font-medium bg-white/40 rounded px-1 py-0.5">
+                                            {utilization.freeCount}h available
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {!hasBoth && !applicantAvailable && bookedClasses.length === 0 && (
+                                      <div className={`${textColor} text-xl`}>-</div>
+                                    )}
+                                  </>
                                 )}
                               </td>
                             );
