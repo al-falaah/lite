@@ -27,6 +27,7 @@ const AdminStudentsList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadStudents();
@@ -40,6 +41,7 @@ const AdminStudentsList = () => {
   const loadStudents = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       // Add timeout to prevent infinite loading
       const timeout = new Promise((_, reject) =>
@@ -53,16 +55,20 @@ const AdminStudentsList = () => {
 
       if (error) {
         console.error('Error loading students:', error);
+        setError('Failed to load students');
         toast.error('Failed to load students');
         return;
       }
 
       setStudentsData(data || []);
+      setError(null);
     } catch (error) {
       console.error('Error:', error);
       if (error.message === 'Request timeout') {
-        toast.error('Request timed out. Please check your connection.');
+        setError('Request timed out. Please check your connection and try again.');
+        toast.error('Request timed out. Click Retry to load again.');
       } else {
+        setError('An error occurred loading students');
         toast.error('An error occurred loading students');
       }
     } finally {
@@ -172,6 +178,21 @@ const AdminStudentsList = () => {
     return (
       <div className="flex justify-center py-12">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      </div>
+    );
+  }
+
+  if (error && studentsData.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <div className="text-center max-w-md">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Students</h3>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={loadStudents} variant="primary">
+            Retry
+          </Button>
+        </div>
       </div>
     );
   }

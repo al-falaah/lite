@@ -16,7 +16,8 @@ import {
   Send,
   Copy,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -38,6 +39,7 @@ const AdminDashboard = () => {
   const [reviewNotes, setReviewNotes] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [error, setError] = useState(null);
 
   // Login form state
   const [email, setEmail] = useState('');
@@ -60,6 +62,7 @@ const AdminDashboard = () => {
 
   const loadApplications = async (force = false) => {
     setLoading(true);
+    setError(null);
     try {
       // Add timeout to prevent infinite loading
       const timeout = new Promise((_, reject) =>
@@ -74,6 +77,7 @@ const AdminDashboard = () => {
       const { data, error } = await Promise.race([dataFetch, timeout]);
 
       if (error) {
+        setError('Failed to load applications');
         toast.error('Failed to load applications');
         console.error(error);
         return;
@@ -81,11 +85,14 @@ const AdminDashboard = () => {
 
       setApplicationsData(data || []);
       setDataLoaded(true);
+      setError(null);
     } catch (error) {
       console.error('Error loading applications:', error);
       if (error.message === 'Request timeout') {
-        toast.error('Request timed out. Please check your connection.');
+        setError('Request timed out. Please check your connection and try again.');
+        toast.error('Request timed out. Click Retry to load again.');
       } else {
+        setError('An error occurred while loading applications');
         toast.error('An error occurred while loading applications');
       }
     } finally {
@@ -482,6 +489,18 @@ const AdminDashboard = () => {
               <div className="flex justify-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
               </div>
+            ) : error && applicationsData.length === 0 ? (
+              <Card>
+                <div className="flex flex-col items-center justify-center py-12">
+                  <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Applications</h3>
+                  <p className="text-gray-600 mb-6 text-center max-w-md">{error}</p>
+                  <Button onClick={() => loadApplications(true)} variant="primary">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Retry
+                  </Button>
+                </div>
+              </Card>
             ) : applicationsData.length === 0 ? (
               <Card>
                 <p className="text-center text-gray-600 py-8">

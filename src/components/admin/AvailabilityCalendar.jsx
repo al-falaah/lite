@@ -16,11 +16,13 @@ import {
   BarChart3,
   Zap,
   Edit2,
-  Video
+  Video,
+  RefreshCw
 } from 'lucide-react';
 import { applications, classSchedules, students } from '../../services/supabase';
 import { supabase } from '../../services/supabase';
 import Card from '../common/Card';
+import Button from '../common/Button';
 import { toast } from 'react-toastify';
 
 const AvailabilityCalendar = () => {
@@ -34,6 +36,7 @@ const AvailabilityCalendar = () => {
   const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
   const [progress, setProgress] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState(null);
 
   // Scheduling modal state
   const [showScheduleModal, setShowScheduleModal] = useState(false);
@@ -340,6 +343,7 @@ const AvailabilityCalendar = () => {
   const loadData = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       // Add timeout to prevent infinite loading
       const timeout = new Promise((_, reject) =>
@@ -391,10 +395,16 @@ const AvailabilityCalendar = () => {
       } else {
         setScheduledClasses(schedulesResponse.data || []);
       }
+
+      setError(null);
     } catch (error) {
       console.error('Error loading data:', error);
       if (error.message === 'Request timeout') {
-        toast.error('Request timed out. Please check your connection.');
+        setError('Request timed out. Please check your connection and try again.');
+        toast.error('Request timed out. Click Retry to load again.');
+      } else {
+        setError('An error occurred loading data');
+        toast.error('An error occurred loading data');
       }
     } finally {
       setLoading(false);
@@ -456,6 +466,22 @@ const AvailabilityCalendar = () => {
       <Card>
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+        </div>
+      </Card>
+    );
+  }
+
+  if (error && applicants.length === 0 && enrolledStudents.length === 0) {
+    return (
+      <Card>
+        <div className="flex flex-col items-center justify-center py-12">
+          <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Data</h3>
+          <p className="text-gray-600 mb-6 text-center max-w-md">{error}</p>
+          <Button onClick={loadData} variant="primary">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Retry
+          </Button>
         </div>
       </Card>
     );
