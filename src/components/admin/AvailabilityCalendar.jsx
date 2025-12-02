@@ -671,11 +671,19 @@ const AvailabilityCalendar = () => {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <div className="px-3 py-1 rounded-full text-xs font-medium bg-amber-600 text-white">
+                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      selectedApplicant.status === 'enrolled'
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-amber-600 text-white'
+                    }`}>
                       {selectedApplicant.status}
                     </div>
                     <div className="text-xs text-gray-500 text-right">
-                      {new Date(selectedApplicant.submitted_at).toLocaleDateString()}
+                      {selectedApplicant.status === 'enrolled' && selectedApplicant.enrolled_date
+                        ? new Date(selectedApplicant.enrolled_date).toLocaleDateString()
+                        : selectedApplicant.submitted_at
+                        ? new Date(selectedApplicant.submitted_at).toLocaleDateString()
+                        : 'N/A'}
                     </div>
                   </div>
                 </div>
