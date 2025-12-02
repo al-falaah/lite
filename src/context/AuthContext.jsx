@@ -45,14 +45,25 @@ export const AuthProvider = ({ children }) => {
 
   const checkUser = async () => {
     try {
-      // Use getSession instead of getCurrentUser for faster initial load
-      const { data: { session } } = await supabase.auth.getSession();
+      // Add timeout to prevent infinite loading
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Auth check timeout')), 5000)
+      );
+
+      const authCheck = supabase.auth.getSession();
+
+      // Race between auth check and timeout
+      const { data: { session } } = await Promise.race([authCheck, timeout]);
+
       if (session?.user) {
         setUser(session.user);
         await loadProfile(session.user.id);
+      } else {
+        console.log('No active session found');
       }
     } catch (error) {
       console.error('Error checking user:', error);
+      // Even on error, stop loading to prevent infinite spinner
     } finally {
       setLoading(false);
     }
