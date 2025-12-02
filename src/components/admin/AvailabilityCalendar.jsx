@@ -14,7 +14,9 @@ import {
   Phone,
   Plus,
   BarChart3,
-  Zap
+  Zap,
+  Edit2,
+  Video
 } from 'lucide-react';
 import { applications, classSchedules, students } from '../../services/supabase';
 import { supabase } from '../../services/supabase';
@@ -35,13 +37,16 @@ const AvailabilityCalendar = () => {
 
   // Scheduling modal state
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [editingSchedule, setEditingSchedule] = useState(null);
   const [scheduleForm, setScheduleForm] = useState({
     student_id: '',
     day_of_week: '',
     class_time: '',
     class_type: 'main', // main or makeup
     status: 'scheduled',
-    academic_year: 1 // Default to year 1
+    academic_year: 1, // Default to year 1
+    week_number: 1,
+    meeting_link: ''
   });
 
   // Generate Full Schedule modal state
@@ -275,26 +280,50 @@ const AvailabilityCalendar = () => {
     }
   };
 
-  // Create a new class schedule
+  // Create or update a class schedule
   const handleCreateSchedule = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await classSchedules.create(scheduleForm);
+      if (editingSchedule) {
+        // Update existing schedule
+        const { error } = await supabase
+          .from('class_schedules')
+          .update(scheduleForm)
+          .eq('id', editingSchedule.id);
 
-      if (response.error) {
-        throw response.error;
+        if (error) throw error;
+
+        // Update local state
+        setScheduledClasses(prev =>
+          prev.map(schedule =>
+            schedule.id === editingSchedule.id
+              ? { ...schedule, ...scheduleForm }
+              : schedule
+          )
+        );
+
+        toast.success('Class rescheduled successfully');
+      } else {
+        // Create new schedule
+        const response = await classSchedules.create(scheduleForm);
+
+        if (response.error) {
+          throw response.error;
+        }
+
+        toast.success('Class scheduled successfully');
+        loadData(); // Reload to show the new schedule
       }
 
-      toast.success('Class scheduled successfully!');
       setShowScheduleModal(false);
-      loadData(); // Reload to show the new schedule
+      setEditingSchedule(null);
       if (selectedApplicant) {
         loadStudentProgress(selectedApplicant.id);
       }
     } catch (error) {
-      console.error('Error creating schedule:', error);
-      toast.error('Failed to create schedule: ' + error.message);
+      console.error('Error saving schedule:', error);
+      toast.error('Failed to save schedule: ' + error.message);
     }
   };
 
@@ -704,7 +733,7 @@ const AvailabilityCalendar = () => {
                   </div>
                 )}
 
-                {/* Current Week Classes (Students view only) */}
+                {/* Current Week Schedule (Students view only) */}
                 {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length > 0 && (() => {
                   const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant?.id);
                   const currentActive = getCurrentActiveWeekAndYear();
@@ -739,7 +768,7 @@ const AvailabilityCalendar = () => {
                         )
                       );
 
-                      toast.success('Class marked as completed!');
+                      toast.success('Class marked as completed');
 
                       // Only reload progress data
                       if (selectedApplicant) {
@@ -747,20 +776,36 @@ const AvailabilityCalendar = () => {
                       }
                     } catch (error) {
                       console.error('Error marking complete:', error);
-                      toast.error('Failed to mark class as completed');
+                      toast.error('Failed to mark as completed');
                     }
                   };
 
+                  const openScheduleModal = (schedule = null) => {
+                    if (schedule) {
+                      setEditingSchedule(schedule);
+                      setScheduleForm({
+                        student_id: schedule.student_id,
+                        academic_year: schedule.academic_year,
+                        week_number: schedule.week_number,
+                        class_type: schedule.class_type,
+                        day_of_week: schedule.day_of_week || '',
+                        class_time: schedule.class_time || '',
+                        meeting_link: schedule.meeting_link || '',
+                        status: schedule.status
+                      });
+                    }
+                    setShowScheduleModal(true);
+                  };
+
                   return (
-                    <div className="mt-4 space-y-3">
-                      {/* Current Week Header */}
-                      <div className="p-4 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg border border-emerald-200">
-                        <div className="flex items-center justify-between">
+                    <div className="mt-4">
+                      <Card>
+                        {/* Current Week Header */}
+                        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
                           <div>
-                            <p className="text-sm font-medium text-gray-700">Current Week</p>
-                            <p className="text-2xl font-bold text-emerald-900">
+                            <h3 className="text-2xl font-bold text-gray-900">
                               Week {currentActive.week} of 52
-                            </p>
+                            </h3>
                             <p className="text-sm text-gray-600 mt-1">
                               {currentActive.year === 1 ? (
                                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -775,7 +820,7 @@ const AvailabilityCalendar = () => {
                           </div>
                           <div className="text-right">
                             <p className="text-sm text-gray-600">Progress</p>
-                            <p className="text-3xl font-bold text-emerald-600">
+                            <p className="text-2xl font-bold text-emerald-600">
                               {progressPercent}%
                             </p>
                             <p className="text-xs text-gray-500">
@@ -783,85 +828,132 @@ const AvailabilityCalendar = () => {
                             </p>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Current Week Classes */}
-                      {currentWeekClasses.length > 0 && (
-                        <div className="bg-white rounded-lg border border-gray-200 p-4">
-                          <h4 className="text-sm font-semibold text-gray-900 mb-3">This Week's Classes</h4>
-                          <div className="space-y-2">
+                        {/* Current Week Classes */}
+                        {currentWeekClasses.length === 0 ? (
+                          <div className="text-center py-8 text-gray-500">
+                            <p>No classes scheduled for this week</p>
+                          </div>
+                        ) : (
+                          <div className="grid md:grid-cols-2 gap-4">
+                            {/* Main Class */}
                             {mainClass && (
-                              <div className={`flex items-center justify-between p-3 rounded-lg border-2 ${
-                                mainClass.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'
-                              }`}>
-                                <div className="flex items-center gap-3">
-                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                    mainClass.status === 'completed' ? 'bg-emerald-500 text-white' : 'bg-blue-500 text-white'
-                                  }`}>
-                                    {mainClass.status === 'completed' ? (
-                                      <CheckCircle className="h-5 w-5" />
-                                    ) : (
-                                      <Clock className="h-5 w-5" />
-                                    )}
+                              <div className="bg-blue-50 p-5 rounded-lg border-2 border-blue-200">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <Clock className="h-5 w-5 text-blue-600" />
+                                    <span className="text-base font-semibold text-blue-900">
+                                      Main Class (2 hrs)
+                                    </span>
                                   </div>
-                                  <div>
-                                    <p className="font-medium text-gray-900">Main Class (2 hours)</p>
-                                    <p className="text-sm text-gray-600">
-                                      {mainClass.day_of_week} at {formatTime(mainClass.class_time)}
-                                    </p>
+                                  <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                    mainClass.status === 'completed'
+                                      ? 'bg-green-100 text-green-800'
+                                      : 'bg-yellow-100 text-yellow-800'
+                                  }`}>
+                                    {mainClass.status}
+                                  </span>
+                                </div>
+                                <div className="space-y-2 mb-4">
+                                  <div className="text-sm text-blue-800">
+                                    <span className="font-medium">Day:</span> {mainClass.day_of_week}
+                                  </div>
+                                  <div className="text-sm text-blue-800">
+                                    <span className="font-medium">Time:</span> {formatTime(mainClass.class_time) || 'Not set'}
                                   </div>
                                 </div>
-                                {mainClass.status !== 'completed' && (
-                                  <button
-                                    onClick={() => handleMarkComplete(mainClass.id)}
-                                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                                {mainClass.meeting_link && (
+                                  <a
+                                    href={mainClass.meeting_link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center text-sm text-blue-700 hover:text-blue-800 font-medium mb-3"
                                   >
-                                    Mark Complete
+                                    <Video className="h-4 w-4 mr-2" />
+                                    Join Meeting
+                                  </a>
+                                )}
+                                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-blue-200">
+                                  <button
+                                    onClick={() => openScheduleModal(mainClass)}
+                                    className="text-sm text-blue-700 hover:text-blue-800 flex items-center font-medium"
+                                  >
+                                    <Edit2 className="h-4 w-4 mr-1" />
+                                    Reschedule
                                   </button>
-                                )}
-                                {mainClass.status === 'completed' && (
-                                  <span className="text-emerald-600 font-medium text-sm">Completed ✓</span>
-                                )}
+                                  {mainClass.status === 'scheduled' && (
+                                    <button
+                                      onClick={() => handleMarkComplete(mainClass.id)}
+                                      className="text-sm text-green-700 hover:text-green-800 flex items-center font-medium ml-auto"
+                                    >
+                                      <CheckCircle className="h-4 w-4 mr-1" />
+                                      Mark Complete
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             )}
 
+                            {/* Short Class */}
                             {shortClass && (
-                              <div className={`flex items-center justify-between p-3 rounded-lg border-2 ${
-                                shortClass.status === 'completed' ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-200'
-                              }`}>
-                                <div className="flex items-center gap-3">
-                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                    shortClass.status === 'completed' ? 'bg-emerald-500 text-white' : 'bg-purple-500 text-white'
-                                  }`}>
-                                    {shortClass.status === 'completed' ? (
-                                      <CheckCircle className="h-5 w-5" />
-                                    ) : (
-                                      <Clock className="h-5 w-5" />
-                                    )}
+                              <div className="bg-purple-50 p-5 rounded-lg border-2 border-purple-200">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <Clock className="h-5 w-5 text-purple-600" />
+                                    <span className="text-base font-semibold text-purple-900">
+                                      Short Class (30 min)
+                                    </span>
                                   </div>
-                                  <div>
-                                    <p className="font-medium text-gray-900">Short Class (30 minutes)</p>
-                                    <p className="text-sm text-gray-600">
-                                      {shortClass.day_of_week} at {formatTime(shortClass.class_time)}
-                                    </p>
+                                  <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+                                    shortClass.status === 'completed'
+                                      ? 'bg-green-100 text-green-800'
+                                      : 'bg-yellow-100 text-yellow-800'
+                                  }`}>
+                                    {shortClass.status}
+                                  </span>
+                                </div>
+                                <div className="space-y-2 mb-4">
+                                  <div className="text-sm text-purple-800">
+                                    <span className="font-medium">Day:</span> {shortClass.day_of_week}
+                                  </div>
+                                  <div className="text-sm text-purple-800">
+                                    <span className="font-medium">Time:</span> {formatTime(shortClass.class_time) || 'Not set'}
                                   </div>
                                 </div>
-                                {shortClass.status !== 'completed' && (
-                                  <button
-                                    onClick={() => handleMarkComplete(shortClass.id)}
-                                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                                {shortClass.meeting_link && (
+                                  <a
+                                    href={shortClass.meeting_link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center text-sm text-purple-700 hover:text-purple-800 font-medium mb-3"
                                   >
-                                    Mark Complete
+                                    <Video className="h-4 w-4 mr-2" />
+                                    Join Meeting
+                                  </a>
+                                )}
+                                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-purple-200">
+                                  <button
+                                    onClick={() => openScheduleModal(shortClass)}
+                                    className="text-sm text-purple-700 hover:text-purple-800 flex items-center font-medium"
+                                  >
+                                    <Edit2 className="h-4 w-4 mr-1" />
+                                    Reschedule
                                   </button>
-                                )}
-                                {shortClass.status === 'completed' && (
-                                  <span className="text-emerald-600 font-medium text-sm">Completed ✓</span>
-                                )}
+                                  {shortClass.status === 'scheduled' && (
+                                    <button
+                                      onClick={() => handleMarkComplete(shortClass.id)}
+                                      className="text-sm text-green-700 hover:text-green-800 flex items-center font-medium ml-auto"
+                                    >
+                                      <CheckCircle className="h-4 w-4 mr-1" />
+                                      Mark Complete
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </Card>
                     </div>
                   );
                 })()}
@@ -1177,9 +1269,14 @@ const AvailabilityCalendar = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Schedule Class</h3>
+              <h3 className="text-xl font-bold text-gray-900">
+                {editingSchedule ? 'Reschedule Class' : 'Schedule Class'}
+              </h3>
               <button
-                onClick={() => setShowScheduleModal(false)}
+                onClick={() => {
+                  setShowScheduleModal(false);
+                  setEditingSchedule(null);
+                }}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
               >
                 <XIcon className="h-6 w-6" />
