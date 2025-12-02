@@ -45,10 +45,11 @@ export const AuthProvider = ({ children }) => {
 
   const checkUser = async () => {
     try {
-      const { user: currentUser } = await auth.getCurrentUser();
-      if (currentUser) {
-        setUser(currentUser);
-        await loadProfile(currentUser.id);
+      // Use getSession instead of getCurrentUser for faster initial load
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+        await loadProfile(session.user.id);
       }
     } catch (error) {
       console.error('Error checking user:', error);
