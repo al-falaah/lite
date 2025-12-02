@@ -40,7 +40,16 @@ const AdminStudentsList = () => {
   const loadStudents = async () => {
     try {
       setLoading(true);
-      const { data, error } = await students.getAll();
+
+      // Add timeout to prevent infinite loading
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+
+      const dataFetch = students.getAll();
+
+      // Race between data fetch and timeout
+      const { data, error } = await Promise.race([dataFetch, timeout]);
 
       if (error) {
         console.error('Error loading students:', error);
@@ -51,7 +60,11 @@ const AdminStudentsList = () => {
       setStudentsData(data || []);
     } catch (error) {
       console.error('Error:', error);
-      toast.error('An error occurred loading students');
+      if (error.message === 'Request timeout') {
+        toast.error('Request timed out. Please check your connection.');
+      } else {
+        toast.error('An error occurred loading students');
+      }
     } finally {
       setLoading(false);
     }

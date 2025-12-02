@@ -341,12 +341,20 @@ const AvailabilityCalendar = () => {
     try {
       setLoading(true);
 
+      // Add timeout to prevent infinite loading
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+
       // Load applications, students, and scheduled classes
-      const [appsResponse, studentsResponse, schedulesResponse] = await Promise.all([
+      const dataFetch = Promise.all([
         applications.getAll(),
         students.getAll(),
         classSchedules.getScheduled()
       ]);
+
+      // Race between data fetch and timeout
+      const [appsResponse, studentsResponse, schedulesResponse] = await Promise.race([dataFetch, timeout]);
 
       if (appsResponse.error) {
         console.error('Error loading applicants:', appsResponse.error);
@@ -385,6 +393,9 @@ const AvailabilityCalendar = () => {
       }
     } catch (error) {
       console.error('Error loading data:', error);
+      if (error.message === 'Request timeout') {
+        toast.error('Request timed out. Please check your connection.');
+      }
     } finally {
       setLoading(false);
     }

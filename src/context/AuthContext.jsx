@@ -191,7 +191,16 @@ export const AuthProvider = ({ children }) => {
       console.log('SignOut initiated');
       setLoading(true); // Set loading while signing out
 
-      const { error } = await auth.signOut();
+      // Add timeout to prevent infinite loading
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('SignOut timeout')), 5000)
+      );
+
+      const signOutPromise = auth.signOut();
+
+      // Race between sign out and timeout
+      const { error } = await Promise.race([signOutPromise, timeout]);
+
       if (error) {
         console.error('SignOut error:', error);
         throw error;
@@ -206,6 +215,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('SignOut exception:', error);
       setLoading(false);
+      // Clear user and profile even on timeout to allow logout
+      setUser(null);
+      setProfile(null);
       return { error };
     }
   };
