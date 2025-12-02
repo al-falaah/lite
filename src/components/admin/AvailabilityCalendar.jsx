@@ -722,13 +722,26 @@ const AvailabilityCalendar = () => {
                     try {
                       const { error } = await supabase
                         .from('class_schedules')
-                        .update({ status: 'completed' })
+                        .update({
+                          status: 'completed',
+                          completed_at: new Date().toISOString()
+                        })
                         .eq('id', classId);
 
                       if (error) throw error;
 
+                      // Update local state without full reload
+                      setScheduledClasses(prev =>
+                        prev.map(schedule =>
+                          schedule.id === classId
+                            ? { ...schedule, status: 'completed', completed_at: new Date().toISOString() }
+                            : schedule
+                        )
+                      );
+
                       toast.success('Class marked as completed!');
-                      loadData();
+
+                      // Only reload progress data
                       if (selectedApplicant) {
                         loadStudentProgress(selectedApplicant.id);
                       }
