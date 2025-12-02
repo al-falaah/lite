@@ -61,9 +61,17 @@ const AdminDashboard = () => {
   const loadApplications = async (force = false) => {
     setLoading(true);
     try {
-      const { data, error } = await applications.getAll(
+      // Add timeout to prevent infinite loading
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+
+      const dataFetch = applications.getAll(
         statusFilter === 'all' ? null : statusFilter
       );
+
+      // Race between data fetch and timeout
+      const { data, error } = await Promise.race([dataFetch, timeout]);
 
       if (error) {
         toast.error('Failed to load applications');
@@ -75,7 +83,11 @@ const AdminDashboard = () => {
       setDataLoaded(true);
     } catch (error) {
       console.error('Error loading applications:', error);
-      toast.error('An error occurred while loading applications');
+      if (error.message === 'Request timeout') {
+        toast.error('Request timed out. Please check your connection.');
+      } else {
+        toast.error('An error occurred while loading applications');
+      }
     } finally {
       setLoading(false);
     }
