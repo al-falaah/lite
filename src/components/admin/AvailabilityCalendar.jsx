@@ -158,18 +158,10 @@ const AvailabilityCalendar = () => {
 
   // Get the current active week and year for a student
   const getCurrentActiveWeekAndYear = () => {
-    if (!selectedApplicant) {
-      console.log('[DEBUG] No selected applicant');
-      return { year: 1, week: 1 };
-    }
+    if (!selectedApplicant) return { year: 1, week: 1 };
 
     const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant.id);
-    console.log('[DEBUG] Student schedules count:', studentSchedules.length);
-
-    if (studentSchedules.length === 0) {
-      console.log('[DEBUG] No schedules found for student');
-      return { year: 1, week: 1 };
-    }
+    if (studentSchedules.length === 0) return { year: 1, week: 1 };
 
     const weekMap = {};
 
@@ -181,21 +173,15 @@ const AvailabilityCalendar = () => {
       weekMap[key].push(schedule);
     });
 
-    console.log('[DEBUG] Week map keys:', Object.keys(weekMap));
-
     // Check Year 1 first
     for (let weekNum = 1; weekNum <= 52; weekNum++) {
       const weekClasses = weekMap[`1-${weekNum}`];
       if (!weekClasses || weekClasses.length === 0) {
-        console.log('[DEBUG] First week without classes: Year 1, Week', weekNum);
         return { year: 1, week: weekNum }; // First week without classes
       }
 
       const allCompleted = weekClasses.every(c => c.status === 'completed');
-      console.log(`[DEBUG] Week ${weekNum}: ${weekClasses.length} classes, all completed:`, allCompleted);
-
       if (!allCompleted) {
-        console.log('[DEBUG] First incomplete week: Year 1, Week', weekNum);
         return { year: 1, week: weekNum }; // First incomplete week in Year 1
       }
     }
@@ -761,16 +747,10 @@ const AvailabilityCalendar = () => {
                   const currentActive = getCurrentActiveWeekAndYear();
                   const progressPercent = Math.round(((currentActive.year - 1) * 52 + currentActive.week - 1) / 104 * 100);
 
-                  console.log('[DEBUG] Current active:', currentActive);
-                  console.log('[DEBUG] Progress percent:', progressPercent);
-
                   // Get current week's classes
                   const currentWeekClasses = studentSchedules.filter(
                     s => s.academic_year === currentActive.year && s.week_number === currentActive.week
                   );
-
-                  console.log('[DEBUG] Current week classes:', currentWeekClasses.length);
-                  console.log('[DEBUG] Current week classes details:', currentWeekClasses);
 
                   const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
                   const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
