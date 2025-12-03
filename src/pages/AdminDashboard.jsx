@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import useIdleTimeout from '../hooks/useIdleTimeout';
 import {
   BookOpen,
   LogOut,
@@ -45,6 +46,33 @@ const AdminDashboard = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
+
+  // Auto-logout after 15 minutes of inactivity (only for logged-in admins)
+  const handleIdleLogout = useCallback(async () => {
+    if (user && profile?.role === 'admin') {
+      toast.error('Session expired due to inactivity. Please log in again.');
+      try {
+        await signOut();
+        navigate('/admin');
+      } catch (error) {
+        console.error('Auto-logout error:', error);
+      }
+    }
+  }, [user, profile, signOut, navigate]);
+
+  const handleIdleWarning = useCallback(() => {
+    if (user && profile?.role === 'admin') {
+      toast.warning('You will be logged out in 1 minute due to inactivity.');
+    }
+  }, [user, profile]);
+
+  // Only activate idle timeout when admin is logged in
+  useIdleTimeout({
+    onIdle: handleIdleLogout,
+    onWarning: handleIdleWarning,
+    idleTime: 15 * 60 * 1000, // 15 minutes
+    warningTime: 1 * 60 * 1000 // 1 minute warning
+  });
 
   useEffect(() => {
     // Only load applications when on the applications tab AND not already loaded
