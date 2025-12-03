@@ -34,6 +34,7 @@ const AvailabilityCalendar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showApplicantList, setShowApplicantList] = useState(true);
   const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
+  const [scheduleFilter, setScheduleFilter] = useState('all'); // 'all', 'with-schedules', 'without-schedules'
   const [progress, setProgress] = useState(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
@@ -413,10 +414,26 @@ const AvailabilityCalendar = () => {
 
   // Filter applicants or students based on search and view mode
   const currentList = viewMode === 'applicants' ? applicants : enrolledStudents;
-  const filteredList = currentList.filter(item =>
+
+  // Apply search filter
+  let filteredList = currentList.filter(item =>
     item.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Apply schedule filter (only for students view)
+  if (viewMode === 'students' && scheduleFilter !== 'all') {
+    filteredList = filteredList.filter(student => {
+      const hasSchedule = scheduledClasses.some(schedule => schedule.student_id === student.id);
+
+      if (scheduleFilter === 'with-schedules') {
+        return hasSchedule;
+      } else if (scheduleFilter === 'without-schedules') {
+        return !hasSchedule;
+      }
+      return true;
+    });
+  }
 
   // Get scheduled classes for a specific day/time
   const getScheduledClassesForSlot = (day, timeSlot) => {
@@ -508,6 +525,7 @@ const AvailabilityCalendar = () => {
               setViewMode('applicants');
               setSelectedApplicant(applicants[0] || null);
               setSearchQuery('');
+              setScheduleFilter('all');
             }}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               viewMode === 'applicants'
@@ -523,6 +541,7 @@ const AvailabilityCalendar = () => {
               setViewMode('students');
               setSelectedApplicant(enrolledStudents[0] || null);
               setSearchQuery('');
+              setScheduleFilter('all');
             }}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               viewMode === 'students'
@@ -535,6 +554,45 @@ const AvailabilityCalendar = () => {
           </button>
         </div>
       </div>
+
+      {/* Schedule Filter (Students view only) */}
+      {viewMode === 'students' && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600 font-medium">Filter by schedule:</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setScheduleFilter('all')}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                scheduleFilter === 'all'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              All Students
+            </button>
+            <button
+              onClick={() => setScheduleFilter('with-schedules')}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                scheduleFilter === 'with-schedules'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              With Schedules
+            </button>
+            <button
+              onClick={() => setScheduleFilter('without-schedules')}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                scheduleFilter === 'without-schedules'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Without Schedules
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
