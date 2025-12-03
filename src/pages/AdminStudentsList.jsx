@@ -12,7 +12,8 @@ import {
   XCircle,
   Search,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Copy
 } from 'lucide-react';
 import { students } from '../services/supabase';
 import Button from '../components/common/Button';
@@ -79,6 +80,14 @@ const AdminStudentsList = () => {
   const handleViewStudent = async (student) => {
     setSelectedStudent(student);
     setShowModal(true);
+  };
+
+  const copyToClipboard = (text, label) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success(`${label} copied to clipboard!`);
+    }).catch(() => {
+      toast.error('Failed to copy');
+    });
   };
 
   const handleUpdateStatus = async (studentId, newStatus) => {
@@ -312,6 +321,13 @@ const AdminStudentsList = () => {
                       <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4" />
                         {student.email}
+                        <button
+                          onClick={() => copyToClipboard(student.email, 'Email')}
+                          className="ml-1 p-1 hover:bg-gray-100 rounded transition-colors"
+                          title="Copy email"
+                        >
+                          <Copy className="h-3 w-3 text-gray-500" />
+                        </button>
                       </div>
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4" />
@@ -419,7 +435,16 @@ const AdminStudentsList = () => {
                   </div>
                   <div>
                     <p className="text-gray-600">Email</p>
-                    <p className="font-semibold">{selectedStudent.email}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold">{selectedStudent.email}</p>
+                      <button
+                        onClick={() => copyToClipboard(selectedStudent.email, 'Email')}
+                        className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        title="Copy email"
+                      >
+                        <Copy className="h-3 w-3 text-gray-500" />
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <p className="text-gray-600">Phone</p>
