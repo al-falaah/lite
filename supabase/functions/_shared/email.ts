@@ -6,6 +6,7 @@ interface EmailOptions {
   subject: string;
   html: string;
   from?: string;
+  replyTo?: string;
 }
 
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; error?: string }> {
@@ -17,6 +18,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ success: boole
   }
 
   const fromEmail = options.from || 'Al-Falaah Academy <noreply@alfalaah-academy.nz>';
+  const replyToEmail = options.replyTo || 'admin@alfalaah-academy.nz';
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
@@ -30,6 +32,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ success: boole
         to: options.to,
         subject: options.subject,
         html: options.html,
+        reply_to: replyToEmail,
       }),
     });
 
