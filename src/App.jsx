@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'sonner';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -44,17 +43,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
 
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+          <Toaster position="top-right" duration={3000} />
         </div>
       </Router>
     </AuthProvider>

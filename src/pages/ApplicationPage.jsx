@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, CheckCircle, BookOpen, Clock, Globe } from 'lucide-react';
 import { applications, supabase } from '../services/supabase';
 import Button from '../components/common/Button';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   ArrowLeft, User, Mail, LogOut, ExternalLink

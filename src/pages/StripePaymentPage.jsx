@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, CreditCard, Calendar, DollarSign, CheckCircle } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';

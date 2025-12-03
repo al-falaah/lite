@@ -23,7 +23,7 @@ import { applications, classSchedules, students } from '../../services/supabase'
 import { supabase } from '../../services/supabase';
 import Card from '../common/Card';
 import Button from '../common/Button';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const AvailabilityCalendar = () => {
   const [applicants, setApplicants] = useState([]);
