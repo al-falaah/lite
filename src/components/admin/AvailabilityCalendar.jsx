@@ -556,43 +556,53 @@ const AvailabilityCalendar = () => {
       </div>
 
       {/* Schedule Filter (Students view only) */}
-      {viewMode === 'students' && (
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 font-medium">Filter by schedule:</span>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setScheduleFilter('all')}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                scheduleFilter === 'all'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              All Students
-            </button>
-            <button
-              onClick={() => setScheduleFilter('with-schedules')}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                scheduleFilter === 'with-schedules'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              With Schedules
-            </button>
-            <button
-              onClick={() => setScheduleFilter('without-schedules')}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                scheduleFilter === 'without-schedules'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              Without Schedules
-            </button>
+      {viewMode === 'students' && (() => {
+        // Calculate counts for each filter
+        const studentsWithSchedules = enrolledStudents.filter(student =>
+          scheduledClasses.some(schedule => schedule.student_id === student.id)
+        ).length;
+        const studentsWithoutSchedules = enrolledStudents.filter(student =>
+          !scheduledClasses.some(schedule => schedule.student_id === student.id)
+        ).length;
+
+        return (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 font-medium">Filter by schedule:</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setScheduleFilter('all')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  scheduleFilter === 'all'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                All Students ({enrolledStudents.length})
+              </button>
+              <button
+                onClick={() => setScheduleFilter('with-schedules')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  scheduleFilter === 'with-schedules'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                With Schedules ({studentsWithSchedules})
+              </button>
+              <button
+                onClick={() => setScheduleFilter('without-schedules')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  scheduleFilter === 'without-schedules'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                Without Schedules ({studentsWithoutSchedules})
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
