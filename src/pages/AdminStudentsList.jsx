@@ -13,9 +13,11 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
-  Copy
+  Copy,
+  Send,
+  X as XIcon2
 } from 'lucide-react';
-import { students } from '../services/supabase';
+import { students, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
@@ -29,6 +31,13 @@ const AdminStudentsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [error, setError] = useState(null);
+
+  // Email functionality state
+  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
     loadStudents();
@@ -88,6 +97,88 @@ const AdminStudentsList = () => {
     }).catch(() => {
       toast.error('Failed to copy');
     });
+  };
+
+  // Email functions
+  const handleToggleStudentSelection = (studentId) => {
+    setSelectedStudentIds(prev =>
+      prev.includes(studentId)
+        ? prev.filter(id => id !== studentId)
+        : [...prev, studentId]
+    );
+  };
+
+  const handleToggleAllStudents = () => {
+    if (selectedStudentIds.length === paginatedStudents.length) {
+      setSelectedStudentIds([]);
+    } else {
+      setSelectedStudentIds(paginatedStudents.map(s => s.id));
+    }
+  };
+
+  const handleOpenEmailModal = (studentId = null) => {
+    if (studentId) {
+      // Single student email
+      setSelectedStudentIds([studentId]);
+    }
+    // For bulk, use already selected students
+    setShowEmailModal(true);
+  };
+
+  const handleSendEmail = async () => {
+    if (selectedStudentIds.length === 0) {
+      toast.error('Please select at least one student');
+      return;
+    }
+
+    if (!emailSubject.trim() || !emailMessage.trim()) {
+      toast.error('Please enter both subject and message');
+      return;
+    }
+
+    setSendingEmail(true);
+    try {
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/send-student-email`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            studentIds: selectedStudentIds,
+            subject: emailSubject,
+            message: emailMessage,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send email');
+      }
+
+      toast.success(
+        `Email sent successfully to ${result.sent} student${result.sent > 1 ? 's' : ''}!`
+      );
+
+      if (result.failed > 0) {
+        toast.warning(`${result.failed} email${result.failed > 1 ? 's' : ''} failed to send`);
+      }
+
+      // Reset form
+      setShowEmailModal(false);
+      setEmailSubject('');
+      setEmailMessage('');
+      setSelectedStudentIds([]);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error(error.message || 'Failed to send email');
+    } finally {
+      setSendingEmail(false);
+    }
   };
 
   const handleUpdateStatus = async (studentId, newStatus) => {
@@ -274,21 +365,39 @@ const AdminStudentsList = () => {
         </div>
       </Card>
 
-      {/* Filters */}
-      <div className="flex gap-2">
-        {['all', 'applicant', 'enrolled', 'graduated', 'dropout'].map((filter) => (
-          <button
-            key={filter}
-            onClick={() => setStatusFilter(filter)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
-              statusFilter === filter
-                ? 'bg-emerald-600 text-white'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-            }`}
-          >
-            {filter}
-          </button>
-        ))}
+      {/* Filters and Bulk Actions */}
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          {['all', 'applicant', 'enrolled', 'graduated', 'dropout'].map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setStatusFilter(filter)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
+                statusFilter === filter
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+
+        {selectedStudentIds.length > 0 && (
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-600">
+              {selectedStudentIds.length} selected
+            </span>
+            <Button
+              onClick={() => handleOpenEmailModal()}
+              variant="primary"
+              className="flex items-center gap-2"
+            >
+              <Send className="h-4 w-4" />
+              Send Bulk Email
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Students List */}
@@ -303,7 +412,17 @@ const AdminStudentsList = () => {
           <div className="grid gap-4">
             {paginatedStudents.map((student) => (
               <Card key={student.id} className="hover:shadow-lg transition-shadow">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start gap-4">
+                  {/* Checkbox for bulk selection */}
+                  <div className="pt-1">
+                    <input
+                      type="checkbox"
+                      checked={selectedStudentIds.includes(student.id)}
+                      onChange={() => handleToggleStudentSelection(student.id)}
+                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
+                    />
+                  </div>
+
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <h3 className="text-lg font-semibold text-gray-900">
@@ -344,7 +463,7 @@ const AdminStudentsList = () => {
                     </div>
                   </div>
 
-                  <div className="ml-4">
+                  <div className="ml-4 flex flex-col gap-2">
                     <Button
                       size="sm"
                       variant="outline"
@@ -352,6 +471,15 @@ const AdminStudentsList = () => {
                     >
                       <Eye className="h-4 w-4 mr-1" />
                       View Details
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleOpenEmailModal(student.id)}
+                      className="flex items-center gap-1"
+                    >
+                      <Send className="h-4 w-4" />
+                      Send Email
                     </Button>
                   </div>
                 </div>
@@ -514,6 +642,102 @@ const AdminStudentsList = () => {
               <div className="flex justify-end">
                 <Button variant="secondary" onClick={closeModal}>
                   Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Email Composition Modal */}
+      {showEmailModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Send Email</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Sending to {selectedStudentIds.length} student{selectedStudentIds.length > 1 ? 's' : ''}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowEmailModal(false);
+                    setEmailSubject('');
+                    setEmailMessage('');
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <XIcon2 className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Email Form */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    value={emailSubject}
+                    onChange={(e) => setEmailSubject(e.target.value)}
+                    placeholder="Enter email subject..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    disabled={sendingEmail}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    value={emailMessage}
+                    onChange={(e) => setEmailMessage(e.target.value)}
+                    placeholder="Enter your message..."
+                    rows={10}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                    disabled={sendingEmail}
+                  />
+                  <p className="mt-2 text-sm text-gray-500">
+                    Your message will be automatically formatted with Al-Falaah Academy branding.
+                  </p>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setShowEmailModal(false);
+                    setEmailSubject('');
+                    setEmailMessage('');
+                  }}
+                  disabled={sendingEmail}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleSendEmail}
+                  disabled={sendingEmail || !emailSubject.trim() || !emailMessage.trim()}
+                  className="flex items-center gap-2"
+                >
+                  {sendingEmail ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" />
+                      Send Email
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
