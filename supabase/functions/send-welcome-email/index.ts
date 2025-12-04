@@ -33,7 +33,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🌟 Welcome to Al-Falaah Academy!</h1>
+          <h1>Welcome to Al-Falaah Academy</h1>
           <p>Your Journey Begins Now</p>
         </div>
 
@@ -59,7 +59,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
               </tr>
               <tr>
                 <td class="label">Status:</td>
-                <td>✅ Active</td>
+                <td>Active</td>
               </tr>
             </table>
           </div>
@@ -130,7 +130,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: studentData.email,
-      subject: '🌟 Welcome to Al-Falaah Academy!',
+      subject: 'Welcome to Al-Falaah Academy!',
       html: emailHTML,
     });
 

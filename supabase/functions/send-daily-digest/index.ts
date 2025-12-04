@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'admin@alfalaah.edu'
+const ADMIN_EMAIL = 'admin@alfalaah-academy.nz'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -116,7 +116,7 @@ serve(async (req) => {
       <body>
         <div class="container">
           <div class="header">
-            <h1>📊 ${digestType} Digest</h1>
+            <h1>${digestType} Digest</h1>
             <p>${nzDateStr}</p>
             <p style="font-size: 14px; opacity: 0.9;">${nzTimeStr} NZ Time</p>
           </div>
@@ -135,22 +135,22 @@ serve(async (req) => {
 
             ${applicationCount > 0 ? `
               <div class="section">
-                <div class="section-title">📝 New Applications</div>
+                <div class="section-title">New Applications</div>
                 ${newApplications.map(app => `
                   <div class="item">
                     <div class="item-title">${app.full_name}</div>
-                    <div class="item-detail">📧 ${app.email}</div>
-                    <div class="item-detail">📱 ${app.phone}</div>
+                    <div class="item-detail">Email: ${app.email}</div>
+                    <div class="item-detail">Phone: ${app.phone}</div>
                     <div class="item-detail">
                       <span class="badge">${app.status.toUpperCase()}</span>
                       • Submitted: ${new Date(app.created_at).toLocaleString('en-NZ')}
                     </div>
                     <div class="item-detail">
-                      🕌 Can Read Quran: ${app.can_read_quran ? 'Yes' : 'No'}
+                      Can Read Quran: ${app.can_read_quran ? 'Yes' : 'No'}
                       ${app.can_read_quran && app.tajweed_level ? `(${app.tajweed_level})` : ''}
                     </div>
                     <div class="item-detail">
-                      📚 Studied Arabic: ${app.has_studied_arabic ? 'Yes' : 'No'}
+                      Studied Arabic: ${app.has_studied_arabic ? 'Yes' : 'No'}
                       ${app.has_studied_arabic && app.arabic_level ? `(${app.arabic_level})` : ''}
                     </div>
                   </div>
@@ -160,13 +160,13 @@ serve(async (req) => {
 
             ${paymentCount > 0 ? `
               <div class="section">
-                <div class="section-title">💳 Payments Awaiting Verification</div>
+                <div class="section-title">Payments Awaiting Verification</div>
                 ${newPayments.map(payment => `
                   <div class="item">
                     <div class="item-title">${payment.student?.full_name || 'Unknown Student'} (${payment.student?.student_id || 'N/A'})</div>
-                    <div class="item-detail">💰 Amount: $${payment.amount?.toFixed(2) || '0.00'}</div>
-                    <div class="item-detail">📅 Payment Date: ${payment.payment_date ? new Date(payment.payment_date).toLocaleDateString('en-NZ') : 'Not specified'}</div>
-                    <div class="item-detail">📝 Method: ${payment.payment_method || 'Not specified'}</div>
+                    <div class="item-detail">Amount: $${payment.amount?.toFixed(2) || '0.00'}</div>
+                    <div class="item-detail">Payment Date: ${payment.payment_date ? new Date(payment.payment_date).toLocaleDateString('en-NZ') : 'Not specified'}</div>
+                    <div class="item-detail">Method: ${payment.payment_method || 'Not specified'}</div>
                     <div class="item-detail">
                       <span class="badge">PENDING VERIFICATION</span>
                       • Uploaded: ${new Date(payment.created_at).toLocaleString('en-NZ')}
@@ -177,7 +177,7 @@ serve(async (req) => {
             ` : ''}
 
             <center>
-              <a href="${Deno.env.get('APP_URL') || 'https://alfalaah.edu'}/admin" class="button">
+              <a href="${Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'}/admin" class="button">
                 Go to Admin Dashboard →
               </a>
             </center>

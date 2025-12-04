@@ -32,14 +32,14 @@ function generateEmailHTML(applicantData: any, signupUrl: string): string {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🎉 Congratulations!</h1>
+          <h1>Congratulations!</h1>
           <p>Your Application Has Been Approved</p>
         </div>
 
         <div class="content">
           <h2>Assalaamu 'alaykum ${full_name},</h2>
 
-          <p>We are delighted to inform you that your application to Al-Falaah Islamic Institute has been <strong>approved</strong>!</p>
+          <p>We are delighted to inform you that your application to Al-Falaah Academy has been <strong>approved</strong>!</p>
 
           <div class="info-box">
             <p><strong>Program:</strong> ${programName}</p>
@@ -59,13 +59,13 @@ function generateEmailHTML(applicantData: any, signupUrl: string): string {
           </center>
 
           <div class="warning-box">
-            <p><strong>⏰ Important:</strong> This invitation link will expire in 7 days. Please complete your enrollment as soon as possible.</p>
+            <p><strong>Important:</strong> This invitation link will expire in 7 days. Please complete your enrollment as soon as possible.</p>
           </div>
 
           <p>If the button doesn't work, copy and paste this link into your browser:</p>
           <p style="word-break: break-all; color: #059669;">${signupUrl}</p>
 
-          <p>If you have any questions or need assistance, please contact us at <a href="mailto:admin@alfalaah.co.nz">admin@alfalaah.co.nz</a>.</p>
+          <p>If you have any questions or need assistance, please contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
 
           <p>We look forward to having you join our learning community!</p>
 
@@ -74,7 +74,7 @@ function generateEmailHTML(applicantData: any, signupUrl: string): string {
         </div>
 
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Islamic Institute. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
           <p>New Zealand</p>
         </div>
       </div>
@@ -112,7 +112,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: applicantData.email,
-      subject: '🎉 Your Application Has Been Approved - Al-Falaah Islamic Institute',
+      subject: 'Your Application Has Been Approved - Al-Falaah Academy',
       html: emailHTML,
     });
 

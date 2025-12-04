@@ -31,7 +31,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🎉 Application Approved!</h1>
+          <h1>Application Approved</h1>
           <p>Al-Falaah Academy</p>
         </div>
 
@@ -41,7 +41,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
           <p>Congratulations! Your application to Al-Falaah Academy has been approved. We are excited to welcome you to our community of learners.</p>
 
           <div class="highlight-box">
-            <h3 style="margin-top: 0; color: #92400e;">📋 Next Step: Payment</h3>
+            <h3 style="margin-top: 0; color: #92400e;">Next Step: Payment</h3>
             <p style="margin-bottom: 0;">Choose your payment plan and complete your enrollment instantly with Stripe.</p>
           </div>
 
@@ -68,7 +68,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
           </div>
 
           <div class="info-box" style="background: #e0f2fe; border-color: #0284c7;">
-            <h3>✨ Instant Enrollment with Stripe</h3>
+            <h3>Instant Enrollment with Stripe</h3>
             <p style="margin-bottom: 10px;">Pay securely online and get enrolled immediately:</p>
             <ul style="margin: 0; padding-left: 20px;">
               <li>Secure payment processing by Stripe</li>
@@ -80,7 +80,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
 
           <center>
             <a href="${appUrl}/payment?email=${encodeURIComponent(email)}" class="button" style="font-size: 18px; padding: 16px 40px;">
-              💳 Choose Payment Plan & Pay Now →
+              Choose Payment Plan & Pay Now
             </a>
           </center>
 
@@ -133,7 +133,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: applicantData.email,
-      subject: '🎉 Application Approved - Payment Instructions',
+      subject: 'Application Approved - Payment Instructions',
       html: emailHTML,
     });
 

@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const ADMIN_EMAIL = Deno.env.get('ADMIN_EMAIL') || 'admin@alfalaah.edu'
+const ADMIN_EMAIL = 'admin@alfalaah-academy.nz'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,7 +90,7 @@ serve(async (req) => {
             <div style="margin: 30px 0; text-align: center;">
               <a href="${Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'}/admin"
                  style="display: inline-block; background-color: #059669; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600;">
-                📋 Review Application in Admin Dashboard
+                Review Application in Admin Dashboard
               </a>
             </div>
 
