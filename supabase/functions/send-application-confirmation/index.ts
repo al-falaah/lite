@@ -37,7 +37,7 @@ function generateEmailHTML(applicantData: any): string {
         <div class="content">
           <h2>Assalaamu 'alaykum ${full_name},</h2>
 
-          <p>Thank you for your interest in Al-Falaah Academy. We have received your application for the <strong>2-Year Essential Islamic Studies Course</strong> and will review it shortly.</p>
+          <p>Thank you for your interest in Al-Falaah Academy. We have received your application for the <strong>2-Year Essential Arabic & Islamic Studies Course</strong> and will review it shortly.</p>
 
           <div class="info-box">
             <h3>Application Summary</h3>
@@ -52,19 +52,23 @@ function generateEmailHTML(applicantData: any): string {
               </tr>
               <tr>
                 <td class="label">Program:</td>
-                <td>2-Year Essential Islamic Studies Course</td>
+                <td>2-Year Essential Arabic & Islamic Studies Course</td>
               </tr>
               <tr>
                 <td class="label">Learning Format:</td>
                 <td>Personalized One-on-One</td>
               </tr>
               <tr>
-                <td class="label">Annual Fee:</td>
-                <td>$300/year (full payment or up to 4 installments per year)</td>
+                <td class="label">Option 1 - Monthly:</td>
+                <td>$25 NZD/month (auto-renewing)</td>
+              </tr>
+              <tr>
+                <td class="label">Option 2 - Annual:</td>
+                <td>$275 NZD/year (save $25!)</td>
               </tr>
               <tr>
                 <td class="label">Total (2 years):</td>
-                <td>$600</td>
+                <td>Monthly: $600 | Annual: $550</td>
               </tr>
             </table>
           </div>
@@ -72,9 +76,8 @@ function generateEmailHTML(applicantData: any): string {
           <p><strong>What happens next?</strong></p>
           <ol>
             <li>Our admissions team will review your application</li>
-            <li>Once approved, you'll be enrolled as a student</li>
-            <li>You'll receive an email with your student details and payment instructions</li>
-            <li>After payment verification, you can begin your personalized learning journey</li>
+            <li>Once approved, you'll receive an approval notification email and payment instructions</li>
+            <li>After payment you'll be enrolled as a student, then you can begin your personalized learning journey</li>
           </ol>
 
           <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
