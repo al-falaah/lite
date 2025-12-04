@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Light Background -->
+  <rect width="64" height="64" rx="12" fill="#f9fafb"/>
+
+  <!-- Open Book Shape with Green Pages -->
+  <!-- Left page -->
+  <path d="M 16 18 L 30 20 L 30 46 L 16 44 Z" fill="#059669" opacity="0.95"/>
+  <!-- Right page -->
+  <path d="M 34 20 L 48 18 L 48 44 L 34 46 Z" fill="#059669" opacity="0.95"/>
+  <!-- Center binding (darker green) -->
+  <rect x="31" y="18" width="2" height="28" fill="#065f46"/>
+
+  <!-- AFA Text in white with green stroke -->
+  <text x="32" y="37" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="white" stroke="#059669" stroke-width="0.8" text-anchor="middle">
+    AFA
+  </text>
+</svg>
