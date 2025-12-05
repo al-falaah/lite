@@ -58,21 +58,27 @@ const StudentPortal = () => {
 
   const loadStudentData = async (studentId) => {
     try {
-      // Load enrollments
+      // Load enrollments (only active ones)
       const { data: enrollmentsData, error: enrollmentsError } = await supabase
         .from('enrollments')
         .select('*')
         .eq('student_id', studentId)
+        .eq('status', 'active') // Only show active enrollments
         .order('created_at', { ascending: false });
 
       if (enrollmentsError) throw enrollmentsError;
       setEnrollments(enrollmentsData || []);
 
-      // Load schedules
+      // Get the programs for active enrollments
+      const activePrograms = (enrollmentsData || []).map(e => e.program);
+
+      // Load schedules only for active enrollments
+      // Only show schedules if student has active enrollment in that program
       const { data: schedulesData, error: schedulesError } = await supabase
         .from('class_schedules')
         .select('*')
         .eq('student_id', studentId)
+        .in('program', activePrograms.length > 0 ? activePrograms : ['none']) // Filter by active programs only
         .order('academic_year', { ascending: true })
         .order('week_number', { ascending: true });
 
