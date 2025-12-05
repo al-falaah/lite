@@ -428,11 +428,19 @@ export const payments = {
           email,
           phone,
           balance_remaining
+        ),
+        enrollments (
+          id,
+          program,
+          payment_type,
+          total_fees,
+          total_paid,
+          balance_remaining
         )
       `)
       .eq('status', 'pending')
       .not('proof_of_payment_url', 'is', null)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false});
     return { data, error };
   }
 };

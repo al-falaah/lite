@@ -11,7 +11,9 @@ import {
   Hash,
   DollarSign,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { payments, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -166,6 +168,18 @@ const AdminPaymentVerification = () => {
     }).format(amount);
   };
 
+  const getProgramName = (program) => {
+    return program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies';
+  };
+
+  const getProgramIcon = (program) => {
+    return program === 'tajweed' ? <GraduationCap className="h-4 w-4" /> : <BookOpen className="h-4 w-4" />;
+  };
+
+  const getProgramColor = (program) => {
+    return program === 'tajweed' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -210,12 +224,20 @@ const AdminPaymentVerification = () => {
                     <div className="p-2 bg-blue-100 rounded-lg">
                       <Building2 className="h-5 w-5 text-blue-600" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">
-                        {payment.students?.full_name || 'Unknown Student'}
-                      </h3>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-lg">
+                          {payment.students?.full_name || 'Unknown Student'}
+                        </h3>
+                        {payment.enrollments && (
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getProgramColor(payment.enrollments.program)}`}>
+                            {getProgramIcon(payment.enrollments.program)}
+                            <span className="ml-1">{getProgramName(payment.enrollments.program)}</span>
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm text-gray-600">
-                        {payment.students?.student_id}
+                        {payment.students?.student_id || 'No ID yet'}
                       </p>
                     </div>
                   </div>
@@ -318,6 +340,54 @@ const AdminPaymentVerification = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Enrollment Info */}
+              {selectedPayment.enrollments && (
+                <div className={`rounded-lg p-4 border-2 ${
+                  selectedPayment.enrollments.program === 'tajweed'
+                    ? 'bg-purple-50 border-purple-200'
+                    : 'bg-blue-50 border-blue-200'
+                }`}>
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    {getProgramIcon(selectedPayment.enrollments.program)}
+                    Enrollment Information
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600">Program</p>
+                      <p className="font-semibold">
+                        {getProgramName(selectedPayment.enrollments.program)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Payment Type</p>
+                      <p className="font-semibold capitalize">
+                        {selectedPayment.enrollments.payment_type?.replace('_', ' ')}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Total Fees</p>
+                      <p className="font-semibold">
+                        ${selectedPayment.enrollments.total_fees?.toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Total Paid</p>
+                      <p className="font-semibold text-green-700">
+                        ${selectedPayment.enrollments.total_paid?.toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Balance Remaining</p>
+                      <p className={`font-semibold ${
+                        selectedPayment.enrollments.balance_remaining > 0 ? 'text-amber-700' : 'text-green-700'
+                      }`}>
+                        ${selectedPayment.enrollments.balance_remaining?.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Payment Details */}
               <div className="bg-emerald-50 rounded-lg p-4">
