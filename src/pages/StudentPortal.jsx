@@ -136,8 +136,8 @@ const StudentPortal = () => {
         throw new Error(result.error || 'Failed to access billing portal');
       }
 
-      // Redirect to Stripe Billing Portal
-      window.location.href = result.url;
+      // Open Stripe Billing Portal in new tab
+      window.open(result.url, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Billing portal error:', error);
       toast.error(error.message || 'Failed to access billing portal');
@@ -527,7 +527,11 @@ const StudentPortal = () => {
                   <p className="text-gray-600 mb-4">
                     Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
                   </p>
-                  <Link to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}>
+                  <Link
+                    to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Button variant="primary" className="bg-purple-600 hover:bg-purple-700">
                       <BookOpen className="h-4 w-4 mr-2" />
                       Apply for Another Program
