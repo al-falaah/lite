@@ -41,6 +41,10 @@ serve(async (req) => {
       throw new Error('Only approved applications can be converted to students')
     }
 
+    // Get program from application
+    const program = application.program || 'essentials'
+    console.log(`Processing application for program: ${program}`)
+
     // Check if student already exists with this email
     const { data: existingStudent } = await supabaseClient
       .from('students')
@@ -48,53 +52,100 @@ serve(async (req) => {
       .eq('email', application.email)
       .single()
 
+    let student
+    let isNewStudent = false
+
     if (existingStudent) {
-      return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'Student already exists',
-          student: existingStudent
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      console.log('Student already exists:', existingStudent.student_id)
+      student = existingStudent
+
+      // Check if they already have an enrollment for this program
+      const { data: existingEnrollment } = await supabaseClient
+        .from('enrollments')
+        .select('*')
+        .eq('student_id', student.id)
+        .eq('program', program)
+        .single()
+
+      if (existingEnrollment) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: `Student is already enrolled in ${program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program'}`,
+            student: student,
+            enrollment: existingEnrollment
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      console.log(`Creating new ${program} enrollment for existing student`)
+    } else {
+      // Note: Student ID will be generated AFTER payment, not before
+      // Students who haven't paid yet don't get official student IDs
+      console.log('Creating new student record')
+
+      // Create student record without student_id
+      const { data: newStudent, error: studentError } = await supabaseClient
+        .from('students')
+        .insert({
+          student_id: null, // Will be assigned after payment (6-digit random number)
+          full_name: application.full_name,
+          email: application.email,
+          phone: application.phone,
+          date_of_birth: application.date_of_birth,
+          gender: application.gender,
+          application_id: application.id,
+          status: 'pending_payment', // Will be changed to 'enrolled' after Stripe payment
+          enrolled_date: new Date().toISOString().split('T')[0],
+          // Copy availability preferences from application
+          preferred_days: application.preferred_days,
+          preferred_times: application.preferred_times,
+          timezone: application.timezone || 'Pacific/Auckland',
+          availability_notes: application.availability_notes
+        })
+        .select()
+        .single()
+
+      if (studentError) {
+        console.error('Error creating student:', studentError)
+        throw new Error('Failed to create student record')
+      }
+
+      student = newStudent
+      isNewStudent = true
+      console.log('Student created successfully')
     }
 
-    // Note: Student ID will be generated AFTER payment, not before
-    // Students who haven't paid yet don't get official student IDs
-
-    // Create student record without student_id
-    const { data: student, error: studentError } = await supabaseClient
-      .from('students')
-      .insert({
-        student_id: null, // Will be assigned after payment
-        full_name: application.full_name,
-        email: application.email,
-        phone: application.phone,
-        date_of_birth: application.date_of_birth,
-        gender: application.gender,
-        application_id: application.id,
-        status: 'pending_payment', // Will be changed to 'enrolled' after Stripe payment
-        enrolled_date: new Date().toISOString().split('T')[0],
-        total_fees: 600.00, // Monthly: $25/month x 24 months OR Annual: $275/year x 2 years ($550)
-        installments_per_year: null, // Not used with Stripe - payments handled via Stripe
-        total_paid: 0,
-        balance_remaining: 600.00,
-        // Copy availability preferences from application
-        preferred_days: application.preferred_days,
-        preferred_times: application.preferred_times,
-        timezone: application.timezone || 'Pacific/Auckland',
-        availability_notes: application.availability_notes
+    // Create enrollment for the program using the database function
+    console.log(`Creating enrollment for program: ${program}`)
+    const { data: enrollmentData, error: enrollmentError } = await supabaseClient
+      .rpc('create_enrollment', {
+        p_student_id: student.id,
+        p_program: program,
+        p_payment_type: 'monthly', // Default to monthly, Stripe will handle the actual subscription
+        p_application_id: application.id
       })
-      .select()
+
+    if (enrollmentError) {
+      console.error('Error creating enrollment:', enrollmentError)
+      throw new Error(`Failed to create enrollment: ${enrollmentError.message}`)
+    }
+
+    const enrollmentId = enrollmentData
+    console.log('Enrollment created with ID:', enrollmentId)
+
+    // Get the created enrollment details
+    const { data: enrollment } = await supabaseClient
+      .from('enrollments')
+      .select('*')
+      .eq('id', enrollmentId)
       .single()
 
-    if (studentError) {
-      console.error('Error creating student:', studentError)
-      throw new Error('Failed to create student record')
-    }
+    console.log('Enrollment details:', enrollment)
 
     // Note: With Stripe integration, payments are handled automatically
-    // No need to generate installments - Stripe handles monthly/annual subscriptions
+    // No need to generate installments manually - Stripe handles monthly/annual subscriptions
 
     // Send payment instructions to applicant (not welcome email yet - that comes after payment)
     console.log('Sending payment instructions to:', student.email)
@@ -123,11 +174,18 @@ serve(async (req) => {
       // Don't throw - student is created, email is non-critical
     }
 
+    const programName = program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program'
+    const message = isNewStudent
+      ? `Student created and enrolled in ${programName}`
+      : `Existing student enrolled in ${programName}`
+
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Student created successfully',
-        student: student
+        message: message,
+        student: student,
+        enrollment: enrollment,
+        isNewStudent: isNewStudent
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
