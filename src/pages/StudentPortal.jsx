@@ -74,16 +74,24 @@ const StudentPortal = () => {
 
       // Load schedules only for active enrollments
       // Only show schedules if student has active enrollment in that program
-      const { data: schedulesData, error: schedulesError } = await supabase
-        .from('class_schedules')
-        .select('*')
-        .eq('student_id', studentId)
-        .in('program', activePrograms.length > 0 ? activePrograms : ['none']) // Filter by active programs only
-        .order('academic_year', { ascending: true })
-        .order('week_number', { ascending: true });
+      let schedulesData = [];
+      if (activePrograms.length > 0) {
+        const { data, error: schedulesError } = await supabase
+          .from('class_schedules')
+          .select('*')
+          .eq('student_id', studentId)
+          .in('program', activePrograms)
+          .order('academic_year', { ascending: true })
+          .order('week_number', { ascending: true });
 
-      if (schedulesError) throw schedulesError;
-      setSchedules(schedulesData || []);
+        if (schedulesError) {
+          console.error('Schedules error:', schedulesError);
+        } else {
+          schedulesData = data || [];
+        }
+      }
+
+      setSchedules(schedulesData);
 
       // Load progress
       const { data: progressData, error: progressError } = await supabase

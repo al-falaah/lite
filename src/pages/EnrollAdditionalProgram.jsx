@@ -66,7 +66,7 @@ const EnrollAdditionalProgram = () => {
 
       if (unenrolledPrograms.length === 0) {
         toast.error('You are already enrolled in all available programs!');
-        navigate('/student-portal');
+        navigate('/student');
         return;
       }
 
@@ -123,14 +123,9 @@ const EnrollAdditionalProgram = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            studentId: student.id,
-            studentEmail: student.email,
-            studentName: student.full_name,
-            amount: amount,
+            email: student.email,
             planType: paymentType,
             program: selectedProgram, // Pass program to webhook
-            successUrl: `${window.location.origin}/student-portal`,
-            cancelUrl: `${window.location.origin}/enroll-additional?email=${student.email}`,
           }),
         }
       );
@@ -142,7 +137,7 @@ const EnrollAdditionalProgram = () => {
       }
 
       // Redirect to Stripe checkout
-      window.location.href = data.url;
+      window.location.href = data.checkout_url || data.url;
 
     } catch (error) {
       console.error('Payment error:', error);
@@ -379,7 +374,7 @@ const EnrollAdditionalProgram = () => {
         <div className="flex gap-4">
           <Button
             variant="outline"
-            onClick={() => navigate('/student-portal')}
+            onClick={() => navigate('/student')}
             className="flex-1"
           >
             Cancel

@@ -13,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, planType } = await req.json() // planType: 'monthly' or 'annual'
+    const { email, planType, program } = await req.json() // program: 'essentials' or 'tajweed' (optional)
 
     if (!email || !planType) {
       return new Response(
@@ -27,18 +27,17 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Get student details by email (student_id not assigned yet)
+    // Get student details by email (works for both new and existing students)
     const { data: student, error: studentError } = await supabaseClient
       .from('students')
       .select('*')
       .eq('email', email)
-      .eq('status', 'pending_payment') // Only pending payment students
       .single()
 
     if (studentError || !student) {
       console.error('Student lookup error:', studentError)
       return new Response(
-        JSON.stringify({ error: `No pending payment found for: ${email}` }),
+        JSON.stringify({ error: `No student found for: ${email}` }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -80,6 +79,7 @@ serve(async (req) => {
       metadata: {
         student_id: student.id,
         plan_type: planType,
+        program: program || 'essentials', // Include program in metadata for webhook
       },
     }
 
