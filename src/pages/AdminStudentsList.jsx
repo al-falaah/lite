@@ -15,7 +15,9 @@ import {
   ChevronRight,
   Copy,
   Send,
-  X as XIcon2
+  X as XIcon2,
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 import { students, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
@@ -24,9 +26,12 @@ import Card from '../components/common/Card';
 const AdminStudentsList = () => {
   const [loading, setLoading] = useState(true);
   const [studentsData, setStudentsData] = useState([]);
+  const [enrollmentsData, setEnrollmentsData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudentEnrollments, setSelectedStudentEnrollments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [programFilter, setProgramFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
@@ -46,7 +51,7 @@ const AdminStudentsList = () => {
   // Reset to page 1 when search or filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, programFilter]);
 
   const loadStudents = async () => {
     try {
@@ -71,6 +76,20 @@ const AdminStudentsList = () => {
       }
 
       setStudentsData(data || []);
+
+      // Load all enrollments
+      const { data: enrollments, error: enrollmentsError } = await supabase
+        .from('enrollments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (enrollmentsError) {
+        console.error('Error loading enrollments:', enrollmentsError);
+        toast.warning('Failed to load enrollment data');
+      } else {
+        setEnrollmentsData(enrollments || []);
+      }
+
       setError(null);
     } catch (error) {
       console.error('Error:', error);
@@ -88,6 +107,9 @@ const AdminStudentsList = () => {
 
   const handleViewStudent = async (student) => {
     setSelectedStudent(student);
+    // Get enrollments for this student
+    const studentEnrollments = enrollmentsData.filter(e => e.student_id === student.id);
+    setSelectedStudentEnrollments(studentEnrollments);
     setShowModal(true);
   };
 
@@ -245,13 +267,42 @@ const AdminStudentsList = () => {
     });
   };
 
+  const getProgramName = (program) => {
+    return program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+  };
+
+  const getEnrollmentStatusColor = (status) => {
+    switch (status) {
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'completed':
+        return 'bg-blue-100 text-blue-800';
+      case 'withdrawn':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStudentEnrollments = (studentId) => {
+    return enrollmentsData.filter(e => e.student_id === studentId);
+  };
+
   // Filter students by status
   const statusFilteredStudents = statusFilter === 'all'
     ? studentsData
     : studentsData.filter(s => s.status === statusFilter);
 
+  // Filter students by program
+  const programFilteredStudents = programFilter === 'all'
+    ? statusFilteredStudents
+    : statusFilteredStudents.filter(student => {
+        const studentEnrollments = getStudentEnrollments(student.id);
+        return studentEnrollments.some(e => e.program === programFilter);
+      });
+
   // Filter students by search query
-  const searchFilteredStudents = statusFilteredStudents.filter(student => {
+  const searchFilteredStudents = programFilteredStudents.filter(student => {
     const query = searchQuery.toLowerCase();
     return (
       student.full_name?.toLowerCase().includes(query) ||
@@ -271,7 +322,9 @@ const AdminStudentsList = () => {
     total: studentsData.length,
     enrolled: studentsData.filter(s => s.status === 'enrolled').length,
     graduated: studentsData.filter(s => s.status === 'graduated').length,
-    dropout: studentsData.filter(s => s.status === 'dropout').length
+    dropout: studentsData.filter(s => s.status === 'dropout').length,
+    essentialsEnrollments: enrollmentsData.filter(e => e.program === 'essentials' && e.status === 'active').length,
+    tajweedEnrollments: enrollmentsData.filter(e => e.program === 'tajweed' && e.status === 'active').length
   };
 
   if (loading) {
@@ -309,7 +362,7 @@ const AdminStudentsList = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
         <Card>
           <div className="flex items-center justify-between">
             <div>
@@ -349,6 +402,26 @@ const AdminStudentsList = () => {
             <XCircle className="h-10 w-10 text-red-400" />
           </div>
         </Card>
+
+        <Card className="bg-blue-50 border-blue-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-blue-700">Essentials</div>
+              <div className="text-3xl font-bold text-blue-900">{stats.essentialsEnrollments}</div>
+            </div>
+            <BookOpen className="h-10 w-10 text-blue-400" />
+          </div>
+        </Card>
+
+        <Card className="bg-purple-50 border-purple-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-purple-700">Tajweed</div>
+              <div className="text-3xl font-bold text-purple-900">{stats.tajweedEnrollments}</div>
+            </div>
+            <GraduationCap className="h-10 w-10 text-purple-400" />
+          </div>
+        </Card>
       </div>
 
       {/* Search Bar */}
@@ -366,38 +439,68 @@ const AdminStudentsList = () => {
       </Card>
 
       {/* Filters and Bulk Actions */}
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2">
-          {['all', 'applicant', 'enrolled', 'graduated', 'dropout'].map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setStatusFilter(filter)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
-                statusFilter === filter
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
+      <div className="space-y-4">
+        {/* Status Filter */}
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">Filter by Status</label>
+            <div className="flex gap-2 flex-wrap">
+              {['all', 'applicant', 'enrolled', 'graduated', 'dropout'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setStatusFilter(filter)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
+                    statusFilter === filter
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {selectedStudentIds.length > 0 && (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">
+                {selectedStudentIds.length} selected
+              </span>
+              <Button
+                onClick={() => handleOpenEmailModal()}
+                variant="primary"
+                className="flex items-center gap-2"
+              >
+                <Send className="h-4 w-4" />
+                Send Bulk Email
+              </Button>
+            </div>
+          )}
         </div>
 
-        {selectedStudentIds.length > 0 && (
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">
-              {selectedStudentIds.length} selected
-            </span>
-            <Button
-              onClick={() => handleOpenEmailModal()}
-              variant="primary"
-              className="flex items-center gap-2"
-            >
-              <Send className="h-4 w-4" />
-              Send Bulk Email
-            </Button>
+        {/* Program Filter */}
+        <div>
+          <label className="text-sm font-medium text-gray-700 mb-2 block">Filter by Program</label>
+          <div className="flex gap-2 flex-wrap">
+            {[
+              { value: 'all', label: 'All Programs' },
+              { value: 'essentials', label: 'Essential Arabic & Islamic Studies' },
+              { value: 'tajweed', label: 'Tajweed Program' }
+            ].map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setProgramFilter(filter.value)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                  programFilter === filter.value
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {filter.label}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Students List */}
@@ -458,8 +561,25 @@ const AdminStudentsList = () => {
                       </div>
                     </div>
 
-                    <div className="mt-2 text-sm text-gray-500">
-                      <span className="font-mono">{student.student_id}</span>
+                    <div className="mt-3 flex items-center gap-3 flex-wrap">
+                      <span className="text-sm text-gray-500 font-mono">{student.student_id || 'No ID yet'}</span>
+                      {getStudentEnrollments(student.id).length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-500">Programs:</span>
+                          {getStudentEnrollments(student.id).map((enrollment) => (
+                            <span
+                              key={enrollment.id}
+                              className={`px-2 py-1 rounded text-xs font-medium ${
+                                enrollment.program === 'tajweed'
+                                  ? 'bg-purple-100 text-purple-800'
+                                  : 'bg-blue-100 text-blue-800'
+                              }`}
+                            >
+                              {enrollment.program === 'tajweed' ? 'Tajweed' : 'Essentials'}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -588,7 +708,7 @@ const AdminStudentsList = () => {
               {/* Enrollment Info */}
               <div className="bg-emerald-50 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-3">
-                  Enrollment Information
+                  Student Status
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4 text-sm">
                   <div>
@@ -606,6 +726,80 @@ const AdminStudentsList = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Program Enrollments */}
+              {selectedStudentEnrollments.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <BookOpen className="h-5 w-5" />
+                    Program Enrollments ({selectedStudentEnrollments.length})
+                  </h3>
+                  <div className="space-y-4">
+                    {selectedStudentEnrollments.map((enrollment) => (
+                      <div
+                        key={enrollment.id}
+                        className={`rounded-lg p-4 border-2 ${
+                          enrollment.program === 'tajweed'
+                            ? 'bg-purple-50 border-purple-200'
+                            : 'bg-blue-50 border-blue-200'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-semibold text-gray-900">
+                            {getProgramName(enrollment.program)}
+                          </h4>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getEnrollmentStatusColor(enrollment.status)}`}>
+                            {enrollment.status}
+                          </span>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-4 text-sm mb-3">
+                          <div>
+                            <p className="text-gray-600">Total Fees</p>
+                            <p className="font-semibold">${enrollment.total_fees?.toFixed(2)}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Paid</p>
+                            <p className="font-semibold text-green-700">${enrollment.total_paid?.toFixed(2)}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Balance</p>
+                            <p className={`font-semibold ${enrollment.balance_remaining > 0 ? 'text-amber-700' : 'text-green-700'}`}>
+                              ${enrollment.balance_remaining?.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <p className="text-gray-600">Payment Type</p>
+                            <p className="font-semibold capitalize">{enrollment.payment_type?.replace('_', ' ')}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Duration</p>
+                            <p className="font-semibold">{enrollment.program_duration_months} months</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-600">Enrolled On</p>
+                            <p className="font-semibold">{formatDate(enrollment.enrolled_date)}</p>
+                          </div>
+                          {enrollment.expected_graduation_date && (
+                            <div>
+                              <p className="text-gray-600">Expected Graduation</p>
+                              <p className="font-semibold">{formatDate(enrollment.expected_graduation_date)}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedStudentEnrollments.length === 0 && (
+                <div className="bg-gray-50 rounded-lg p-6 text-center">
+                  <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600">No program enrollments found for this student</p>
+                </div>
+              )}
 
               {/* Update Status */}
               {selectedStudent.status !== 'graduated' && (
