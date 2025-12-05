@@ -447,7 +447,7 @@ const ApplicationPage = () => {
                           <h3 className={`text-lg font-bold mb-1 ${formData.program === 'essentials' ? 'text-emerald-900' : 'text-gray-900'}`}>
                             Essential Arabic & Islamic Studies Program
                           </h3>
-                          <p className="text-sm text-gray-600 mb-3">Comprehensive 2-year Islamic education</p>
+                          <p className="text-sm text-gray-600 mb-3">Comprehensive 2-year Educational Program</p>
                         </div>
                       </div>
                       <div className="space-y-2 text-sm">
@@ -465,7 +465,7 @@ const ApplicationPage = () => {
                         </div>
                         <div className="flex items-center text-gray-700">
                           <span className="mr-2">⏱️</span>
-                          <span>2 hours per week</span>
+                          <span>2 sessions/week (2 hours + 30 min)</span>
                         </div>
                         <div className="mt-3 pt-3 border-t border-gray-200">
                           <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
@@ -501,7 +501,7 @@ const ApplicationPage = () => {
                           <h3 className={`text-lg font-bold mb-1 ${formData.program === 'tajweed' ? 'text-emerald-900' : 'text-gray-900'}`}>
                             Tajweed Program
                           </h3>
-                          <p className="text-sm text-gray-600 mb-3">Intensive Quranic recitation course</p>
+                          <p className="text-sm text-gray-600 mb-3">Intensive Qur'anic recitation course</p>
                         </div>
                       </div>
                       <div className="space-y-2 text-sm">
