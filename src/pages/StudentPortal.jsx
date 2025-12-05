@@ -99,13 +99,11 @@ const StudentPortal = () => {
     }
   };
 
-  const handlePayment = async (enrollment, planType) => {
-    setProcessingPayment(enrollment.id);
-
+  const handleBillingPortal = async () => {
+    setLoading(true);
     try {
-      // Create Stripe checkout session
       const response = await fetch(
-        `${supabaseUrl}/functions/v1/create-stripe-checkout`,
+        `${supabaseUrl}/functions/v1/create-billing-portal`,
         {
           method: 'POST',
           headers: {
@@ -113,10 +111,7 @@ const StudentPortal = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            email: student.email,
-            planType: planType,
-            enrollmentId: enrollment.id,
-            program: enrollment.program
+            customerId: student.stripe_customer_id
           }),
         }
       );
@@ -124,17 +119,36 @@ const StudentPortal = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to create checkout session');
+        throw new Error(result.error || 'Failed to access billing portal');
       }
 
-      // Redirect to Stripe Checkout
-      window.location.href = result.checkout_url;
-
+      // Redirect to Stripe Billing Portal
+      window.location.href = result.url;
     } catch (error) {
-      console.error('Payment error:', error);
-      toast.error(error.message || 'Failed to initiate payment');
-      setProcessingPayment(null);
+      console.error('Billing portal error:', error);
+      toast.error(error.message || 'Failed to access billing portal');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const isEnrolledInAllPrograms = () => {
+    const availablePrograms = ['essentials', 'tajweed'];
+    const enrolledPrograms = enrollments.map(e => e.program);
+    return availablePrograms.every(program => enrolledPrograms.includes(program));
+  };
+
+  const formatScheduleTime = (time) => {
+    return new Date(`2000-01-01T${time}`).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  const getDayName = (dayNum) => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[dayNum] || `Day ${dayNum}`;
   };
 
   const handleLogout = () => {
@@ -352,120 +366,24 @@ const StudentPortal = () => {
                       </div>
                     </div>
 
-                    {/* Payment Actions */}
-                    {hasPendingPayment && (
+                    {/* Billing Portal Link */}
+                    {student?.stripe_customer_id && (
                       <div className="border-t pt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Make a Payment</h3>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          {!isTajweed && (
-                            <>
-                              {/* Monthly Plan */}
-                              <div className="bg-blue-50 border-2 border-blue-200 p-4 rounded-lg">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <Calendar className="h-5 w-5 text-blue-600" />
-                                  <h4 className="font-semibold text-gray-900">Monthly Plan</h4>
-                                </div>
-                                <p className="text-3xl font-bold text-blue-600 mb-2">$25<span className="text-sm text-gray-600">/month</span></p>
-                                <p className="text-sm text-gray-600 mb-4">Pay monthly over 24 months</p>
-                                <Button
-                                  onClick={() => handlePayment(enrollment, 'monthly')}
-                                  disabled={processingPayment === enrollment.id}
-                                  fullWidth
-                                  className="bg-blue-600 hover:bg-blue-700"
-                                >
-                                  {processingPayment === enrollment.id ? (
-                                    <>
-                                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                      Processing...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <CreditCard className="h-5 w-5 mr-2" />
-                                      Pay $25/month
-                                    </>
-                                  )}
-                                </Button>
-                              </div>
-
-                              {/* Annual Plan */}
-                              <div className="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-lg relative">
-                                <div className="absolute -top-3 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                                  Save $25!
-                                </div>
-                                <div className="flex items-center gap-2 mb-3">
-                                  <DollarSign className="h-5 w-5 text-emerald-600" />
-                                  <h4 className="font-semibold text-gray-900">Annual Plan</h4>
-                                </div>
-                                <p className="text-3xl font-bold text-emerald-600 mb-2">$275<span className="text-sm text-gray-600">/year</span></p>
-                                <p className="text-sm text-gray-600 mb-4">Pay once per year (2 payments total)</p>
-                                <Button
-                                  onClick={() => handlePayment(enrollment, 'annual')}
-                                  disabled={processingPayment === enrollment.id}
-                                  fullWidth
-                                  className="bg-emerald-600 hover:bg-emerald-700"
-                                >
-                                  {processingPayment === enrollment.id ? (
-                                    <>
-                                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                      Processing...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <DollarSign className="h-5 w-5 mr-2" />
-                                      Pay $275/year
-                                    </>
-                                  )}
-                                </Button>
-                              </div>
-                            </>
-                          )}
-
-                          {isTajweed && (
-                            <div className="bg-purple-50 border-2 border-purple-200 p-4 rounded-lg">
-                              <div className="flex items-center gap-2 mb-3">
-                                <DollarSign className="h-5 w-5 text-purple-600" />
-                                <h4 className="font-semibold text-gray-900">One-time Payment</h4>
-                              </div>
-                              <p className="text-3xl font-bold text-purple-600 mb-2">$120</p>
-                              <p className="text-sm text-gray-600 mb-4">Complete program payment</p>
-                              <Button
-                                onClick={() => handlePayment(enrollment, 'one-time')}
-                                disabled={processingPayment === enrollment.id}
-                                fullWidth
-                                className="bg-purple-600 hover:bg-purple-700"
-                              >
-                                {processingPayment === enrollment.id ? (
-                                  <>
-                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                    Processing...
-                                  </>
-                                ) : (
-                                  <>
-                                    <CreditCard className="h-5 w-5 mr-2" />
-                                    Pay $120
-                                  </>
-                                )}
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                          <p className="text-sm text-blue-900">
-                            <strong>Note:</strong> All payments are processed securely through Stripe. You will receive your student ID after your first payment.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {!hasPendingPayment && enrollment.status === 'active' && (
-                      <div className="border-t pt-6">
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                          <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                        <div className="flex items-center justify-between">
                           <div>
-                            <p className="font-semibold text-green-900">Payment Complete!</p>
-                            <p className="text-sm text-green-700">Your enrollment is fully paid. Keep up the great work!</p>
+                            <h3 className="text-lg font-semibold text-gray-900">Manage Billing</h3>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Update payment methods, view invoices, and manage your subscription
+                            </p>
                           </div>
+                          <Button
+                            onClick={handleBillingPortal}
+                            variant="outline"
+                            disabled={loading}
+                          >
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            Billing Portal
+                          </Button>
                         </div>
                       </div>
                     )}
@@ -475,13 +393,134 @@ const StudentPortal = () => {
             </div>
           )}
 
-          {/* Class Schedule (if available) */}
-          {schedules.length > 0 && (
+          {/* Class Schedule */}
+          {schedules.length > 0 ? (
             <Card>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Class Schedule</h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Your personalized class schedule will be available here after enrollment confirmation.
-              </p>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Class Schedule</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Your personalized weekly schedule for {progress?.current_year ? `Year ${progress.current_year}` : 'current program'}
+                  </p>
+                </div>
+                {progress && (
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">Progress</p>
+                    <p className="text-2xl font-bold text-emerald-600">{progress.overall_progress_pct || 0}%</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Current Week's Schedule */}
+              <div className="space-y-3">
+                {schedules
+                  .filter(s => s.status !== 'completed' && s.week_number === (progress?.current_week || 1))
+                  .map((schedule) => (
+                    <div
+                      key={schedule.id}
+                      className="flex items-center gap-4 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-200 rounded-lg hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+                          <Calendar className="h-6 w-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-1">
+                          <h3 className="font-semibold text-gray-900">{getDayName(schedule.day_of_week)}</h3>
+                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full font-medium">
+                            Week {schedule.week_number}
+                          </span>
+                          <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                            Year {schedule.academic_year}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            <span>{formatScheduleTime(schedule.class_time)}</span>
+                          </div>
+                          {schedule.zoom_link && (
+                            <a
+                              href={schedule.zoom_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                              <Video className="h-4 w-4" />
+                              Join Class
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      {schedule.status === 'completed' && (
+                        <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                      )}
+                    </div>
+                  ))}
+
+                {schedules.filter(s => s.status !== 'completed' && s.week_number === (progress?.current_week || 1)).length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                    <p className="text-sm">No upcoming classes this week</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Progress Overview */}
+              {progress && (
+                <div className="mt-6 pt-6 border-t grid md:grid-cols-3 gap-4">
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Year 1</p>
+                    <p className="text-2xl font-bold text-blue-600">{progress.year1_progress_pct || 0}%</p>
+                    <p className="text-xs text-gray-500 mt-1">{progress.year1_completed || 0}/{progress.year1_total} classes</p>
+                  </div>
+                  <div className="text-center p-3 bg-purple-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Year 2</p>
+                    <p className="text-2xl font-bold text-purple-600">{progress.year2_progress_pct || 0}%</p>
+                    <p className="text-xs text-gray-500 mt-1">{progress.year2_completed || 0}/{progress.year2_total} classes</p>
+                  </div>
+                  <div className="text-center p-3 bg-emerald-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Overall</p>
+                    <p className="text-2xl font-bold text-emerald-600">{progress.overall_progress_pct || 0}%</p>
+                    <p className="text-xs text-gray-500 mt-1">{progress.total_completed || 0}/{progress.total_classes} classes</p>
+                  </div>
+                </div>
+              )}
+            </Card>
+          ) : (
+            <Card>
+              <div className="text-center py-8 text-gray-500">
+                <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-lg font-medium mb-2">Class Schedule Coming Soon</p>
+                <p className="text-sm">Your class schedule will appear here once your enrollment is confirmed.</p>
+              </div>
+            </Card>
+          )}
+
+          {/* Apply for Another Program */}
+          {!isEnrolledInAllPrograms() && (
+            <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <GraduationCap className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Expand Your Learning</h3>
+                  <p className="text-gray-600 mb-4">
+                    Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
+                  </p>
+                  <Link to="/apply">
+                    <Button variant="primary" className="bg-purple-600 hover:bg-purple-700">
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      Apply for Another Program
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </Card>
           )}
         </div>
