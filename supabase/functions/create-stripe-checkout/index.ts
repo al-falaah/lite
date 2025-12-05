@@ -68,8 +68,9 @@ serve(async (req) => {
     }
 
     const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
+    const currentProgram = program || 'essentials'
 
-    // Create checkout session based on plan type
+    // Create checkout session based on plan type and program
     const sessionConfig: any = {
       customer: customerId,
       line_items: [],
@@ -79,39 +80,56 @@ serve(async (req) => {
       metadata: {
         student_id: student.id,
         plan_type: planType,
-        program: program || 'essentials', // Include program in metadata for webhook
+        program: currentProgram,
       },
     }
 
-    if (planType === 'monthly') {
-      // Monthly subscription: $25/month
+    // Program-specific pricing
+    if (currentProgram === 'tajweed') {
+      // Tajweed Program: $120 one-time payment only (6 months program)
       sessionConfig.line_items.push({
         price_data: {
           currency: 'nzd',
           product_data: {
-            name: 'Al-Falaah Academy - Monthly Subscription',
-            description: '2-Year Essential Islamic Studies Course',
+            name: 'Al-Falaah Academy - Tajweed Program',
+            description: '6-Month Tajweed Mastery Course',
           },
-          unit_amount: 2500, // $25 in cents
-          recurring: {
-            interval: 'month',
-          },
+          unit_amount: 12000, // $120 in cents
         },
         quantity: 1,
       })
     } else {
-      // Annual one-time payment: $275
-      sessionConfig.line_items.push({
-        price_data: {
-          currency: 'nzd',
-          product_data: {
-            name: 'Al-Falaah Academy - Annual Payment',
-            description: '2-Year Essential Islamic Studies Course (Year 1)',
+      // Essentials Program pricing
+      if (planType === 'monthly') {
+        // Monthly subscription: $25/month
+        sessionConfig.line_items.push({
+          price_data: {
+            currency: 'nzd',
+            product_data: {
+              name: 'Al-Falaah Academy - Monthly Subscription',
+              description: '2-Year Essential Islamic Studies Course',
+            },
+            unit_amount: 2500, // $25 in cents
+            recurring: {
+              interval: 'month',
+            },
           },
-          unit_amount: 27500, // $275 in cents
-        },
-        quantity: 1,
-      })
+          quantity: 1,
+        })
+      } else {
+        // Annual one-time payment: $275
+        sessionConfig.line_items.push({
+          price_data: {
+            currency: 'nzd',
+            product_data: {
+              name: 'Al-Falaah Academy - Annual Payment',
+              description: '2-Year Essential Islamic Studies Course (Year 1)',
+            },
+            unit_amount: 27500, // $275 in cents
+          },
+          quantity: 1,
+        })
+      }
     }
 
     const session = await stripe.checkout.sessions.create(sessionConfig)

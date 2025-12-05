@@ -9,10 +9,15 @@ import Card from '../components/common/Card';
 const StripePaymentPage = () => {
   const [searchParams] = useSearchParams();
   const emailFromUrl = searchParams.get('email');
+  const programFromUrl = searchParams.get('program') || 'essentials'; // Default to essentials
 
   const [email, setEmail] = useState(emailFromUrl || '');
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
+
+  const isTajweed = programFromUrl === 'tajweed';
+  const programName = isTajweed ? 'Tajweed Program' : 'Essential Islamic Studies Course';
+  const programDuration = isTajweed ? '6 months' : '2 years';
 
   const handlePayment = async (planType) => {
     if (!email) {
@@ -41,8 +46,9 @@ const StripePaymentPage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            email, // Use email instead of student_id
-            planType, // 'monthly' or 'annual'
+            email,
+            planType,
+            program: programFromUrl, // Pass program to backend
           }),
         }
       );
@@ -87,9 +93,11 @@ const StripePaymentPage = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
             <CreditCard className="h-8 w-8 text-emerald-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Choose Your Payment Plan</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            {isTajweed ? 'Complete Your Payment' : 'Choose Your Payment Plan'}
+          </h1>
           <p className="text-lg text-gray-600">
-            Select the payment option that works best for you
+            {isTajweed ? `${programName} - ${programDuration}` : 'Select the payment option that works best for you'}
           </p>
         </div>
 
@@ -115,107 +123,161 @@ const StripePaymentPage = () => {
         )}
 
         {/* Payment Plans */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {/* Monthly Plan */}
-          <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mb-4">
-                <Calendar className="h-6 w-6 text-blue-600" />
+        {isTajweed ? (
+          /* Tajweed: Single $120 payment */
+          <div className="max-w-md mx-auto mb-8">
+            <Card className="hover:shadow-xl transition-shadow border-2 border-purple-500">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 mb-4">
+                  <DollarSign className="h-6 w-6 text-purple-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Tajweed Program</h3>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-purple-600">$120</span>
+                  <span className="text-gray-600"> one-time</span>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Complete 6-month Tajweed Mastery Course
+                </p>
+                <ul className="text-left space-y-2 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">One-time payment for full course</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">6 months of intensive Tajweed training</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Certificate upon completion</span>
+                  </li>
+                </ul>
+                <Button
+                  onClick={() => handlePayment('oneTime')}
+                  disabled={loading}
+                  fullWidth
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="h-5 w-5 mr-2" />
+                      Pay $120
+                    </>
+                  )}
+                </Button>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Monthly Plan</h3>
-              <div className="mb-4">
-                <span className="text-4xl font-bold text-emerald-600">$25</span>
-                <span className="text-gray-600">/month</span>
+            </Card>
+          </div>
+        ) : (
+          /* Essentials: Monthly or Annual plans */
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Monthly Plan */}
+            <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mb-4">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Monthly Plan</h3>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-emerald-600">$25</span>
+                  <span className="text-gray-600">/month</span>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Pay monthly and spread the cost over 2 years
+                </p>
+                <ul className="text-left space-y-2 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Auto-renewing monthly subscription</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Cancel anytime (non-refundable)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Total: $600 over 24 months</span>
+                  </li>
+                </ul>
+                <Button
+                  onClick={() => handlePayment('monthly')}
+                  disabled={loading}
+                  fullWidth
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {loading && selectedPlan === 'monthly' ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="h-5 w-5 mr-2" />
+                      Pay $25/month
+                    </>
+                  )}
+                </Button>
               </div>
-              <p className="text-gray-600 mb-6">
-                Pay monthly and spread the cost over 2 years
-              </p>
-              <ul className="text-left space-y-2 mb-6">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">Auto-renewing monthly subscription</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">Cancel anytime (non-refundable)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">Total: $600 over 24 months</span>
-                </li>
-              </ul>
-              <Button
-                onClick={() => handlePayment('monthly')}
-                disabled={loading}
-                fullWidth
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {loading && selectedPlan === 'monthly' ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="h-5 w-5 mr-2" />
-                    Pay $25/month
-                  </>
-                )}
-              </Button>
-            </div>
-          </Card>
+            </Card>
 
-          {/* Annual Plan */}
-          <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500 relative">
-            <div className="absolute -top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-              Save $25!
-            </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
-                <DollarSign className="h-6 w-6 text-emerald-600" />
+            {/* Annual Plan */}
+            <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500 relative">
+              <div className="absolute -top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                Save $25!
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Annual Plan</h3>
-              <div className="mb-4">
-                <span className="text-4xl font-bold text-emerald-600">$275</span>
-                <span className="text-gray-600">/year</span>
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
+                  <DollarSign className="h-6 w-6 text-emerald-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Annual Plan</h3>
+                <div className="mb-4">
+                  <span className="text-4xl font-bold text-emerald-600">$275</span>
+                  <span className="text-gray-600">/year</span>
+                </div>
+                <p className="text-gray-600 mb-6">
+                  Pay once per year and save money
+                </p>
+                <ul className="text-left space-y-2 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">One-time annual payment</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Pay for 2nd year next academic year</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">Total: $550 over 2 years (save $50!)</span>
+                  </li>
+                </ul>
+                <Button
+                  onClick={() => handlePayment('annual')}
+                  disabled={loading}
+                  fullWidth
+                >
+                  {loading && selectedPlan === 'annual' ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <DollarSign className="h-5 w-5 mr-2" />
+                      Pay $275/year
+                    </>
+                  )}
+                </Button>
               </div>
-              <p className="text-gray-600 mb-6">
-                Pay once per year and save money
-              </p>
-              <ul className="text-left space-y-2 mb-6">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">One-time annual payment</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">Pay for 2nd year next academic year</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-700">Total: $550 over 2 years (save $50!)</span>
-                </li>
-              </ul>
-              <Button
-                onClick={() => handlePayment('annual')}
-                disabled={loading}
-                fullWidth
-              >
-                {loading && selectedPlan === 'annual' ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <DollarSign className="h-5 w-5 mr-2" />
-                    Pay $275/year
-                  </>
-                )}
-              </Button>
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </div>
+        )}
 
         {/* Info Section */}
         <Card className="bg-blue-50 border-blue-200">
