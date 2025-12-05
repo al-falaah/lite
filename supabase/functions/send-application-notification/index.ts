@@ -40,6 +40,11 @@ serve(async (req) => {
       throw new Error('Application not found')
     }
 
+    // Determine program name
+    const programName = application.program === 'tajweed'
+      ? 'Tajweed Program'
+      : 'Essential Arabic & Islamic Studies Program';
+
     // Send email to admin
     const emailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -50,12 +55,18 @@ serve(async (req) => {
       body: JSON.stringify({
         from: 'Al-Falaah Academy <noreply@alfalaah-academy.nz>',
         to: [ADMIN_EMAIL],
-        subject: `New Application: ${application.full_name}`,
+        subject: `New Application: ${application.full_name} (${programName})`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #059669;">New Application Received</h2>
 
             <p>A new student application has been submitted and requires your review.</p>
+
+            <div style="background-color: #d1fae5; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #059669;">
+              <p style="margin: 0; font-size: 16px; font-weight: 600; color: #065f46;">
+                Program: ${programName}
+              </p>
+            </div>
 
             <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin-top: 0;">Applicant Information</h3>

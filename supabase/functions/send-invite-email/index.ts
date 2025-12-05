@@ -16,11 +16,11 @@ const EMAIL_STYLES = `
 `;
 
 function generateEmailHTML(applicantData: any, signupUrl: string): string {
-  const { full_name, program_type } = applicantData;
+  const { full_name, program } = applicantData;
 
-  const programName = program_type === 'foundational'
-    ? '1-Year Foundational Certificate'
-    : '3-Year Essentials Program';
+  const programName = program === 'tajweed'
+    ? 'Tajweed Program'
+    : 'Essential Arabic & Islamic Studies Program';
 
   return `
     <!DOCTYPE html>

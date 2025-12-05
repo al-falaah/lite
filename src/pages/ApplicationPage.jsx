@@ -261,7 +261,8 @@ const ApplicationPage = () => {
         body: {
           applicantData: {
             full_name: formData.fullName,
-            email: formData.email
+            email: formData.email,
+            program: formData.program
           }
         }
       }).then(({ data, error }) => {

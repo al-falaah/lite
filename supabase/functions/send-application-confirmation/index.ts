@@ -18,7 +18,38 @@ const EMAIL_STYLES = `
 `;
 
 function generateEmailHTML(applicantData: any): string {
-  const { full_name, email } = applicantData;
+  const { full_name, email, program } = applicantData;
+
+  // Determine program-specific details
+  const isTajweed = program === 'tajweed';
+  const programName = isTajweed ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+  const programDuration = isTajweed ? '6 months (24 weeks)' : '2 years (24 months)';
+  const programSchedule = isTajweed ? '2 sessions/week (1 hour + 30 min)' : '2 sessions/week (2 hours + 30 min)';
+
+  // Build payment info HTML
+  const paymentInfoHTML = isTajweed ? `
+    <tr>
+      <td class="label">Payment:</td>
+      <td>One-time payment of $120 NZD</td>
+    </tr>
+    <tr>
+      <td class="label">Total Cost:</td>
+      <td>$120 NZD</td>
+    </tr>
+  ` : `
+    <tr>
+      <td class="label">Option 1 - Monthly:</td>
+      <td>$25 NZD/month (auto-renewing)</td>
+    </tr>
+    <tr>
+      <td class="label">Option 2 - Annual:</td>
+      <td>$275 NZD/year (save $25!)</td>
+    </tr>
+    <tr>
+      <td class="label">Total (2 years):</td>
+      <td>Monthly: $600 | Annual: $550</td>
+    </tr>
+  `;
 
   return `
     <!DOCTYPE html>
@@ -37,7 +68,7 @@ function generateEmailHTML(applicantData: any): string {
         <div class="content">
           <h2>Assalaamu 'alaykum ${full_name},</h2>
 
-          <p>Thank you for your interest in Al-Falaah Academy. We have received your application for the <strong>2-Year Essential Arabic & Islamic Studies Course</strong> and will review it shortly.</p>
+          <p>Thank you for your interest in Al-Falaah Academy. We have received your application for the <strong>${programName}</strong> and will review it shortly.</p>
 
           <div class="info-box">
             <h3>Application Summary</h3>
@@ -52,24 +83,21 @@ function generateEmailHTML(applicantData: any): string {
               </tr>
               <tr>
                 <td class="label">Program:</td>
-                <td>2-Year Essential Arabic & Islamic Studies Course</td>
+                <td>${programName}</td>
+              </tr>
+              <tr>
+                <td class="label">Duration:</td>
+                <td>${programDuration}</td>
+              </tr>
+              <tr>
+                <td class="label">Schedule:</td>
+                <td>${programSchedule}</td>
               </tr>
               <tr>
                 <td class="label">Learning Format:</td>
                 <td>Personalized One-on-One</td>
               </tr>
-              <tr>
-                <td class="label">Option 1 - Monthly:</td>
-                <td>$25 NZD/month (auto-renewing)</td>
-              </tr>
-              <tr>
-                <td class="label">Option 2 - Annual:</td>
-                <td>$275 NZD/year (save $25!)</td>
-              </tr>
-              <tr>
-                <td class="label">Total (2 years):</td>
-                <td>Monthly: $600 | Annual: $550</td>
-              </tr>
+              ${paymentInfoHTML}
             </table>
           </div>
 
