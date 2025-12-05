@@ -15,6 +15,9 @@ const ApplicationPage = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
+    // Program Selection
+    program: '', // 'essentials' or 'tajweed'
+
     // Step 1: Personal Information
     fullName: '',
     email: '',
@@ -151,6 +154,10 @@ const ApplicationPage = () => {
   const validateStep = (step) => {
     switch (step) {
       case 1:
+        if (!formData.program) {
+          toast.error('Please select a program');
+          return false;
+        }
         if (!formData.fullName || !formData.email || !formData.phone || !formData.dateOfBirth || !formData.gender) {
           toast.error('Please fill in all required personal information');
           return false;
@@ -219,6 +226,7 @@ const ApplicationPage = () => {
 
     try {
       const applicationData = {
+        program: formData.program,
         full_name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -298,6 +306,11 @@ const ApplicationPage = () => {
   ];
 
   if (submitted) {
+    const programName = formData.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+    const paymentInfo = formData.program === 'tajweed'
+      ? 'One-time payment of $120 NZD'
+      : 'Monthly ($25/month) or Annual ($275/year) payment options';
+
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
@@ -306,7 +319,7 @@ const ApplicationPage = () => {
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Application Submitted!</h2>
               <p className="text-gray-600 mb-4">
-                Thank you for applying to the <strong>2-Year Essential Islamic Studies Course</strong> at Al-Falaah Academy.
+                Thank you for applying to the <strong>{programName}</strong> at Al-Falaah Academy.
               </p>
               <p className="text-gray-600 mb-6">
                 We've received your application and will review it shortly.
@@ -317,7 +330,7 @@ const ApplicationPage = () => {
                   <li>• Our admin team will review your application</li>
                   <li>• Once approved, you'll be enrolled as a student</li>
                   <li>• You'll receive an email at <strong>{formData.email}</strong> with your student details</li>
-                  <li>• Payment instructions ($300/year - pay in full or up to 4 installments per year) will be provided</li>
+                  <li>• Payment instructions ({paymentInfo}) will be provided</li>
                 </ul>
               </div>
               <Button onClick={() => navigate('/')}>
@@ -347,12 +360,22 @@ const ApplicationPage = () => {
           </div>
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900">Student Application</h1>
-            <p className="text-gray-600 mt-2">2-Year Essential Islamic Studies Course</p>
-            <div className="mt-4 inline-flex items-center px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
-              <div className="text-sm text-emerald-900">
-                <span className="font-semibold">$300/year</span> • 2 years • Personalized learning
+            <p className="text-gray-600 mt-2">Al-Falaah Academy Programs</p>
+            {formData.program && (
+              <div className="mt-4 inline-flex items-center px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                <div className="text-sm text-emerald-900">
+                  {formData.program === 'tajweed' ? (
+                    <>
+                      <span className="font-semibold">Tajweed Program</span> • 6 months • $120 NZD
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-semibold">Essential Arabic & Islamic Studies</span> • 2 years • $25-$275/payment
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -394,7 +417,127 @@ const ApplicationPage = () => {
             {/* Step 1: Personal Information */}
             {currentStep === 1 && (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Personal Information</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Program Selection & Personal Information</h2>
+
+                {/* Program Selection */}
+                <div className="mb-8">
+                  <label className="block text-sm font-medium text-gray-700 mb-4">
+                    Select Your Program <span className="text-red-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Essential Arabic & Islamic Studies Program */}
+                    <label
+                      className={`relative flex flex-col p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                        formData.program === 'essentials'
+                          ? 'border-emerald-600 bg-emerald-50 shadow-md'
+                          : 'border-gray-300 hover:border-emerald-300 bg-white'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="program"
+                        value="essentials"
+                        checked={formData.program === 'essentials'}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <div className="flex items-start mb-3">
+                        <BookOpen className={`h-6 w-6 mr-3 mt-1 ${formData.program === 'essentials' ? 'text-emerald-600' : 'text-gray-500'}`} />
+                        <div className="flex-1">
+                          <h3 className={`text-lg font-bold mb-1 ${formData.program === 'essentials' ? 'text-emerald-900' : 'text-gray-900'}`}>
+                            Essential Arabic & Islamic Studies Program
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-3">Comprehensive 2-year Islamic education</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center text-gray-700">
+                          <Clock className="h-4 w-4 mr-2" />
+                          <span>Duration: 2 years (24 months)</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2">💰</span>
+                          <span>Monthly: $25 NZD/month or Annual: $275 NZD/year</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2">📚</span>
+                          <span>Personalized one-on-one learning</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2">⏱️</span>
+                          <span>2 hours per week</span>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-gray-200">
+                          <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
+                          <p className="text-sm font-bold text-emerald-700">Monthly: $600 | Annual: $550</p>
+                        </div>
+                      </div>
+                      {formData.program === 'essentials' && (
+                        <div className="absolute top-4 right-4">
+                          <CheckCircle className="h-6 w-6 text-emerald-600" />
+                        </div>
+                      )}
+                    </label>
+
+                    {/* Tajweed Program */}
+                    <label
+                      className={`relative flex flex-col p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                        formData.program === 'tajweed'
+                          ? 'border-emerald-600 bg-emerald-50 shadow-md'
+                          : 'border-gray-300 hover:border-emerald-300 bg-white'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="program"
+                        value="tajweed"
+                        checked={formData.program === 'tajweed'}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <div className="flex items-start mb-3">
+                        <BookOpen className={`h-6 w-6 mr-3 mt-1 ${formData.program === 'tajweed' ? 'text-emerald-600' : 'text-gray-500'}`} />
+                        <div className="flex-1">
+                          <h3 className={`text-lg font-bold mb-1 ${formData.program === 'tajweed' ? 'text-emerald-900' : 'text-gray-900'}`}>
+                            Tajweed Program
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-3">Intensive Quranic recitation course</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center text-gray-700">
+                          <Clock className="h-4 w-4 mr-2" />
+                          <span>Duration: 6 months (24 weeks)</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2">💰</span>
+                          <span>One-time payment: $120 NZD</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2">📚</span>
+                          <span>Personalized one-on-one learning</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2">⏱️</span>
+                          <span>2 sessions/week (1 hour + 30 min)</span>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-gray-200">
+                          <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
+                          <p className="text-sm font-bold text-emerald-700">$120 NZD (one-time)</p>
+                        </div>
+                      </div>
+                      {formData.program === 'tajweed' && (
+                        <div className="absolute top-4 right-4">
+                          <CheckCircle className="h-6 w-6 text-emerald-600" />
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="border-t pt-6 mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Information</h3>
+                </div>
 
                 <Input
                   label="Full Name"
