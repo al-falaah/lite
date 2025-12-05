@@ -88,7 +88,7 @@ const AdminClassScheduling = () => {
       const { data, error } = await supabase
         .from('students')
         .select('*')
-        .eq('status', 'enrolled') // Only show actively enrolled students
+        // Removed status filter - show all students who have schedules
         .order('enrolled_date', { ascending: false });
 
       if (error) throw error;
