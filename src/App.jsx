@@ -9,6 +9,7 @@ import PaymentUploadPage from './pages/PaymentUploadPage';
 import StripePaymentPage from './pages/StripePaymentPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import StudentPortal from './pages/StudentPortal';
+import EnrollAdditionalProgram from './pages/EnrollAdditionalProgram';
 import AdminDashboard from './pages/AdminDashboard';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
             <Route path="/payment-upload" element={<PaymentUploadPage />} />
             <Route path="/student" element={<StudentPortal />} />
+            <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
 
             {/* Admin Route - Login and Dashboard */}
             <Route

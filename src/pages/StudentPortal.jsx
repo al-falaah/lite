@@ -519,7 +519,7 @@ const StudentPortal = () => {
                   <p className="text-gray-600 mb-4">
                     Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
                   </p>
-                  <Link to="/apply">
+                  <Link to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}>
                     <Button variant="primary" className="bg-purple-600 hover:bg-purple-700">
                       <BookOpen className="h-4 w-4 mr-2" />
                       Apply for Another Program
