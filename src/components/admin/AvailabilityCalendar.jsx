@@ -471,7 +471,9 @@ const AvailabilityCalendar = () => {
   const stats = {
     totalApplicants: applicants.length,
     totalStudents: enrolledStudents.length,
-    totalBookings: scheduledClasses.length,
+    totalBookings: selectedApplicant && viewMode === 'students'
+      ? scheduledClasses.filter(s => s.student_id === selectedApplicant.id).length
+      : 0,  // Show 0 for applicants view or when no selection
     selectedApplicantSlots: selectedApplicant
       ? (selectedApplicant.preferred_days?.length || 0) *
         (selectedApplicant.preferred_times?.length || 0)
@@ -1228,102 +1230,49 @@ const AvailabilityCalendar = () => {
                                   </div>
                                 )}
 
-                                {/* Show summary for students, detailed view for applicants */}
-                                {viewMode === 'students' && bookedClasses.length > 0 ? (
-                                  // Simple summary for students with schedules
+                                {/* Show summary view for both students and applicants */}
+                                {bookedClasses.length > 0 || applicantAvailable ? (
                                   <div className="space-y-1">
-                                    <div className="flex items-center justify-center gap-1">
-                                      <CheckCircle className="h-4 w-4 text-blue-700" />
-                                      <span className="text-xs font-semibold text-blue-900">
-                                        {bookedClasses.length} class{bookedClasses.length !== 1 ? 'es' : ''}
-                                      </span>
-                                    </div>
+                                    {/* Conflict indicator */}
+                                    {hasBoth && (
+                                      <div className="flex items-center justify-center gap-1">
+                                        <AlertCircle className="h-4 w-4 text-purple-700" />
+                                        <span className="text-xs font-bold text-purple-900">CONFLICT</span>
+                                      </div>
+                                    )}
+
+                                    {/* Available indicator */}
+                                    {!hasBoth && applicantAvailable && (
+                                      <div className="flex items-center justify-center gap-1">
+                                        <CheckCircle className="h-4 w-4 text-emerald-700" />
+                                        <span className="text-xs font-semibold text-emerald-900">Available</span>
+                                      </div>
+                                    )}
+
+                                    {/* Booking summary */}
+                                    {bookedClasses.length > 0 && (
+                                      <div className="flex items-center justify-center gap-1">
+                                        <CheckCircle className="h-4 w-4 text-blue-700" />
+                                        <span className="text-xs font-semibold text-blue-900">
+                                          {bookedClasses.length} class{bookedClasses.length !== 1 ? 'es' : ''}
+                                        </span>
+                                      </div>
+                                    )}
+
+                                    {/* Free hours */}
                                     <div className="text-xs text-gray-600">
-                                      {utilization.freeCount > 0 ? `${utilization.freeCount}h free` : 'Fully booked'}
+                                      {utilization.freeCount > 0 ? `${utilization.freeCount}h free` : bookedClasses.length > 0 ? 'Fully booked' : ''}
                                     </div>
+
+                                    {/* Other applicants indicator */}
+                                    {otherApplicants.length > 0 && viewMode === 'applicants' && (
+                                      <div className="text-xs text-gray-500">
+                                        +{otherApplicants.length} others
+                                      </div>
+                                    )}
                                   </div>
                                 ) : (
-                                  // Detailed view for applicants or empty slots
-                                  <>
-                                    {hasBoth && (
-                                      <div className="space-y-1">
-                                        <div className="flex items-center justify-center gap-1">
-                                          <AlertCircle className="h-4 w-4 text-purple-700" />
-                                          <span className="text-xs font-bold text-purple-900">CONFLICT</span>
-                                        </div>
-                                        {bookedClasses.map((schedule, idx) => (
-                                          <div key={idx} className="text-xs bg-white/50 rounded px-1 py-0.5">
-                                            <div className="font-semibold text-purple-900">
-                                              {formatTime(schedule.class_time)}
-                                            </div>
-                                            <div className="text-purple-700 truncate">
-                                              {schedule.students?.full_name?.split(' ')[0]}
-                                            </div>
-                                          </div>
-                                        ))}
-                                        {utilization.freeCount > 0 && (
-                                          <div className="text-xs text-emerald-700 font-medium mt-1">
-                                            ✓ {utilization.freeCount}h available
-                                          </div>
-                                        )}
-                                      </div>
-                                    )}
-
-                                    {!hasBoth && applicantAvailable && (
-                                      <div className="space-y-1">
-                                        <div className="flex items-center justify-center gap-1">
-                                          <CheckCircle className="h-4 w-4 text-emerald-700" />
-                                          <span className="text-xs font-semibold text-emerald-900">Available</span>
-                                        </div>
-                                        {bookedClasses.length > 0 && (
-                                          <div className="space-y-0.5 mt-1">
-                                            {bookedClasses.map((schedule, idx) => (
-                                              <div key={idx} className="text-xs bg-blue-100 rounded px-1 py-0.5">
-                                                <div className="font-medium text-blue-900">
-                                                  {formatTime(schedule.class_time)}
-                                                </div>
-                                              </div>
-                                            ))}
-                                            <div className="text-xs text-emerald-700 font-medium">
-                                              {utilization.freeCount}h free
-                                            </div>
-                                          </div>
-                                        )}
-                                        {otherApplicants.length > 0 && (
-                                          <div className="text-xs text-emerald-700 mt-1">
-                                            +{otherApplicants.length} others
-                                          </div>
-                                        )}
-                                      </div>
-                                    )}
-
-                                    {!hasBoth && !applicantAvailable && bookedClasses.length > 0 && (
-                                      <div className="space-y-1">
-                                        {bookedClasses.map((schedule, idx) => (
-                                          <div key={idx} className="text-xs bg-white/60 rounded px-1 py-0.5">
-                                            <div className="font-bold text-blue-900">
-                                              {formatTime(schedule.class_time)}
-                                            </div>
-                                            <div className="text-blue-700 truncate">
-                                              {schedule.students?.full_name?.split(' ')[0] || 'Student'}
-                                            </div>
-                                            <div className="text-xs text-blue-600">
-                                              {schedule.class_type === 'main' ? '2h' : '30m'}
-                                            </div>
-                                          </div>
-                                        ))}
-                                        {utilization.freeCount > 0 && (
-                                          <div className="text-xs text-blue-700 font-medium bg-white/40 rounded px-1 py-0.5">
-                                            {utilization.freeCount}h available
-                                          </div>
-                                        )}
-                                      </div>
-                                    )}
-
-                                    {!hasBoth && !applicantAvailable && bookedClasses.length === 0 && (
-                                      <div className={`${textColor} text-xl`}>-</div>
-                                    )}
-                                  </>
+                                  <div className={`${textColor} text-xl`}>-</div>
                                 )}
                               </td>
                             );
