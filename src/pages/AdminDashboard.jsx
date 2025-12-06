@@ -546,6 +546,13 @@ const AdminDashboard = () => {
                             {app.full_name}
                           </h3>
                           <div className="flex items-center gap-2">
+                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                              app.program === 'tajweed'
+                                ? 'bg-purple-100 text-purple-700'
+                                : 'bg-blue-100 text-blue-700'
+                            }`}>
+                              {app.program === 'tajweed' ? 'Tajweed' : 'Essentials'}
+                            </span>
                             {getStatusIcon(app.status)}
                             <span
                               className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
@@ -717,9 +724,18 @@ const AdminDashboard = () => {
                   <h2 className="text-2xl font-bold text-gray-900">
                     Application Details
                   </h2>
-                  <p className="text-sm text-gray-500 mt-1">
-                    ID: <span className="font-mono">{selectedApplication.id}</span>
-                  </p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                      selectedApplication.program === 'tajweed'
+                        ? 'bg-purple-100 text-purple-800'
+                        : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {selectedApplication.program === 'tajweed' ? 'Tajweed Program' : 'Essential Islamic Studies'}
+                    </span>
+                    <p className="text-sm text-gray-500">
+                      ID: <span className="font-mono">{selectedApplication.id}</span>
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setSelectedApplication(null)}
