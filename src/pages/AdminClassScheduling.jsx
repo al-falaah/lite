@@ -1,4 +1,4 @@
-// Multi-program enrollment support - v2.1 - Build: 20251209-073000
+// Multi-program enrollment support - v2.2 - Build: 20251209-080500
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import {
@@ -85,6 +85,7 @@ const AdminClassScheduling = () => {
   }, [globalDayFilter, viewMode]);
 
   const loadEnrolledStudents = async () => {
+    console.log('🔵 AdminClassScheduling v2.2 - Build: 20251209-080500');
     try {
       // Fetch students with their enrollments
       const { data, error } = await supabase
