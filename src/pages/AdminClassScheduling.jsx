@@ -85,18 +85,37 @@ const AdminClassScheduling = () => {
 
   const loadEnrolledStudents = async () => {
     try {
+      // Fetch students with their enrollments
       const { data, error } = await supabase
         .from('students')
-        .select('*')
-        // Removed status filter - show all students who have schedules
-        .order('enrolled_date', { ascending: false });
+        .select(`
+          *,
+          enrollments (
+            id,
+            program,
+            status,
+            enrolled_date,
+            total_fees,
+            total_paid,
+            balance_remaining
+          )
+        `)
+        .eq('status', 'enrolled')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setStudents(data || []);
+
+      // Filter to only students with active enrollments
+      const studentsWithEnrollments = (data || []).filter(student =>
+        student.enrollments && student.enrollments.length > 0 &&
+        student.enrollments.some(e => e.status === 'active')
+      );
+
+      setStudents(studentsWithEnrollments);
 
       // Auto-select first student in student view
-      if (data && data.length > 0 && !selectedStudent && viewMode === 'student') {
-        setSelectedStudent(data[0]);
+      if (studentsWithEnrollments.length > 0 && !selectedStudent && viewMode === 'student') {
+        setSelectedStudent(studentsWithEnrollments[0]);
       }
     } catch (error) {
       console.error('Error loading students:', error);
