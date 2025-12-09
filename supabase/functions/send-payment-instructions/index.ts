@@ -119,7 +119,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
           </div>
 
           <center>
-            <a href="${appUrl}/payment?email=${encodeURIComponent(email)}" class="button" style="font-size: 18px; padding: 16px 40px;">
+            <a href="${appUrl}/payment?email=${encodeURIComponent(email)}&program=${program}" class="button" style="font-size: 18px; padding: 16px 40px;">
               ${paymentButtonText}
             </a>
           </center>
