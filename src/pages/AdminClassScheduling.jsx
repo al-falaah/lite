@@ -107,11 +107,22 @@ const AdminClassScheduling = () => {
 
       if (error) throw error;
 
+      console.log('📊 Raw query returned:', data?.length, 'students');
+      console.log('📋 All students:', data?.map(s => ({
+        id: s.student_id,
+        name: s.full_name,
+        enrollments: s.enrollments?.length || 0,
+        activeEnrollments: s.enrollments?.filter(e => e.status === 'active').length || 0
+      })));
+
       // Filter to only students with active enrollments
       const studentsWithEnrollments = (data || []).filter(student =>
         student.enrollments && student.enrollments.length > 0 &&
         student.enrollments.some(e => e.status === 'active')
       );
+
+      console.log('✅ After filtering:', studentsWithEnrollments.length, 'students with active enrollments');
+      console.log('👥 Filtered students:', studentsWithEnrollments.map(s => `${s.student_id} - ${s.full_name}`));
 
       setStudents(studentsWithEnrollments);
 
