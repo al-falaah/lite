@@ -16,14 +16,18 @@ WITH new_student AS (
     email,
     phone,
     date_of_birth,
-    status
+    enrolled_date,
+    status,
+    program
   ) VALUES (
     '100001',
     'Fatima Ahmed',
     'fatima.tajweed@test.com',
     '+64 21 123 4567',
     '1995-03-15',
-    'enrolled'
+    CURRENT_DATE,
+    'enrolled',
+    'tajweed'
   )
   RETURNING id, full_name
 )
@@ -58,14 +62,18 @@ WITH new_student AS (
     email,
     phone,
     date_of_birth,
-    status
+    enrolled_date,
+    status,
+    program
   ) VALUES (
     '100002',
     'Hassan Ibrahim',
     'hassan.multi@test.com',
     '+64 21 234 5678',
     '1998-07-22',
-    'enrolled'
+    CURRENT_DATE,
+    'enrolled',
+    'essentials'
   )
   RETURNING id, full_name
 )
