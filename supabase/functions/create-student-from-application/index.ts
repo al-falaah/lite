@@ -117,35 +117,9 @@ serve(async (req) => {
       console.log('Student created successfully')
     }
 
-    // Create enrollment for the program using the database function
-    console.log(`Creating enrollment for program: ${program}`)
-    const { data: enrollmentData, error: enrollmentError } = await supabaseClient
-      .rpc('create_enrollment', {
-        p_student_id: student.id,
-        p_program: program,
-        p_payment_type: 'monthly', // Default to monthly, Stripe will handle the actual subscription
-        p_application_id: application.id
-      })
-
-    if (enrollmentError) {
-      console.error('Error creating enrollment:', enrollmentError)
-      throw new Error(`Failed to create enrollment: ${enrollmentError.message}`)
-    }
-
-    const enrollmentId = enrollmentData
-    console.log('Enrollment created with ID:', enrollmentId)
-
-    // Get the created enrollment details
-    const { data: enrollment } = await supabaseClient
-      .from('enrollments')
-      .select('*')
-      .eq('id', enrollmentId)
-      .single()
-
-    console.log('Enrollment details:', enrollment)
-
-    // Note: With Stripe integration, payments are handled automatically
-    // No need to generate installments manually - Stripe handles monthly/annual subscriptions
+    // Note: Enrollment will be created by Stripe webhook AFTER successful payment
+    // Do NOT create enrollment here - student must pay first
+    console.log(`Student created with pending_payment status. Enrollment for ${program} will be created after payment.`)
 
     // Send payment instructions to applicant (not welcome email yet - that comes after payment)
     console.log('Sending payment instructions to:', student.email)
@@ -176,16 +150,17 @@ serve(async (req) => {
 
     const programName = program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program'
     const message = isNewStudent
-      ? `Student created and enrolled in ${programName}`
-      : `Existing student enrolled in ${programName}`
+      ? `Student created for ${programName}. Payment instructions sent.`
+      : `Existing student will be enrolled in ${programName} after payment.`
 
     return new Response(
       JSON.stringify({
         success: true,
         message: message,
         student: student,
-        enrollment: enrollment,
-        isNewStudent: isNewStudent
+        program: program,
+        isNewStudent: isNewStudent,
+        note: 'Enrollment will be created after successful Stripe payment'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
