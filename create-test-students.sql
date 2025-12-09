@@ -117,6 +117,21 @@ WHERE email = 'fatima.tajweed@test.com';
 SELECT 'Enrolled Fatima in Essentials (now has both programs)' as status;
 
 -- =============================================
+-- Scenario 4: Mark enrollments as paid for testing
+-- =============================================
+UPDATE enrollments
+SET
+  total_paid = total_fees,
+  balance_remaining = 0,
+  updated_at = NOW()
+WHERE student_id IN (
+  SELECT id FROM students
+  WHERE email IN ('fatima.tajweed@test.com', 'hassan.multi@test.com')
+);
+
+SELECT 'Marked all enrollments as fully paid for testing' as status;
+
+-- =============================================
 -- Verification
 -- =============================================
 SELECT
@@ -126,7 +141,9 @@ SELECT
   s.status as student_status,
   e.program,
   e.status as enrollment_status,
-  e.total_fees
+  e.total_fees,
+  e.total_paid,
+  e.balance_remaining
 FROM students s
 LEFT JOIN enrollments e ON e.student_id = s.id
 WHERE s.email IN ('fatima.tajweed@test.com', 'hassan.multi@test.com')
