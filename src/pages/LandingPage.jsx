@@ -384,7 +384,7 @@ const LandingPage = () => {
                     Student Portal
                   </h3>
                   <p className="text-gray-600 mb-4 flex-grow">
-                    View your class schedule, track your progress through the 2-year program, and access your weekly class meeting links.
+                    View your class schedule, track your progress, and access your weekly class meeting links using your 6-digit student ID.
                   </p>
                   <div className="flex items-center text-emerald-700 font-semibold group-hover:translate-x-2 transition-transform">
                     Access Portal

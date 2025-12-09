@@ -4,7 +4,7 @@ import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
-  ArrowLeft, User, Mail, LogOut, ExternalLink, CreditCard,
+  ArrowLeft, User, LogOut, ExternalLink, CreditCard,
   DollarSign, AlertCircle, GraduationCap
 } from 'lucide-react';
 import Button from '../components/common/Button';
@@ -14,7 +14,7 @@ const StudentPortal = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const [email, setEmail] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [student, setStudent] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
   const [schedules, setSchedules] = useState([]);
@@ -23,22 +23,28 @@ const StudentPortal = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email) {
-      toast.error('Please enter your email');
+    if (!studentId) {
+      toast.error('Please enter your student ID');
+      return;
+    }
+
+    // Validate student ID format (6 digits)
+    if (!/^\d{6}$/.test(studentId)) {
+      toast.error('Student ID must be 6 digits');
       return;
     }
 
     setLoading(true);
     try {
-      // Find student by email
+      // Find student by student_id
       const { data, error } = await supabase
         .from('students')
         .select('*')
-        .eq('email', email.toLowerCase().trim())
+        .eq('student_id', studentId.trim())
         .single();
 
       if (error || !data) {
-        toast.error('Student not found. Please check your email or contact support.');
+        toast.error('Student not found. Please check your student ID or contact support.');
         setLoading(false);
         return;
       }
@@ -171,7 +177,7 @@ const StudentPortal = () => {
     setEnrollments([]);
     setSchedules([]);
     setProgress(null);
-    setEmail('');
+    setStudentId('');
     toast.info('Logged out successfully');
   };
 
@@ -242,21 +248,23 @@ const StudentPortal = () => {
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
+                  Student ID
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@example.com"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    type="text"
+                    value={studentId}
+                    onChange={(e) => setStudentId(e.target.value)}
+                    placeholder="123456"
+                    maxLength={6}
+                    pattern="\d{6}"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-center text-lg font-mono tracking-widest"
                     required
                   />
                 </div>
                 <p className="mt-2 text-xs text-gray-500">
-                  Enter the email address you used during enrollment
+                  Enter your 6-digit student ID from your enrollment confirmation
                 </p>
               </div>
 
