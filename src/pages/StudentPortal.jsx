@@ -425,9 +425,16 @@ const StudentPortal = () => {
               );
             }
 
-            // Get current week's classes for this program
+            // Get program-specific progress to determine current week
+            const programProgress = programSchedules.find(s => s.status === 'scheduled');
+            const currentWeek = progress?.current_week || programProgress?.week_number || 1;
+            const currentYear = progress?.current_year || programProgress?.academic_year || 1;
+
+            // Get current week's classes for this program - filter by both week AND year
             const currentWeekClasses = programSchedules.filter(
-              s => s.status !== 'completed' && s.week_number === 1 // TODO: Use actual current week
+              s => s.status !== 'completed' &&
+                   s.week_number === currentWeek &&
+                   s.academic_year === currentYear
             );
 
             return (
@@ -437,6 +444,12 @@ const StudentPortal = () => {
                     <h2 className="text-2xl font-bold text-gray-900">{programName}</h2>
                     <p className="text-sm text-gray-600 mt-1">
                       Your weekly class schedule • {programSchedules.length} classes total
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">Current Week</p>
+                    <p className="text-xl font-bold" style={{ color: isTajweed ? '#9333ea' : '#059669' }}>
+                      Year {currentYear}, Week {currentWeek}
                     </p>
                   </div>
                 </div>
