@@ -30,8 +30,6 @@ import Card from '../components/common/Card';
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const AdminClassScheduling = () => {
-  console.log('[AdminClassScheduling] Component rendering...');
-
   const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [schedules, setSchedules] = useState([]);
@@ -68,7 +66,6 @@ const AdminClassScheduling = () => {
   });
 
   useEffect(() => {
-    console.log('[AdminClassScheduling] useEffect triggered - loading students and schedules');
     loadEnrolledStudents();
     loadAllSchedules(); // Load all schedules for global day view
   }, []);
@@ -88,8 +85,6 @@ const AdminClassScheduling = () => {
 
   const loadEnrolledStudents = async () => {
     try {
-      console.log('[AdminClassScheduling] Loading enrolled students...');
-
       // Fetch students with their enrollments
       const { data, error } = await supabase
         .from('students')
@@ -108,12 +103,7 @@ const AdminClassScheduling = () => {
         .eq('status', 'enrolled')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('[AdminClassScheduling] Query error:', error);
-        throw error;
-      }
-
-      console.log('[AdminClassScheduling] Raw query result:', data?.length, 'students');
+      if (error) throw error;
 
       // Filter to only students with active enrollments
       const studentsWithEnrollments = (data || []).filter(student =>
@@ -121,18 +111,14 @@ const AdminClassScheduling = () => {
         student.enrollments.some(e => e.status === 'active')
       );
 
-      console.log('[AdminClassScheduling] After filtering:', studentsWithEnrollments.length, 'students with active enrollments');
-      console.log('[AdminClassScheduling] Students:', studentsWithEnrollments.map(s => `${s.student_id} - ${s.full_name}`));
-
       setStudents(studentsWithEnrollments);
 
       // Auto-select first student in student view
       if (studentsWithEnrollments.length > 0 && !selectedStudent && viewMode === 'student') {
-        console.log('[AdminClassScheduling] Auto-selecting first student:', studentsWithEnrollments[0].full_name);
         setSelectedStudent(studentsWithEnrollments[0]);
       }
     } catch (error) {
-      console.error('[AdminClassScheduling] Error loading students:', error);
+      console.error('Error loading students:', error);
       toast.error('Failed to load students');
     } finally {
       setLoading(false);
