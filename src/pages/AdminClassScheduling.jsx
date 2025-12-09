@@ -54,11 +54,13 @@ const AdminClassScheduling = () => {
     day_of_week: '',
     class_time: '',
     meeting_link: '',
-    notes: ''
+    notes: '',
+    program: '' // Add program field
   });
 
   // Form state for bulk generation - separate days for main and short classes
   const [generateForm, setGenerateForm] = useState({
+    program: '', // Add program field
     main_day_of_week: '',
     short_day_of_week: '',
     main_class_time: '',
@@ -202,7 +204,7 @@ const AdminClassScheduling = () => {
       return;
     }
 
-    if (!generateForm.main_day_of_week || !generateForm.short_day_of_week ||
+    if (!generateForm.program || !generateForm.main_day_of_week || !generateForm.short_day_of_week ||
         !generateForm.main_class_time || !generateForm.short_class_time) {
       toast.error('Please fill in all required fields');
       return;
@@ -210,14 +212,20 @@ const AdminClassScheduling = () => {
 
     setGenerating(true);
     try {
-      // Generate 104 weeks of schedules (52 weeks × 2 years)
+      // Determine number of weeks based on program
+      const isTajweed = generateForm.program === 'tajweed';
+      const totalWeeks = isTajweed ? 24 : 52; // Tajweed: 24 weeks (6 months), Essentials: 52 weeks/year
+      const totalYears = isTajweed ? 1 : 2; // Tajweed: 1 year, Essentials: 2 years
+
+      // Generate schedules
       const schedulesToCreate = [];
 
-      for (let year = 1; year <= 2; year++) {
-        for (let week = 1; week <= 52; week++) {
+      for (let year = 1; year <= totalYears; year++) {
+        for (let week = 1; week <= totalWeeks; week++) {
           // Main class (2 hours) - can be on different day
           schedulesToCreate.push({
             student_id: selectedStudent.id,
+            program: generateForm.program,
             academic_year: year,
             week_number: week,
             class_type: 'main',
@@ -230,6 +238,7 @@ const AdminClassScheduling = () => {
           // Short class (30 minutes) - can be on different day
           schedulesToCreate.push({
             student_id: selectedStudent.id,
+            program: generateForm.program,
             academic_year: year,
             week_number: week,
             class_type: 'short',
@@ -252,9 +261,12 @@ const AdminClassScheduling = () => {
         if (error) throw error;
       }
 
-      toast.success('Full schedule generated successfully! (208 classes created)');
+      const totalClasses = schedulesToCreate.length;
+      const programName = isTajweed ? 'Tajweed Program' : 'Essentials Program';
+      toast.success(`Full schedule generated for ${programName}! (${totalClasses} classes created)`);
       setShowGenerateModal(false);
       setGenerateForm({
+        program: '',
         main_day_of_week: '',
         short_day_of_week: '',
         main_class_time: '',
@@ -346,7 +358,8 @@ const AdminClassScheduling = () => {
       day_of_week: '',
       class_time: '',
       meeting_link: '',
-      notes: ''
+      notes: '',
+      program: ''
     });
   };
 
@@ -360,7 +373,8 @@ const AdminClassScheduling = () => {
         day_of_week: schedule.day_of_week || '',
         class_time: schedule.class_time || '',
         meeting_link: schedule.meeting_link || '',
-        notes: schedule.notes || ''
+        notes: schedule.notes || '',
+        program: schedule.program || ''
       });
     } else {
       setEditingSchedule(null);
@@ -1005,6 +1019,31 @@ const AdminClassScheduling = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Program Selector - First field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Program <span className="text-red-600">*</span>
+                </label>
+                <select
+                  value={generateForm.program}
+                  onChange={(e) => setGenerateForm({ ...generateForm, program: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  required
+                >
+                  <option value="">Select program</option>
+                  {selectedStudent?.enrollments?.filter(e => e.status === 'active').map(enrollment => (
+                    <option key={enrollment.program} value={enrollment.program}>
+                      {enrollment.program === 'tajweed' ? 'Tajweed Program (6 months)' : 'Essential Arabic & Islamic Studies (2 years)'}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  {generateForm.program === 'tajweed'
+                    ? 'Will create 48 classes (24 weeks × 2 classes)'
+                    : 'Will create 208 classes (2 years × 52 weeks × 2 classes)'}
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1086,15 +1125,30 @@ const AdminClassScheduling = () => {
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-900">
-                  This will create <strong>208 classes</strong> for {selectedStudent?.full_name}:
-                </p>
-                <ul className="text-sm text-blue-800 mt-2 space-y-1 ml-4 list-disc">
-                  <li>Year 1: 52 weeks × 2 classes = 104 classes</li>
-                  <li>Year 2: 52 weeks × 2 classes = 104 classes</li>
-                  <li>Main classes on {generateForm.main_day_of_week || '[Day]'}</li>
-                  <li>Short classes on {generateForm.short_day_of_week || '[Day]'}</li>
-                </ul>
+                {generateForm.program ? (
+                  <>
+                    <p className="text-sm text-blue-900">
+                      This will create <strong>{generateForm.program === 'tajweed' ? '48 classes' : '208 classes'}</strong> for {selectedStudent?.full_name}:
+                    </p>
+                    <ul className="text-sm text-blue-800 mt-2 space-y-1 ml-4 list-disc">
+                      {generateForm.program === 'tajweed' ? (
+                        <>
+                          <li>24 weeks × 2 classes = 48 classes total</li>
+                          <li>Program duration: 6 months</li>
+                        </>
+                      ) : (
+                        <>
+                          <li>Year 1: 52 weeks × 2 classes = 104 classes</li>
+                          <li>Year 2: 52 weeks × 2 classes = 104 classes</li>
+                        </>
+                      )}
+                      <li>Main classes on {generateForm.main_day_of_week || '[Day]'}</li>
+                      <li>Short classes on {generateForm.short_day_of_week || '[Day]'}</li>
+                    </ul>
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-600">Please select a program to see class details</p>
+                )}
               </div>
             </div>
 
@@ -1144,6 +1198,27 @@ const AdminClassScheduling = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Program Selector */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Program <span className="text-red-600">*</span>
+                </label>
+                <select
+                  value={scheduleForm.program}
+                  onChange={(e) => setScheduleForm({ ...scheduleForm, program: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  disabled={!!editingSchedule}
+                  required
+                >
+                  <option value="">Select program</option>
+                  {selectedStudent?.enrollments?.filter(e => e.status === 'active').map(enrollment => (
+                    <option key={enrollment.program} value={enrollment.program}>
+                      {enrollment.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
