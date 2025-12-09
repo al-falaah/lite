@@ -212,6 +212,23 @@ const AdminClassScheduling = () => {
 
     setGenerating(true);
     try {
+      // Check if schedules already exist for this program
+      const { data: existingSchedules, error: checkError } = await supabase
+        .from('class_schedules')
+        .select('id')
+        .eq('student_id', selectedStudent.id)
+        .eq('program', generateForm.program)
+        .limit(1);
+
+      if (checkError) throw checkError;
+
+      if (existingSchedules && existingSchedules.length > 0) {
+        const programName = generateForm.program === 'tajweed' ? 'Tajweed Program' : 'Essentials Program';
+        toast.error(`Schedules already exist for ${programName}. Delete existing schedules first or add classes individually.`);
+        setGenerating(false);
+        return;
+      }
+
       // Determine number of weeks based on program
       const isTajweed = generateForm.program === 'tajweed';
       const totalWeeks = isTajweed ? 24 : 52; // Tajweed: 24 weeks (6 months), Essentials: 52 weeks/year
@@ -483,20 +500,17 @@ const AdminClassScheduling = () => {
 
           {/* Action Buttons (only in By Student view) */}
           {viewMode === 'student' && selectedStudent && (
-            <div className="w-full sm:w-auto">
-              {schedules.length === 0 ? (
-                <Button onClick={() => setShowGenerateModal(true)} variant="primary" className="w-full sm:w-auto">
-                  <Zap className="h-4 w-4 mr-2" />
-                  <span className="hidden sm:inline">Generate Full Schedule</span>
-                  <span className="sm:hidden">Generate Schedule</span>
-                </Button>
-              ) : (
-                <Button onClick={() => openScheduleModal()} variant="secondary" className="w-full sm:w-auto">
-                  <Plus className="h-4 w-4 mr-2" />
-                  <span className="hidden sm:inline">Add Single Class</span>
-                  <span className="sm:hidden">Add Class</span>
-                </Button>
-              )}
+            <div className="w-full sm:w-auto flex gap-2">
+              <Button onClick={() => setShowGenerateModal(true)} variant="primary" className="w-full sm:w-auto">
+                <Zap className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Generate Program Schedule</span>
+                <span className="sm:hidden">Generate</span>
+              </Button>
+              <Button onClick={() => openScheduleModal()} variant="secondary" className="w-full sm:w-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Add Single Class</span>
+                <span className="sm:hidden">Add Class</span>
+              </Button>
             </div>
           )}
         </div>

@@ -407,111 +407,145 @@ const StudentPortal = () => {
             </div>
           )}
 
-          {/* Class Schedule */}
-          {schedules.length > 0 ? (
-            <Card>
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Class Schedule</h2>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Your personalized weekly schedule for {progress?.current_year ? `Year ${progress.current_year}` : 'current program'}
-                  </p>
-                </div>
-                {progress && (
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">Progress</p>
-                    <p className="text-2xl font-bold text-emerald-600">{progress.overall_progress_pct || 0}%</p>
-                  </div>
-                )}
-              </div>
+          {/* Class Schedules - Per Program */}
+          {enrollments.map((enrollment) => {
+            const programSchedules = schedules.filter(s => s.program === enrollment.program);
+            const programName = getProgramName(enrollment.program);
+            const isTajweed = enrollment.program === 'tajweed';
 
-              {/* Current Week's Schedule */}
-              <div className="space-y-3">
-                {schedules
-                  .filter(s => s.status !== 'completed' && s.week_number === (progress?.current_week || 1))
-                  .map((schedule) => (
-                    <div
-                      key={schedule.id}
-                      className="flex items-center gap-4 p-4 bg-gradient-to-r from-emerald-50 to-blue-50 border border-emerald-200 rounded-lg hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
-                          <Calendar className="h-6 w-6 text-white" />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1">
-                          <h3 className="font-semibold text-gray-900">{getDayName(schedule.day_of_week)}</h3>
-                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs rounded-full font-medium">
-                            Week {schedule.week_number}
-                          </span>
-                          <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
-                            Year {schedule.academic_year}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-gray-600">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
-                            <span>{formatScheduleTime(schedule.class_time)}</span>
-                          </div>
-                          {schedule.zoom_link && (
-                            <a
-                              href={schedule.zoom_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
-                            >
-                              <Video className="h-4 w-4" />
-                              Join Class
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                      {schedule.status === 'completed' && (
-                        <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-                      )}
-                    </div>
-                  ))}
-
-                {schedules.filter(s => s.status !== 'completed' && s.week_number === (progress?.current_week || 1)).length === 0 && (
+            if (programSchedules.length === 0) {
+              return (
+                <Card key={enrollment.id} className="border-l-4" style={{ borderLeftColor: isTajweed ? '#9333ea' : '#059669' }}>
                   <div className="text-center py-8 text-gray-500">
-                    <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
-                    <p className="text-sm">No upcoming classes this week</p>
+                    <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                    <p className="text-lg font-medium mb-2">{programName} - Schedule Coming Soon</p>
+                    <p className="text-sm">Your class schedule will appear here once it's been created by the admin.</p>
                   </div>
-                )}
-              </div>
+                </Card>
+              );
+            }
 
-              {/* Progress Overview */}
-              {progress && (
-                <div className="mt-6 pt-6 border-t grid md:grid-cols-3 gap-4">
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Year 1</p>
-                    <p className="text-2xl font-bold text-blue-600">{progress.year1_progress_pct || 0}%</p>
-                    <p className="text-xs text-gray-500 mt-1">{progress.year1_completed || 0}/{progress.year1_total} classes</p>
-                  </div>
-                  <div className="text-center p-3 bg-purple-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Year 2</p>
-                    <p className="text-2xl font-bold text-purple-600">{progress.year2_progress_pct || 0}%</p>
-                    <p className="text-xs text-gray-500 mt-1">{progress.year2_completed || 0}/{progress.year2_total} classes</p>
-                  </div>
-                  <div className="text-center p-3 bg-emerald-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Overall</p>
-                    <p className="text-2xl font-bold text-emerald-600">{progress.overall_progress_pct || 0}%</p>
-                    <p className="text-xs text-gray-500 mt-1">{progress.total_completed || 0}/{progress.total_classes} classes</p>
+            // Get current week's classes for this program
+            const currentWeekClasses = programSchedules.filter(
+              s => s.status !== 'completed' && s.week_number === 1 // TODO: Use actual current week
+            );
+
+            return (
+              <Card key={enrollment.id} className="border-l-4" style={{ borderLeftColor: isTajweed ? '#9333ea' : '#059669' }}>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">{programName}</h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Your weekly class schedule • {programSchedules.length} classes total
+                    </p>
                   </div>
                 </div>
-              )}
-            </Card>
-          ) : (
-            <Card>
-              <div className="text-center py-8 text-gray-500">
-                <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                <p className="text-lg font-medium mb-2">Class Schedule Coming Soon</p>
-                <p className="text-sm">Your class schedule will appear here once your enrollment is confirmed.</p>
-              </div>
-            </Card>
-          )}
+
+                {/* Current Week's Schedule */}
+                <div className="space-y-3">
+                  {currentWeekClasses.length > 0 ? (
+                    currentWeekClasses.map((schedule) => (
+                      <div
+                        key={schedule.id}
+                        className="flex items-center gap-4 p-4 rounded-lg border"
+                        style={{
+                          backgroundColor: isTajweed ? '#faf5ff' : '#ecfdf5',
+                          borderColor: isTajweed ? '#e9d5ff' : '#a7f3d0'
+                        }}
+                      >
+                        <div className="flex-shrink-0">
+                          <div
+                            className="w-12 h-12 rounded-lg flex items-center justify-center"
+                            style={{ backgroundColor: isTajweed ? '#9333ea' : '#059669' }}
+                          >
+                            <Calendar className="h-6 w-6 text-white" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-1">
+                            <h3 className="font-semibold text-gray-900">{getDayName(schedule.day_of_week)}</h3>
+                            <span
+                              className="px-2 py-0.5 text-xs rounded-full font-medium"
+                              style={{
+                                backgroundColor: isTajweed ? '#e9d5ff' : '#a7f3d0',
+                                color: isTajweed ? '#6b21a8' : '#065f46'
+                              }}
+                            >
+                              Week {schedule.week_number}
+                            </span>
+                            <span
+                              className="px-2 py-0.5 text-xs rounded-full font-medium"
+                              style={{
+                                backgroundColor: '#dbeafe',
+                                color: '#1e40af'
+                              }}
+                            >
+                              Year {schedule.academic_year}
+                            </span>
+                            <span
+                              className="px-2 py-0.5 text-xs rounded-full font-medium"
+                              style={{
+                                backgroundColor: '#fef3c7',
+                                color: '#92400e'
+                              }}
+                            >
+                              {schedule.class_type === 'main' ? '2 hours' : '30 min'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4" />
+                              <span>{formatScheduleTime(schedule.class_time)}</span>
+                            </div>
+                            {schedule.meeting_link && (
+                              <a
+                                href={schedule.meeting_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
+                              >
+                                <Video className="h-4 w-4" />
+                                Join Class
+                                <ExternalLink className="h-3 w-3" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        {schedule.status === 'completed' && (
+                          <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                      <p className="text-sm">No upcoming classes this week</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Schedule Stats */}
+                <div className="mt-6 pt-6 border-t grid grid-cols-3 gap-4">
+                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Total Classes</p>
+                    <p className="text-2xl font-bold text-gray-900">{programSchedules.length}</p>
+                  </div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Completed</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      {programSchedules.filter(s => s.status === 'completed').length}
+                    </p>
+                  </div>
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-1">Upcoming</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {programSchedules.filter(s => s.status === 'scheduled').length}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
 
           {/* Apply for Another Program */}
           {!isEnrolledInAllPrograms() && (
