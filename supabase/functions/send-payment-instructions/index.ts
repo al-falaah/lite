@@ -19,7 +19,65 @@ const EMAIL_STYLES = `
 `;
 
 function generateEmailHTML(applicantData: any, appUrl: string): string {
-  const { full_name, email } = applicantData;
+  const { full_name, email, program } = applicantData;
+
+  // Determine program-specific details
+  const isTajweed = program === 'tajweed';
+  const programName = isTajweed ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+  const programDuration = isTajweed ? '6 months (24 weeks)' : '2 years (24 months)';
+
+  // Build payment options HTML
+  const paymentOptionsHTML = isTajweed ? `
+    <tr>
+      <td class="label">Program:</td>
+      <td>${programName}</td>
+    </tr>
+    <tr>
+      <td class="label">Duration:</td>
+      <td>${programDuration}</td>
+    </tr>
+    <tr>
+      <td class="label">Payment:</td>
+      <td><strong>$120 NZD</strong> (one-time payment)</td>
+    </tr>
+    <tr>
+      <td class="label">Total Cost:</td>
+      <td><strong>$120 NZD</strong></td>
+    </tr>
+  ` : `
+    <tr>
+      <td class="label">Program:</td>
+      <td>${programName}</td>
+    </tr>
+    <tr>
+      <td class="label">Duration:</td>
+      <td>${programDuration}</td>
+    </tr>
+    <tr>
+      <td class="label">Option 1 - Monthly:</td>
+      <td><strong>$25 NZD/month</strong> (auto-renewing)</td>
+    </tr>
+    <tr>
+      <td class="label">Option 2 - Annual:</td>
+      <td><strong>$275 NZD/year</strong> (save $25!)</td>
+    </tr>
+    <tr>
+      <td class="label">Total (2 years):</td>
+      <td>Monthly: $600 | Annual: $550</td>
+    </tr>
+  `;
+
+  const paymentButtonText = isTajweed ? 'Pay $120 Now' : 'Choose Payment Plan & Pay Now';
+  const stripeBenefits = isTajweed ? `
+    <li>Secure payment processing by Stripe</li>
+    <li>Instant enrollment confirmation</li>
+    <li>Automatic welcome email with student details</li>
+  ` : `
+    <li>Secure payment processing by Stripe</li>
+    <li>Instant enrollment confirmation</li>
+    <li>Automatic welcome email with student details</li>
+    <li>Choose monthly or annual payment</li>
+  `;
 
   return `
     <!DOCTYPE html>
@@ -42,28 +100,13 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
 
           <div class="highlight-box">
             <h3 style="margin-top: 0; color: #92400e;">Next Step: Payment</h3>
-            <p style="margin-bottom: 0;">Choose your payment plan and complete your enrollment instantly with Stripe.</p>
+            <p style="margin-bottom: 0;">${isTajweed ? 'Complete your payment' : 'Choose your payment plan'} and complete your enrollment instantly with Stripe.</p>
           </div>
 
           <div class="info-box">
-            <h3>Choose Your Payment Plan</h3>
+            <h3>${isTajweed ? 'Payment Details' : 'Choose Your Payment Plan'}</h3>
             <table>
-              <tr>
-                <td class="label">Program:</td>
-                <td>2-Year Essential Islamic Studies Course</td>
-              </tr>
-              <tr>
-                <td class="label">Option 1 - Monthly:</td>
-                <td><strong>$25 NZD/month</strong> (auto-renewing)</td>
-              </tr>
-              <tr>
-                <td class="label">Option 2 - Annual:</td>
-                <td><strong>$275 NZD/year</strong> (save $25!)</td>
-              </tr>
-              <tr>
-                <td class="label">Total (2 years):</td>
-                <td>Monthly: $600 | Annual: $550</td>
-              </tr>
+              ${paymentOptionsHTML}
             </table>
           </div>
 
@@ -71,16 +114,13 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
             <h3>Instant Enrollment with Stripe</h3>
             <p style="margin-bottom: 10px;">Pay securely online and get enrolled immediately:</p>
             <ul style="margin: 0; padding-left: 20px;">
-              <li>Secure payment processing by Stripe</li>
-              <li>Instant enrollment confirmation</li>
-              <li>Automatic welcome email with student details</li>
-              <li>Choose monthly or annual payment</li>
+              ${stripeBenefits}
             </ul>
           </div>
 
           <center>
             <a href="${appUrl}/payment?email=${encodeURIComponent(email)}" class="button" style="font-size: 18px; padding: 16px 40px;">
-              Choose Payment Plan & Pay Now
+              ${paymentButtonText}
             </a>
           </center>
 

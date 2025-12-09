@@ -131,7 +131,8 @@ serve(async (req) => {
           applicantData: {
             full_name: student.full_name,
             email: student.email,
-            student_id: null // No student ID until payment
+            student_id: null, // No student ID until payment
+            program: program // Pass program for program-aware email
           },
           appUrl: appUrl
         }
