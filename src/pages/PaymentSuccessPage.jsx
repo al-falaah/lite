@@ -5,7 +5,12 @@ import { CheckCircle, Loader2 } from 'lucide-react';
 const PaymentSuccessPage = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const program = searchParams.get('program') || 'essentials';
   const [loading, setLoading] = useState(true);
+
+  const isTajweed = program === 'tajweed';
+  const programName = isTajweed ? 'Tajweed Program' : '2-Year Essential Islamic Studies Course';
+  const programDuration = isTajweed ? '6 months' : '2 years';
 
   useEffect(() => {
     // Simulate verification delay
@@ -47,7 +52,7 @@ const PaymentSuccessPage = () => {
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">🎉 Enrollment Confirmed</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 Assalaamu 'alaykum! Your payment has been processed successfully and you are now enrolled in the
-                <strong> 2-Year Essential Islamic Studies Course</strong>.
+                <strong> {programName}</strong>.
               </p>
             </div>
 
@@ -67,10 +72,12 @@ const PaymentSuccessPage = () => {
                   <span className="text-emerald-600 mr-2">✓</span>
                   <span>Check your spam folder if you don't see the email in your inbox</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="text-emerald-600 mr-2">✓</span>
-                  <span>For monthly subscribers: Payments will auto-renew on the same date each month</span>
-                </li>
+                {!isTajweed && (
+                  <li className="flex items-start">
+                    <span className="text-emerald-600 mr-2">✓</span>
+                    <span>For monthly subscribers: Payments will auto-renew on the same date each month</span>
+                  </li>
+                )}
               </ul>
             </div>
 
