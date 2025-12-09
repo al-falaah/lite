@@ -30,6 +30,8 @@ import Card from '../components/common/Card';
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const AdminClassScheduling = () => {
+  console.log('[AdminClassScheduling] Component rendering...');
+
   const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [schedules, setSchedules] = useState([]);
@@ -66,6 +68,7 @@ const AdminClassScheduling = () => {
   });
 
   useEffect(() => {
+    console.log('[AdminClassScheduling] useEffect triggered - loading students and schedules');
     loadEnrolledStudents();
     loadAllSchedules(); // Load all schedules for global day view
   }, []);
