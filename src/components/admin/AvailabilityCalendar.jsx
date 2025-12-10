@@ -1098,13 +1098,13 @@ const AvailabilityCalendar = () => {
                 })()}
               </Card>
 
-              {/* Show Generate Full Schedule button if student has no schedules */}
-              {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length === 0 && (
+              {/* Show Generate Full Schedule button for enrolled students */}
+              {viewMode === 'students' && (
                 <Card>
-                  <div className="text-center py-12 text-gray-500">
-                    <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                    <p className="text-lg font-medium mb-2">No schedule generated yet</p>
-                    <p className="text-sm mb-6">Generate a full 2-year schedule with one click</p>
+                  <div className="text-center py-12">
+                    <Calendar className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
+                    <p className="text-lg font-medium mb-2 text-gray-900">Generate Program Schedule</p>
+                    <p className="text-sm mb-6 text-gray-600">Create a full schedule for a specific program</p>
                     <button
                       onClick={() => setShowGenerateModal(true)}
                       className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
