@@ -26,19 +26,19 @@ const LandingPage = () => {
                 <span className="text-xs text-gray-600 -mt-1 font-arabic">الفلاح - Success</span>
               </div>
             </Link>
-            <div className="flex gap-3">
-              <Link to="/student">
-                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50">
+            <div className="flex flex-wrap gap-2 md:gap-3 justify-end">
+              <Link to="/student" className="hidden sm:block">
+                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-sm md:text-base whitespace-nowrap">
                   Student Portal
                 </Button>
               </Link>
-              <a href="#essentials-program">
-                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50">
+              <a href="#essentials-program" className="hidden sm:block">
+                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-sm md:text-base whitespace-nowrap">
                   2-Year Program
                 </Button>
               </a>
               <Link to="/apply">
-                <Button variant="primary" size="md" className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-lg shadow-emerald-600/30">
+                <Button variant="primary" size="md" className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-lg shadow-emerald-600/30 text-sm md:text-base whitespace-nowrap">
                   Apply Now
                 </Button>
               </Link>
@@ -70,7 +70,7 @@ const LandingPage = () => {
           </div>
 
           {/* Main Heading - Elegant Typography */}
-          <h1 className="text-6xl md:text-8xl font-extrabold mb-8 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-6 sm:mb-8 leading-tight px-4">
             <span className="bg-gradient-to-r from-gray-900 via-emerald-800 to-gray-900 bg-clip-text text-transparent block mb-2">
               Your Journey to
             </span>
@@ -79,18 +79,18 @@ const LandingPage = () => {
             </span>
           </h1>
 
-          <p className="text-2xl md:text-3xl text-gray-700 mb-4 max-w-4xl mx-auto leading-relaxed font-light">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-700 mb-4 max-w-4xl mx-auto leading-relaxed font-light px-4">
             Authentic Knowledge • Personal Growth • Lifelong Impact
           </p>
 
-          <p className="text-lg text-gray-600 mb-16 max-w-3xl mx-auto italic">
+          <p className="text-base sm:text-lg text-gray-600 mb-12 sm:mb-16 max-w-3xl mx-auto italic px-4">
             "Seek knowledge from the cradle to the grave" - Prophet Muhammad ﷺ
           </p>
 
           {/* Dual Offering Cards - Premium Design */}
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto px-4">
             {/* FREE Tafseer Course - Elegant Card */}
-            <div className="group bg-white rounded-3xl shadow-2xl border-2 border-emerald-100 p-10 hover:shadow-3xl hover:border-emerald-200 transition-all duration-300 relative overflow-hidden">
+            <div className="group bg-white rounded-2xl sm:rounded-3xl shadow-2xl border-2 border-emerald-100 p-6 sm:p-8 md:p-10 hover:shadow-3xl hover:border-emerald-200 transition-all duration-300 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full -mr-16 -mt-16"></div>
 
               <div className="relative">
@@ -139,7 +139,7 @@ const LandingPage = () => {
             </div>
 
             {/* 2-Year Essentials - Premium Card */}
-            <div className="group relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 rounded-3xl shadow-2xl p-10 text-white hover:shadow-3xl transition-all duration-300 overflow-hidden">
+            <div className="group relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 text-white hover:shadow-3xl transition-all duration-300 overflow-hidden">
               {/* Decorative Elements */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>

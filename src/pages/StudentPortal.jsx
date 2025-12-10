@@ -354,15 +354,17 @@ const StudentPortal = () => {
                   <Card key={enrollment.id} className="overflow-hidden">
                     {/* Enrollment Header */}
                     <div className="flex items-start justify-between mb-6">
-                      <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-lg ${isTajweed ? 'bg-purple-100' : 'bg-blue-100'}`}>
-                          <GraduationCap className={`h-6 w-6 ${isTajweed ? 'text-purple-600' : 'text-blue-600'}`} />
+                      <div className="flex items-start gap-3 md:gap-4 flex-1 min-w-0">
+                        <div className={`p-2 md:p-3 rounded-lg flex-shrink-0 ${isTajweed ? 'bg-purple-100' : 'bg-blue-100'}`}>
+                          <GraduationCap className={`h-5 w-5 md:h-6 md:w-6 ${isTajweed ? 'text-purple-600' : 'text-blue-600'}`} />
                         </div>
-                        <div>
-                          <h2 className="text-2xl font-bold text-gray-900">{programName}</h2>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Duration: {programDuration} • Enrolled: {new Date(enrollment.enrolled_date).toLocaleDateString()}
-                          </p>
+                        <div className="flex-1 min-w-0">
+                          <h2 className="text-xl md:text-2xl font-bold text-gray-900 break-words">{programName}</h2>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs md:text-sm text-gray-600 mt-1">
+                            <span className="whitespace-nowrap">Duration: {programDuration}</span>
+                            <span className="hidden sm:inline">•</span>
+                            <span className="whitespace-nowrap">Enrolled: {new Date(enrollment.enrolled_date).toLocaleDateString()}</span>
+                          </div>
                           <div className="mt-2">
                             {getStatusBadge(enrollment.status)}
                           </div>
@@ -482,40 +484,40 @@ const StudentPortal = () => {
                             <Calendar className="h-6 w-6 text-white" />
                           </div>
                         </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-1">
-                            <h3 className="font-semibold text-gray-900">{getDayName(schedule.day_of_week)}</h3>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-gray-900 whitespace-nowrap">{getDayName(schedule.day_of_week)}</h3>
                             <span
-                              className="px-2 py-0.5 text-xs rounded-full font-medium"
+                              className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap"
                               style={{
                                 backgroundColor: isTajweed ? '#e9d5ff' : '#a7f3d0',
                                 color: isTajweed ? '#6b21a8' : '#065f46'
                               }}
                             >
-                              Week {schedule.week_number}
+                              Wk {schedule.week_number}
                             </span>
                             <span
-                              className="px-2 py-0.5 text-xs rounded-full font-medium"
+                              className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap"
                               style={{
                                 backgroundColor: '#dbeafe',
                                 color: '#1e40af'
                               }}
                             >
-                              Year {schedule.academic_year}
+                              Yr {schedule.academic_year}
                             </span>
                             <span
-                              className="px-2 py-0.5 text-xs rounded-full font-medium"
+                              className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap"
                               style={{
                                 backgroundColor: '#fef3c7',
                                 color: '#92400e'
                               }}
                             >
-                              {schedule.class_type === 'main' ? '2 hours' : '30 min'}
+                              {schedule.class_type === 'main' ? '2 hrs' : '30 min'}
                             </span>
                           </div>
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
-                            <div className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600">
+                            <div className="flex items-center gap-1 whitespace-nowrap">
+                              <Clock className="h-4 w-4 flex-shrink-0" />
                               <span>{formatScheduleTime(schedule.class_time)}</span>
                             </div>
                             {schedule.meeting_link && (
@@ -523,11 +525,11 @@ const StudentPortal = () => {
                                 href={schedule.meeting_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
+                                className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap"
                               >
-                                <Video className="h-4 w-4" />
-                                Join Class
-                                <ExternalLink className="h-3 w-3" />
+                                <Video className="h-4 w-4 flex-shrink-0" />
+                                <span>Join Class</span>
+                                <ExternalLink className="h-3 w-3 flex-shrink-0" />
                               </a>
                             )}
                           </div>
