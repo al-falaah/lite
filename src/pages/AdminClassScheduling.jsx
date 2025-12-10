@@ -400,6 +400,46 @@ const AdminClassScheduling = () => {
     setShowScheduleModal(true);
   };
 
+  const openGenerateModal = async () => {
+    if (!selectedStudent) return;
+
+    // Refresh student's enrollments before opening modal
+    try {
+      const { data, error } = await supabase
+        .from('students')
+        .select(`
+          *,
+          enrollments (
+            id,
+            program,
+            status,
+            enrolled_date,
+            total_fees,
+            total_paid,
+            balance_remaining
+          )
+        `)
+        .eq('id', selectedStudent.id)
+        .single();
+
+      if (error) throw error;
+
+      // Update the selected student with fresh enrollment data
+      setSelectedStudent(data);
+
+      // Also update in the students list
+      setStudents(prev => prev.map(s => s.id === data.id ? data : s));
+
+      console.log('📋 Refreshed enrollments:', data.enrollments);
+    } catch (error) {
+      console.error('Error refreshing student data:', error);
+      toast.error('Failed to refresh student data');
+      return;
+    }
+
+    setShowGenerateModal(true);
+  };
+
   // Get the current active week and year
   const getCurrentActiveWeekAndYear = () => {
     if (schedules.length === 0) return { year: 1, week: 1 };
@@ -501,7 +541,7 @@ const AdminClassScheduling = () => {
           {/* Action Buttons (only in By Student view) */}
           {viewMode === 'student' && selectedStudent && (
             <div className="w-full sm:w-auto flex gap-2">
-              <Button onClick={() => setShowGenerateModal(true)} variant="primary" className="w-full sm:w-auto">
+              <Button onClick={openGenerateModal} variant="primary" className="w-full sm:w-auto">
                 <Zap className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Generate Program Schedule</span>
                 <span className="sm:hidden">Generate</span>
@@ -1021,7 +1061,11 @@ const AdminClassScheduling = () => {
               <div>
                 <h3 className="text-xl font-bold text-gray-900">Generate Full Schedule</h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  Create 208 classes (2 years × 52 weeks × 2 classes per week)
+                  {!generateForm.program
+                    ? 'Select a program to see details'
+                    : generateForm.program === 'tajweed'
+                    ? 'Create 48 classes (24 weeks × 2 classes per week)'
+                    : 'Create 208 classes (2 years × 52 weeks × 2 classes per week)'}
                 </p>
               </div>
               <button

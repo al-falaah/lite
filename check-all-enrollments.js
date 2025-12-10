@@ -1,70 +1,81 @@
+// Check all student enrollments and schedules
 import { createClient } from '@supabase/supabase-js';
-import { readFileSync } from 'fs';
 
-// Read .env file manually
-const envContent = readFileSync('.env', 'utf-8');
-const envVars = {};
-envContent.split('\n').forEach(line => {
-  const [key, value] = line.split('=');
-  if (key && value) {
-    envVars[key.trim()] = value.trim();
-  }
-});
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
-const supabase = createClient(
-  envVars.VITE_SUPABASE_URL,
-  envVars.VITE_SUPABASE_ANON_KEY
-);
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Missing environment variables!');
+  console.error('   Please set VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY');
+  console.error('');
+  console.error('   Run with:');
+  console.error('   VITE_SUPABASE_URL=your-url VITE_SUPABASE_SERVICE_ROLE_KEY=your-key node check-all-enrollments.js');
+  process.exit(1);
+}
 
-async function checkAllEnrollments() {
-  console.log('Checking all enrollments...\n');
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-  // Check all enrollments
-  const { data: enrollments, error } = await supabase
-    .from('enrollments')
-    .select('*, students(student_id, full_name)')
-    .order('created_at', { ascending: false })
-    .limit(10);
+async function checkAllStudents() {
+  console.log('🔍 Checking all students and their enrollments...\n');
 
-  if (error) {
-    console.error('Error fetching enrollments:', error);
+  // Get all students
+  const { data: students, error: studentsError } = await supabase
+    .from('students')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (studentsError) {
+    console.error('❌ Error fetching students:', studentsError);
     return;
   }
 
-  console.log(`Total enrollments fetched: ${enrollments?.length || 0}\n`);
-
-  if (enrollments && enrollments.length > 0) {
-    enrollments.forEach((e, i) => {
-      console.log(`${i + 1}. ${e.students?.full_name || 'Unknown'} (${e.students?.student_id || 'No ID'})`);
-      console.log(`   Program: ${e.program}, Status: ${e.status}`);
-      console.log(`   Total Fees: $${e.total_fees}, Balance: $${e.balance_remaining}\n`);
-    });
-  } else {
-    console.log('No enrollments found - might be an RLS issue');
+  if (!students || students.length === 0) {
+    console.log('⚠️  No students found in database');
+    return;
   }
 
-  // Check students with schedules but might not have enrollments
-  const { data: students, error: studentsError } = await supabase
-    .from('students')
-    .select('id, student_id, full_name, status')
-    .limit(5);
+  console.log(`📊 Found ${students.length} student(s)\n`);
+  console.log('='.repeat(80));
 
-  if (!studentsError && students) {
-    console.log('\nChecking first 5 students:');
-    for (const student of students) {
-      const { data: schedules } = await supabase
-        .from('class_schedules')
-        .select('id', { count: 'exact', head: true })
-        .eq('student_id', student.id);
+  for (const student of students) {
+    console.log(`\n👤 Student: ${student.full_name}`);
+    console.log(`   Student ID: ${student.student_id}`);
+    console.log(`   Email: ${student.email}`);
+    console.log(`   Status: ${student.status}`);
 
-      const { data: enroll } = await supabase
-        .from('enrollments')
-        .select('id')
-        .eq('student_id', student.id);
+    // Get enrollments for this student
+    const { data: enrollments, error: enrollmentsError } = await supabase
+      .from('enrollments')
+      .select('*')
+      .eq('student_id', student.id);
 
-      console.log(`- ${student.full_name} (${student.student_id}): Enrollments: ${enroll?.length || 0}`);
+    if (enrollments && enrollments.length > 0) {
+      console.log(`\n   📚 Enrollments (${enrollments.length}):`);
+      for (const enrollment of enrollments) {
+        console.log(`      • ${enrollment.program}: ${enrollment.status}`);
+
+        // Check schedules for this program
+        const { data: schedules, error: schedulesError } = await supabase
+          .from('class_schedules')
+          .select('id, week_number')
+          .eq('student_id', student.id)
+          .eq('program', enrollment.program);
+
+        if (schedules && schedules.length > 0) {
+          const weeks = [...new Set(schedules.map(s => s.week_number))].sort((a, b) => a - b);
+          console.log(`        → Has ${schedules.length} classes (weeks: ${weeks.join(', ')})`);
+        } else {
+          console.log(`        → ⚠️  NO SCHEDULES for ${enrollment.program}`);
+        }
+      }
+    } else {
+      console.log(`   ⚠️  No enrollments`);
     }
+
+    console.log('\n' + '-'.repeat(80));
   }
+
+  console.log('\n✅ Check complete!');
 }
 
-checkAllEnrollments().catch(console.error);
+checkAllStudents().catch(console.error);

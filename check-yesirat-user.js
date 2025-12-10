@@ -1,73 +1,106 @@
+// Check specific user with ID 159898 (Abdulquadri Alaka)
 import { createClient } from '@supabase/supabase-js';
-import { readFileSync } from 'fs';
 
-// Read .env file manually
-const envContent = readFileSync('.env', 'utf-8');
-const envVars = {};
-envContent.split('\n').forEach(line => {
-  const [key, value] = line.split('=');
-  if (key && value) {
-    envVars[key.trim()] = value.trim();
-  }
-});
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
-const supabase = createClient(
-  envVars.VITE_SUPABASE_URL,
-  envVars.VITE_SUPABASE_ANON_KEY
-);
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Missing environment variables!');
+  process.exit(1);
+}
 
-async function checkYesiratUser() {
-  console.log('Checking Yesirat\'s user and enrollment linkage...\n');
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-  // Get student record with user_id
+async function checkUser() {
+  console.log('🔍 Checking user with student_id 159898...\n');
+
+  // Get the student
   const { data: student, error: studentError } = await supabase
     .from('students')
-    .select('id, student_id, full_name, user_id')
-    .eq('student_id', '621370')
+    .select(`
+      *,
+      enrollments (
+        id,
+        program,
+        status,
+        enrolled_date
+      )
+    `)
+    .eq('student_id', '159898')
     .single();
 
   if (studentError) {
-    console.error('Error fetching student:', studentError);
+    console.error('❌ Error:', studentError.message);
     return;
   }
 
-  console.log('Student Record:');
-  console.log('- ID:', student.id);
-  console.log('- Student ID:', student.student_id);
-  console.log('- Full Name:', student.full_name);
-  console.log('- User ID:', student.user_id);
+  console.log('✅ Student found:', student.full_name);
+  console.log(`   Internal ID: ${student.id}`);
+  console.log(`   Student ID: ${student.student_id}`);
+  console.log(`   Email: ${student.email}`);
+  console.log(`   Status: ${student.status}\n`);
 
-  // Check if user exists in profiles
-  if (student.user_id) {
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, email, full_name, role')
-      .eq('id', student.user_id)
-      .single();
-
-    console.log('\nProfile/Auth Record:');
-    if (profileError) {
-      console.log('- ERROR:', profileError.message);
-    } else {
-      console.log('- Email:', profile.email);
-      console.log('- Role:', profile.role);
-    }
+  console.log('📚 Enrollments:');
+  if (student.enrollments && student.enrollments.length > 0) {
+    student.enrollments.forEach((e, i) => {
+      console.log(`   ${i + 1}. ${e.program} - ${e.status}`);
+    });
   } else {
-    console.log('\n⚠️  WARNING: Student has no user_id! This means they can\'t log in.');
+    console.log('   ⚠️  No enrollments found');
   }
 
-  // Try to get enrollments as anon (should fail)
-  const { data: enrollments, error: enrollError } = await supabase
-    .from('enrollments')
-    .select('*')
-    .eq('student_id', student.id);
+  console.log('\n📊 Checking schedules per program:');
 
-  console.log('\nEnrollments (via anon key):');
-  if (enrollError) {
-    console.log('- ERROR:', enrollError.message);
+  // Check Essentials schedules
+  const { data: essentialsSchedules } = await supabase
+    .from('class_schedules')
+    .select('id')
+    .eq('student_id', student.id)
+    .eq('program', 'essentials');
+
+  console.log(`   • Essentials: ${essentialsSchedules?.length || 0} classes`);
+
+  // Check Tajweed schedules
+  const { data: tajweedSchedules } = await supabase
+    .from('class_schedules')
+    .select('id')
+    .eq('student_id', student.id)
+    .eq('program', 'tajweed');
+
+  console.log(`   • Tajweed: ${tajweedSchedules?.length || 0} classes`);
+
+  // Simulate duplicate check for Tajweed
+  console.log('\n🧪 Simulating "Generate Tajweed Schedule" duplicate check:');
+  const { data: existingTajweedSchedules, error: checkError } = await supabase
+    .from('class_schedules')
+    .select('id')
+    .eq('student_id', student.id)
+    .eq('program', 'tajweed')
+    .limit(1);
+
+  if (checkError) {
+    console.log('   ❌ Error during check:', checkError.message);
   } else {
-    console.log('- Count:', enrollments?.length || 0);
+    if (existingTajweedSchedules && existingTajweedSchedules.length > 0) {
+      console.log('   ❌ WOULD BLOCK: Schedules already exist for Tajweed Program');
+    } else {
+      console.log('   ✅ WOULD PROCEED: No existing Tajweed schedules found');
+      console.log('   ✅ Generation should be allowed!');
+    }
+  }
+
+  console.log('\n💡 Active enrollments that should appear in dropdown:');
+  const activeEnrollments = student.enrollments?.filter(e => e.status === 'active') || [];
+  if (activeEnrollments.length > 0) {
+    activeEnrollments.forEach(e => {
+      const programName = e.program === 'tajweed'
+        ? 'Tajweed Program (6 months)'
+        : 'Essential Arabic & Islamic Studies (2 years)';
+      console.log(`   • ${programName}`);
+    });
+  } else {
+    console.log('   ⚠️  No active enrollments found');
   }
 }
 
-checkYesiratUser().catch(console.error);
+checkUser().catch(console.error);
