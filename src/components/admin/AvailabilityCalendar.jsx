@@ -1153,8 +1153,8 @@ const AvailabilityCalendar = () => {
                 );
               })()}
 
-              {/* Weekly Calendar */}
-              <Card>
+              {/* Weekly Calendar - Commented out for now, using Google Calendar instead */}
+              {/* <Card>
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <Clock className="h-5 w-5 text-emerald-600" />
@@ -1347,10 +1347,10 @@ const AvailabilityCalendar = () => {
                     </tbody>
                   </table>
                 </div>
-              </Card>
+              </Card> */}
 
-              {/* Applicant Preferences Summary */}
-              <Card>
+              {/* Applicant Preferences Summary - Commented out for now */}
+              {/* <Card>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferred Schedule</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -1374,7 +1374,8 @@ const AvailabilityCalendar = () => {
                     </div>
                   </div>
                 </div>
-              </Card>
+              </Card> */}
+            {/* End of commented Weekly Availability sections */}
             </div>
           ) : (
             <Card>
