@@ -22,7 +22,8 @@ import {
   Grid,
   Search,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import Button from '../components/common/Button';
@@ -796,6 +797,73 @@ const AdminClassScheduling = () => {
                       <p className="text-gray-600">{selectedStudent.student_id} • {selectedStudent.email}</p>
                     </div>
                   </div>
+
+                  {/* Program Enrollments Section */}
+                  {selectedStudent.enrollments && selectedStudent.enrollments.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold text-gray-700 mb-3">Program Enrollments</h4>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {selectedStudent.enrollments
+                          .filter(e => e.status === 'active')
+                          .map(enrollment => {
+                            // Count schedules for this program
+                            const programSchedules = schedules.filter(s => s.program === enrollment.program);
+                            const hasSchedules = programSchedules.length > 0;
+                            const programName = enrollment.program === 'tajweed'
+                              ? 'Tajweed Program'
+                              : 'Essential Islamic Studies';
+                            const expectedClasses = enrollment.program === 'tajweed' ? 48 : 208;
+
+                            return (
+                              <div
+                                key={enrollment.id}
+                                className={`p-4 rounded-lg border-2 ${
+                                  hasSchedules
+                                    ? 'bg-emerald-50 border-emerald-200'
+                                    : 'bg-amber-50 border-amber-200'
+                                }`}
+                              >
+                                <div className="flex items-start justify-between mb-3">
+                                  <div>
+                                    <h5 className="font-semibold text-gray-900">{programName}</h5>
+                                    <p className="text-sm text-gray-600 capitalize">{enrollment.status}</p>
+                                  </div>
+                                  {hasSchedules ? (
+                                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                                  ) : (
+                                    <AlertCircle className="h-5 w-5 text-amber-600" />
+                                  )}
+                                </div>
+
+                                {hasSchedules ? (
+                                  <div className="text-sm text-gray-700">
+                                    <span className="font-medium text-emerald-700">
+                                      {programSchedules.length} classes scheduled
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <p className="text-sm text-amber-700 mb-3">
+                                      No schedule generated yet
+                                    </p>
+                                    <button
+                                      onClick={() => {
+                                        setGenerateForm({ ...generateForm, program: enrollment.program });
+                                        openGenerateModal();
+                                      }}
+                                      className="w-full px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                      <Zap className="h-4 w-4" />
+                                      Generate Schedule ({expectedClasses} classes)
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
 
                   {progress && (
                     <div className="space-y-4">
