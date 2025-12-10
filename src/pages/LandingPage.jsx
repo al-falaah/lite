@@ -163,37 +163,37 @@ const LandingPage = () => {
         </nav>
 
         {/* Quote Slider - Centered */}
-        <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4">
+        <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-2 md:py-4">
           <div className="max-w-4xl mx-auto w-full">
-            <div className="text-center flex flex-col justify-center mb-6 md:mb-8">
-             <p className="text-emerald-400 font-semibold text-sm mb-3 font-arabic">
+            <div className="text-center flex flex-col justify-center mb-4 md:mb-8">
+             <p className="text-emerald-400 font-semibold text-xs md:text-sm mb-2 md:mb-3 font-arabic">
               بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
             </p>
-              <p className="text-xl md:text-2xl lg:text-4xl text-white mb-4 md:mb-6 font-serif leading-relaxed px-4">
+              <p className="text-lg md:text-2xl lg:text-4xl text-white mb-3 md:mb-6 font-serif leading-tight md:leading-relaxed px-2 md:px-4">
                 "{quotes[currentQuote].text}"
               </p>
-              <p className="text-sm md:text-base text-gray-200 font-light">
+              <p className="text-xs md:text-base text-gray-200 font-light">
                 {quotes[currentQuote].source}
               </p>
             </div>
 
             {/* Navigation Controls */}
-            <div className="flex justify-center items-center gap-4 md:gap-6 mb-6 md:mb-8">
+            <div className="flex justify-center items-center gap-3 md:gap-6 mb-4 md:mb-8">
               <button
                 onClick={prevQuote}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm"
+                className="p-1.5 md:p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm"
                 aria-label="Previous quote"
               >
-                <ChevronLeft className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                <ChevronLeft className="h-3 w-3 md:h-5 md:w-5 text-white" />
               </button>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1.5 md:gap-2">
                 {quotes.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setCurrentQuote(idx)}
-                    className={`h-1.5 rounded-full transition-all ${
-                      idx === currentQuote ? 'w-8 bg-white' : 'w-1.5 bg-white/40'
+                    className={`h-1 md:h-1.5 rounded-full transition-all ${
+                      idx === currentQuote ? 'w-6 md:w-8 bg-white' : 'w-1 md:w-1.5 bg-white/40'
                     }`}
                     aria-label={`Go to quote ${idx + 1}`}
                   />
@@ -202,26 +202,26 @@ const LandingPage = () => {
 
               <button
                 onClick={nextQuote}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm"
+                className="p-1.5 md:p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm"
                 aria-label="Next quote"
               >
-                <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                <ChevronRight className="h-3 w-3 md:h-5 md:w-5 text-white" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Hero Content - Bottom */}
-        <div className="relative pb-8 md:pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="relative pb-6 md:pb-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-4">
+            <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-2 md:mb-4">
               Authentic Islamic Education
             </h1>
-            <p className="text-base md:text-lg lg:text-xl text-gray-200 mb-6 md:mb-8 max-w-3xl mx-auto">
+            <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-8 max-w-3xl mx-auto leading-snug md:leading-normal">
               Comprehensive online programs in Quranic studies, Arabic, and Islamic sciences - rooted in the Quran and Sunnah
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
               <Link to="/apply">
                 <Button variant="primary" size="lg" className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto text-white">
                   Apply Now
