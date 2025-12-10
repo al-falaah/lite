@@ -382,7 +382,7 @@ const AvailabilityCalendar = () => {
       // Load applications, students with enrollments, and scheduled classes
       const dataFetch = Promise.all([
         applications.getAll(),
-        // Load students with their enrollments
+        // Load students with their enrollments (including availability data)
         supabase
           .from('students')
           .select(`
@@ -391,7 +391,11 @@ const AvailabilityCalendar = () => {
               id,
               program,
               status,
-              enrolled_date
+              enrolled_date,
+              preferred_days,
+              preferred_times,
+              timezone,
+              availability_notes
             )
           `)
           .order('created_at', { ascending: false }),
@@ -1551,6 +1555,41 @@ const AvailabilityCalendar = () => {
                     : 'Choose a program to continue'}
                 </p>
               </div>
+
+              {/* Show student's preferred availability for selected program */}
+              {generateForm.program && (() => {
+                const selectedEnrollment = selectedApplicant?.enrollments?.find(e => e.program === generateForm.program);
+
+                if (!selectedEnrollment || (!selectedEnrollment.preferred_days && !selectedEnrollment.preferred_times)) {
+                  return null;
+                }
+
+                return (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-blue-900 mb-2">Student's Preferred Availability</h4>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      {selectedEnrollment.preferred_days && selectedEnrollment.preferred_days.length > 0 && (
+                        <div>
+                          <span className="font-medium text-blue-800">Preferred Days:</span>
+                          <p className="text-blue-700 capitalize">{selectedEnrollment.preferred_days.join(', ')}</p>
+                        </div>
+                      )}
+                      {selectedEnrollment.preferred_times && selectedEnrollment.preferred_times.length > 0 && (
+                        <div>
+                          <span className="font-medium text-blue-800">Preferred Times:</span>
+                          <p className="text-blue-700 capitalize">{selectedEnrollment.preferred_times.join(', ')}</p>
+                        </div>
+                      )}
+                    </div>
+                    {selectedEnrollment.availability_notes && (
+                      <div className="mt-2">
+                        <span className="font-medium text-blue-800 text-sm">Notes:</span>
+                        <p className="text-blue-700 text-sm">{selectedEnrollment.availability_notes}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
