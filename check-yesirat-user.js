@@ -23,7 +23,11 @@ async function checkUser() {
         id,
         program,
         status,
-        enrolled_date
+        enrolled_date,
+        preferred_days,
+        preferred_times,
+        timezone,
+        availability_notes
       )
     `)
     .eq('student_id', '159898')
@@ -44,6 +48,10 @@ async function checkUser() {
   if (student.enrollments && student.enrollments.length > 0) {
     student.enrollments.forEach((e, i) => {
       console.log(`   ${i + 1}. ${e.program} - ${e.status}`);
+      console.log(`      Preferred Days: ${e.preferred_days ? e.preferred_days.join(', ') : 'None'}`);
+      console.log(`      Preferred Times: ${e.preferred_times ? e.preferred_times.join(', ') : 'None'}`);
+      console.log(`      Timezone: ${e.timezone || 'Not set'}`);
+      console.log(`      Notes: ${e.availability_notes || 'None'}`);
     });
   } else {
     console.log('   ⚠️  No enrollments found');

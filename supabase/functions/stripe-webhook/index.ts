@@ -82,13 +82,24 @@ serve(async (req) => {
         }
       }
 
+      // Find the application for this student and program
+      const { data: application } = await supabaseClient
+        .from('applications')
+        .select('id')
+        .eq('email', student.email)
+        .eq('program', program)
+        .eq('status', 'approved')
+        .single()
+
+      const applicationId = application?.id || null
+
       // Create enrollment for this program
       const { data: enrollment, error: enrollmentError } = await supabaseClient
         .rpc('create_enrollment', {
           p_student_id: studentId,
           p_program: program,
           p_payment_type: planType,
-          p_application_id: null,
+          p_application_id: applicationId,
         })
 
       if (enrollmentError) {
