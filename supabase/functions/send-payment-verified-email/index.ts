@@ -149,6 +149,16 @@ serve(async (req) => {
         console.log('Student enrolled successfully')
       }
 
+      // Get student's first enrollment to determine program
+      const { data: enrollments } = await supabaseClient
+        .from('enrollments')
+        .select('program')
+        .eq('student_id', payment.students.id)
+        .order('created_at', { ascending: true })
+        .limit(1)
+
+      const program = enrollments && enrollments.length > 0 ? enrollments[0].program : 'essentials'
+
       // Send welcome email for first payment
       try {
         const welcomeResponse = await supabaseClient.functions.invoke('send-welcome-email', {
@@ -156,8 +166,8 @@ serve(async (req) => {
             studentData: {
               full_name: payment.students.full_name,
               email: payment.students.email,
-              student_number: payment.students.student_id,
-              program_type: 'essentials'
+              student_id: payment.students.student_id,
+              program: program
             },
             baseUrl: appUrl
           }

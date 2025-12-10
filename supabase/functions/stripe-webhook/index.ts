@@ -79,6 +79,9 @@ serve(async (req) => {
           console.error('Error updating student:', updateError)
         } else {
           console.log('Student enrolled:', studentId, 'with ID:', generatedStudentId)
+          // Update the student object with the new student_id
+          student.student_id = generatedStudentId
+          student.status = 'enrolled'
         }
       }
 
@@ -154,8 +157,8 @@ serve(async (req) => {
               studentData: {
                 full_name: student.full_name,
                 email: student.email,
-                student_number: student.student_id,
-                program_type: program,
+                student_id: student.student_id,
+                program: program,
               },
               baseUrl: appUrl,
             },
