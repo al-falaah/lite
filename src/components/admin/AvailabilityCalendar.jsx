@@ -35,6 +35,7 @@ const AvailabilityCalendar = () => {
   const [showApplicantList, setShowApplicantList] = useState(true);
   const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
   const [scheduleFilter, setScheduleFilter] = useState('all'); // 'all', 'with-schedules', 'without-schedules'
+  const [selectedProgram, setSelectedProgram] = useState('essentials'); // 'essentials' or 'tajweed' - for viewing schedules
   const [progress, setProgress] = useState(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState(null);
@@ -161,11 +162,14 @@ const AvailabilityCalendar = () => {
     }
   };
 
-  // Get the current active week and year for a student
+  // Get the current active week and year for a student (program-aware)
   const getCurrentActiveWeekAndYear = () => {
     if (!selectedApplicant) return { year: 1, week: 1 };
 
-    const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant.id);
+    // Filter by selected program
+    const studentSchedules = scheduledClasses.filter(s =>
+      s.student_id === selectedApplicant.id && s.program === selectedProgram
+    );
     if (studentSchedules.length === 0) return { year: 1, week: 1 };
 
     const weekMap = {};
@@ -747,7 +751,20 @@ const AvailabilityCalendar = () => {
                 {filteredList.map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => setSelectedApplicant(item)}
+                    onClick={() => {
+                      setSelectedApplicant(item);
+                      // Auto-select first program with schedules
+                      if (viewMode === 'students' && item.enrollments) {
+                        const programWithSchedules = item.enrollments.find(e =>
+                          e.status === 'active' && scheduledClasses.some(s => s.student_id === item.id && s.program === e.program)
+                        );
+                        if (programWithSchedules) {
+                          setSelectedProgram(programWithSchedules.program);
+                        } else if (item.enrollments.length > 0) {
+                          setSelectedProgram(item.enrollments[0].program);
+                        }
+                      }
+                    }}
                     className={`w-full text-left p-3 rounded-lg transition-all ${
                       selectedApplicant?.id === item.id
                         ? 'bg-emerald-100 border-2 border-emerald-500 shadow-sm'
@@ -894,9 +911,22 @@ const AvailabilityCalendar = () => {
 
                 {/* Current Week Schedule (Students view only) */}
                 {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length > 0 && (() => {
-                  const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant?.id);
+                  // Filter schedules by selected program
+                  const studentSchedules = scheduledClasses.filter(s =>
+                    s.student_id === selectedApplicant?.id && s.program === selectedProgram
+                  );
+
+                  // If no schedules for selected program, don't show the section
+                  if (studentSchedules.length === 0) return null;
+
                   const currentActive = getCurrentActiveWeekAndYear();
-                  const progressPercent = Math.round(((currentActive.year - 1) * 52 + currentActive.week - 1) / 104 * 100);
+
+                  // Calculate progress based on program
+                  const isTajweed = selectedProgram === 'tajweed';
+                  const totalWeeks = isTajweed ? 24 : 104; // Tajweed: 24 weeks, Essentials: 104 weeks (2 years)
+                  const weeksPerYear = isTajweed ? 24 : 52;
+                  const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
+                  const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
 
                   // Get current week's classes
                   const currentWeekClasses = studentSchedules.filter(
@@ -955,20 +985,50 @@ const AvailabilityCalendar = () => {
                   return (
                     <div className="mt-4">
                       <Card>
+                        {/* Program Selector */}
+                        {selectedApplicant?.enrollments?.filter(e => e.status === 'active').length > 1 && (
+                          <div className="mb-4 pb-4 border-b border-gray-200">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Viewing Schedule For:
+                            </label>
+                            <div className="flex gap-2">
+                              {selectedApplicant.enrollments.filter(e => e.status === 'active').map(enrollment => (
+                                <button
+                                  key={enrollment.program}
+                                  onClick={() => setSelectedProgram(enrollment.program)}
+                                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                                    selectedProgram === enrollment.program
+                                      ? 'bg-emerald-600 text-white'
+                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  }`}
+                                >
+                                  {enrollment.program === 'tajweed'
+                                    ? 'Tajweed Program'
+                                    : 'Essential Islamic Studies'}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {/* Current Week Header */}
                         <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
                           <div>
                             <h3 className="text-2xl font-bold text-gray-900">
-                              Week {currentActive.week} of 52
+                              Week {currentActive.week} of {weeksPerYear}
                             </h3>
                             <p className="text-sm text-gray-600 mt-1">
-                              {currentActive.year === 1 ? (
+                              {isTajweed ? (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  Tajweed Program (6 months)
+                                </span>
+                              ) : currentActive.year === 1 ? (
                                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                  Year 1
+                                  Year 1 of 2
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                  Year 2
+                                  Year 2 of 2
                                 </span>
                               )}
                             </p>
@@ -979,7 +1039,7 @@ const AvailabilityCalendar = () => {
                               {progressPercent}%
                             </p>
                             <p className="text-xs text-gray-500">
-                              {(currentActive.year - 1) * 52 + currentActive.week - 1} of 104 weeks
+                              {completedWeeks} of {totalWeeks} weeks
                             </p>
                           </div>
                         </div>
