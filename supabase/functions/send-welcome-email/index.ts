@@ -18,10 +18,12 @@ const EMAIL_STYLES = `
 `;
 
 function generateEmailHTML(studentData: any, baseUrl: string): string {
-  const { full_name, email, student_number, program_type } = studentData;
+  const { full_name, email, student_id, program } = studentData;
 
-  // Currently only offering the 2-year program
-  const programName = '2-Year Essential Islamic Studies Course';
+  // Determine program name based on program field
+  const programName = program === 'tajweed'
+    ? 'Tajweed Program'
+    : '2-Year Essential Islamic Studies Course';
 
   return `
     <!DOCTYPE html>
@@ -47,7 +49,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
             <table>
               <tr>
                 <td class="label">Student ID:</td>
-                <td><strong>${student_number}</strong></td>
+                <td><strong>${student_id}</strong></td>
               </tr>
               <tr>
                 <td class="label">Email:</td>
@@ -66,22 +68,22 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
 
           <p><strong>What You Can Do Now:</strong></p>
           <ul>
-            <li>Access your student dashboard at any time</li>
-            <li>View your payment schedule</li>
-            <li>Download lesson materials (once available)</li>
-            <li>Track your attendance and progress</li>
-            <li>Update your profile information</li>
+            <li>Access your student portal at any time using your Student ID</li>
+            <li>View your class schedule and meeting links</li>
+            <li>Track your progress through the program</li>
+            <li>View your enrollment details</li>
+            <li>Apply for additional programs</li>
           </ul>
 
           <center>
-            <a href="${baseUrl}/dashboard" class="button">Go to Dashboard →</a>
+            <a href="${baseUrl}/student" class="button">Access Student Portal →</a>
           </center>
 
           <p><strong>Important Reminders:</strong></p>
           <ul>
-            <li>Check your payment schedule in the dashboard</li>
-            <li>Complete payments before the due dates</li>
-            <li>Attend all scheduled classes</li>
+            <li>Save your Student ID (shown above) - you'll need it to access the portal</li>
+            <li>Check your class schedule regularly for upcoming sessions</li>
+            <li>Join classes on time using the meeting links provided</li>
             <li>Keep your contact information up to date</li>
           </ul>
 
