@@ -268,6 +268,18 @@ const AdminDashboard = () => {
     });
   };
 
+  const calculateAge = (dateOfBirth) => {
+    if (!dateOfBirth) return null;
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   const stats = {
     total: applicationsData.length,
     pending: applicationsData.filter((app) => app.status === 'pending').length,
@@ -774,6 +786,11 @@ const AdminDashboard = () => {
                       <label className="text-sm text-gray-600">Date of Birth</label>
                       <p className="font-medium">
                         {formatDate(selectedApplication.date_of_birth)}
+                        {selectedApplication.date_of_birth && (
+                          <span className="ml-2 text-gray-500">
+                            (Age: {calculateAge(selectedApplication.date_of_birth)} years)
+                          </span>
+                        )}
                       </p>
                     </div>
                   </div>

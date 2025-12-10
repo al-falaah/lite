@@ -151,6 +151,19 @@ const ApplicationPage = () => {
     });
   };
 
+  // Calculate age from date of birth
+  const calculateAge = (dateOfBirth) => {
+    if (!dateOfBirth) return null;
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   const validateStep = (step) => {
     switch (step) {
       case 1:
@@ -162,10 +175,41 @@ const ApplicationPage = () => {
           toast.error('Please fill in all required personal information');
           return false;
         }
+        // Validate name is not just spaces
+        if (formData.fullName.trim().length < 2) {
+          toast.error('Please enter a valid full name (at least 2 characters)');
+          return false;
+        }
+        // Validate phone number
+        const phoneRegex = /^[\d\s\+\-\(\)]{8,}$/;
+        if (!phoneRegex.test(formData.phone)) {
+          toast.error('Please enter a valid phone number (at least 8 digits)');
+          return false;
+        }
         // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
           toast.error('Please enter a valid email address');
+          return false;
+        }
+        // Validate date of birth
+        const age = calculateAge(formData.dateOfBirth);
+        if (age === null) {
+          toast.error('Please enter a valid date of birth');
+          return false;
+        }
+        if (age < 5) {
+          toast.error('Applicant must be at least 5 years old');
+          return false;
+        }
+        if (age > 100) {
+          toast.error('Please enter a valid date of birth (age cannot exceed 100 years)');
+          return false;
+        }
+        const birthDate = new Date(formData.dateOfBirth);
+        const today = new Date();
+        if (birthDate > today) {
+          toast.error('Date of birth cannot be in the future');
           return false;
         }
         break;
@@ -576,6 +620,8 @@ const ApplicationPage = () => {
                   required
                   value={formData.dateOfBirth}
                   onChange={handleChange}
+                  max={new Date().toISOString().split('T')[0]}
+                  min={new Date(new Date().setFullYear(new Date().getFullYear() - 100)).toISOString().split('T')[0]}
                 />
 
                 <div className="mb-4">
