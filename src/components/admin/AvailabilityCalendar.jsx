@@ -379,10 +379,22 @@ const AvailabilityCalendar = () => {
         setTimeout(() => reject(new Error('Request timeout')), 10000)
       );
 
-      // Load applications, students, and scheduled classes
+      // Load applications, students with enrollments, and scheduled classes
       const dataFetch = Promise.all([
         applications.getAll(),
-        students.getAll(),
+        // Load students with their enrollments
+        supabase
+          .from('students')
+          .select(`
+            *,
+            enrollments (
+              id,
+              program,
+              status,
+              enrolled_date
+            )
+          `)
+          .order('created_at', { ascending: false }),
         classSchedules.getScheduled()
       ]);
 
@@ -1098,23 +1110,44 @@ const AvailabilityCalendar = () => {
                 })()}
               </Card>
 
-              {/* Show Generate Full Schedule button for enrolled students */}
-              {viewMode === 'students' && (
-                <Card>
-                  <div className="text-center py-12">
-                    <Calendar className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
-                    <p className="text-lg font-medium mb-2 text-gray-900">Generate Program Schedule</p>
-                    <p className="text-sm mb-6 text-gray-600">Create a full schedule for a specific program</p>
-                    <button
-                      onClick={() => setShowGenerateModal(true)}
-                      className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
-                    >
-                      <Zap className="h-5 w-5 mr-2" />
-                      Generate Full Schedule
-                    </button>
-                  </div>
-                </Card>
-              )}
+              {/* Show Generate Full Schedule button only if student has unscheduled programs */}
+              {viewMode === 'students' && selectedApplicant && (() => {
+                // Get active enrollments
+                const activeEnrollments = selectedApplicant.enrollments?.filter(e => e.status === 'active') || [];
+
+                if (activeEnrollments.length === 0) return null;
+
+                // Check which programs have schedules
+                const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant.id);
+                const scheduledPrograms = new Set(studentSchedules.map(s => s.program));
+
+                // Find programs without schedules
+                const unscheduledPrograms = activeEnrollments.filter(e => !scheduledPrograms.has(e.program));
+
+                // Only show button if there are unscheduled programs
+                if (unscheduledPrograms.length === 0) return null;
+
+                return (
+                  <Card>
+                    <div className="text-center py-12">
+                      <Calendar className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
+                      <p className="text-lg font-medium mb-2 text-gray-900">Generate Program Schedule</p>
+                      <p className="text-sm mb-6 text-gray-600">
+                        {unscheduledPrograms.length === 1
+                          ? `${unscheduledPrograms[0].program === 'tajweed' ? 'Tajweed Program' : 'Essentials Program'} needs scheduling`
+                          : `${unscheduledPrograms.length} programs need scheduling`}
+                      </p>
+                      <button
+                        onClick={() => setShowGenerateModal(true)}
+                        className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                      >
+                        <Zap className="h-5 w-5 mr-2" />
+                        Generate Full Schedule
+                      </button>
+                    </div>
+                  </Card>
+                );
+              })()}
 
               {/* Weekly Calendar */}
               <Card>
@@ -1478,7 +1511,7 @@ const AvailabilityCalendar = () => {
             </div>
 
             <div className="space-y-4">
-              {/* Program Selector - First field */}
+              {/* Program Selector - Only show programs student is enrolled in WITHOUT schedules */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Program <span className="text-red-600">*</span>
@@ -1490,8 +1523,25 @@ const AvailabilityCalendar = () => {
                   required
                 >
                   <option value="">Select program</option>
-                  <option value="essentials">Essential Arabic & Islamic Studies (2 years)</option>
-                  <option value="tajweed">Tajweed Program (6 months)</option>
+                  {(() => {
+                    // Get active enrollments
+                    const activeEnrollments = selectedApplicant?.enrollments?.filter(e => e.status === 'active') || [];
+
+                    // Get programs that already have schedules
+                    const studentSchedules = scheduledClasses.filter(s => s.student_id === selectedApplicant?.id);
+                    const scheduledPrograms = new Set(studentSchedules.map(s => s.program));
+
+                    // Filter to only show unscheduled programs
+                    const unscheduledEnrollments = activeEnrollments.filter(e => !scheduledPrograms.has(e.program));
+
+                    return unscheduledEnrollments.map(enrollment => (
+                      <option key={enrollment.program} value={enrollment.program}>
+                        {enrollment.program === 'tajweed'
+                          ? 'Tajweed Program (6 months)'
+                          : 'Essential Arabic & Islamic Studies (2 years)'}
+                      </option>
+                    ));
+                  })()}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
                   {generateForm.program === 'tajweed'
