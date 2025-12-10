@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, ExternalLink, GraduationCap, Heart, Star, ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, ExternalLink, GraduationCap, Heart, Star, ArrowRight, CheckCircle, Sparkles, Menu, X } from 'lucide-react';
 import Button from '../components/common/Button';
 
 const LandingPage = () => {
   // Replace this with your actual Google Form URL
   const TAFSEER_COURSE_FORM_URL = "https://forms.google.com/your-form-link-here";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
@@ -26,24 +28,62 @@ const LandingPage = () => {
                 <span className="text-xs text-gray-600 -mt-1 font-arabic">الفلاح - Success</span>
               </div>
             </Link>
-            <div className="flex flex-wrap gap-2 md:gap-3 justify-end">
-              <Link to="/student" className="hidden sm:block">
-                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-sm md:text-base whitespace-nowrap">
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex gap-3">
+              <Link to="/student">
+                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 whitespace-nowrap">
                   Student Portal
                 </Button>
               </Link>
-              <a href="#essentials-program" className="hidden sm:block">
-                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-sm md:text-base whitespace-nowrap">
+              <a href="#essentials-program">
+                <Button variant="outline" size="md" className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 whitespace-nowrap">
                   2-Year Program
                 </Button>
               </a>
               <Link to="/apply">
-                <Button variant="primary" size="md" className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-lg shadow-emerald-600/30 text-sm md:text-base whitespace-nowrap">
+                <Button variant="primary" size="md" className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-lg shadow-emerald-600/30 whitespace-nowrap">
                   Apply Now
                 </Button>
               </Link>
             </div>
+
+            {/* Mobile Hamburger Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-emerald-700 hover:bg-emerald-50 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 border-t border-amber-100">
+              <div className="flex flex-col gap-3">
+                <Link to="/student" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" size="md" className="w-full border-emerald-600 text-emerald-700 hover:bg-emerald-50">
+                    Student Portal
+                  </Button>
+                </Link>
+                <a href="#essentials-program" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" size="md" className="w-full border-emerald-600 text-emerald-700 hover:bg-emerald-50">
+                    2-Year Program
+                  </Button>
+                </a>
+                <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="primary" size="md" className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-lg shadow-emerald-600/30">
+                    Apply Now
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
