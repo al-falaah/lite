@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, ChevronLeft, ChevronRight, Plus, Minus } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus } from 'lucide-react';
 import Button from '../components/common/Button';
 
 const LandingPage = () => {
@@ -11,19 +11,19 @@ const LandingPage = () => {
   const quotes = [
     {
       text: "Whoever follows a path in the pursuit of knowledge, Allah will make a path to Paradise easy for him.",
-      source: "Prophet Muhammad ﷺ (Sahih Muslim)"
+      source: "Sahih Muslim 2699"
     },
     {
       text: "The best of you are those who learn the Qur'an and teach it.",
-      source: "Prophet Muhammad ﷺ (Sahih Bukhari)"
+      source: "Sahih Bukhari 5027"
     },
     {
       text: "Seeking knowledge is an obligation upon every Muslim.",
-      source: "Prophet Muhammad ﷺ (Sunan Ibn Majah)"
+      source: "Sunan Ibn Majah 224"
     },
     {
       text: "The superiority of the scholar over the worshipper is like that of the moon on the night when it is full over the rest of the stars.",
-      source: "Prophet Muhammad ﷺ (Sunan Abu Dawud)"
+      source: "Sunan Abu Dawud 3641"
     }
   ];
 
@@ -69,14 +69,6 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, [quotes.length]);
 
-  const nextQuote = () => {
-    setCurrentQuote((prev) => (prev + 1) % quotes.length);
-  };
-
-  const prevQuote = () => {
-    setCurrentQuote((prev) => (prev - 1 + quotes.length) % quotes.length);
-  };
-
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Full Screen with Background */}
@@ -95,15 +87,15 @@ const LandingPage = () => {
         {/* Navigation */}
         <nav className="relative z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16 md:h-20">
+            <div className="flex justify-between items-center h-14 md:h-16">
               <Link to="/" className="flex items-center gap-2">
                 <img
                   src="/favicon.svg"
                   alt="Al-Falaah Logo"
-                  className="h-10 w-10"
+                  className="h-8 w-8 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col">
-                  <span className="text-xl font-semibold text-white">Al-Falaah</span>
+                  <span className="text-lg md:text-xl font-semibold text-white">Al-Falaah</span>
                   <span className="text-xs text-gray-300 font-arabic">الفلاح</span>
                 </div>
               </Link>
@@ -162,76 +154,63 @@ const LandingPage = () => {
           </div>
         </nav>
 
-        {/* Quote Slider - Centered */}
-        <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-2 md:py-3">
-          <div className="max-w-4xl mx-auto w-full">
-            <div className="text-center flex flex-col justify-center mb-4 md:mb-6">
-             <p className="text-emerald-400 font-semibold text-xs md:text-sm mb-2 font-arabic">
-              بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
-            </p>
-              <p className="text-lg md:text-2xl lg:text-4xl text-white mb-3 md:mb-5 font-serif leading-tight md:leading-relaxed px-2 md:px-4">
+        {/* Centered Hero Content with Slider and CTA */}
+        <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto w-full text-center">
+            {/* Quote Slider */}
+            <div className="mb-6 md:mb-10">
+              <p className="text-emerald-400 font-semibold text-xs md:text-sm mb-2 md:mb-3 font-arabic">
+                قال رسول الله ﷺ
+              </p>
+              <p className="text-lg md:text-2xl lg:text-4xl text-white mb-3 md:mb-4 font-serif leading-tight md:leading-relaxed px-2 md:px-4">
                 "{quotes[currentQuote].text}"
               </p>
-              <p className="text-xs md:text-base text-gray-200 font-light">
+              <p className="text-xs md:text-base text-gray-200 font-light mb-4 md:mb-6">
                 {quotes[currentQuote].source}
               </p>
-            </div>
 
-            {/* Navigation Controls */}
-            <div className="flex justify-center items-center gap-3 md:gap-6 mb-4 md:mb-6">
-              <button
-                onClick={prevQuote}
-                className="p-1.5 md:p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm"
-                aria-label="Previous quote"
-              >
-                <ChevronLeft className="h-3 w-3 md:h-5 md:w-5 text-white" />
-              </button>
-
-              <div className="flex gap-1.5 md:gap-2">
-                {quotes.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentQuote(idx)}
-                    className={`h-1 md:h-1.5 rounded-full transition-all ${
-                      idx === currentQuote ? 'w-6 md:w-8 bg-white' : 'w-1 md:w-1.5 bg-white/40'
-                    }`}
-                    aria-label={`Go to quote ${idx + 1}`}
-                  />
-                ))}
+              {/* Navigation Controls - Minimal Progress Bar */}
+              <div className="flex justify-center items-center mb-6 md:mb-8">
+                <div className="flex gap-1.5 md:gap-2">
+                  {quotes.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentQuote(idx)}
+                      className="group relative"
+                      aria-label={`Go to quote ${idx + 1}`}
+                    >
+                      <div className={`h-0.5 md:h-1 w-12 md:w-16 rounded-full transition-all duration-500 ${
+                        idx === currentQuote
+                          ? 'bg-white'
+                          : 'bg-white/20 group-hover:bg-white/40'
+                      }`} />
+                    </button>
+                  ))}
+                </div>
               </div>
-
-              <button
-                onClick={nextQuote}
-                className="p-1.5 md:p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm"
-                aria-label="Next quote"
-              >
-                <ChevronRight className="h-3 w-3 md:h-5 md:w-5 text-white" />
-              </button>
             </div>
-          </div>
-        </div>
 
-        {/* Hero Content - Bottom */}
-        <div className="relative pb-6 md:pb-10 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-2 md:mb-3">
-              Authentic Islamic Education
-            </h1>
-            <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-              Comprehensive online programs in Quranic studies, Arabic, and Islamic sciences - rooted in the Quran and Sunnah
-            </p>
+            {/* Hero Content */}
+            <div>
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10">
+                Authentic Islamic Education
+              </h1>
+              <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
+                Comprehensive online programs in Quranic studies, Arabic, and Islamic sciences - rooted in the Quran and Sunnah
+              </p>
 
-            <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
-              <Link to="/apply">
-                <Button variant="primary" size="lg" className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto text-white">
-                  Apply Now
-                </Button>
-              </Link>
-              <a href="#programs">
-                <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 w-full sm:w-auto backdrop-blur-sm">
-                  View Programs
-                </Button>
-              </a>
+              <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
+                <Link to="/apply">
+                  <Button variant="primary" size="lg" className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto text-white">
+                    Apply Now
+                  </Button>
+                </Link>
+                <a href="#programs">
+                  <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 w-full sm:w-auto backdrop-blur-sm">
+                    View Programs
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
         </div>
