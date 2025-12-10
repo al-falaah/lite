@@ -56,6 +56,7 @@ const AvailabilityCalendar = () => {
   // Generate Full Schedule modal state
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [generateForm, setGenerateForm] = useState({
+    program: '',
     main_day_of_week: '',
     short_day_of_week: '',
     main_class_time: '',
@@ -213,7 +214,7 @@ const AvailabilityCalendar = () => {
       return;
     }
 
-    if (!generateForm.main_day_of_week || !generateForm.short_day_of_week ||
+    if (!generateForm.program || !generateForm.main_day_of_week || !generateForm.short_day_of_week ||
         !generateForm.main_class_time || !generateForm.short_class_time) {
       toast.error('Please fill in all required fields');
       return;
@@ -221,14 +222,37 @@ const AvailabilityCalendar = () => {
 
     setGenerating(true);
     try {
-      // Generate 104 weeks of schedules (52 weeks × 2 years)
+      // Check if schedules already exist for this program
+      const { data: existingSchedules, error: checkError } = await supabase
+        .from('class_schedules')
+        .select('id')
+        .eq('student_id', selectedApplicant.id)
+        .eq('program', generateForm.program)
+        .limit(1);
+
+      if (checkError) throw checkError;
+
+      if (existingSchedules && existingSchedules.length > 0) {
+        const programName = generateForm.program === 'tajweed' ? 'Tajweed Program' : 'Essentials Program';
+        toast.error(`Schedules already exist for ${programName}. Delete existing schedules first.`);
+        setGenerating(false);
+        return;
+      }
+
+      // Determine number of weeks based on program
+      const isTajweed = generateForm.program === 'tajweed';
+      const totalWeeks = isTajweed ? 24 : 52; // Tajweed: 24 weeks (6 months), Essentials: 52 weeks/year
+      const totalYears = isTajweed ? 1 : 2; // Tajweed: 1 year, Essentials: 2 years
+
+      // Generate schedules
       const schedulesToCreate = [];
 
-      for (let year = 1; year <= 2; year++) {
-        for (let week = 1; week <= 52; week++) {
+      for (let year = 1; year <= totalYears; year++) {
+        for (let week = 1; week <= totalWeeks; week++) {
           // Main class (2 hours) - can be on different day
           schedulesToCreate.push({
             student_id: selectedApplicant.id,
+            program: generateForm.program,
             academic_year: year,
             week_number: week,
             class_type: 'main',
@@ -241,6 +265,7 @@ const AvailabilityCalendar = () => {
           // Short class (30 minutes) - can be on different day
           schedulesToCreate.push({
             student_id: selectedApplicant.id,
+            program: generateForm.program,
             academic_year: year,
             week_number: week,
             class_type: 'short',
@@ -263,9 +288,12 @@ const AvailabilityCalendar = () => {
         if (error) throw error;
       }
 
-      toast.success('Full schedule generated successfully! (208 classes created)');
+      const totalClasses = schedulesToCreate.length;
+      const programName = isTajweed ? 'Tajweed Program' : 'Essentials Program';
+      toast.success(`Full schedule generated for ${programName}! (${totalClasses} classes created)`);
       setShowGenerateModal(false);
       setGenerateForm({
+        program: '',
         main_day_of_week: '',
         short_day_of_week: '',
         main_class_time: '',
@@ -1434,7 +1462,11 @@ const AvailabilityCalendar = () => {
               <div>
                 <h3 className="text-xl font-bold text-gray-900">Generate Full Schedule</h3>
                 <p className="text-sm text-gray-600 mt-1">
-                  Create 208 classes (2 years × 52 weeks × 2 classes per week)
+                  {!generateForm.program
+                    ? 'Select a program to see details'
+                    : generateForm.program === 'tajweed'
+                    ? 'Create 48 classes (24 weeks × 2 classes per week)'
+                    : 'Create 208 classes (2 years × 52 weeks × 2 classes per week)'}
                 </p>
               </div>
               <button
@@ -1446,6 +1478,30 @@ const AvailabilityCalendar = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Program Selector - First field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Program <span className="text-red-600">*</span>
+                </label>
+                <select
+                  value={generateForm.program}
+                  onChange={(e) => setGenerateForm({ ...generateForm, program: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  required
+                >
+                  <option value="">Select program</option>
+                  <option value="essentials">Essential Arabic & Islamic Studies (2 years)</option>
+                  <option value="tajweed">Tajweed Program (6 months)</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  {generateForm.program === 'tajweed'
+                    ? 'Will create 48 classes (24 weeks × 2 classes)'
+                    : generateForm.program === 'essentials'
+                    ? 'Will create 208 classes (2 years × 52 weeks × 2 classes)'
+                    : 'Choose a program to continue'}
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
