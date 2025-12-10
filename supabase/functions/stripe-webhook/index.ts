@@ -51,8 +51,11 @@ serve(async (req) => {
         return new Response('Student not found', { status: 404 })
       }
 
+      // Track if this is a new student to send welcome email
+      const isNewStudent = student.status === 'pending_payment'
+
       // If student is pending_payment, generate student ID and update status
-      if (student.status === 'pending_payment') {
+      if (isNewStudent) {
         // Generate random 6-digit numeric student ID using database function
         const { data: idResult, error: idError } = await supabaseClient
           .rpc('generate_random_student_id')
@@ -149,7 +152,7 @@ serve(async (req) => {
       }
 
       // Send welcome email if new student
-      if (student.status === 'pending_payment') {
+      if (isNewStudent) {
         try {
           const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
           await supabaseClient.functions.invoke('send-welcome-email', {
