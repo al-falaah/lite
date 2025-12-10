@@ -191,8 +191,8 @@ const StudentPortal = () => {
 
   const getStatusBadge = (status) => {
     const badges = {
-      active: { bg: 'bg-green-100', text: 'text-green-800', label: 'Active' },
-      completed: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Completed' },
+      active: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Active' },
+      completed: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Completed' },
       withdrawn: { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Withdrawn' },
     };
     const badge = badges[status] || badges.active;
@@ -205,89 +205,86 @@ const StudentPortal = () => {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-amber-50/30 to-white">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <nav className="bg-white/98 backdrop-blur-lg shadow-sm border-b border-amber-100">
+        <nav className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-20">
-              <Link to="/" className="flex items-center gap-3 group">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-amber-600 rounded-xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                  <div className="relative bg-gradient-to-br from-emerald-600 to-amber-600 p-2 rounded-xl">
-                    <BookOpen className="h-6 w-6 text-white" />
-                  </div>
-                </div>
+            <div className="flex justify-between items-center h-16">
+              <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <img
+                  src="/favicon.svg"
+                  alt="Al-Falaah Logo"
+                  className="h-8 w-8"
+                />
                 <div className="flex flex-col">
-                  <span className="text-2xl font-bold bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-600 bg-clip-text text-transparent">
-                    Al-Falaah
-                  </span>
-                  <span className="text-xs text-gray-600 -mt-1 font-arabic">الفلاح - Success</span>
+                  <span className="text-xl font-semibold text-gray-900">Al-Falaah Academy</span>
+                  {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
                 </div>
               </Link>
               <Link to="/">
-                <Button variant="outline" size="md">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Home
-                </Button>
+                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 rounded-lg hover:bg-gray-50 transition-colors">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Back to Home</span>
+                  <span className="sm:hidden">Back</span>
+                </button>
               </Link>
             </div>
           </div>
         </nav>
 
         {/* Login Form */}
-        <div className="max-w-md mx-auto px-4 py-16">
-          <Card>
+        <div className="flex items-center justify-center px-4 py-12 sm:py-16">
+          <div className="w-full max-w-md">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 mb-4">
-                <User className="h-8 w-8 text-white" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
+                <User className="h-8 w-8 text-emerald-600" />
               </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Student Portal</h1>
-              <p className="text-gray-600">Access your enrollments and make payments</p>
+              <p className="text-gray-600">Access your enrollment and class schedule</p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Student ID
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Card>
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Student ID
+                  </label>
                   <input
                     type="text"
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
-                    placeholder="123456"
+                    placeholder="Enter your 6-digit ID"
                     maxLength={6}
                     pattern="\d{6}"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-center text-lg font-mono tracking-widest"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-center text-lg font-mono tracking-widest"
                     required
                   />
+                  <p className="mt-2 text-xs text-gray-500 text-center">
+                    Enter your 6-digit student ID from your enrollment confirmation
+                  </p>
                 </div>
-                <p className="mt-2 text-xs text-gray-500">
-                  Enter your 6-digit student ID from your enrollment confirmation
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700"
+                  disabled={loading}
+                >
+                  {loading ? 'Accessing...' : 'Access Portal'}
+                </Button>
+              </form>
+
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600 text-center">
+                  Need help? Contact{' '}
+                  <a href="mailto:admin@alfalaah-academy.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">
+                    admin@alfalaah-academy.nz
+                  </a>
                 </p>
               </div>
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? 'Accessing...' : 'Access My Portal'}
-              </Button>
-            </form>
-
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600 text-center">
-                Need help? Contact us at{' '}
-                <a href="mailto:admin@alfalaah-academy.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">
-                  admin@alfalaah-academy.nz
-                </a>
-              </p>
-            </div>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     );
@@ -296,27 +293,34 @@ const StudentPortal = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-emerald-600 to-amber-600 p-2 rounded-lg">
-                <BookOpen className="h-5 w-5 text-white" />
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <img
+                src="/favicon.svg"
+                alt="Al-Falaah Logo"
+                className="h-8 w-8"
+              />
+              <div className="flex flex-col">
+                <span className="text-xl font-semibold text-gray-900">Al-Falaah Academy</span>
+                {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
               </div>
-              <span className="text-xl font-bold text-gray-900">Al-Falaah</span>
             </Link>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="hidden sm:flex items-center gap-2 text-sm text-gray-700">
-                <User className="h-4 w-4" />
                 <span className="font-medium">{student?.full_name}</span>
                 {student?.student_id && (
-                  <span className="text-gray-500">• ID: {student.student_id}</span>
+                  <span className="text-gray-500">• {student.student_id}</span>
                 )}
               </div>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
             </div>
           </div>
         </div>
@@ -351,12 +355,12 @@ const StudentPortal = () => {
                 const isTajweed = enrollment.program === 'tajweed';
 
                 return (
-                  <Card key={enrollment.id} className="overflow-hidden">
+                  <Card key={enrollment.id}>
                     {/* Enrollment Header */}
                     <div className="flex items-start justify-between mb-6">
                       <div className="flex items-start gap-3 md:gap-4 flex-1 min-w-0">
-                        <div className={`p-2 md:p-3 rounded-lg flex-shrink-0 ${isTajweed ? 'bg-purple-100' : 'bg-blue-100'}`}>
-                          <GraduationCap className={`h-5 w-5 md:h-6 md:w-6 ${isTajweed ? 'text-purple-600' : 'text-blue-600'}`} />
+                        <div className="p-2 md:p-3 rounded-lg flex-shrink-0 bg-emerald-100">
+                          <GraduationCap className="h-5 w-5 md:h-6 md:w-6 text-emerald-600" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h2 className="text-xl md:text-2xl font-bold text-gray-900 break-words">{programName}</h2>
@@ -374,15 +378,15 @@ const StudentPortal = () => {
 
                     {/* Payment Status */}
                     <div className="grid md:grid-cols-3 gap-4 mb-6">
-                      <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                         <p className="text-sm text-gray-600 mb-1">Total Fees</p>
                         <p className="text-2xl font-bold text-gray-900">${enrollment.total_fees?.toFixed(2)}</p>
                       </div>
-                      <div className="bg-green-50 p-4 rounded-lg">
+                      <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
                         <p className="text-sm text-gray-600 mb-1">Paid</p>
-                        <p className="text-2xl font-bold text-green-600">${enrollment.total_paid?.toFixed(2)}</p>
+                        <p className="text-2xl font-bold text-emerald-600">${enrollment.total_paid?.toFixed(2)}</p>
                       </div>
-                      <div className={`p-4 rounded-lg ${hasPendingPayment ? 'bg-amber-50' : 'bg-emerald-50'}`}>
+                      <div className={`p-4 rounded-lg border ${hasPendingPayment ? 'bg-amber-50 border-amber-200' : 'bg-emerald-50 border-emerald-200'}`}>
                         <p className="text-sm text-gray-600 mb-1">Balance</p>
                         <p className={`text-2xl font-bold ${hasPendingPayment ? 'text-amber-600' : 'text-emerald-600'}`}>
                           ${enrollment.balance_remaining?.toFixed(2)}
@@ -392,8 +396,8 @@ const StudentPortal = () => {
 
                     {/* Billing Portal Link */}
                     {student?.stripe_customer_id && (
-                      <div className="border-t pt-6">
-                        <div className="flex items-center justify-between">
+                      <div className="border-t border-gray-200 pt-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                           <div>
                             <h3 className="text-lg font-semibold text-gray-900">Manage Billing</h3>
                             <p className="text-sm text-gray-600 mt-1">
@@ -403,6 +407,8 @@ const StudentPortal = () => {
                           <Button
                             onClick={handleBillingPortal}
                             variant="outline"
+                            size="md"
+                            className="w-full sm:w-auto"
                             disabled={loading}
                           >
                             <ExternalLink className="h-4 w-4 mr-2" />
@@ -425,7 +431,7 @@ const StudentPortal = () => {
 
             if (programSchedules.length === 0) {
               return (
-                <Card key={enrollment.id} className="border-l-4" style={{ borderLeftColor: isTajweed ? '#9333ea' : '#059669' }}>
+                <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
                   <div className="text-center py-8 text-gray-500">
                     <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
                     <p className="text-lg font-medium mb-2">{programName} - Schedule Coming Soon</p>
@@ -448,17 +454,17 @@ const StudentPortal = () => {
             );
 
             return (
-              <Card key={enrollment.id} className="border-l-4" style={{ borderLeftColor: isTajweed ? '#9333ea' : '#059669' }}>
-                <div className="flex items-center justify-between mb-6">
+              <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">{programName}</h2>
                     <p className="text-sm text-gray-600 mt-1">
                       Your weekly class schedule • {programSchedules.length} classes total
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="sm:text-right">
                     <p className="text-sm text-gray-600">Current Week</p>
-                    <p className="text-xl font-bold" style={{ color: isTajweed ? '#9333ea' : '#059669' }}>
+                    <p className="text-xl font-bold text-emerald-600">
                       Year {currentYear}, Week {currentWeek}
                     </p>
                   </div>
@@ -470,48 +476,23 @@ const StudentPortal = () => {
                     currentWeekClasses.map((schedule) => (
                       <div
                         key={schedule.id}
-                        className="flex items-center gap-4 p-4 rounded-lg border"
-                        style={{
-                          backgroundColor: isTajweed ? '#faf5ff' : '#ecfdf5',
-                          borderColor: isTajweed ? '#e9d5ff' : '#a7f3d0'
-                        }}
+                        className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 bg-white hover:border-emerald-300 transition-colors"
                       >
                         <div className="flex-shrink-0">
-                          <div
-                            className="w-12 h-12 rounded-lg flex items-center justify-center"
-                            style={{ backgroundColor: isTajweed ? '#9333ea' : '#059669' }}
-                          >
-                            <Calendar className="h-6 w-6 text-white" />
+                          <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-emerald-100">
+                            <Calendar className="h-6 w-6 text-emerald-600" />
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2 mb-1">
                             <h3 className="font-semibold text-gray-900 whitespace-nowrap">{getDayName(schedule.day_of_week)}</h3>
-                            <span
-                              className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap"
-                              style={{
-                                backgroundColor: isTajweed ? '#e9d5ff' : '#a7f3d0',
-                                color: isTajweed ? '#6b21a8' : '#065f46'
-                              }}
-                            >
+                            <span className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap bg-emerald-100 text-emerald-700">
                               Wk {schedule.week_number}
                             </span>
-                            <span
-                              className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap"
-                              style={{
-                                backgroundColor: '#dbeafe',
-                                color: '#1e40af'
-                              }}
-                            >
+                            <span className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap bg-gray-100 text-gray-700">
                               Yr {schedule.academic_year}
                             </span>
-                            <span
-                              className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap"
-                              style={{
-                                backgroundColor: '#fef3c7',
-                                color: '#92400e'
-                              }}
-                            >
+                            <span className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap bg-gray-100 text-gray-700">
                               {schedule.class_type === 'main' ? '2 hrs' : '30 min'}
                             </span>
                           </div>
@@ -525,7 +506,7 @@ const StudentPortal = () => {
                                 href={schedule.meeting_link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap"
+                                className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-medium whitespace-nowrap"
                               >
                                 <Video className="h-4 w-4 flex-shrink-0" />
                                 <span>Join Class</span>
@@ -535,7 +516,7 @@ const StudentPortal = () => {
                           </div>
                         </div>
                         {schedule.status === 'completed' && (
-                          <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
+                          <CheckCircle className="h-6 w-6 text-emerald-600 flex-shrink-0" />
                         )}
                       </div>
                     ))
@@ -548,20 +529,20 @@ const StudentPortal = () => {
                 </div>
 
                 {/* Schedule Stats */}
-                <div className="mt-6 pt-6 border-t grid grid-cols-3 gap-4">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
+                  <div className="text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-sm text-gray-600 mb-1">Total Classes</p>
                     <p className="text-2xl font-bold text-gray-900">{programSchedules.length}</p>
                   </div>
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                  <div className="text-center p-3 bg-emerald-50 rounded-lg border border-emerald-200">
                     <p className="text-sm text-gray-600 mb-1">Completed</p>
-                    <p className="text-2xl font-bold text-green-600">
+                    <p className="text-2xl font-bold text-emerald-600">
                       {programSchedules.filter(s => s.status === 'completed').length}
                     </p>
                   </div>
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                  <div className="text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-sm text-gray-600 mb-1">Upcoming</p>
-                    <p className="text-2xl font-bold text-blue-600">
+                    <p className="text-2xl font-bold text-gray-900">
                       {programSchedules.filter(s => s.status === 'scheduled').length}
                     </p>
                   </div>
@@ -572,10 +553,10 @@ const StudentPortal = () => {
 
           {/* Apply for Another Program */}
           {!isEnrolledInAllPrograms() && (
-            <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200">
-              <div className="flex items-start gap-4">
+            <Card className="border-2 border-emerald-200 bg-emerald-50">
+              <div className="flex flex-col sm:flex-row items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
                     <GraduationCap className="h-6 w-6 text-white" />
                   </div>
                 </div>
@@ -589,7 +570,7 @@ const StudentPortal = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="primary" className="bg-purple-600 hover:bg-purple-700">
+                    <Button variant="primary" className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
                       <BookOpen className="h-4 w-4 mr-2" />
                       Apply for Another Program
                     </Button>

@@ -394,17 +394,22 @@ const ApplicationPage = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <Link to="/" className="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
-              <ChevronLeft className="h-5 w-5 mr-1" />
-              <span className="font-medium">Back to Home</span>
+            <Link to="/">
+              <button className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 rounded-lg hover:bg-gray-50 transition-colors">
+                <ChevronLeft className="h-4 w-4" />
+                <span>Back to Home</span>
+              </button>
             </Link>
-            <Link to="/" className="flex items-center text-emerald-600 hover:text-emerald-700 gap-2">
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
                 src="/favicon.svg"
                 alt="Al-Falaah Logo"
                 className="h-8 w-8"
               />
-              <span className="text-xl font-bold">Al-Falaah</span>
+              <div className="flex flex-col">
+                <span className="text-lg font-semibold text-gray-900">Al-Falaah Academy</span>
+                {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
+              </div>
             </Link>
           </div>
           <div className="text-center px-4">

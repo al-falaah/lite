@@ -95,27 +95,27 @@ const LandingPage = () => {
                   className="h-8 w-8 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col">
-                  <span className="text-lg md:text-xl font-semibold text-white">Al-Falaah</span>
-                  <span className="text-xs text-gray-300 font-arabic">الفلاح</span>
+                  <span className="text-md md:text-xl font-semibold text-white">Al-Falaah Academy</span>
+                  {/* <span className="text-md text-gray-300">Academy</span> */}
                 </div>
               </Link>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex gap-4">
+              <div className="hidden md:flex items-center gap-1">
                 <Link to="/student">
-                  <Button variant="outline" size="md" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
                     Student Portal
-                  </Button>
+                  </button>
                 </Link>
                 <a href="#programs">
-                  <Button variant="outline" size="md" className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm">
+                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
                     Programs
-                  </Button>
+                  </button>
                 </a>
                 <Link to="/apply">
-                  <Button variant="primary" size="md" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                  <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all hover:scale-105 shadow-lg shadow-emerald-600/30">
                     Apply Now
-                  </Button>
+                  </button>
                 </Link>
               </div>
 
@@ -134,19 +134,19 @@ const LandingPage = () => {
               <div className="md:hidden py-4 border-t border-white/20">
                 <div className="flex flex-col gap-2">
                   <Link to="/student" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" size="md" className="w-full border-white/30 text-white hover:bg-white/10">
+                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
                       Student Portal
-                    </Button>
+                    </button>
                   </Link>
                   <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" size="md" className="w-full border-white/30 text-white hover:bg-white/10">
+                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
                       Programs
-                    </Button>
+                    </button>
                   </a>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="primary" size="md" className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    <button className="w-full px-4 py-3 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-lg shadow-emerald-600/30">
                       Apply Now
-                    </Button>
+                    </button>
                   </Link>
                 </div>
               </div>
@@ -467,12 +467,12 @@ const LandingPage = () => {
                   className="h-8 w-8"
                 />
                 <div>
-                  <div className="text-lg font-semibold">Al-Falaah</div>
-                  <div className="text-xs text-gray-400 font-arabic">الفلاح</div>
+                  <div className="text-lg font-semibold">Al-Falaah Academy</div>
+                  {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
                 </div>
               </div>
               <p className="text-gray-400 text-sm">
-                Authentic Islamic education rooted in the Quran and Sunnah
+                Authentic Islamic education rooted in the Qur'an and Sunnah
               </p>
             </div>
 
@@ -492,8 +492,8 @@ const LandingPage = () => {
               <p className="text-gray-400 text-sm mb-2">
                 Questions about our programs?
               </p>
-              <a href="mailto:admin@alfalaah-academy.nz" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                admin@alfalaah-academy.nz
+              <a href="mailto:info@alfalaah-academy.nz" className="text-emerald-400 hover:text-emerald-300 text-sm">
+                info@alfalaah-academy.nz
               </a>
             </div>
           </div>
