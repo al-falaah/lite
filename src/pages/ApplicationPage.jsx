@@ -398,8 +398,12 @@ const ApplicationPage = () => {
               <ChevronLeft className="h-5 w-5 mr-1" />
               <span className="font-medium">Back to Home</span>
             </Link>
-            <Link to="/" className="flex items-center text-emerald-600 hover:text-emerald-700">
-              <BookOpen className="h-6 w-6 mr-2" />
+            <Link to="/" className="flex items-center text-emerald-600 hover:text-emerald-700 gap-2">
+              <img
+                src="/favicon.svg"
+                alt="Al-Falaah Logo"
+                className="h-8 w-8"
+              />
               <span className="text-xl font-bold">Al-Falaah</span>
             </Link>
           </div>

@@ -15,12 +15,11 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-amber-600 rounded-xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative bg-gradient-to-br from-emerald-600 to-amber-600 p-2 rounded-xl">
-                  <BookOpen className="h-6 w-6 text-white" />
-                </div>
-              </div>
+              <img
+                src="/favicon.svg"
+                alt="Al-Falaah Logo"
+                className="h-12 w-12 transition-transform group-hover:scale-110"
+              />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold bg-gradient-to-r from-emerald-700 via-emerald-600 to-amber-600 bg-clip-text text-transparent">
                   Al-Falaah
@@ -469,9 +468,11 @@ const LandingPage = () => {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-br from-emerald-600 to-amber-600 p-2 rounded-xl">
-                  <BookOpen className="h-6 w-6 text-white" />
-                </div>
+                <img
+                  src="/favicon.svg"
+                  alt="Al-Falaah Logo"
+                  className="h-10 w-10"
+                />
                 <div>
                   <div className="text-2xl font-bold">Al-Falaah</div>
                   <div className="text-sm text-gray-400 font-arabic">الفلاح</div>
