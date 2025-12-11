@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus } from 'lucide-react';
 import Button from '../components/common/Button';
+import { storage } from '../services/supabase';
 
 const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentQuote, setCurrentQuote] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+
+  // Background image URL from Supabase with fallback to iStock
+  const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
 
   const quotes = [
     {
@@ -72,12 +76,12 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Full Screen with Background */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden">
+      <section className="relative min-h-screen flex flex-col overflow-hidden bg-black">
         {/* Background Image with Overlay */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
           style={{
-            backgroundImage: 'url("https://media.istockphoto.com/id/1485327020/photo/islamic-books-on-a-shelf.jpg?s=2048x2048&w=is&k=20&c=LttV2lg5ijBHhkB5xT3WVA8iI0poC2Wsm69dR67nnyk=")',
+            backgroundImage: `url("${bgImageUrl}")`,
           }}
         >
           {/* Diagonal gradient: light top-left to dark bottom-right */}

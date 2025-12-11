@@ -55,42 +55,145 @@ serve(async (req) => {
       );
     }
 
-    // Prepare email HTML
-    const emailHtml = isHtml ? message : `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${subject}</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
-          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-            <!-- Header -->
-            <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 40px 20px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">
-                Al-Falaah Academy
-              </h1>
-            </div>
+    // Prepare email HTML with modern template
+    const getEmailHtml = (studentName: string) => {
+      if (isHtml) {
+        return message;
+      }
 
-            <!-- Content -->
-            <div style="padding: 40px 30px;">
-              <div style="color: #1f2937; line-height: 1.6; white-space: pre-wrap;">${message}</div>
-            </div>
+      // Modern email template matching the branding
+      return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background-color: #f9fafb;
+    }
+    .email-wrapper {
+      background-color: #f9fafb;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .header {
+      background: white;
+      padding: 32px 40px 24px;
+      text-align: center;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .logo-container {
+      margin-bottom: 16px;
+    }
+    .brand-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #059669;
+      margin: 8px 0 4px;
+    }
+    .brand-tagline {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 400;
+    }
+    .header-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      margin: 20px 0 8px;
+    }
+    .content {
+      padding: 40px;
+    }
+    .greeting {
+      font-size: 20px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 16px;
+    }
+    .paragraph {
+      margin-bottom: 16px;
+      color: #374151;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .footer {
+      text-align: center;
+      padding: 32px 40px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer-text {
+      color: #6b7280;
+      font-size: 13px;
+      margin: 4px 0;
+    }
+    .footer-link {
+      color: #059669;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="container">
+      <div class="header">
+        <div class="logo-container">
+          <svg width="56" height="56" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="12" fill="#059669"/>
+            <path d="M 16 18 L 30 20 L 30 46 L 16 44 Z" fill="white" opacity="0.95"/>
+            <path d="M 34 20 L 48 18 L 48 44 L 34 46 Z" fill="white" opacity="0.95"/>
+            <rect x="31" y="18" width="2" height="28" fill="#047857"/>
+            <text x="32" y="37" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#059669" stroke="white" stroke-width="0.5" text-anchor="middle">
+              AFA
+            </text>
+          </svg>
+        </div>
+        <div class="brand-name">Al-Falaah Academy</div>
+        <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
+        <h1 class="header-title">${subject}</h1>
+      </div>
 
-            <!-- Footer -->
-            <div style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
-              <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
-                Al-Falaah Academy
-              </p>
-              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                This email was sent from Al-Falaah Academy. Please do not reply to this email.
-              </p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `;
+      <div class="content">
+        <h2 class="greeting">As-salāmu ʿalaykum ${studentName},</h2>
+
+        <div style="color: #374151; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+
+        <p class="paragraph" style="margin-top: 32px;">
+          JazakAllah Khair,<br>
+          <strong>Al-Falaah Academy Team</strong>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+        <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
+        <p class="footer-text" style="margin-top: 16px;">
+          <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+        </p>
+        <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+          © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+        </p>
+        <p class="footer-text">New Zealand</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+      `;
+    };
 
     // Send emails to all students
     const results = await Promise.all(
@@ -98,7 +201,7 @@ serve(async (req) => {
         const result = await sendEmail({
           to: student.email,
           subject: subject,
-          html: emailHtml,
+          html: getEmailHtml(student.full_name),
         });
         return {
           email: student.email,
