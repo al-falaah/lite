@@ -210,7 +210,7 @@ const getEmailHeader = (title, subtitle = '') => `
     ${getLogoSvg()}
   </div>
   <div class="brand-name">Al-Falaah Academy</div>
-  <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
+  <div class="brand-tagline">Authentic Islamic Education</div>
   ${title ? `<h1 class="header-title">${title}</h1>` : ''}
   ${subtitle ? `<p class="header-subtitle">${subtitle}</p>` : ''}
 </div>
@@ -347,7 +347,7 @@ export const applicationConfirmationEmail = (applicantData) => {
   `;
 };
 
-export const inviteEmail = (applicantData, inviteToken, baseUrl = 'http://localhost:5173') => {
+export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://alfalaah-academy.nz') => {
   const { full_name, program } = applicantData;
   const programName = getProgramName(program);
   const signupUrl = `${baseUrl}/signup?token=${inviteToken}`;

@@ -151,15 +151,13 @@ serve(async (req) => {
     <div class="container">
       <div class="header">
         <div class="logo-container">
-          <svg width="56" height="56" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-            <rect width="64" height="64" rx="12" fill="#059669"/>
-            <path d="M 16 18 L 30 20 L 30 46 L 16 44 Z" fill="white" opacity="0.95"/>
-            <path d="M 34 20 L 48 18 L 48 44 L 34 46 Z" fill="white" opacity="0.95"/>
-            <rect x="31" y="18" width="2" height="28" fill="#047857"/>
-            <text x="32" y="37" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#059669" stroke="white" stroke-width="0.5" text-anchor="middle">
-              AFA
-            </text>
-          </svg>
+          <table cellpadding="0" cellspacing="0" border="0" align="center">
+            <tr>
+              <td width="64" height="64" style="background: #059669; border-radius: 12px; text-align: center; vertical-align: middle;">
+                <span style="color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; letter-spacing: 1px; line-height: 64px; display: inline-block;">AFA</span>
+              </td>
+            </tr>
+          </table>
         </div>
         <div class="brand-name">Al-Falaah Academy</div>
         <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
