@@ -100,13 +100,6 @@ const NotFoundPage = () => {
                   </Link>
                   <span className="text-gray-300">•</span>
                   <Link
-                    to="/payment"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
-                  >
-                    Payment Upload
-                  </Link>
-                  <span className="text-gray-300">•</span>
-                  <Link
                     to="/student"
                     className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
                   >
