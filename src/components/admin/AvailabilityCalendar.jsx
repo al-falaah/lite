@@ -33,7 +33,7 @@ const AvailabilityCalendar = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showApplicantList, setShowApplicantList] = useState(true);
-  const [viewMode, setViewMode] = useState('applicants'); // 'applicants' or 'students'
+  const [viewMode, setViewMode] = useState('students'); // Only students view
   const [scheduleFilter, setScheduleFilter] = useState('all'); // 'all', 'with-schedules', 'without-schedules'
   const [selectedProgram, setSelectedProgram] = useState('essentials'); // 'essentials' or 'tajweed' - for viewing schedules
   const [progress, setProgress] = useState(null);
@@ -567,46 +567,10 @@ const AvailabilityCalendar = () => {
             View availability, schedule classes, and manage bookings
           </p>
         </div>
-
-        {/* View Mode Toggle */}
-        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
-          <button
-            onClick={() => {
-              setViewMode('applicants');
-              setSelectedApplicant(applicants[0] || null);
-              setSearchQuery('');
-              setScheduleFilter('all');
-            }}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              viewMode === 'applicants'
-                ? 'bg-white text-emerald-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <AlertCircle className="h-4 w-4 inline mr-1" />
-            Applicants ({stats.totalApplicants})
-          </button>
-          <button
-            onClick={() => {
-              setViewMode('students');
-              setSelectedApplicant(enrolledStudents[0] || null);
-              setSearchQuery('');
-              setScheduleFilter('all');
-            }}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              viewMode === 'students'
-                ? 'bg-white text-emerald-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <Users className="h-4 w-4 inline mr-1" />
-            Students ({stats.totalStudents})
-          </button>
-        </div>
       </div>
 
-      {/* Schedule Filter (Students view only) */}
-      {viewMode === 'students' && (() => {
+      {/* Schedule Filter */}
+      {(() => {
         // Calculate counts for each filter
         const studentsWithSchedules = enrolledStudents.filter(student =>
           scheduledClasses.some(schedule => schedule.student_id === student.id)
