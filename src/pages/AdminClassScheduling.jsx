@@ -189,13 +189,21 @@ const AdminClassScheduling = () => {
       const { data, error } = await supabase
         .from('student_class_progress')
         .select('*')
-        .eq('student_id', studentId)
-        .single();
+        .eq('student_id', studentId);
 
-      if (error && error.code !== 'PGRST116') throw error;
-      setProgress(data);
+      if (error) throw error;
+
+      // Store all progress records (one per program)
+      // If student has only one program, use that
+      // If multiple, we'll show all of them
+      if (data && data.length > 0) {
+        setProgress(data.length === 1 ? data[0] : data);
+      } else {
+        setProgress(null);
+      }
     } catch (error) {
       console.error('Error loading progress:', error);
+      setProgress(null);
     }
   };
 
@@ -867,58 +875,151 @@ const AdminClassScheduling = () => {
 
                   {progress && (
                     <div className="space-y-4">
-                      <div className="grid md:grid-cols-3 gap-4">
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-blue-900">Year 1</span>
-                            <BarChart3 className="h-4 w-4 text-blue-600" />
-                          </div>
-                          <div className="text-2xl font-bold text-blue-900">
-                            {progress.year1_completed}/{progress.year1_total}
-                          </div>
-                          <div className="text-sm text-blue-700">{progress.year1_progress_pct}% Complete</div>
-                          <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full transition-all"
-                              style={{ width: `${progress.year1_progress_pct}%` }}
-                            />
-                          </div>
-                        </div>
+                      {/* Handle both single program (object) and multiple programs (array) */}
+                      {Array.isArray(progress) ? (
+                        // Multiple programs - show each separately
+                        progress.map((prog, index) => {
+                          const programName = prog.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies';
+                          return (
+                            <div key={`${prog.student_id}-${prog.program}`} className="space-y-2">
+                              <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
+                                <span className="text-sm font-semibold text-gray-800">{programName}</span>
+                                {prog.program === 'tajweed' ? (
+                                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">6 months</span>
+                                ) : (
+                                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">2 years</span>
+                                )}
+                              </div>
+                              <div className="grid md:grid-cols-3 gap-4">
+                                {prog.program !== 'tajweed' && (
+                                  <>
+                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                      <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-medium text-blue-900">Year 1</span>
+                                        <BarChart3 className="h-4 w-4 text-blue-600" />
+                                      </div>
+                                      <div className="text-2xl font-bold text-blue-900">
+                                        {prog.year1_completed}/{prog.year1_total}
+                                      </div>
+                                      <div className="text-sm text-blue-700">{prog.year1_progress_pct}% Complete</div>
+                                      <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                                        <div
+                                          className="bg-blue-600 h-2 rounded-full transition-all"
+                                          style={{ width: `${prog.year1_progress_pct}%` }}
+                                        />
+                                      </div>
+                                    </div>
 
-                        <div className="bg-purple-50 p-4 rounded-lg">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-purple-900">Year 2</span>
-                            <BarChart3 className="h-4 w-4 text-purple-600" />
-                          </div>
-                          <div className="text-2xl font-bold text-purple-900">
-                            {progress.year2_completed}/{progress.year2_total}
-                          </div>
-                          <div className="text-sm text-purple-700">{progress.year2_progress_pct}% Complete</div>
-                          <div className="mt-2 w-full bg-purple-200 rounded-full h-2">
-                            <div
-                              className="bg-purple-600 h-2 rounded-full transition-all"
-                              style={{ width: `${progress.year2_progress_pct}%` }}
-                            />
-                          </div>
-                        </div>
+                                    <div className="bg-purple-50 p-4 rounded-lg">
+                                      <div className="flex items-center justify-between mb-2">
+                                        <span className="text-sm font-medium text-purple-900">Year 2</span>
+                                        <BarChart3 className="h-4 w-4 text-purple-600" />
+                                      </div>
+                                      <div className="text-2xl font-bold text-purple-900">
+                                        {prog.year2_completed}/{prog.year2_total}
+                                      </div>
+                                      <div className="text-sm text-purple-700">{prog.year2_progress_pct}% Complete</div>
+                                      <div className="mt-2 w-full bg-purple-200 rounded-full h-2">
+                                        <div
+                                          className="bg-purple-600 h-2 rounded-full transition-all"
+                                          style={{ width: `${prog.year2_progress_pct}%` }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
 
-                        <div className="bg-emerald-50 p-4 rounded-lg">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-emerald-900">Overall</span>
-                            <CheckCircle className="h-4 w-4 text-emerald-600" />
+                                <div className="bg-emerald-50 p-4 rounded-lg">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-medium text-emerald-900">Overall</span>
+                                    <CheckCircle className="h-4 w-4 text-emerald-600" />
+                                  </div>
+                                  <div className="text-2xl font-bold text-emerald-900">
+                                    {prog.total_completed}/{prog.total_classes}
+                                  </div>
+                                  <div className="text-sm text-emerald-700">{prog.overall_progress_pct}% Complete</div>
+                                  <div className="mt-2 w-full bg-emerald-200 rounded-full h-2">
+                                    <div
+                                      className="bg-emerald-600 h-2 rounded-full transition-all"
+                                      style={{ width: `${prog.overall_progress_pct}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        // Single program - show as before with program label
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
+                            <span className="text-sm font-semibold text-gray-800">
+                              {progress.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies'}
+                            </span>
+                            {progress.program === 'tajweed' ? (
+                              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">6 months</span>
+                            ) : (
+                              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">2 years</span>
+                            )}
                           </div>
-                          <div className="text-2xl font-bold text-emerald-900">
-                            {progress.total_completed}/{progress.total_classes}
-                          </div>
-                          <div className="text-sm text-emerald-700">{progress.overall_progress_pct}% Complete</div>
-                          <div className="mt-2 w-full bg-emerald-200 rounded-full h-2">
-                            <div
-                              className="bg-emerald-600 h-2 rounded-full transition-all"
-                              style={{ width: `${progress.overall_progress_pct}%` }}
-                            />
+                          <div className="grid md:grid-cols-3 gap-4">
+                            {progress.program !== 'tajweed' && (
+                              <>
+                                <div className="bg-blue-50 p-4 rounded-lg">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-medium text-blue-900">Year 1</span>
+                                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                                  </div>
+                                  <div className="text-2xl font-bold text-blue-900">
+                                    {progress.year1_completed}/{progress.year1_total}
+                                  </div>
+                                  <div className="text-sm text-blue-700">{progress.year1_progress_pct}% Complete</div>
+                                  <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                                    <div
+                                      className="bg-blue-600 h-2 rounded-full transition-all"
+                                      style={{ width: `${progress.year1_progress_pct}%` }}
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="bg-purple-50 p-4 rounded-lg">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-medium text-purple-900">Year 2</span>
+                                    <BarChart3 className="h-4 w-4 text-purple-600" />
+                                  </div>
+                                  <div className="text-2xl font-bold text-purple-900">
+                                    {progress.year2_completed}/{progress.year2_total}
+                                  </div>
+                                  <div className="text-sm text-purple-700">{progress.year2_progress_pct}% Complete</div>
+                                  <div className="mt-2 w-full bg-purple-200 rounded-full h-2">
+                                    <div
+                                      className="bg-purple-600 h-2 rounded-full transition-all"
+                                      style={{ width: `${progress.year2_progress_pct}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            <div className="bg-emerald-50 p-4 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-medium text-emerald-900">Overall</span>
+                                <CheckCircle className="h-4 w-4 text-emerald-600" />
+                              </div>
+                              <div className="text-2xl font-bold text-emerald-900">
+                                {progress.total_completed}/{progress.total_classes}
+                              </div>
+                              <div className="text-sm text-emerald-700">{progress.overall_progress_pct}% Complete</div>
+                              <div className="mt-2 w-full bg-emerald-200 rounded-full h-2">
+                                <div
+                                  className="bg-emerald-600 h-2 rounded-full transition-all"
+                                  style={{ width: `${progress.overall_progress_pct}%` }}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   )}
                 </Card>
