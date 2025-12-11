@@ -5,16 +5,127 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 
 const EMAIL_STYLES = `
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
-  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-  .header { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-  .content { background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none; }
-  .button { display: inline-block; background: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: 600; }
-  .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
-  .info-box { background: #f0fdf4; border-left: 4px solid #059669; padding: 15px; margin: 20px 0; }
-  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-  td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
-  .label { font-weight: 600; color: #6b7280; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #f9fafb;
+  }
+  .email-wrapper {
+    background-color: #f9fafb;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  .header {
+    background: white;
+    padding: 32px 40px 24px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .logo-container {
+    margin-bottom: 16px;
+  }
+  .brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #059669;
+    margin: 8px 0 4px;
+  }
+  .brand-tagline {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+  .header-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 20px 0 8px;
+  }
+  .header-subtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 0;
+  }
+  .content {
+    padding: 40px;
+  }
+  .greeting {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+  .paragraph {
+    margin-bottom: 16px;
+    color: #374151;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .info-box {
+    background: #f0fdf4;
+    border-left: 4px solid #059669;
+    padding: 20px;
+    margin: 24px 0;
+    border-radius: 6px;
+  }
+  .info-box-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #047857;
+    margin-bottom: 16px;
+  }
+  .info-box table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .info-box td {
+    padding: 8px 0;
+    border-bottom: 1px solid #d1fae5;
+  }
+  .info-box tr:last-child td {
+    border-bottom: none;
+  }
+  .label {
+    font-weight: 600;
+    color: #065f46;
+    width: 40%;
+  }
+  .value {
+    color: #374151;
+  }
+  ol {
+    margin: 16px 0;
+    padding-left: 24px;
+    color: #374151;
+  }
+  ol li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .footer {
+    text-align: center;
+    padding: 32px 40px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+  }
+  .footer-text {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  .footer-link {
+    color: #059669;
+    text-decoration: none;
+  }
 `;
 
 function generateEmailHTML(applicantData: any): string {
@@ -23,102 +134,90 @@ function generateEmailHTML(applicantData: any): string {
   // Determine program-specific details
   const isTajweed = program === 'tajweed';
   const programName = isTajweed ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
-  const programDuration = isTajweed ? '6 months (24 weeks)' : '2 years (24 months)';
-  const programSchedule = isTajweed ? '2 sessions/week (1 hour + 30 min)' : '2 sessions/week (2 hours + 30 min)';
-
-  // Build payment info HTML
-  const paymentInfoHTML = isTajweed ? `
-    <tr>
-      <td class="label">Payment:</td>
-      <td>One-time payment of $120 NZD</td>
-    </tr>
-    <tr>
-      <td class="label">Total Cost:</td>
-      <td>$120 NZD</td>
-    </tr>
-  ` : `
-    <tr>
-      <td class="label">Option 1 - Monthly:</td>
-      <td>$25 NZD/month (auto-renewing)</td>
-    </tr>
-    <tr>
-      <td class="label">Option 2 - Annual:</td>
-      <td>$275 NZD/year (save $25!)</td>
-    </tr>
-    <tr>
-      <td class="label">Total (2 years):</td>
-      <td>Monthly: $600 | Annual: $550</td>
-    </tr>
-  `;
+  const programDuration = isTajweed ? '6 months' : '2 years';
 
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>${EMAIL_STYLES}</style>
     </head>
     <body>
-      <div class="container">
-        <div class="header">
-          <h1>Al-Falaah Academy</h1>
-          <p>Application Received</p>
-        </div>
-
-        <div class="content">
-          <h2>Assalaamu 'alaykum ${full_name},</h2>
-
-          <p>Thank you for your interest in Al-Falaah Academy. We have received your application for the <strong>${programName}</strong> and will review it shortly.</p>
-
-          <div class="info-box">
-            <h3>Application Summary</h3>
-            <table>
-              <tr>
-                <td class="label">Name:</td>
-                <td>${full_name}</td>
-              </tr>
-              <tr>
-                <td class="label">Email:</td>
-                <td>${email}</td>
-              </tr>
-              <tr>
-                <td class="label">Program:</td>
-                <td>${programName}</td>
-              </tr>
-              <tr>
-                <td class="label">Duration:</td>
-                <td>${programDuration}</td>
-              </tr>
-              <tr>
-                <td class="label">Schedule:</td>
-                <td>${programSchedule}</td>
-              </tr>
-              <tr>
-                <td class="label">Learning Format:</td>
-                <td>Personalized One-on-One</td>
-              </tr>
-              ${paymentInfoHTML}
-            </table>
+      <div class="email-wrapper">
+        <div class="container">
+          <div class="header">
+            <div class="logo-container">
+              <table cellpadding="0" cellspacing="0" border="0" align="center">
+                <tr>
+                  <td width="64" height="64" style="background: #059669; border-radius: 12px; text-align: center; vertical-align: middle;">
+                    <span style="color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; letter-spacing: 1px; line-height: 64px; display: inline-block;">AFA</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="brand-name">Al-Falaah Academy</div>
+            <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
+            <h1 class="header-title">Application Received</h1>
+            <p class="header-subtitle">We have received your application</p>
           </div>
 
-          <p><strong>What happens next?</strong></p>
-          <ol>
-            <li>Our admissions team will review your application</li>
-            <li>Once approved, you'll receive an approval notification email and payment instructions</li>
-            <li>After payment you'll be enrolled as a student, then you can begin your personalized learning journey</li>
-          </ol>
+          <div class="content">
+            <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
 
-          <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+            <p class="paragraph">Jazākumullāhu Khayran for your interest in Al-Falaah Academy. We have received your application and are excited about the possibility of welcoming you to our learning community.</p>
 
-          <p>May Allah bless your journey of seeking knowledge.</p>
+            <div class="info-box">
+              <div class="info-box-title">Application Summary</div>
+              <table>
+                <tr>
+                  <td class="label">Applicant Name</td>
+                  <td class="value">${full_name}</td>
+                </tr>
+                <tr>
+                  <td class="label">Email Address</td>
+                  <td class="value">${email}</td>
+                </tr>
+                <tr>
+                  <td class="label">Program</td>
+                  <td class="value">${programName}</td>
+                </tr>
+                <tr>
+                  <td class="label">Duration</td>
+                  <td class="value">${programDuration}</td>
+                </tr>
+              </table>
+            </div>
 
-          <p>Best regards,<br>
-          <strong>Al-Falaah Admissions Team</strong></p>
-        </div>
+            <p class="paragraph"><strong>What happens next?</strong></p>
+            <ol>
+              <li>Our admissions team will review your application</li>
+              <li>Once approved, you'll receive an email with payment instructions</li>
+              <li>After payment, you'll be enrolled and can begin your learning journey</li>
+            </ol>
 
-        <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
-          <p>New Zealand</p>
+            <p class="paragraph">If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz" style="color: #059669; text-decoration: none;">admin@alfalaah-academy.nz</a>.</p>
+
+            <p class="paragraph">May Allah bless your journey of seeking knowledge.</p>
+
+            <p class="paragraph" style="margin-top: 32px;">
+              JazakAllah Khair,<br>
+              <strong>Al-Falaah Academy Team</strong>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+            <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
+            <p class="footer-text" style="margin-top: 16px;">
+              <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+            </p>
+            <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+              © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+            </p>
+            <p class="footer-text">New Zealand</p>
+          </div>
         </div>
       </div>
     </body>

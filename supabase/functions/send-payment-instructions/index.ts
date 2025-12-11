@@ -5,17 +5,126 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 
 const EMAIL_STYLES = `
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
-  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-  .header { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-  .content { background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none; }
-  .button { display: inline-block; background: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: 600; }
-  .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
-  .info-box { background: #f0fdf4; border-left: 4px solid #059669; padding: 15px; margin: 20px 0; }
-  .highlight-box { background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
-  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-  td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
-  .label { font-weight: 600; color: #6b7280; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #f9fafb;
+  }
+  .email-wrapper {
+    background-color: #f9fafb;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  .header {
+    background: white;
+    padding: 32px 40px 24px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .logo-container {
+    margin-bottom: 16px;
+  }
+  .brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #059669;
+    margin: 8px 0 4px;
+  }
+  .brand-tagline {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+  .header-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 20px 0 8px;
+  }
+  .header-subtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 0;
+  }
+  .content {
+    padding: 40px;
+  }
+  .greeting {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+  .paragraph {
+    margin-bottom: 16px;
+    color: #374151;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .info-box {
+    background: #f0fdf4;
+    border-left: 4px solid #059669;
+    padding: 20px;
+    margin: 24px 0;
+    border-radius: 6px;
+  }
+  .info-box-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #047857;
+    margin-bottom: 16px;
+  }
+  .cta-button {
+    display: inline-block;
+    background: #059669;
+    color: white;
+    padding: 16px 40px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 24px 0;
+    transition: background 0.2s;
+  }
+  .cta-button:hover {
+    background: #047857;
+  }
+  .highlight-box {
+    background: #fef3c7;
+    border: 2px solid #f59e0b;
+    padding: 20px;
+    margin: 24px 0;
+    border-radius: 8px;
+  }
+  .highlight-box h3 {
+    margin-top: 0;
+    color: #92400e;
+    font-size: 18px;
+  }
+  .footer {
+    text-align: center;
+    padding: 32px 40px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+  }
+  .footer-text {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  .footer-link {
+    color: #059669;
+    text-decoration: none;
+  }
 `;
 
 function generateEmailHTML(applicantData: any, appUrl: string): string {
@@ -24,121 +133,91 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
   // Determine program-specific details
   const isTajweed = program === 'tajweed';
   const programName = isTajweed ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
-  const programDuration = isTajweed ? '6 months (24 weeks)' : '2 years (24 months)';
-
-  // Build payment options HTML
-  const paymentOptionsHTML = isTajweed ? `
-    <tr>
-      <td class="label">Program:</td>
-      <td>${programName}</td>
-    </tr>
-    <tr>
-      <td class="label">Duration:</td>
-      <td>${programDuration}</td>
-    </tr>
-    <tr>
-      <td class="label">Payment:</td>
-      <td><strong>$120 NZD</strong> (one-time payment)</td>
-    </tr>
-    <tr>
-      <td class="label">Total Cost:</td>
-      <td><strong>$120 NZD</strong></td>
-    </tr>
-  ` : `
-    <tr>
-      <td class="label">Program:</td>
-      <td>${programName}</td>
-    </tr>
-    <tr>
-      <td class="label">Duration:</td>
-      <td>${programDuration}</td>
-    </tr>
-    <tr>
-      <td class="label">Option 1 - Monthly:</td>
-      <td><strong>$25 NZD/month</strong> (auto-renewing)</td>
-    </tr>
-    <tr>
-      <td class="label">Option 2 - Annual:</td>
-      <td><strong>$275 NZD/year</strong> (save $25!)</td>
-    </tr>
-    <tr>
-      <td class="label">Total (2 years):</td>
-      <td>Monthly: $600 | Annual: $550</td>
-    </tr>
-  `;
-
-  const paymentButtonText = isTajweed ? 'Pay $120 Now' : 'Choose Payment Plan & Pay Now';
-  const stripeBenefits = isTajweed ? `
-    <li>Secure payment processing by Stripe</li>
-    <li>Instant enrollment confirmation</li>
-    <li>Automatic welcome email with student details</li>
-  ` : `
-    <li>Secure payment processing by Stripe</li>
-    <li>Instant enrollment confirmation</li>
-    <li>Automatic welcome email with student details</li>
-    <li>Choose monthly or annual payment</li>
-  `;
+  const programDuration = isTajweed ? '6 months' : '2 years';
 
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>${EMAIL_STYLES}</style>
     </head>
     <body>
-      <div class="container">
-        <div class="header">
-          <h1>Application Approved</h1>
-          <p>Al-Falaah Academy</p>
-        </div>
-
-        <div class="content">
-          <h2>Assalaamu 'alaykum ${full_name},</h2>
-
-          <p>Congratulations! Your application to Al-Falaah Academy has been approved. We are excited to welcome you to our community of learners.</p>
-
-          <div class="highlight-box">
-            <h3 style="margin-top: 0; color: #92400e;">Next Step: Payment</h3>
-            <p style="margin-bottom: 0;">${isTajweed ? 'Complete your payment' : 'Choose your payment plan'} and complete your enrollment instantly with Stripe.</p>
+      <div class="email-wrapper">
+        <div class="container">
+          <div class="header">
+            <div class="logo-container">
+              <table cellpadding="0" cellspacing="0" border="0" align="center">
+                <tr>
+                  <td width="64" height="64" style="background: #059669; border-radius: 12px; text-align: center; vertical-align: middle;">
+                    <span style="color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; letter-spacing: 1px; line-height: 64px; display: inline-block;">AFA</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="brand-name">Al-Falaah Academy</div>
+            <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
+            <h1 class="header-title">Congratulations! 🎉</h1>
+            <p class="header-subtitle">Your application has been approved</p>
           </div>
 
-          <div class="info-box">
-            <h3>${isTajweed ? 'Payment Details' : 'Choose Your Payment Plan'}</h3>
-            <table>
-              ${paymentOptionsHTML}
-            </table>
+          <div class="content">
+            <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
+
+            <p class="paragraph">We are delighted to inform you that your application to Al-Falaah Academy has been <strong>approved</strong>!</p>
+
+            <div class="info-box">
+              <div class="info-box-title">Your Program</div>
+              <p class="paragraph" style="margin: 0;"><strong>${programName}</strong></p>
+              <p class="paragraph" style="margin-top: 8px; margin-bottom: 0;">You are now ready to complete your enrollment and begin your journey in authentic Islamic education.</p>
+            </div>
+
+            <div class="highlight-box">
+              <h3>Next Step: Complete Payment</h3>
+              <p style="margin-bottom: 0;">Click the button below to proceed with secure online payment via Stripe.</p>
+            </div>
+
+            <center>
+              <a href="${appUrl}/payment?email=${encodeURIComponent(email)}&program=${program}" class="cta-button">
+                ${isTajweed ? 'Pay $120 Now' : 'Choose Payment Plan & Pay Now'}
+              </a>
+            </center>
+
+            <p class="paragraph" style="text-align: center; font-size: 14px; color: #6b7280;">
+              Secure payment powered by <strong>Stripe</strong> • Instant enrollment
+            </p>
+
+            <p class="paragraph"><strong>Complete Your Enrollment:</strong></p>
+            <ol style="margin: 16px 0; padding-left: 24px; color: #374151;">
+              <li style="margin-bottom: 8px;">Click the button above to access the payment page</li>
+              <li style="margin-bottom: 8px;">${isTajweed ? 'Complete your $120 payment' : 'Choose your preferred payment plan (monthly or annual)'}</li>
+              <li style="margin-bottom: 8px;">Complete secure payment via Stripe</li>
+              <li style="margin-bottom: 8px;">You'll receive a welcome email with your student details</li>
+              <li style="margin-bottom: 8px;">Your personalized classes will be scheduled</li>
+            </ol>
+
+            <p class="paragraph">If you have any questions about payment, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz" style="color: #059669; text-decoration: none;">admin@alfalaah-academy.nz</a>.</p>
+
+            <p class="paragraph">We look forward to having you in our academy!</p>
+
+            <p class="paragraph" style="margin-top: 32px;">
+              JazakAllah Khair,<br>
+              <strong>Al-Falaah Academy Team</strong>
+            </p>
           </div>
 
-          <div class="info-box" style="background: #e0f2fe; border-color: #0284c7;">
-            <h3>Instant Enrollment with Stripe</h3>
-            <p style="margin-bottom: 10px;">Pay securely online and get enrolled immediately:</p>
-            <ul style="margin: 0; padding-left: 20px;">
-              ${stripeBenefits}
-            </ul>
+          <div class="footer">
+            <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+            <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
+            <p class="footer-text" style="margin-top: 16px;">
+              <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+            </p>
+            <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+              © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+            </p>
+            <p class="footer-text">New Zealand</p>
           </div>
-
-          <center>
-            <a href="${appUrl}/payment?email=${encodeURIComponent(email)}&program=${program}" class="button" style="font-size: 18px; padding: 16px 40px;">
-              ${paymentButtonText}
-            </a>
-          </center>
-
-          <p style="margin-top: 30px; font-size: 14px; color: #6b7280; text-align: center;">
-            Secure payment powered by <strong>Stripe</strong> • No credit card fees • Instant enrollment
-          </p>
-
-          <p>If you have any questions about payment, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
-
-          <p>We look forward to having you in our academy!</p>
-
-          <p>Best regards,<br>
-          <strong>Al-Falaah Admissions Team</strong></p>
-        </div>
-
-        <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
-          <p>New Zealand</p>
         </div>
       </div>
     </body>
@@ -173,7 +252,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: applicantData.email,
-      subject: 'Application Approved - Payment Instructions',
+      subject: 'Application Approved - Payment Instructions | Al-Falaah Academy',
       html: emailHTML,
     });
 
