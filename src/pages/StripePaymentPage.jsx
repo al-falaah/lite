@@ -74,14 +74,22 @@ const StripePaymentPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30">
       {/* Header */}
       <nav className="bg-white shadow-sm border-b border-emerald-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-14 md:h-16">
             <Link to="/" className="flex items-center gap-2">
-              <BookOpen className="h-7 w-7 text-emerald-600" />
-              <span className="text-xl font-bold text-emerald-600">Al-Falaah Academy</span>
+              <img
+                src="/favicon.svg"
+                alt="Al-Falaah Logo"
+                className="h-8 w-8 md:h-10 md:w-10"
+              />
+              <div className="flex flex-col">
+                <span className="text-md md:text-xl font-semibold text-emerald-600">Al-Falaah Academy</span>
+              </div>
             </Link>
             <Link to="/">
-              <Button variant="secondary" size="sm">Back to Home</Button>
+              <button className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors rounded-lg hover:bg-emerald-50">
+                Back to Home
+              </button>
             </Link>
           </div>
         </div>
@@ -280,19 +288,48 @@ const StripePaymentPage = () => {
         )}
 
         {/* Info Section */}
-        <Card className="bg-blue-50 border-blue-200">
-          <div className="text-sm text-blue-900">
-            <p className="font-semibold mb-2">Important Information:</p>
-            <ul className="list-disc list-inside space-y-1">
-              <li>All payments are processed securely through Stripe</li>
-              <li>You will be enrolled immediately after your first payment</li>
-              <li>You'll receive a welcome email with your student dashboard access</li>
-              <li>Monthly subscriptions can be cancelled anytime (non-refundable)</li>
-              <li>For questions, contact us at <a href="mailto:admin@alfalaah-academy.nz" className="underline">admin@alfalaah-academy.nz</a></li>
+        <Card className="bg-emerald-50 border-emerald-200">
+          <div className="text-sm text-emerald-900">
+            <p className="font-semibold mb-3 text-emerald-800">Important Information:</p>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>All payments are processed securely through Stripe</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>You will be enrolled immediately after your first payment</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>You'll receive a welcome email with your student dashboard access</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>Monthly subscriptions can be cancelled anytime (non-refundable)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <span>For questions, contact us at <a href="mailto:admin@alfalaah-academy.nz" className="font-medium text-emerald-700 hover:text-emerald-800 underline">admin@alfalaah-academy.nz</a></span>
+              </li>
             </ul>
           </div>
         </Card>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              © {new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">
+              Authentic Islamic Education Rooted in the Qur'an and Sunnah
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

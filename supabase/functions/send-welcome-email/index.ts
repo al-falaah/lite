@@ -5,16 +5,142 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 
 const EMAIL_STYLES = `
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
-  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-  .header { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-  .content { background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none; }
-  .button { display: inline-block; background: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: 600; }
-  .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
-  .info-box { background: #f0fdf4; border-left: 4px solid #059669; padding: 15px; margin: 20px 0; }
-  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-  td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
-  .label { font-weight: 600; color: #6b7280; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #f9fafb;
+  }
+  .email-wrapper {
+    background-color: #f9fafb;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  .header {
+    background: white;
+    padding: 32px 40px 24px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .logo-container {
+    margin-bottom: 16px;
+  }
+  .brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #059669;
+    margin: 8px 0 4px;
+  }
+  .brand-tagline {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+  .header-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin: 20px 0 8px;
+  }
+  .header-subtitle {
+    font-size: 15px;
+    color: #6b7280;
+    margin: 0;
+  }
+  .content {
+    padding: 40px;
+  }
+  .greeting {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+  .paragraph {
+    margin-bottom: 16px;
+    color: #374151;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .info-box {
+    background: #f0fdf4;
+    border-left: 4px solid #059669;
+    padding: 20px;
+    margin: 24px 0;
+    border-radius: 6px;
+  }
+  .info-box-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #047857;
+    margin-bottom: 16px;
+  }
+  .info-box table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .info-box td {
+    padding: 8px 0;
+    border-bottom: 1px solid #d1fae5;
+  }
+  .info-box tr:last-child td {
+    border-bottom: none;
+  }
+  .label {
+    font-weight: 600;
+    color: #065f46;
+    width: 40%;
+  }
+  .value {
+    color: #374151;
+  }
+  .cta-button {
+    display: inline-block;
+    background: #059669;
+    color: white;
+    padding: 16px 40px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 24px 0;
+    transition: background 0.2s;
+  }
+  .cta-button:hover {
+    background: #047857;
+  }
+  ul {
+    margin: 16px 0;
+    padding-left: 24px;
+    color: #374151;
+  }
+  ul li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .footer {
+    text-align: center;
+    padding: 32px 40px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+  }
+  .footer-text {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 4px 0;
+  }
+  .footer-link {
+    color: #059669;
+    text-decoration: none;
+  }
 `;
 
 function generateEmailHTML(studentData: any, baseUrl: string): string {
@@ -23,81 +149,106 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
   // Determine program name based on program field
   const programName = program === 'tajweed'
     ? 'Tajweed Program'
-    : '2-Year Essential Islamic Studies Course';
+    : 'Essential Arabic & Islamic Studies Program';
+  
+  const programDuration = program === 'tajweed' ? '6 months' : '2 years';
 
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>${EMAIL_STYLES}</style>
     </head>
     <body>
-      <div class="container">
-        <div class="header">
-          <h1>Welcome to Al-Falaah Academy</h1>
-          <p>Your Journey Begins Now</p>
-        </div>
-
-        <div class="content">
-          <h2>Assalaamu 'alaykum ${full_name},</h2>
-
-          <p>Welcome to Al-Falaah Academy! We are thrilled to have you join our community of learners.</p>
-
-          <div class="info-box">
-            <h3>Your Enrollment Details</h3>
-            <table>
-              <tr>
-                <td class="label">Student ID:</td>
-                <td><strong>${student_id}</strong></td>
-              </tr>
-              <tr>
-                <td class="label">Email:</td>
-                <td>${email}</td>
-              </tr>
-              <tr>
-                <td class="label">Program:</td>
-                <td>${programName}</td>
-              </tr>
-              <tr>
-                <td class="label">Status:</td>
-                <td>Active</td>
-              </tr>
-            </table>
+      <div class="email-wrapper">
+        <div class="container">
+          <div class="header">
+            <div class="logo-container">
+              <table cellpadding="0" cellspacing="0" border="0" align="center">
+                <tr>
+                  <td width="64" height="64" style="background: #059669; border-radius: 12px; text-align: center; vertical-align: middle;">
+                    <span style="color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; letter-spacing: 1px; line-height: 64px; display: inline-block;">AFA</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="brand-name">Al-Falaah Academy</div>
+            <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
+            <h1 class="header-title">Welcome to Al-Falaah! 🌟</h1>
+            <p class="header-subtitle">Your journey of knowledge begins now</p>
           </div>
 
-          <p><strong>What You Can Do Now:</strong></p>
-          <ul>
-            <li>Access your student portal at any time using your Student ID</li>
-            <li>View your class schedule and meeting links</li>
-            <li>Track your progress through the program</li>
-            <li>View your enrollment details</li>
-            <li>Apply for additional programs</li>
-          </ul>
+          <div class="content">
+            <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
 
-          <center>
-            <a href="${baseUrl}/student" class="button">Access Student Portal →</a>
-          </center>
+            <p class="paragraph">Welcome to Al-Falaah Academy! We are thrilled to have you join our community of dedicated learners on the path of authentic Islamic knowledge.</p>
 
-          <p><strong>Important Reminders:</strong></p>
-          <ul>
-            <li>Save your Student ID (shown above) - you'll need it to access the portal</li>
-            <li>Check your class schedule regularly for upcoming sessions</li>
-            <li>Join classes on time using the meeting links provided</li>
-            <li>Keep your contact information up to date</li>
-          </ul>
+            <div class="info-box">
+              <div class="info-box-title">Your Enrollment Details</div>
+              <table>
+                <tr>
+                  <td class="label">Student ID</td>
+                  <td class="value" style="color: #059669; font-size: 16px; font-weight: 600;">${student_id}</td>
+                </tr>
+                <tr>
+                  <td class="label">Program</td>
+                  <td class="value">${programName}</td>
+                </tr>
+                <tr>
+                  <td class="label">Duration</td>
+                  <td class="value">${programDuration}</td>
+                </tr>
+                <tr>
+                  <td class="label">Status</td>
+                  <td class="value" style="color: #059669; font-weight: 600;">✓ Active</td>
+                </tr>
+              </table>
+            </div>
 
-          <p>If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+            <p class="paragraph"><strong>What You Can Do Now:</strong></p>
+            <ul>
+              <li>Access your student portal at any time using your Student ID</li>
+              <li>View your class schedule and meeting links</li>
+              <li>Track your progress through the program</li>
+              <li>View your enrollment details</li>
+              <li>Apply for additional programs</li>
+            </ul>
 
-          <p>May Allah make this journey beneficial for you and grant you success in your studies.</p>
+            <center>
+              <a href="${baseUrl}/student" class="cta-button">Access Student Portal</a>
+            </center>
 
-          <p>Best regards,<br>
-          <strong>Al-Falaah Team</strong></p>
-        </div>
+            <p class="paragraph"><strong>Important Reminders:</strong></p>
+            <ul>
+              <li>Save your Student ID (shown above) - you'll need it to access the portal</li>
+              <li>Check your class schedule regularly for upcoming sessions</li>
+              <li>Join classes on time using the meeting links provided</li>
+              <li>Keep your contact information up to date</li>
+            </ul>
 
-        <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
-          <p>New Zealand</p>
+            <p class="paragraph">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@alfalaah-academy.nz" style="color: #059669; text-decoration: none;">admin@alfalaah-academy.nz</a>.</p>
+
+            <p class="paragraph">May Allah make this journey beneficial for you and grant you success in your studies.</p>
+
+            <p class="paragraph" style="margin-top: 32px;">
+              JazakAllah Khair,<br>
+              <strong>Al-Falaah Academy Team</strong>
+            </p>
+          </div>
+
+          <div class="footer">
+            <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+            <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
+            <p class="footer-text" style="margin-top: 16px;">
+              <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+            </p>
+            <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+              © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+            </p>
+            <p class="footer-text">New Zealand</p>
+          </div>
         </div>
       </div>
     </body>
@@ -127,7 +278,7 @@ serve(async (req) => {
       );
     }
 
-    const appUrl = baseUrl || Deno.env.get('APP_URL') || 'http://localhost:5173';
+    const appUrl = baseUrl || Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz';
     const emailHTML = generateEmailHTML(studentData, appUrl);
 
     const result = await sendEmail({

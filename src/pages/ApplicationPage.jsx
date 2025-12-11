@@ -615,7 +615,7 @@ const ApplicationPage = () => {
                 />
 
                 <Input
-                  label="Phone Number"
+                  label="WhatsApp Contact"
                   name="phone"
                   type="tel"
                   required

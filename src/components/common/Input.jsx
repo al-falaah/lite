@@ -29,10 +29,10 @@ const Input = ({
         onChange={onChange}
         onBlur={onBlur}
         disabled={disabled}
-        className={`w-full ${type === 'date' ? 'max-w-full' : ''} px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed ${
+        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed ${
           error ? 'border-red-500' : 'border-gray-300'
         } ${className}`}
-        style={type === 'date' ? { width: '100%' } : {}}
+        style={type === 'date' ? { width: '100%', maxWidth: '100%', minWidth: '100%' } : {}}
         {...props}
       />
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
