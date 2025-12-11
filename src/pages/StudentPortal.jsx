@@ -503,7 +503,7 @@ const StudentPortal = () => {
                             </div>
                             {schedule.meeting_link && (
                               <a
-                                href={schedule.meeting_link}
+                                href={schedule.meeting_link.startsWith('http') ? schedule.meeting_link : `https://${schedule.meeting_link}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-medium whitespace-nowrap"
