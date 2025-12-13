@@ -230,7 +230,7 @@ const AdminStudentsList = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'applicant':
+      case 'pending_payment':
         return 'bg-yellow-100 text-yellow-800';
       case 'enrolled':
         return 'bg-green-100 text-green-800';
@@ -245,7 +245,7 @@ const AdminStudentsList = () => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'applicant':
+      case 'pending_payment':
         return <Clock className="h-5 w-5 text-yellow-500" />;
       case 'enrolled':
         return <CheckCircle className="h-5 w-5 text-green-500" />;
@@ -445,7 +445,7 @@ const AdminStudentsList = () => {
           <div>
             <label className="text-sm font-medium text-gray-700 mb-2 block">Filter by Status</label>
             <div className="flex gap-2 flex-wrap">
-              {['all', 'applicant', 'enrolled', 'graduated', 'dropout'].map((filter) => (
+              {['all', 'pending_payment', 'enrolled', 'graduated', 'dropout'].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setStatusFilter(filter)}
@@ -455,7 +455,7 @@ const AdminStudentsList = () => {
                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                   }`}
                 >
-                  {filter}
+                  {filter === 'pending_payment' ? 'Pending Payment' : filter}
                 </button>
               ))}
             </div>
@@ -534,7 +534,7 @@ const AdminStudentsList = () => {
                       <div className="flex items-center gap-2">
                         {getStatusIcon(student.status)}
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(student.status)}`}>
-                          {student.status}
+                          {student.status === 'pending_payment' ? 'Pending Payment' : student.status}
                         </span>
                       </div>
                     </div>
@@ -720,7 +720,7 @@ const AdminStudentsList = () => {
                     <div className="flex items-center gap-2">
                       {getStatusIcon(selectedStudent.status)}
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(selectedStudent.status)}`}>
-                        {selectedStudent.status}
+                        {selectedStudent.status === 'pending_payment' ? 'Pending Payment' : selectedStudent.status}
                       </span>
                     </div>
                   </div>

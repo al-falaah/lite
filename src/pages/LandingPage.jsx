@@ -163,7 +163,7 @@ const LandingPage = () => {
           <div className="max-w-4xl mx-auto w-full text-center">
             {/* Quote Slider */}
             <div className="mb-6 md:mb-10">
-              <p className="text-emerald-400 font-semibold text-xs md:text-sm mb-2 md:mb-3 font-arabic">
+              <p className="text-emerald-400 font-semibold text-xs md:text-lg mb-2 md:mb-3 font-arabic">
                 قال رسول الله ﷺ
               </p>
               <p className="text-lg md:text-2xl lg:text-4xl text-white mb-3 md:mb-4 font-serif leading-tight md:leading-relaxed px-2 md:px-4">
@@ -200,7 +200,7 @@ const LandingPage = () => {
                 Authentic Islamic Education
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                Comprehensive online programs in Quranic studies, Arabic, and Islamic sciences - rooted in the Quran and Sunnah
+                Curated 1-on-1 online programs in Arabic & Islamic sciences for Kiwi Muslims and beyond
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
@@ -497,7 +497,10 @@ const LandingPage = () => {
                 Questions about our programs?
               </p>
               <a href="mailto:info@alfalaah-academy.nz" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                info@alfalaah-academy.nz
+                info@alfalaah-academy.nz 
+              </a><br />
+              <a href="tel:+64272131486" className="text-emerald-400 hover:text-emerald-300 text-sm">
+                +6427 213 1486
               </a>
             </div>
           </div>

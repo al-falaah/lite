@@ -1,17 +1,24 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="64" height="64" rx="12" fill="#059669"/>
-
-  <!-- Open Book Shape -->
-  <!-- Left page -->
-  <path d="M 16 18 L 30 20 L 30 46 L 16 44 Z" fill="white" opacity="0.95"/>
-  <!-- Right page -->
-  <path d="M 34 20 L 48 18 L 48 44 L 34 46 Z" fill="white" opacity="0.95"/>
-  <!-- Center binding -->
-  <rect x="31" y="18" width="2" height="28" fill="#047857"/>
-
-  <!-- AFA Text centered on both pages with stroke -->
-  <text x="32" y="37" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#059669" stroke="white" stroke-width="0.5" text-anchor="middle">
-    AFA
-  </text>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW 2021 (64-Bit) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="11.6425in" height="14.1303in" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 773.8 939.15"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil0 {fill:#0A9369}
+    .fil1 {fill:#0A9369;fill-rule:nonzero}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_2541639992048">
+   <path class="fil0" d="M646.45 658.67c-94.67,16.07 -192.95,52.41 -259.55,116.27 -66.6,-63.87 -164.88,-100.2 -259.55,-116.27l0 -247.79c94.67,16.07 192.95,52.41 259.55,116.27 66.6,-63.87 164.88,-100.2 259.55,-116.27l0 247.79z"/>
+   <path class="fil0" d="M386.9 835.66c-81.19,-78.54 -210.4,-115.59 -322.21,-124.62l0 -315.74c11.33,-74.08 71.41,-123.08 129.21,-164.32 64.92,-46.33 133.71,-86.42 193,-139.11 59.29,52.69 128.08,92.79 193,139.11 57.79,41.24 117.87,90.24 129.21,164.32l0 315.74c-111.81,9.03 -241.02,46.09 -322.21,124.62zm-376.73 -62.18c177.75,0 327.6,70.06 373.63,165.67l3.1 0 3.1 0c46.03,-95.6 195.88,-165.67 373.63,-165.67 3.4,0 6.79,0.03 10.17,0.08l0 -382.77c-24.57,-190.34 -263.32,-245.98 -386.9,-390.78 -123.58,144.8 -362.33,200.45 -386.9,390.78l0 382.77c3.38,-0.05 6.77,-0.08 10.17,-0.08z"/>
+   <path class="fil1" d="M222.66 412.66l32.24 -174.49 52.94 0 31.81 174.49 -42.01 0 -3.92 -31.37 -27.23 0 -3.96 31.37 -39.87 0zm48.4 -62.96l18.92 0 -6.06 -53.34c-0.44,-3.52 -0.84,-7.33 -1.23,-11.44 -0.36,-4.07 -0.91,-10.24 -1.63,-18.44 -0.44,4.68 -0.91,9.55 -1.49,14.56 -0.58,5.05 -1.16,10.24 -1.82,15.54l-6.68 53.12zm78.21 62.96l0 -174.49 83.43 0 0 33.77 -44 0 0 34.64 39.43 0 0 33.33 -39.43 0 0 72.76 -39.43 0zm84.89 0l32.24 -174.49 52.94 0 31.81 174.49 -42.01 0 -3.92 -31.37 -27.23 0 -3.96 31.37 -39.87 0zm48.4 -62.96l18.92 0 -6.06 -53.34c-0.44,-3.52 -0.84,-7.33 -1.23,-11.44 -0.36,-4.07 -0.91,-10.24 -1.63,-18.44 -0.44,4.68 -0.91,9.55 -1.49,14.56 -0.58,5.05 -1.16,10.24 -1.82,15.54l-6.68 53.12z"/>
+  </g>
+ </g>
 </svg>
