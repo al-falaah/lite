@@ -94,7 +94,7 @@ const LandingPage = () => {
             <div className="flex justify-between items-center h-14 md:h-16">
               <Link to="/" className="flex items-center gap-2">
                 <img
-                  src="/favicon.svg"
+                  src="/favicon-white.svg"
                   alt="Al-Falaah Logo"
                   className="h-8 w-8 md:h-10 md:w-10"
                 />
@@ -466,7 +466,7 @@ const LandingPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <img
-                  src="/favicon.svg"
+                  src="/favicon-white.svg"
                   alt="Al-Falaah Logo"
                   className="h-8 w-8"
                 />
