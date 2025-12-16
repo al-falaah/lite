@@ -508,6 +508,7 @@ const LandingPage = () => {
                 <li><Link to="/apply" className="text-gray-400 hover:text-white">Apply Now</Link></li>
                 <li><Link to="/student" className="text-gray-400 hover:text-white">Student Portal</Link></li>
                 <li><a href="#programs" className="text-gray-400 hover:text-white">Programs</a></li>
+                <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
                 <li>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 flex items-center gap-1.5">
                     <Heart className="h-3.5 w-3.5" />
