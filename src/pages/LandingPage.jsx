@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -11,6 +11,9 @@ const LandingPage = () => {
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
+
+  // Stripe donation link from environment variable
+  const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/your-link';
 
   const quotes = [
     {
@@ -116,6 +119,12 @@ const LandingPage = () => {
                     Programs
                   </button>
                 </a>
+                <a href={donationLink} target="_blank" rel="noopener noreferrer">
+                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-rose-400 transition-colors rounded-lg hover:bg-white/5 flex items-center gap-1.5">
+                    <Heart className="h-4 w-4" />
+                    Donate
+                  </button>
+                </a>
                 <Link to="/apply">
                   <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all hover:scale-105 shadow-lg shadow-emerald-600/30">
                     Apply Now
@@ -145,6 +154,12 @@ const LandingPage = () => {
                   <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
                       Programs
+                    </button>
+                  </a>
+                  <a href={donationLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-rose-400 rounded-lg hover:bg-white/5 transition-colors text-left flex items-center gap-2">
+                      <Heart className="h-4 w-4" />
+                      Donate
                     </button>
                   </a>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
@@ -449,6 +464,12 @@ const LandingPage = () => {
                 Apply Now
               </Button>
             </Link>
+            <a href={donationLink} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 w-full sm:w-auto flex items-center justify-center gap-2">
+                <Heart className="h-5 w-5" />
+                Support Us
+              </Button>
+            </a>
             <Link to="/student">
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
                 Student Portal
@@ -487,6 +508,12 @@ const LandingPage = () => {
                 <li><Link to="/apply" className="text-gray-400 hover:text-white">Apply Now</Link></li>
                 <li><Link to="/student" className="text-gray-400 hover:text-white">Student Portal</Link></li>
                 <li><a href="#programs" className="text-gray-400 hover:text-white">Programs</a></li>
+                <li>
+                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 flex items-center gap-1.5">
+                    <Heart className="h-3.5 w-3.5" />
+                    Support Our Mission
+                  </a>
+                </li>
               </ul>
             </div>
 

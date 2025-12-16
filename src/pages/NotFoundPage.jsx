@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
-import { Home, Search, BookOpen, ArrowLeft } from 'lucide-react';
+import { Home, Search, BookOpen, ArrowLeft, Heart } from 'lucide-react';
 import Button from '../components/common/Button';
 
 const NotFoundPage = () => {
+  // Stripe donation link from environment variable
+  const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/your-link';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 flex flex-col">
       {/* Header */}
@@ -105,6 +108,16 @@ const NotFoundPage = () => {
                   >
                     Student Portal
                   </Link>
+                  <span className="text-gray-300">•</span>
+                  <a
+                    href={donationLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-rose-600 hover:text-rose-700 hover:underline inline-flex items-center gap-1"
+                  >
+                    <Heart className="h-3.5 w-3.5" />
+                    Donate
+                  </a>
                   <span className="text-gray-300">•</span>
                   <Link
                     to="/admin"
