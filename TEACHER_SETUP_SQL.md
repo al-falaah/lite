@@ -56,116 +56,50 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_teacher_student_program_active
 -- Enable RLS on teachers table
 ALTER TABLE teachers ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for teachers - Admins
-CREATE POLICY "Admins can view all teachers"
+-- RLS Policies for teachers - Allow authenticated users (admin check done in app)
+CREATE POLICY "Authenticated users can view teachers"
   ON teachers FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
+  USING (true);
 
-CREATE POLICY "Admins can insert teachers"
+CREATE POLICY "Authenticated users can insert teachers"
   ON teachers FOR INSERT
   TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
+  WITH CHECK (true);
 
-CREATE POLICY "Admins can update teachers"
+CREATE POLICY "Authenticated users can update teachers"
   ON teachers FOR UPDATE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
+  USING (true);
 
-CREATE POLICY "Admins can delete teachers"
+CREATE POLICY "Authenticated users can delete teachers"
   ON teachers FOR DELETE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
-
--- Teachers can view their own data
-CREATE POLICY "Teachers can view own data"
-  ON teachers FOR SELECT
-  TO authenticated
-  USING (email = auth.email());
+  USING (true);
 
 -- Enable RLS on teacher_student_assignments
 ALTER TABLE teacher_student_assignments ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for assignments - Admins
-CREATE POLICY "Admins can view all assignments"
+-- RLS Policies for assignments - Allow authenticated users (admin check done in app)
+CREATE POLICY "Authenticated users can view assignments"
   ON teacher_student_assignments FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
+  USING (true);
 
-CREATE POLICY "Admins can insert assignments"
+CREATE POLICY "Authenticated users can insert assignments"
   ON teacher_student_assignments FOR INSERT
   TO authenticated
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
+  WITH CHECK (true);
 
-CREATE POLICY "Admins can update assignments"
+CREATE POLICY "Authenticated users can update assignments"
   ON teacher_student_assignments FOR UPDATE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
+  USING (true);
 
-CREATE POLICY "Admins can delete assignments"
+CREATE POLICY "Authenticated users can delete assignments"
   ON teacher_student_assignments FOR DELETE
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
-    )
-  );
-
--- Teachers can view their own assignments
-CREATE POLICY "Teachers can view own assignments"
-  ON teacher_student_assignments FOR SELECT
-  TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM teachers
-      WHERE teachers.id = teacher_student_assignments.teacher_id
-      AND teachers.email = auth.email()
-    )
-  );
+  USING (true);
 
 -- Triggers
 CREATE OR REPLACE FUNCTION update_teachers_updated_at()
