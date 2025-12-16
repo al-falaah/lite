@@ -657,3 +657,153 @@ export const storage = {
     return { error };
   }
 };
+
+// Teacher helpers
+export const teachers = {
+  getAll: async () => {
+    const { data, error } = await supabase
+      .from('teachers')
+      .select('*')
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  getById: async (teacherId) => {
+    const { data, error } = await supabase
+      .from('teachers')
+      .select('*')
+      .eq('id', teacherId)
+      .single();
+    return { data, error };
+  },
+
+  getByStaffId: async (staffId) => {
+    const { data, error} = await supabase
+      .from('teachers')
+      .select('*')
+      .eq('staff_id', staffId)
+      .single();
+    return { data, error };
+  },
+
+  create: async (teacher) => {
+    const { data, error } = await supabase
+      .from('teachers')
+      .insert(teacher)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  update: async (teacherId, updates) => {
+    const { data, error } = await supabase
+      .from('teachers')
+      .update(updates)
+      .eq('id', teacherId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  delete: async (teacherId) => {
+    const { error } = await supabase
+      .from('teachers')
+      .delete()
+      .eq('id', teacherId);
+    return { error };
+  },
+
+  // Get teacher with assigned students count
+  getWithStats: async () => {
+    const { data, error } = await supabase
+      .from('teachers')
+      .select(`
+        *,
+        assignments:teacher_student_assignments(count)
+      `)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  }
+};
+
+// Teacher-Student Assignment helpers
+export const teacherAssignments = {
+  getAll: async () => {
+    const { data, error } = await supabase
+      .from('teacher_student_assignments')
+      .select(`
+        *,
+        teacher:teachers(*),
+        student:students(*)
+      `)
+      .order('created_at', { ascending: false });
+    return { data, error };
+  },
+
+  getByTeacher: async (teacherId, status = 'assigned') => {
+    let query = supabase
+      .from('teacher_student_assignments')
+      .select(`
+        *,
+        student:students(*)
+      `)
+      .eq('teacher_id', teacherId);
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query.order('assigned_at', { ascending: false });
+    return { data, error };
+  },
+
+  getByStudent: async (studentId, status = 'assigned') => {
+    let query = supabase
+      .from('teacher_student_assignments')
+      .select(`
+        *,
+        teacher:teachers(*)
+      `)
+      .eq('student_id', studentId);
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query.order('assigned_at', { ascending: false });
+    return { data, error };
+  },
+
+  assign: async (teacherId, studentId, program, notes = null) => {
+    const { data, error } = await supabase
+      .from('teacher_student_assignments')
+      .insert({
+        teacher_id: teacherId,
+        student_id: studentId,
+        program,
+        status: 'assigned',
+        notes
+      })
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  remove: async (assignmentId) => {
+    const { data, error } = await supabase
+      .from('teacher_student_assignments')
+      .update({ status: 'removed' })
+      .eq('id', assignmentId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  delete: async (assignmentId) => {
+    const { error } = await supabase
+      .from('teacher_student_assignments')
+      .delete()
+      .eq('id', assignmentId);
+    return { error };
+  }
+};
