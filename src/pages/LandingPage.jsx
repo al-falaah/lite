@@ -114,6 +114,11 @@ const LandingPage = () => {
                     Student Portal
                   </button>
                 </Link>
+                <Link to="/teacher">
+                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
+                    Teacher Portal
+                  </button>
+                </Link>
                 <a href="#programs">
                   <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
                     Programs
@@ -149,6 +154,11 @@ const LandingPage = () => {
                   <Link to="/student" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
                       Student Portal
+                    </button>
+                  </Link>
+                  <Link to="/teacher" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
+                      Teacher Portal
                     </button>
                   </Link>
                   <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
