@@ -18,7 +18,8 @@ import {
   Copy,
   Loader2,
   RefreshCw,
-  AlertCircle
+  AlertCircle,
+  UserCheck
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -26,6 +27,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import AdminStudentsList from './AdminStudentsList';
 import AvailabilityCalendar from '../components/admin/AvailabilityCalendar';
+import AdminTeachersList from './AdminTeachersList';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -438,6 +440,17 @@ const AdminDashboard = () => {
               <Calendar className="h-5 w-5" />
               Class Availability and Scheduling
             </button>
+            <button
+              onClick={() => setActiveTab('teachers')}
+              className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                activeTab === 'teachers'
+                  ? 'border-emerald-600 text-emerald-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+              }`}
+            >
+              <UserCheck className="h-5 w-5" />
+              Teachers
+            </button>
           </div>
         </div>
       </div>
@@ -653,6 +666,8 @@ const AdminDashboard = () => {
         {activeTab === 'students' && <AdminStudentsList />}
 
         {activeTab === 'availability' && <AvailabilityCalendar />}
+
+        {activeTab === 'teachers' && <AdminTeachersList />}
       </div>
 
       {/* Review Modal */}

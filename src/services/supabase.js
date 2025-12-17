@@ -137,6 +137,25 @@ export const students = {
     return { data, error };
   },
 
+  getById: async (studentId) => {
+    const { data, error } = await supabase
+      .from('students')
+      .select(`
+        *,
+        enrollments (
+          id,
+          program,
+          enrolled_date,
+          status,
+          weeks_completed,
+          total_weeks
+        )
+      `)
+      .eq('id', studentId)
+      .single();
+    return { data, error };
+  },
+
   // Withdrawal management
   withdraw: async (studentId, withdrawalData) => {
     const { data, error } = await supabase
@@ -527,7 +546,17 @@ export const classSchedules = {
       .select('*')
       .eq('student_id', studentId)
       .order('academic_year', { ascending: true })
-      .order('week_number', { ascending: true });
+      .order('week_number', { ascending: true});
+    return { data, error };
+  },
+
+  getByStudentId: async (studentId) => {
+    const { data, error } = await supabase
+      .from('class_schedules')
+      .select('*')
+      .eq('student_id', studentId)
+      .order('day_of_week', { ascending: true })
+      .order('class_time', { ascending: true });
     return { data, error };
   },
 

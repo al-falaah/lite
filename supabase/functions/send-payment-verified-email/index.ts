@@ -167,7 +167,8 @@ serve(async (req) => {
               full_name: payment.students.full_name,
               email: payment.students.email,
               student_id: payment.students.student_id,
-              program: program
+              program: program,
+              password: payment.students.password
             },
             baseUrl: appUrl
           }

@@ -144,13 +144,13 @@ const EMAIL_STYLES = `
 `;
 
 function generateEmailHTML(studentData: any, baseUrl: string): string {
-  const { full_name, email, student_id, program } = studentData;
+  const { full_name, email, student_id, program, password } = studentData;
 
   // Determine program name based on program field
   const programName = program === 'tajweed'
     ? 'Tajweed Program'
     : 'Essential Arabic & Islamic Studies Program';
-  
+
   const programDuration = program === 'tajweed' ? '6 months' : '2 years';
 
   return `
@@ -207,6 +207,21 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
               </table>
             </div>
 
+            <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; margin: 24px 0; border-radius: 6px;">
+              <div style="font-size: 18px; font-weight: 700; color: #92400e; margin-bottom: 16px;">🔐 Your Login Credentials</div>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; border-bottom: 1px solid #fde68a; font-weight: 600; color: #92400e; width: 50%;">Student ID</td>
+                  <td style="padding: 8px 0; border-bottom: 1px solid #fde68a; color: #059669; font-size: 16px; font-weight: 600; font-family: monospace;">${student_id}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #92400e; width: 50%;">Temporary Password</td>
+                  <td style="padding: 8px 0; color: #92400e; font-size: 16px; font-weight: 600; font-family: monospace;">${password}</td>
+                </tr>
+              </table>
+              <p style="margin: 12px 0 0 0; font-size: 14px; color: #92400e; line-height: 1.6;"><strong>⚠️ Important:</strong> You will be required to change your password on first login for security. Please choose a strong password (minimum 8 characters).</p>
+            </div>
+
             <p class="paragraph"><strong>What You Can Do Now:</strong></p>
             <ul>
               <li>Access your student portal at any time using your Student ID</li>
@@ -222,7 +237,8 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
 
             <p class="paragraph"><strong>Important Reminders:</strong></p>
             <ul>
-              <li>Save your Student ID (shown above) - you'll need it to access the portal</li>
+              <li>Save your Student ID and temporary password - you'll need both to access the portal</li>
+              <li>Change your temporary password on first login for security</li>
               <li>Check your class schedule regularly for upcoming sessions</li>
               <li>Join classes on time using the meeting links provided</li>
               <li>Keep your contact information up to date</li>

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS teachers (
   gender TEXT NOT NULL CHECK (gender IN ('male', 'female')),
   country_of_residence TEXT NOT NULL,
   password TEXT NOT NULL,
+  first_login BOOLEAN DEFAULT true,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -56,21 +57,25 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_teacher_student_program_active
 -- Enable RLS on teachers table
 ALTER TABLE teachers ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for teachers - Allow authenticated users (admin check done in app)
-CREATE POLICY "Authenticated users can view teachers"
+-- RLS Policies for teachers
+-- Allow public SELECT for teacher login (staff_id lookup)
+CREATE POLICY "Anyone can view teachers for login"
   ON teachers FOR SELECT
-  TO authenticated
+  TO public
   USING (true);
 
+-- Allow public UPDATE for teachers to change their own password
+CREATE POLICY "Anyone can update teachers"
+  ON teachers FOR UPDATE
+  TO public
+  USING (true)
+  WITH CHECK (true);
+
+-- Only authenticated users can insert/delete (admin only)
 CREATE POLICY "Authenticated users can insert teachers"
   ON teachers FOR INSERT
   TO authenticated
   WITH CHECK (true);
-
-CREATE POLICY "Authenticated users can update teachers"
-  ON teachers FOR UPDATE
-  TO authenticated
-  USING (true);
 
 CREATE POLICY "Authenticated users can delete teachers"
   ON teachers FOR DELETE
@@ -80,12 +85,14 @@ CREATE POLICY "Authenticated users can delete teachers"
 -- Enable RLS on teacher_student_assignments
 ALTER TABLE teacher_student_assignments ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for assignments - Allow authenticated users (admin check done in app)
-CREATE POLICY "Authenticated users can view assignments"
+-- RLS Policies for assignments
+-- Allow public SELECT for teacher portal (to view assigned students)
+CREATE POLICY "Anyone can view assignments"
   ON teacher_student_assignments FOR SELECT
-  TO authenticated
+  TO public
   USING (true);
 
+-- Only authenticated users can modify (admin only)
 CREATE POLICY "Authenticated users can insert assignments"
   ON teacher_student_assignments FOR INSERT
   TO authenticated

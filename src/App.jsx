@@ -12,6 +12,7 @@ import StudentPortal from './pages/StudentPortal';
 import EnrollAdditionalProgram from './pages/EnrollAdditionalProgram';
 import AdminDashboard from './pages/AdminDashboard';
 import VacanciesPage from './pages/VacanciesPage';
+import TeacherPortal from './pages/TeacherPortal';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Layout
@@ -32,6 +33,7 @@ function App() {
             <Route path="/student" element={<StudentPortal />} />
             <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
             <Route path="/vacancies" element={<VacanciesPage />} />
+            <Route path="/teacher" element={<TeacherPortal />} />
 
             {/* Admin Route - Login and Dashboard */}
             <Route

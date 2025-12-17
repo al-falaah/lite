@@ -17,9 +17,10 @@ import {
   Send,
   X as XIcon2,
   BookOpen,
-  GraduationCap
+  GraduationCap,
+  UserCheck
 } from 'lucide-react';
-import { students, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
+import { students, teachers, teacherAssignments, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
@@ -43,6 +44,13 @@ const AdminStudentsList = () => {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailMessage, setEmailMessage] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
+
+  // Teacher assignment state
+  const [showAssignTeacherModal, setShowAssignTeacherModal] = useState(false);
+  const [selectedEnrollment, setSelectedEnrollment] = useState(null);
+  const [allTeachers, setAllTeachers] = useState([]);
+  const [selectedTeacherId, setSelectedTeacherId] = useState('');
+  const [assignedTeachers, setAssignedTeachers] = useState({});
 
   useEffect(() => {
     loadStudents();
@@ -110,6 +118,8 @@ const AdminStudentsList = () => {
     // Get enrollments for this student
     const studentEnrollments = enrollmentsData.filter(e => e.student_id === student.id);
     setSelectedStudentEnrollments(studentEnrollments);
+    // Load assigned teachers for this student
+    await loadAssignedTeachers(student.id);
     setShowModal(true);
   };
 
@@ -255,6 +265,114 @@ const AdminStudentsList = () => {
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
         return <AlertCircle className="h-5 w-5 text-gray-500" />;
+    }
+  };
+
+  // Teacher assignment functions
+  const loadTeachers = async () => {
+    const { data, error } = await teachers.getAll();
+    if (error) {
+      console.error('Error loading teachers:', error);
+      toast.error('Failed to load teachers');
+      return;
+    }
+    setAllTeachers(data || []);
+  };
+
+  const loadAssignedTeachers = async (studentId) => {
+    const { data, error } = await supabase
+      .from('teacher_student_assignments')
+      .select(`
+        *,
+        teacher:teachers(id, full_name, staff_id)
+      `)
+      .eq('student_id', studentId)
+      .eq('status', 'assigned');
+
+    if (error) {
+      console.error('Error loading assigned teachers:', error);
+      return;
+    }
+
+    // Group by program
+    const assignmentsByProgram = {};
+    (data || []).forEach(assignment => {
+      if (assignment.program) {
+        assignmentsByProgram[assignment.program] = assignment.teacher;
+      }
+    });
+    setAssignedTeachers(assignmentsByProgram);
+  };
+
+  const handleOpenAssignTeacher = async (enrollment) => {
+    setSelectedEnrollment(enrollment);
+    await loadTeachers();
+    await loadAssignedTeachers(selectedStudent.id);
+    setShowAssignTeacherModal(true);
+  };
+
+  const handleAssignTeacher = async () => {
+    if (!selectedTeacherId) {
+      toast.error('Please select a teacher');
+      return;
+    }
+
+    if (!selectedEnrollment) {
+      toast.error('No enrollment selected');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Check if there's already an assignment for this student-program combo
+      const { data: existing, error: checkError } = await supabase
+        .from('teacher_student_assignments')
+        .select('id, status')
+        .eq('student_id', selectedStudent.id)
+        .eq('program', selectedEnrollment.program)
+        .eq('status', 'assigned')
+        .single();
+
+      if (existing) {
+        // Update existing assignment
+        const { error: updateError } = await supabase
+          .from('teacher_student_assignments')
+          .update({
+            teacher_id: selectedTeacherId
+          })
+          .eq('id', existing.id);
+
+        if (updateError) {
+          toast.error('Failed to update teacher assignment');
+          console.error(updateError);
+          return;
+        }
+      } else {
+        // Create new assignment using the assign method
+        const { error: createError } = await teacherAssignments.assign(
+          selectedTeacherId,
+          selectedStudent.id,
+          selectedEnrollment.program,
+          null
+        );
+
+        if (createError) {
+          toast.error('Failed to assign teacher');
+          console.error(createError);
+          return;
+        }
+      }
+
+      toast.success('Teacher assigned successfully!');
+      setShowAssignTeacherModal(false);
+      setSelectedTeacherId('');
+      await loadAssignedTeachers(selectedStudent.id);
+    } catch (error) {
+      console.error('Error assigning teacher:', error);
+      toast.error('An error occurred');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -788,6 +906,36 @@ const AdminStudentsList = () => {
                             </div>
                           )}
                         </div>
+
+                        {/* Assigned Teacher */}
+                        <div className="mt-4 pt-4 border-t border-gray-300">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
+                                <UserCheck className="h-4 w-4" />
+                                Assigned Teacher
+                              </p>
+                              {assignedTeachers[enrollment.program] ? (
+                                <p className="font-semibold text-gray-900">
+                                  {assignedTeachers[enrollment.program].full_name}
+                                  <span className="text-gray-500 text-sm ml-2">
+                                    (Staff ID: {assignedTeachers[enrollment.program].staff_id})
+                                  </span>
+                                </p>
+                              ) : (
+                                <p className="text-sm text-gray-500 italic">No teacher assigned</p>
+                              )}
+                            </div>
+                            <Button
+                              onClick={() => handleOpenAssignTeacher(enrollment)}
+                              className="text-sm"
+                              size="sm"
+                            >
+                              <UserCheck className="h-4 w-4 mr-1" />
+                              {assignedTeachers[enrollment.program] ? 'Change Teacher' : 'Assign Teacher'}
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -930,6 +1078,89 @@ const AdminStudentsList = () => {
                     <>
                       <Send className="h-4 w-4" />
                       Send Email
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assign Teacher Modal */}
+      {showAssignTeacherModal && selectedEnrollment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-emerald-100 rounded-full">
+                  <UserCheck className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Assign Teacher</h2>
+                  <p className="text-sm text-gray-600">
+                    {getProgramName(selectedEnrollment.program)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-sm text-gray-700 mb-2">
+                  Student: <span className="font-semibold">{selectedStudent?.full_name}</span>
+                </p>
+                {assignedTeachers[selectedEnrollment.program] && (
+                  <p className="text-sm text-gray-600 mb-4">
+                    Current Teacher: <span className="font-semibold">{assignedTeachers[selectedEnrollment.program].full_name}</span>
+                  </p>
+                )}
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Teacher *
+                </label>
+                <select
+                  value={selectedTeacherId}
+                  onChange={(e) => setSelectedTeacherId(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option value="">-- Choose a teacher --</option>
+                  {allTeachers
+                    .filter(t => t.is_active)
+                    .map(teacher => (
+                      <option key={teacher.id} value={teacher.id}>
+                        {teacher.full_name} (Staff ID: {teacher.staff_id})
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => {
+                    setShowAssignTeacherModal(false);
+                    setSelectedTeacherId('');
+                    setSelectedEnrollment(null);
+                  }}
+                  variant="secondary"
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAssignTeacher}
+                  disabled={loading || !selectedTeacherId}
+                  className="flex-1"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Assigning...
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck className="h-5 w-5 mr-2" />
+                      Assign Teacher
                     </>
                   )}
                 </Button>

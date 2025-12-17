@@ -162,6 +162,7 @@ serve(async (req) => {
                 email: student.email,
                 student_id: student.student_id,
                 program: program,
+                password: student.password,
               },
               baseUrl: appUrl,
             },

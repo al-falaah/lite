@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   ArrowLeft, User, LogOut, ExternalLink, CreditCard,
-  DollarSign, AlertCircle, GraduationCap
+  DollarSign, AlertCircle, GraduationCap, Key, X, UserCheck, Mail, Send
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -15,16 +15,28 @@ const StudentPortal = () => {
   const [loading, setLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [studentId, setStudentId] = useState('');
+  const [password, setPassword] = useState('');
   const [student, setStudent] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [progress, setProgress] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(null);
+  const [assignedTeachers, setAssignedTeachers] = useState({});
+
+  // Password change modal
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // Email modal state
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailRecipient, setEmailRecipient] = useState(null);
+  const [emailMessage, setEmailMessage] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!studentId) {
-      toast.error('Please enter your student ID');
+    if (!studentId || !password) {
+      toast.error('Please enter your student ID and password');
       return;
     }
 
@@ -44,17 +56,31 @@ const StudentPortal = () => {
         .single();
 
       if (error || !data) {
-        toast.error('Student not found. Please check your student ID or contact support.');
+        toast.error('Invalid Student ID or password');
+        setLoading(false);
+        return;
+      }
+
+      // Check password
+      if (data.password !== password) {
+        toast.error('Invalid Student ID or password');
         setLoading(false);
         return;
       }
 
       setStudent(data);
       setAuthenticated(true);
-      toast.success(`Welcome, ${data.full_name}!`);
 
-      // Load enrollments and student data
-      await loadStudentData(data.id);
+      // Check if first login - show password change modal
+      if (data.first_login) {
+        toast.info('Please change your password');
+        setShowPasswordModal(true);
+        setLoading(false); // Reset loading so password change button isn't stuck
+      } else {
+        toast.success(`Welcome, ${data.full_name}!`);
+        // Load enrollments and student data
+        await loadStudentData(data.id);
+      }
     } catch (error) {
       console.error('Login error:', error);
       toast.error('Failed to login. Please try again.');
@@ -110,6 +136,29 @@ const StudentPortal = () => {
         console.error('Progress error:', progressError);
       } else {
         setProgress(progressData);
+      }
+
+      // Load assigned teachers
+      const { data: teacherAssignments, error: teacherError } = await supabase
+        .from('teacher_student_assignments')
+        .select(`
+          program,
+          teacher:teachers(id, full_name, staff_id, email)
+        `)
+        .eq('student_id', studentId)
+        .eq('status', 'assigned');
+
+      if (teacherError) {
+        console.error('Teacher assignments error:', teacherError);
+      } else {
+        // Group by program
+        const teachersByProgram = {};
+        (teacherAssignments || []).forEach(assignment => {
+          if (assignment.program && assignment.teacher) {
+            teachersByProgram[assignment.program] = assignment.teacher;
+          }
+        });
+        setAssignedTeachers(teachersByProgram);
       }
     } catch (error) {
       console.error('Error loading student data:', error);
@@ -171,6 +220,67 @@ const StudentPortal = () => {
     return days[dayNum] || `Day ${dayNum}`;
   };
 
+  const handleChangePassword = async () => {
+    // Validation
+    if (!newPassword || !confirmPassword) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      console.log('Updating password for student ID:', student.id);
+
+      // Update password and set first_login to false
+      const { data, error } = await supabase
+        .from('students')
+        .update({
+          password: newPassword, // TODO: Add bcrypt hashing in production
+          first_login: false
+        })
+        .eq('id', student.id)
+        .select();
+
+      console.log('Update response:', { data, error });
+
+      if (error) {
+        toast.error(`Failed to update password: ${error.message}`);
+        console.error('Password update error:', error);
+        setLoading(false);
+        return;
+      }
+
+      // Update student data in state and localStorage
+      const updatedStudent = { ...student, first_login: false, password: newPassword };
+      setStudent(updatedStudent);
+      localStorage.setItem('student', JSON.stringify(updatedStudent));
+
+      toast.success('Password changed successfully!');
+      setShowPasswordModal(false);
+      setNewPassword('');
+      setConfirmPassword('');
+
+      // Load student data now
+      await loadStudentData(student.id);
+      // Note: loadStudentData will call setLoading(false) in its finally block
+    } catch (err) {
+      console.error('Password change error:', err);
+      toast.error('An error occurred while changing password');
+      setLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     setAuthenticated(false);
     setStudent(null);
@@ -178,7 +288,70 @@ const StudentPortal = () => {
     setSchedules([]);
     setProgress(null);
     setStudentId('');
+    setPassword('');
+    setShowPasswordModal(false);
+    setNewPassword('');
+    setConfirmPassword('');
     toast.info('Logged out successfully');
+  };
+
+  const handleOpenEmailModal = (teacher, program) => {
+    setEmailRecipient({
+      name: teacher.full_name,
+      email: teacher.email,
+      staffId: teacher.staff_id,
+      program: program
+    });
+    setEmailMessage('');
+    setShowEmailModal(true);
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailMessage.trim()) {
+      toast.error('Please enter a message');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/send-message-email`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messageData: {
+              senderName: student.full_name,
+              senderEmail: student.email,
+              recipientName: emailRecipient.name,
+              recipientEmail: emailRecipient.email,
+              message: emailMessage,
+              program: emailRecipient.program
+            },
+            recipientType: 'teacher'
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success('Message sent successfully!');
+        setShowEmailModal(false);
+        setEmailMessage('');
+        setEmailRecipient(null);
+      } else {
+        toast.error(result.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getProgramName = (program) => {
@@ -218,7 +391,7 @@ const StudentPortal = () => {
                 />
                 <div className="flex flex-col">
                   <span className="text-xl font-semibold text-gray-900">Al-Falaah Academy</span>
-                  {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
+                  <span className="text-xs text-gray-500 font-arabic"> أكاديمية الفلاح</span>
                 </div>
               </Link>
               <Link to="/">
@@ -253,14 +426,30 @@ const StudentPortal = () => {
                     type="text"
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
-                    placeholder="Enter your 6-digit ID"
+                    placeholder="123456"
                     maxLength={6}
                     pattern="\d{6}"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-center text-lg font-mono tracking-widest"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     required
+                    autoComplete="username"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    required
+                    autoComplete="current-password"
                   />
                   <p className="mt-2 text-xs text-gray-500 text-center">
-                    Enter your 6-digit student ID from your enrollment confirmation
+                    If this is your first time logging in, use the temporary password provided in your welcome email.
                   </p>
                 </div>
 
@@ -394,9 +583,55 @@ const StudentPortal = () => {
                       </div>
                     </div>
 
+                    {/* Assigned Teacher */}
+                    {assignedTeachers[enrollment.program] && (
+                      <div className="border-t border-gray-200 pt-6 mt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                          <UserCheck className="h-5 w-5 text-emerald-600" />
+                          Your Teacher
+                        </h3>
+                        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="p-2 bg-emerald-100 rounded-lg">
+                              <User className="h-5 w-5 text-emerald-600" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-900">
+                                {assignedTeachers[enrollment.program].full_name}
+                              </p>
+                              <p className="text-sm text-gray-600 mt-1">
+                                Staff ID: {assignedTeachers[enrollment.program].staff_id}
+                              </p>
+                              {assignedTeachers[enrollment.program].email && (
+                                <div className="flex items-center gap-1 mt-2 text-sm text-gray-600">
+                                  <Mail className="h-4 w-4" />
+                                  <a
+                                    href={`mailto:${assignedTeachers[enrollment.program].email}`}
+                                    className="text-emerald-600 hover:text-emerald-700 hover:underline"
+                                  >
+                                    {assignedTeachers[enrollment.program].email}
+                                  </a>
+                                </div>
+                              )}
+                              <div className="mt-3">
+                                <Button
+                                  onClick={() => handleOpenEmailModal(assignedTeachers[enrollment.program], enrollment.program)}
+                                  className="inline-flex items-center text-sm"
+                                  variant="secondary"
+                                >
+                                  <Mail className="h-4 w-4 mr-2" />
+                                  Send Message
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Billing Portal Link */}
                     {student?.stripe_customer_id && (
-                      <div className="border-t border-gray-200 pt-6">
+                      <div className="border-t border-gray-200 pt-6 mt-6">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                           <div>
                             <h3 className="text-lg font-semibold text-gray-900">Manage Billing</h3>
@@ -581,6 +816,180 @@ const StudentPortal = () => {
           )}
         </div>
       </div>
+
+      {/* Email Modal */}
+      {showEmailModal && emailRecipient && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <Mail className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">Send Message</h2>
+                    <p className="text-sm text-gray-600">To: {emailRecipient.name}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowEmailModal(false);
+                    setEmailMessage('');
+                    setEmailRecipient(null);
+                  }}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600 mb-1">Staff ID</p>
+                      <p className="font-medium">{emailRecipient.staffId}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 mb-1">Program</p>
+                      <p className="font-medium capitalize">
+                        {emailRecipient.program === 'essentials' ? 'Essentials' : 'Tajweed'}
+                      </p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-gray-600 mb-1">Email</p>
+                      <p className="font-medium">{emailRecipient.email}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="emailMessage" className="block text-sm font-medium text-gray-700 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    id="emailMessage"
+                    value={emailMessage}
+                    onChange={(e) => setEmailMessage(e.target.value)}
+                    rows={8}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                    placeholder="Type your message here..."
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    Your teacher will receive this message via email and can reply directly to your email address.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setShowEmailModal(false);
+                    setEmailMessage('');
+                    setEmailRecipient(null);
+                  }}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSendEmail}
+                  disabled={loading || !emailMessage.trim()}
+                  className="inline-flex items-center"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Message
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Password Change Modal (First Login) */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-emerald-100 rounded-full">
+                  <Key className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Change Your Password</h2>
+                  <p className="text-sm text-gray-600">Please set a new password to continue</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                    New Password *
+                  </label>
+                  <input
+                    id="newPassword"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="At least 8 characters"
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm Password *
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="Re-enter your password"
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-xs text-blue-800">
+                    <strong>Password requirements:</strong>
+                    <br />• Minimum 8 characters
+                    <br />• Use a strong, unique password
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleChangePassword}
+                  disabled={loading}
+                  className="w-full"
+                >
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Changing Password...
+                    </>
+                  ) : (
+                    'Change Password'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

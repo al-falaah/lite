@@ -418,7 +418,7 @@ export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://alfal
 };
 
 export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => {
-  const { full_name, student_id, program } = studentData;
+  const { full_name, student_id, program, password } = studentData;
   const programName = getProgramName(program);
   const programDuration = getProgramDuration(program);
   const dashboardUrl = `${baseUrl}/student`;
@@ -463,8 +463,23 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
               </table>
             </div>
 
+            <div class="warning-box">
+              <div class="warning-box-title">🔐 Your Login Credentials</div>
+              <table>
+                <tr>
+                  <td class="label">Student ID</td>
+                  <td class="value" style="color: #059669; font-size: 16px; font-family: monospace;">${student_id}</td>
+                </tr>
+                <tr>
+                  <td class="label">Temporary Password</td>
+                  <td class="value" style="color: #92400e; font-size: 16px; font-family: monospace;">${password}</td>
+                </tr>
+              </table>
+              <p class="paragraph" style="margin: 12px 0 0 0; font-size: 14px; color: #92400e;"><strong>⚠️ Important:</strong> You will be required to change your password on first login for security. Please choose a strong password (minimum 8 characters).</p>
+            </div>
+
             <p class="paragraph"><strong>Access Your Student Portal:</strong></p>
-            <p class="paragraph">Your personalized student portal is now ready! Use your <span class="highlight">Student ID: ${student_id}</span> to log in and access:</p>
+            <p class="paragraph">Your personalized student portal is now ready! Use the credentials above to log in and access:</p>
 
             <ul>
               <li>Your weekly class schedule with meeting links</li>
@@ -481,7 +496,8 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
 
             <p class="paragraph"><strong>Important Reminders:</strong></p>
             <ul>
-              <li>Keep your Student ID safe - you'll need it to access your portal</li>
+              <li>Keep your Student ID and password safe - you'll need both to access your portal</li>
+              <li>Change your temporary password on first login</li>
               <li>Check your class schedule regularly for meeting times and links</li>
               <li>Attend all scheduled classes punctually</li>
               <li>Keep your contact information up to date</li>

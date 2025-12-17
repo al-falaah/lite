@@ -1,26 +1,36 @@
 // Test script to send welcome email without going through Stripe
+import 'dotenv/config';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_KEY = process.env.VITE_SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error('❌ Missing environment variables!');
+  console.error('VITE_SUPABASE_URL:', SUPABASE_URL ? '✓ Set' : '✗ Missing');
+  console.error('VITE_SUPABASE_ANON_KEY:', process.env.VITE_SUPABASE_ANON_KEY ? '✓ Set' : '✗ Missing');
+  process.exit(1);
+}
 
 async function testWelcomeEmail() {
   console.log('🧪 Testing welcome email function...\n');
 
   // Replace this email with your actual email to receive the test
-  const testEmail = 'scigine.dev@gmail.com'; // <-- CHANGE THIS!
+  const testEmail = 'abdulquadrialaka@gmail.com'; // <-- CHANGE THIS!
 
   const payload = {
     studentData: {
       full_name: 'Test Student',
       email: testEmail,
       student_id: '100001',
-      program: 'tajweed' // or 'tajweed'
+      program: 'tajweed', // or 'essentials'
+      password: 'test1234' // Test password to verify it appears in email
     },
     baseUrl: 'https://alfalaah-academy.nz' // Production URL
   };
 
   console.log('📤 Sending test email to:', testEmail);
   console.log('📋 Student ID:', payload.studentData.student_id);
+  console.log('🔐 Password:', payload.studentData.password);
   console.log('📚 Program:', payload.studentData.program);
   console.log('');
 
@@ -30,7 +40,7 @@ async function testWelcomeEmail() {
       {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
