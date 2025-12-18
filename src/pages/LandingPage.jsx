@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -8,6 +8,7 @@ const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentQuote, setCurrentQuote] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+  const [expandedProgram, setExpandedProgram] = useState(null);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -49,7 +50,7 @@ const LandingPage = () => {
     },
     {
       question: "Who are the instructors?",
-      answer: "Our instructors are qualified Islamic scholars with deep knowledge of the Quran, Sunnah, and traditional Islamic sciences. They have experience in teaching and are committed to authentic Islamic education rooted in the understanding of the Salaf."
+      answer: "Our instructors are qualified Islamic scholars with deep knowledge of the Quran, Sunnah, and traditional Islamic sciences. They have experience in teaching and are committed to sound Islamic education rooted in the understanding of the Salaf."
     },
     {
       question: "Do I need any prerequisites?",
@@ -225,7 +226,7 @@ const LandingPage = () => {
                 Authentic Islamic Education
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                Curated 1-on-1 online programs in Arabic & Islamic sciences for Kiwi Muslims and beyond
+                Master Arabic and Islamic sciences through flexible one-on-one online instruction
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
@@ -245,177 +246,594 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Programs Section */}
-      <section id="programs" className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Programs
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Choose the program that best fits your learning journey
+      {/* Our Mission Section */}
+      <section className="bg-white py-16 sm:py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-12">
+            Our Mission
+          </h2>
+
+          <div className="prose prose-lg max-w-none">
+            <p className="text-lg leading-relaxed text-gray-700 mb-6">
+              Today, only a small percentage of Muslims worldwide can understand the Arabic language of the Qur'an. As a result, many rely on translations—interpretations shaped by the translator's understanding and biases—rather than experiencing the direct, unmediated word of Allah ﷻ.
+            </p>
+
+            <p className="text-lg leading-relaxed text-gray-700 mb-6">
+              For Muslims living in the West—particularly in New Zealand and similar contexts—the challenge is compounded by busy work schedules, family responsibilities, and the lack of accessible, high-quality Islamic education. Many desire to deepen their understanding of the Qur'an, Hadith, and essential Islamic sciences, but struggle to find programs that fit their unique circumstances.
+            </p>
+
+            <p className="text-lg leading-relaxed text-gray-700 mb-6">
+              Al-Falaah Academy was founded to bridge this gap. We provide flexible, one-on-one online instruction in Essential Arabic & Islamic Studies and Tajweed, rooted in the Qur'an, the authentic Sunnah, and the methodology of the Salaf. Our approach is designed to meet students where they are—whether they are busy professionals, parents, or anyone seeking knowledge—and guide them toward a deeper, more authentic connection with their faith.
+            </p>
+
+            <p className="text-lg leading-relaxed text-gray-700 mb-12">
+              We believe that Islamic education should not be a luxury reserved for a select few, but a right accessible to all who sincerely seek it. Our mission is to empower students with the tools to understand the sources of Islam directly, to cultivate beneficial knowledge, and to live their faith with clarity and conviction.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Essentials Program */}
-            <div className="bg-white border-2 border-gray-200 rounded-lg p-8 hover:border-emerald-600 transition-colors">
-              <div className="flex items-center justify-between mb-4">
-                <GraduationCap className="h-8 w-8 text-emerald-600" />
-                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">
-                  2 YEARS
-                </span>
+          {/* Founder Quote Box */}
+          <div className="mt-16 relative">
+            <div className="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-8 sm:p-10 shadow-sm border border-emerald-100">
+              {/* Quote Mark */}
+              <div className="absolute top-6 left-6 text-6xl font-serif text-emerald-600 opacity-20 leading-none">
+                "
               </div>
 
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Essential Arabic & Islamic Studies</h3>
-              <p className="text-gray-600 mb-6">
-                Comprehensive curriculum covering Quran, Hadith, Fiqh, Aqeedah, Seerah, and Arabic fundamentals
-              </p>
+              <div className="relative">
+                {/* Quote Text */}
+                <blockquote className="text-xl sm:text-2xl font-light text-gray-800 mb-8 sm:mb-10 leading-relaxed pl-6">
+                  This is our purpose, and we ask Allah ﷻ to grant us success in helping Muslims reconnect with their faith through authentic, accessible education.
+                </blockquote>
 
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">One-on-one personalized instruction</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">2 sessions/week (2 hours + 30 min)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Flexible scheduling</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Progress at your own pace</span>
-                </li>
-              </ul>
-
-              <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
-                <p className="text-2xl font-bold text-gray-900">$25 <span className="text-base font-normal text-gray-600">/month</span></p>
-                <p className="text-sm text-gray-600 mb-2">Monthly payment option</p>
-                <div className="border-t border-gray-300 pt-2">
-                  <p className="text-xl font-bold text-gray-900">$275 <span className="text-base font-normal text-gray-600">/year</span></p>
-                  <p className="text-sm text-gray-600">Annual payment option (save $25)</p>
+                {/* Founder Info */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pl-6">
+                  <img
+                    src="/placeholder-founder.svg"
+                    alt="Dr Abdulquadri Alaka"
+                    className="w-24 h-24 rounded-full object-cover bg-gray-200 ring-4 ring-white shadow-md"
+                  />
+                  <div className="flex-1">
+                    <p className="text-xl font-semibold text-gray-900 mb-1">Dr Abdulquadri Alaka</p>
+                    <p className="text-base text-gray-600 mb-3">Founder & Lead, Al-Falaah Academy</p>
+                    <a
+                      href="https://www.linkedin.com/in/aalaka"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 hover:text-emerald-800 transition-colors group"
+                    >
+                      <span>View LinkedIn</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                  </div>
                 </div>
               </div>
-
-              <Link to="/apply">
-                <Button variant="primary" size="md" className="w-full bg-emerald-600 hover:bg-emerald-700">
-                  Enroll Now
-                </Button>
-              </Link>
-            </div>
-
-            {/* Tajweed Program */}
-            <div className="bg-white border-2 border-gray-200 rounded-lg p-8 hover:border-emerald-600 transition-colors">
-              <div className="flex items-center justify-between mb-4">
-                <BookOpen className="h-8 w-8 text-emerald-600" />
-                <span className="bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">
-                  6 MONTHS
-                </span>
-              </div>
-
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Tajweed Program</h3>
-              <p className="text-gray-600 mb-6">
-                Intensive course focused on perfecting Quranic recitation with proper pronunciation and rules
-              </p>
-
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">One-on-one personalized instruction</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">2 sessions/week (1 hour + 30 min)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Master Tajweed rules</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Practice and feedback</span>
-                </li>
-              </ul>
-
-              <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
-                <p className="text-2xl font-bold text-gray-900">$120 <span className="text-base font-normal text-gray-600">NZD</span></p>
-                <p className="text-sm text-gray-600">One-time payment for full course</p>
-              </div>
-
-              <Link to="/apply">
-                <Button variant="outline" size="md" className="w-full border-emerald-600 text-emerald-700 hover:bg-emerald-50">
-                  Enroll Now
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Curriculum Section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      {/* Our Approach Section */}
+      <section className="bg-gray-50 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              What You'll Study
-            </h2>
-            <p className="text-lg text-gray-600">
-              Essential Arabic & Islamic Studies Program Curriculum
-            </p>
-          </div>
+          <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
+            Our Approach
+          </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              { title: "Qur'anic Studies", desc: "Tafseer and understanding" },
-              { title: "Hadith Sciences", desc: "Authentication and study" },
-              { title: "Fiqh", desc: "Islamic jurisprudence" },
-              { title: "Aqeedah", desc: "Creed and theology" },
-              { title: "Seerah", desc: "Prophetic biography" },
-              { title: "Islamic History", desc: "Understanding our heritage" },
-              { title: "Arabic Language", desc: "Essential foundations" },
-              { title: "Contemporary Issues", desc: "Modern fiqh matters" }
-            ].map((item, i) => (
-              <div key={i} className="bg-white p-6 rounded-lg border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.desc}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Card 1 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
+              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                01
               </div>
-            ))}
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Flexible & Personalized Learning
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Every student progresses at their own pace. When beneficial, we may group family members or students with similar backgrounds into cohort learning for enhanced engagement and support.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
+              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                02
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Islamic Values at the Core
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Beyond teaching Arabic language, we cultivate Islamic character and values. Our curriculum integrates spiritual development with linguistic mastery.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
+              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                03
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Accessible Online Delivery
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  All classes are conducted via video conferencing, making quality Islamic education accessible wherever you are in New Zealand.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
+              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                04
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Grounded in Classical Tradition
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Our learning materials are drawn from authentic, time-tested texts from Islamic scholarship. Students actively engage through note-taking and traditional learning methods that have proven effective for centuries.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 5 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
+              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                05
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Progress Through Assessment
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Regular evaluations throughout your learning journey ensure knowledge retention and help identify areas for growth, solidifying your understanding at each stage.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 6 */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
+              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                06
+              </div>
+
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Holistic Mentorship
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  We don't just teach—we mentor. Our support extends beyond the classroom to guide students in both their spiritual journey and daily life challenges.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 md:py-24 bg-white">
+      {/* Enhanced Programs Section - Mobile-Friendly Accordion */}
+      <section id="programs" className="bg-white py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg mb-4">
-                <Calendar className="h-6 w-6 text-emerald-600" />
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-12 sm:mb-16">
+            Our Programs
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+            {/* EAIS Program Card */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
+              {/* Always Visible Header */}
+              <div className="p-5 sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                  Essential Arabic & Islamic Studies (EAIS)
+                </h3>
+                <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
+                  العربية والدراسات الإسلامية الأساسية
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600 mb-4">
+                  Al-'Arabiyyah wal-Dirāsāt al-Islāmiyyah al-Asāsiyyah
+                </p>
+
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
+                  Equip yourself with intermediate Arabic proficiency and foundational Islamic knowledge in creed, manners, and jurisprudence through comprehensive study of classical texts.
+                </p>
+
+                {/* Key Info - Always Visible */}
+                <div className="bg-emerald-50 rounded-lg p-4 mb-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <p className="text-xs text-emerald-800 font-medium mb-1">Duration</p>
+                      <p className="text-base sm:text-lg font-bold text-emerald-900">2 years</p>
+                      <p className="text-xs text-emerald-700">104 weeks total</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-emerald-800 font-medium mb-1">Investment</p>
+                      <p className="text-base sm:text-lg font-bold text-emerald-900">$25 NZD/mo</p>
+                      <p className="text-xs text-emerald-700">or $275/year</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expand Button */}
+                <button
+                  onClick={() => setExpandedProgram(expandedProgram === 'eais' ? null : 'eais')}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-emerald-600 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors mb-4"
+                >
+                  <span>{expandedProgram === 'eais' ? 'Hide Details' : 'View Full Curriculum'}</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform ${expandedProgram === 'eais' ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Collapsible Details */}
+                {expandedProgram === 'eais' && (
+                  <div className="border-t border-gray-200 pt-6 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Equip students with intermediate proficiency in Arabic language to enhance their understanding of the Qur'an and Sunnah</li>
+                        <li>Build sound Islamic knowledge in creed ('aqīdah), manners (ādāb), and jurisprudence (fiqh)</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Structure</h4>
+                      <p className="text-xs sm:text-sm text-gray-600 mb-3">Two comprehensive courses, each covering multiple integrated subjects:</p>
+
+                      <div className="space-y-3 ml-2 sm:ml-4">
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-xs sm:text-sm font-medium text-gray-900 mb-1">Course 1: <span style={{fontFamily: 'Traditional Arabic, serif'}}>العربية</span> | Al-'Arabiyyah</p>
+                          <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside ml-2">
+                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو</span> | An-Naḥw (Grammar)</li>
+                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الصرف</span> | Aṣ-Ṣarf (Morphology)</li>
+                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الإملاء</span> | Al-Imlā' (Spelling & Dictation)</li>
+                          </ul>
+                        </div>
+
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-xs sm:text-sm font-medium text-gray-900 mb-1">Course 2: <span style={{fontFamily: 'Traditional Arabic, serif'}}>الإسلامية</span> | Al-Islāmiyyah</p>
+                          <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside ml-2">
+                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>العقيدة</span> | Al-'Aqīdah (Creed)</li>
+                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الفقه</span> | Al-Fiqh (Jurisprudence)</li>
+                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الآداب</span> | Al-Ādāb (Islamic Manners & Ethics)</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Primary Texts</h4>
+                      <ul className="text-xs text-gray-600 space-y-1.5">
+                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> | Alfiyyat Ibn Mālik</li>
+                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> | An-Naḥw al-Wāḍiḥ</li>
+                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>المنهاج المختصر</span> | Al-Minhāj al-Mukhtaṣar</li>
+                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>مجموع عقيدة أهل السنة</span> | Majmū' 'Aqīdat</li>
+                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>الدرر البهية</span> | Ad-Durar al-Bahiyyah</li>
+                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>من آداب الإسلام</span> | Min Ādāb al-Islām</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Class Schedule</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Two sessions per week</li>
+                        <li>Long session: 2 hours (primary instruction)</li>
+                        <li>Short session: 30 minutes (assessment & homework review)</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Enroll Button */}
+                <Link to="/apply">
+                  <Button variant="primary" size="md" className="w-full bg-emerald-600 hover:bg-emerald-700 mt-4">
+                    Enroll in EAIS
+                  </Button>
+                </Link>
               </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">Flexible Schedule</h3>
-              <p className="text-gray-600">
-                Classes scheduled at times convenient for you across different time zones
+            </div>
+
+            {/* TMP Program Card */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
+              {/* Always Visible Header */}
+              <div className="p-5 sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                  Tajweed Mastery Program (TMP)
+                </h3>
+                <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
+                  برنامج إتقان التجويد
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600 mb-4">
+                  Barnāmij Itqān at-Tajwīd
+                </p>
+
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
+                  Perfect your Qur'anic recitation through intensive study of tajweed rules, articulation points, and introduction to Qur'anic sciences.
+                </p>
+
+                {/* Key Info - Always Visible */}
+                <div className="bg-purple-50 rounded-lg p-4 mb-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <p className="text-xs text-purple-800 font-medium mb-1">Duration</p>
+                      <p className="text-base sm:text-lg font-bold text-purple-900">6 months</p>
+                      <p className="text-xs text-purple-700">24 weeks total</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-purple-800 font-medium mb-1">Investment</p>
+                      <p className="text-base sm:text-lg font-bold text-purple-900">$120 NZD</p>
+                      <p className="text-xs text-purple-700">One-time payment</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expand Button */}
+                <button
+                  onClick={() => setExpandedProgram(expandedProgram === 'tmp' ? null : 'tmp')}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-purple-600 text-purple-700 font-semibold rounded-lg hover:bg-purple-50 transition-colors mb-4"
+                >
+                  <span>{expandedProgram === 'tmp' ? 'Hide Details' : 'View Full Curriculum'}</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform ${expandedProgram === 'tmp' ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Collapsible Details */}
+                {expandedProgram === 'tmp' && (
+                  <div className="border-t border-gray-200 pt-6 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Develop intermediate proficiency in Tajweed (Qur'anic recitation rules)</li>
+                        <li> Learn introductory knowledge of Qur'anic Sciences <span style={{fontFamily: 'Traditional Arabic, serif'}}>علوم القرآن</span> | 'Ulūm al-Qur'ān</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Course</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        <span style={{fontFamily: 'Traditional Arabic, serif'}}>التجويد</span> | At-Tajwīd (Perfecting Qur'anic Recitation)
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Primary Text</h4>
+                      <p className="text-xs text-gray-600">
+                        <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān by Su'ād 'Abdul-Ḥamīd
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Class Schedule</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Two sessions per week</li>
+                        <li>Long session: 2 hours (primary instruction)</li>
+                        <li>Short session: 30 minutes (assessment & homework review)</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        Must be able to read the Qur'an but lack knowledge or application of tajweed rules
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Enroll Button */}
+                <Link to="/apply">
+                  <Button variant="outline" size="md" className="w-full border-purple-600 text-purple-700 hover:bg-purple-50 mt-4">
+                    Enroll in TMP
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How Admission Works Section */}
+      <section className="bg-gray-50 py-16 sm:py-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
+            How Admission Works
+          </h2>
+
+          {/* Mobile: Vertical Layout */}
+          <div className="md:hidden space-y-6">
+            {/* Step 1 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                1. Apply
+              </h3>
+              <p className="text-sm text-gray-700">
+                Submit your application for one of our programs through our online form.
               </p>
             </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg mb-4">
-                <Video className="h-6 w-6 text-emerald-600" />
-              </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">One-on-One Learning</h3>
-              <p className="text-gray-600">
-                Personalized instruction adapted to your learning pace and style
+
+            {/* Connector */}
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+
+            {/* Step 2 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                2. Application Review
+              </h3>
+              <p className="text-sm text-gray-700">
+                Our team will review your application and notify you of the outcome within 1-2 weeks. Review may require a short phone interview.
               </p>
             </div>
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-emerald-100 rounded-lg mb-4">
-                <Users className="h-6 w-6 text-emerald-600" />
+
+            {/* Connector */}
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+
+            {/* Step 3 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                3. Secure Your Place
+              </h3>
+              <p className="text-sm text-gray-700">
+                Once approved, complete your enrollment by processing payment securely through Stripe.
+              </p>
+            </div>
+
+            {/* Connector */}
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+
+            {/* Step 4 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                4. Get Started
+              </h3>
+              <p className="text-sm text-gray-700">
+                You'll be assigned a dedicated tutor, receive your student ID, and gain access to our learning platform with your login credentials.
+              </p>
+            </div>
+
+            {/* Connector */}
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+
+            {/* Step 5 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                5. Learn & Grow
+              </h3>
+              <p className="text-sm text-gray-700">
+                Attend classes and complete regular assessments as you progress through your program.
+              </p>
+            </div>
+
+            {/* Connector */}
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+
+            {/* Step 6 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                6. Graduate
+              </h3>
+              <p className="text-sm text-gray-700">
+                Successfully complete your final lesson and graduate from the program.
+              </p>
+            </div>
+
+            {/* Connector */}
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+
+            {/* Step 7 */}
+            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <h3 className="text-base font-bold text-emerald-600 mb-2">
+                7. Join Our Community
+              </h3>
+              <p className="text-sm text-gray-700">
+                Receive your certificate of completion and become part of the Al-Falaah Academy alumni network.
+              </p>
+            </div>
+          </div>
+
+          {/* Tablet/Desktop: 3-Row Grid Layout */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
+            {/* Row 1: Steps 1-3 */}
+            {/* Step 1 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                1
               </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">Qualified Instructors</h3>
-              <p className="text-gray-600">
-                Learn from scholars with authentic Islamic knowledge and teaching experience
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Apply
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Submit your application for one of our programs through our online form.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                2
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Application Review
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Our team will review your application and notify you of the outcome within 1-2 weeks. Review may require a short phone interview.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                3
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Secure Your Place
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Once approved, complete your enrollment by processing payment securely through Stripe.
+              </p>
+            </div>
+
+            {/* Row 2: Steps 4-6 */}
+            {/* Step 4 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                4
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Get Started
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                You'll be assigned a dedicated tutor, receive your student ID, and gain access to our learning platform with your login credentials.
+              </p>
+            </div>
+
+            {/* Step 5 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                5
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Learn & Grow
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Attend classes and complete regular assessments as you progress through your program.
+              </p>
+            </div>
+
+            {/* Step 6 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                6
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Graduate
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Successfully complete your final lesson and graduate from the program.
+              </p>
+            </div>
+
+            {/* Row 3: Step 7 (centered) */}
+            {/* Step 7 */}
+            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm md:col-start-2">
+              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+                7
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">
+                Join Our Community
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Receive your certificate of completion and become part of the Al-Falaah Academy alumni network.
               </p>
             </div>
           </div>
