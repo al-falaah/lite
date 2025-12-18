@@ -246,8 +246,24 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Transition Wave */}
+      <div className="relative -mt-1">
+        <svg
+          className="w-full h-12 sm:h-20 lg:h-24"
+          viewBox="0 0 1440 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,50 C240,90 480,90 720,50 C960,10 1200,10 1440,50 L1440,100 L0,100 Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+
       {/* Our Mission Section */}
-      <section className="bg-white py-16 sm:py-24">
+      <section className="bg-white py-16 sm:py-24 -mt-1">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-12">
             Our Mission
