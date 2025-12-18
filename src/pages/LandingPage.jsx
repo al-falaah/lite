@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -9,6 +9,7 @@ const LandingPage = () => {
   const [currentQuote, setCurrentQuote] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
   const [expandedProgram, setExpandedProgram] = useState(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -37,24 +38,12 @@ const LandingPage = () => {
 
   const faqs = [
     {
-      question: "What are the program offerings?",
-      answer: "We offer two programs: (1) Essential Arabic & Islamic Studies - a comprehensive 2-year program covering Quran, Hadith, Fiqh, Aqeedah, Seerah, and Arabic fundamentals with personalized one-on-one instruction. (2) Tajweed Program - a 6-month intensive course focused on perfecting Quranic recitation."
-    },
-    {
       question: "How does the class schedule work?",
       answer: "For the 2-Year Essential program, you'll have 2 sessions per week (one 2-hour main session and one 30-minute review session) scheduled at times convenient for you. The Tajweed program also includes 2 weekly sessions (one 1-hour main session and one 30-minute practice session). All classes are one-on-one online via video call."
     },
     {
       question: "What are the fees and payment options?",
       answer: "The 2-Year Essential Arabic & Islamic Studies program costs $25 NZD per month or $275 NZD per year (saving you $25 with annual payment). The Tajweed Program is a one-time payment of $120 NZD for the full 6-month course."
-    },
-    {
-      question: "Who are the instructors?",
-      answer: "Our instructors are qualified Islamic scholars with deep knowledge of the Quran, Sunnah, and traditional Islamic sciences. They have experience in teaching and are committed to sound Islamic education rooted in the understanding of the Salaf."
-    },
-    {
-      question: "Do I need any prerequisites?",
-      answer: "For the Essential Arabic & Islamic Studies program, no prerequisites are needed - we welcome students at all levels. For the Tajweed program, students should be able to read Arabic letters, as the focus is on perfecting pronunciation and recitation rules."
     },
     {
       question: "How do I access my classes after enrolling?",
@@ -77,6 +66,20 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, [quotes.length]);
 
+  // Back to top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Full Screen with Background */}
@@ -93,40 +96,34 @@ const LandingPage = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="relative z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="relative z-50 backdrop-blur-sm bg-black/10">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 md:h-16">
-              <Link to="/" className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
                 <img
                   src="/favicon-white.svg"
                   alt="Al-Falaah Logo"
-                  className="h-8 w-8 md:h-10 md:w-10"
+                  className="h-7 w-7 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col">
-                  <span className="text-md md:text-xl font-semibold text-white">Al-Falaah Academy</span>
-                  {/* <span className="text-md text-gray-300">Academy</span> */}
+                  <span className="text-sm sm:text-base md:text-xl font-semibold text-white">Al-Falaah Academy</span>
                 </div>
               </Link>
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-1">
-                <Link to="/student">
-                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
-                    Student Portal
+                <a href="#mission">
+                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                    Our Mission
                   </button>
-                </Link>
-                <Link to="/teacher">
-                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
-                    Teacher Portal
-                  </button>
-                </Link>
+                </a>
                 <a href="#programs">
-                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-emerald-400 transition-colors rounded-lg hover:bg-white/5">
+                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
                     Programs
                   </button>
                 </a>
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className="px-4 py-2 text-sm font-medium text-white hover:text-rose-400 transition-colors rounded-lg hover:bg-white/5 flex items-center gap-1.5">
+                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
                     <Heart className="h-4 w-4" />
                     Donate
                   </button>
@@ -141,43 +138,53 @@ const LandingPage = () => {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded text-white hover:bg-white/10"
+                className="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
                 aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
             </div>
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-              <div className="md:hidden py-4 border-t border-white/20">
-                <div className="flex flex-col gap-2">
-                  <Link to="/student" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
-                      Student Portal
+              <div className="md:hidden py-3 border-t border-white/10 bg-black/20 backdrop-blur-md rounded-b-lg">
+                <div className="flex flex-col gap-1">
+                  <a href="#mission" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
+                      Our Mission
                     </button>
-                  </Link>
-                  <Link to="/teacher" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
-                      Teacher Portal
-                    </button>
-                  </Link>
+                  </a>
                   <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-emerald-400 rounded-lg hover:bg-white/5 transition-colors text-left">
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Programs
                     </button>
                   </a>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-3 text-sm font-medium text-white hover:text-rose-400 rounded-lg hover:bg-white/5 transition-colors text-left flex items-center gap-2">
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
                       <Heart className="h-4 w-4" />
                       Donate
                     </button>
                   </a>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-3 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-lg shadow-emerald-600/30">
+                    <button className="w-full px-4 py-2.5 mt-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-lg shadow-emerald-600/30">
                       Apply Now
                     </button>
                   </Link>
+
+                  {/* Portal Links - Secondary */}
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="px-4 text-xs text-white/60 mb-2 uppercase tracking-wider">Portals</p>
+                    <Link to="/student" onClick={() => setMobileMenuOpen(false)}>
+                      <button className="w-full px-4 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all text-left">
+                        Student Portal
+                      </button>
+                    </Link>
+                    <Link to="/teacher" onClick={() => setMobileMenuOpen(false)}>
+                      <button className="w-full px-4 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all text-left">
+                        Teacher Portal
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}
@@ -250,27 +257,27 @@ const LandingPage = () => {
       <div className="relative h-32 sm:h-40 lg:h-48 bg-gradient-to-b from-black via-gray-900/50 to-white"></div>
 
       {/* Our Mission Section */}
-      <section className="bg-white py-16 sm:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-12">
+      <section id="mission" className="bg-white py-20 sm:py-28">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
             Our Mission
           </h2>
 
-          <div className="prose prose-lg max-w-none">
-            <p className="text-lg leading-relaxed text-gray-700 mb-6">
-              Today, only a small percentage of Muslims worldwide can understand the Arabic language of the Qur'an. As a result, many rely on translations—interpretations shaped by the translator's understanding and biases—rather than experiencing the direct, unmediated word of Allah ﷻ.
+          <div className="space-y-6 text-justify">
+            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
+              Today, only a small percentage of Muslims worldwide can understand the Arabic language of the Qur'an. While many can recite the words, true comprehension remains out of reach—and as this gap widens, our connection with the divine guidance of the Qur'an and Sunnah weakens.
             </p>
 
-            <p className="text-lg leading-relaxed text-gray-700 mb-6">
-              For Muslims living in the West—particularly in New Zealand and similar contexts—the challenge is compounded by busy work schedules, family responsibilities, and the lack of accessible, high-quality Islamic education. Many desire to deepen their understanding of the Qur'an, Hadith, and essential Islamic sciences, but struggle to find programs that fit their unique circumstances.
+            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
+              Traditionally, developing expertise in Qur'anic understanding requires years of dedicated study. In countries like New Zealand and across the Western world, busy lifestyles make such long-term commitments challenging. We need a better solution—one that's both accessible and transformative.
             </p>
 
-            <p className="text-lg leading-relaxed text-gray-700 mb-6">
-              Al-Falaah Academy was founded to bridge this gap. We provide flexible, one-on-one online instruction in Essential Arabic & Islamic Studies and Tajweed, rooted in the Qur'an, the authentic Sunnah, and the methodology of the Salaf. Our approach is designed to meet students where they are—whether they are busy professionals, parents, or anyone seeking knowledge—and guide them toward a deeper, more authentic connection with their faith.
+            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
+             Through years of teaching and mentoring Muslim students in Palmerston North and Tauranga, I've witnessed something remarkable: young learners who can read the Qur'an can understand it when equipped with the right knowledge and skills.
             </p>
 
-            <p className="text-lg leading-relaxed text-gray-700 mb-12">
-              We believe that Islamic education should not be a luxury reserved for a select few, but a right accessible to all who sincerely seek it. Our mission is to empower students with the tools to understand the sources of Islam directly, to cultivate beneficial knowledge, and to live their faith with clarity and conviction.
+            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
+              At Al-Falaah Academy, our mission is to bridge this gap. We combine Islamic scholarship with modern technology to deliver carefully curated learning programs that empower Muslims in New Zealand to move beyond basic recitation to genuine understanding. Our goal is clear: to help you engage directly with the Qur'an in Arabic, with minimal reliance on translations.
             </p>
           </div>
 
@@ -285,7 +292,7 @@ const LandingPage = () => {
               <div className="relative">
                 {/* Quote Text */}
                 <blockquote className="text-xl sm:text-2xl font-light text-gray-800 mb-8 sm:mb-10 leading-relaxed pl-6">
-                  This is our purpose, and we ask Allah ﷻ to grant us success in helping Muslims reconnect with their faith through authentic, accessible education.
+                  This is our purpose, and we ask Allah ('azza wa jalla) to grant us success in helping Muslims reconnect with their faith through authentic, accessible education.
                 </blockquote>
 
                 {/* Founder Info */}
@@ -296,9 +303,20 @@ const LandingPage = () => {
                     className="w-24 h-24 rounded-full object-cover bg-gray-200 ring-4 ring-white shadow-md"
                   />
                   <div className="flex-1">
-                    <p className="text-xl font-semibold text-gray-900 mb-1">Dr Abdulquadri Alaka</p>
-                    <p className="text-base text-gray-600 mb-3">Founder & Lead, Al-Falaah Academy</p>
-                    <a
+                    <p className="text-xl">
+                      <a
+                      href="https://www.linkedin.com/in/aalaka"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-emerald-800 transition-colors group"
+                      >
+                      Ustadh Abdulquadri Alaka, PhD
+                      </a> 
+                      </p>
+                    <p className="text-base text-gray-600 mb-3">
+                      Founder, Al-Falaah Academy
+                      </p>
+                    {/* <a
                       href="https://www.linkedin.com/in/aalaka"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -306,11 +324,24 @@ const LandingPage = () => {
                     >
                       <span>View LinkedIn</span>
                       <span className="group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Support CTA */}
+          <div className="mt-12 text-center">
+            <p className="text-gray-600 mb-4 text-sm sm:text-base">
+              Help us make authentic Islamic education accessible to all
+            </p>
+            <a href={donationLink} target="_blank" rel="noopener noreferrer">
+              <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl">
+                <Heart className="h-5 w-5" />
+                Support Our Mission
+              </button>
+            </a>
           </div>
         </div>
       </section>
@@ -936,15 +967,21 @@ const LandingPage = () => {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/apply" className="text-gray-400 hover:text-white">Apply Now</Link></li>
-                <li><Link to="/student" className="text-gray-400 hover:text-white">Student Portal</Link></li>
+                <li><a href="#mission" className="text-gray-400 hover:text-white">Our Mission</a></li>
                 <li><a href="#programs" className="text-gray-400 hover:text-white">Programs</a></li>
-                <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
+                <li><Link to="/apply" className="text-gray-400 hover:text-white">Apply Now</Link></li>
                 <li>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 flex items-center gap-1.5">
                     <Heart className="h-3.5 w-3.5" />
                     Support Our Mission
                   </a>
+                </li>
+                <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
+                <li className="pt-2 border-t border-gray-800">
+                  <Link to="/student" className="text-gray-500 hover:text-gray-300 text-xs">Student Portal</Link>
+                </li>
+                <li>
+                  <Link to="/teacher" className="text-gray-500 hover:text-gray-300 text-xs">Teacher Portal</Link>
                 </li>
               </ul>
             </div>
@@ -969,6 +1006,17 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 group"
+          aria-label="Back to top"
+        >
+          <ArrowUp className="h-5 w-5 group-hover:-translate-y-1 transition-transform" />
+        </button>
+      )}
     </div>
   );
 };
