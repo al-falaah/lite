@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RTL Test - Arabic Text Direction</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .test-section {
+      margin: 30px 0;
+      padding: 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+    }
+
+    .test-section h2 {
+      color: #059669;
+      margin-bottom: 15px;
+    }
+
+    [dir="auto"] {
+      unicode-bidi: plaintext !important;
+      text-align: start !important;
+      background: #f0fdf4;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #10b981;
+    }
+
+    .without-dir {
+      background: #fef2f2;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <h1>RTL (Right-to-Left) Text Direction Test</h1>
+  <p>This page tests if Arabic text displays correctly with right-to-left direction.</p>
+
+  <div class="test-section">
+    <h2>Test 1: Arabic text WITHOUT dir="auto" (should look wrong)</h2>
+    <p class="without-dir"><strong>إِنَّ الَّذِينَ يَتْلُونَ كِتَابَ اللَّهِ وَأَقَامُوا الصَّلَاةَ وَأَنفَقُوا مِمَّا رَزَقْنَاهُمْ سِرًّا وَعَلَانِيَةً يَرْجُونَ تِجَارَةً لَّن تَبُورَ</strong></p>
+    <p class="without-dir">This should be left-aligned (wrong for Arabic)</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Arabic text WITH dir="auto" (should be right-aligned)</h2>
+    <p dir="auto"><strong>إِنَّ الَّذِينَ يَتْلُونَ كِتَابَ اللَّهِ وَأَقَامُوا الصَّلَاةَ وَأَنفَقُوا مِمَّا رَزَقْنَاهُمْ سِرًّا وَعَلَانِيَةً يَرْجُونَ تِجَارَةً لَّن تَبُورَ</strong></p>
+    <p dir="auto">This should be right-aligned (correct for Arabic)! ✓</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: English text WITH dir="auto" (should be left-aligned)</h2>
+    <p dir="auto">Indeed, those who recite the Book of Allah, establish the prayer, and spend from what We have provided them—privately and publicly—are hoping for a trade that will never fail.</p>
+    <p dir="auto">This English text should be left-aligned (correct) ✓</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: Mixed content (like your blog post)</h2>
+    <p dir="auto">Allah Almighty says:</p>
+    <p dir="auto"><strong>إِنَّ الَّذِينَ يَتْلُونَ كِتَابَ اللَّهِ وَأَقَامُوا الصَّلَاةَ وَأَنفَقُوا مِمَّا رَزَقْنَاهُمْ سِرًّا وَعَلَانِيَةً يَرْجُونَ تِجَارَةً لَّن تَبُورَ</strong></p>
+    <p dir="auto"><em>"Indeed, those who recite the Book of Allah, establish the prayer, and spend from what We have provided them—privately and publicly—are hoping for a trade that will never fail." [Surah Fāṭir 35:29]</em></p>
+    <p dir="auto">Allah revealed the Qur'an as guidance, light, and mercy for mankind.</p>
+  </div>
+
+  <div class="test-section">
+    <h2>What to look for:</h2>
+    <ul>
+      <li>Test 1 (red border): Arabic should look wrong - starting from left</li>
+      <li>Test 2 (green border): Arabic should be right-aligned and read right-to-left</li>
+      <li>Test 3 (green border): English should be left-aligned and read left-to-right</li>
+      <li>Test 4 (green border): Mixed content with automatic direction switching</li>
+    </ul>
+    <p>If the green-bordered Arabic text is right-aligned, then <code>dir="auto"</code> is working! ✓</p>
+  </div>
+</body>
+</html>

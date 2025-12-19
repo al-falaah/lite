@@ -122,6 +122,11 @@ const LandingPage = () => {
                     Programs
                   </button>
                 </a>
+                <Link to="/blog">
+                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                    Blog
+                  </button>
+                </Link>
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
                   <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
                     <Heart className="h-4 w-4" />
@@ -159,6 +164,11 @@ const LandingPage = () => {
                       Programs
                     </button>
                   </a>
+                  <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
+                      Blog
+                    </button>
+                  </Link>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
                       <Heart className="h-4 w-4" />
@@ -273,7 +283,7 @@ const LandingPage = () => {
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-             Through years of teaching and mentoring Muslim students in Palmerston North and Tauranga, I've witnessed something remarkable: young learners who can read the Qur'an can understand it when equipped with the right knowledge and skills.
+             Through years of teaching and mentoring Muslim students in Palmerston North and Tauranga, I've witnessed something remarkable: learners who can read the Qur'an can understand it when equipped with the right knowledge and skills.
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
@@ -982,6 +992,9 @@ const LandingPage = () => {
                 </li>
                 <li>
                   <Link to="/teacher" className="text-gray-500 hover:text-gray-300 text-xs">Teacher Portal</Link>
+                </li>
+                                <li>
+                  <Link to="/admin" className="text-gray-500 hover:text-gray-300 text-xs">Admin</Link>
                 </li>
               </ul>
             </div>

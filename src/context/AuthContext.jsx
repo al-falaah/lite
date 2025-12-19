@@ -169,17 +169,42 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (email, password) => {
     try {
       console.log('SignIn attempt for:', email);
-      const { data, error } = await auth.signIn(email, password);
 
-      if (error) {
-        console.error('SignIn error:', error);
-        throw error;
+      // Add retry logic for network failures
+      let lastError;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          console.log(`SignIn attempt ${attempt}/3...`);
+          const { data, error } = await auth.signIn(email, password);
+
+          if (error) {
+            // If it's a retryable network error, try again
+            if (error.name === 'AuthRetryableFetchError' && attempt < 3) {
+              console.warn(`Network error on attempt ${attempt}, retrying...`);
+              lastError = error;
+              await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+              continue;
+            }
+            console.error('SignIn error:', error);
+            throw error;
+          }
+
+          console.log('SignIn successful, user:', data.user?.id);
+          console.log('Waiting for profile to load via auth state change...');
+          return { data, error: null };
+        } catch (err) {
+          if (err.name === 'AuthRetryableFetchError' && attempt < 3) {
+            lastError = err;
+            console.warn(`Network error on attempt ${attempt}, retrying in ${attempt}s...`);
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+            continue;
+          }
+          throw err;
+        }
       }
 
-      console.log('SignIn successful, user:', data.user?.id);
-      console.log('Waiting for profile to load via auth state change...');
-
-      return { data, error: null };
+      // If we get here, all retries failed
+      throw lastError || new Error('Sign in failed after 3 attempts');
     } catch (error) {
       console.error('SignIn exception:', error);
       return { data: null, error };

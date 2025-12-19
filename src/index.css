@@ -15,3 +15,37 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
+
+/* RTL Support for Arabic text */
+[dir="rtl"],
+.prose [dir="rtl"],
+.prose p[dir="rtl"],
+.prose strong[dir="rtl"],
+.prose em[dir="rtl"] {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: embed !important;
+}
+
+[dir="ltr"],
+.prose [dir="ltr"],
+.prose p[dir="ltr"],
+.prose strong[dir="ltr"],
+.prose em[dir="ltr"] {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+[dir="auto"] {
+  unicode-bidi: plaintext !important;
+  text-align: start !important;
+}
+
+/* Force RTL styling for elements with inline direction */
+.prose [style*="direction: rtl"],
+.prose p[style*="direction: rtl"],
+.prose strong[style*="direction: rtl"],
+.prose em[style*="direction: rtl"] {
+  direction: rtl !important;
+  text-align: right !important;
+}
