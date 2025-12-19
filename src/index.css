@@ -49,3 +49,38 @@ body {
   direction: rtl !important;
   text-align: right !important;
 }
+
+/* Medium.com-style blog content */
+.blog-content p {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
+  font-size: 21px !important;
+  line-height: 1.58 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 28px !important;
+  text-align: left !important;
+}
+
+/* Justified text on larger screens for LTR content */
+@media (min-width: 640px) {
+  .blog-content p[dir="ltr"],
+  .blog-content p:not([dir="rtl"]) {
+    text-align: justify !important;
+  }
+}
+
+/* Arabic/RTL content always right-aligned */
+.blog-content p[dir="rtl"] {
+  text-align: right !important;
+}
+
+.blog-content ul,
+.blog-content ol {
+  font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
+  margin: 24px 0 !important;
+}
+
+.blog-content li {
+  font-size: 21px !important;
+  line-height: 1.58 !important;
+  margin: 8px 0 !important;
+}

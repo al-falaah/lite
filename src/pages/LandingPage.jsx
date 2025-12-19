@@ -15,7 +15,7 @@ const LandingPage = () => {
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
 
   // Stripe donation link from environment variable
-  const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/your-link';
+  const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/dRm28t3WQ4Jacmj6gocAo00.com';
 
   const quotes = [
     {
@@ -82,22 +82,9 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Full Screen with Background */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden bg-black">
-        {/* Background Image with Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
-          style={{
-            backgroundImage: `url("${bgImageUrl}")`,
-          }}
-        >
-          {/* Diagonal gradient: light top-left to dark bottom-right */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/95 to-black/100"></div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="relative z-50 backdrop-blur-sm bg-black/10">
-          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      {/* Navigation - Fixed for sticky positioning */}
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-black/30 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 md:h-16">
               <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
                 <img
@@ -199,7 +186,20 @@ const LandingPage = () => {
               </div>
             )}
           </div>
-        </nav>
+      </nav>
+
+      {/* Hero Section - Full Screen with Background */}
+      <section className="relative min-h-screen flex flex-col overflow-hidden bg-black pt-14 md:pt-16">
+        {/* Background Image with Overlay */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
+          style={{
+            backgroundImage: `url("${bgImageUrl}")`,
+          }}
+        >
+          {/* Diagonal gradient: light top-left to dark bottom-right */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/95 to-black/100"></div>
+        </div>
 
         {/* Centered Hero Content with Slider and CTA */}
         <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -320,7 +320,7 @@ const LandingPage = () => {
                       rel="noopener noreferrer"
                       className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-emerald-800 transition-colors group"
                       >
-                      Ustadh Abdulquadri Alaka, PhD
+                      Dr Abdulquadri Alaka
                       </a> 
                       </p>
                     <p className="text-base text-gray-600 mb-3">
@@ -574,7 +574,7 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
                       <p className="text-xs sm:text-sm text-gray-600">
-                        Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently
+                        Must be at least 14 years old and able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently
                       </p>
                     </div>
                   </div>
@@ -669,7 +669,7 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
                       <p className="text-xs sm:text-sm text-gray-600">
-                        Must be able to read the Qur'an but lack knowledge or application of tajweed rules
+                        Must be at least 14 years old and able to read the Qur'an but lack knowledge or application of tajweed rules
                       </p>
                     </div>
                   </div>

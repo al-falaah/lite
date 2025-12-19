@@ -198,8 +198,8 @@ const ApplicationPage = () => {
           toast.error('Please enter a valid date of birth');
           return false;
         }
-        if (age < 13) {
-          toast.error('Applicant must be at least 13 years old');
+        if (age < 14) {
+          toast.error('Applicant must be at least 14 years old');
           return false;
         }
         if (age > 100) {

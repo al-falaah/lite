@@ -120,10 +120,10 @@ const Blog = () => {
       <div className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
-            Insights & Articles
+            Maqāmāt al-Falāḥī
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-            Exploring Arabic, Islamic studies, and authentic knowledge
+            Exploring Arabic and Islam for Spiritual Uplift and Intellectual Growth 
           </p>
         </div>
       </div>

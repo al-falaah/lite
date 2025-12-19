@@ -189,14 +189,15 @@ const BlogPost = () => {
       </nav>
 
       {/* Article */}
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+      <article className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-12 py-12 sm:py-20">
         {/* Meta Info */}
-        <div className="flex items-center gap-3 text-sm text-gray-500 mb-8">
+        <div className="flex flex-col gap-1 text-sm text-gray-500 mb-8">
           <time>{formatDate(post.published_at)}</time>
-          <span>·</span>
-          <span>{post.author_name}</span>
-          <span>·</span>
-          <span>{calculateReadingTime(post.content)} min read</span>
+          <div className="flex items-center gap-2">
+            <span>{post.author_name}</span>
+            <span>·</span>
+            <span>{calculateReadingTime(post.content)} min read</span>
+          </div>
         </div>
 
         {/* Title */}
@@ -221,17 +222,17 @@ const BlogPost = () => {
 
         {/* Content */}
         <div
-          className="prose prose-lg prose-gray max-w-none
-            prose-headings:font-bold prose-headings:tracking-tight
-            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
-            prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4
-            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
+          className="blog-content prose prose-xl prose-gray max-w-none
+            prose-headings:font-sans prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
+            prose-h2:text-[32px] prose-h2:leading-[1.25] prose-h2:mt-12 prose-h2:mb-4
+            prose-h3:text-[24px] prose-h3:leading-[1.35] prose-h3:mt-10 prose-h3:mb-3
             prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-gray-900 prose-strong:font-semibold
-            prose-ul:my-6 prose-li:my-2
-            prose-img:rounded-lg prose-img:my-8
-            [&_*[dir=auto]]:text-start"
+            prose-strong:font-semibold prose-strong:text-gray-900
+            prose-em:italic prose-em:font-serif
+            prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-700
+            prose-img:rounded-lg prose-img:my-8"
           dir="auto"
+          style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif' }}
           dangerouslySetInnerHTML={{ __html: processContentForRTL(post.content) }}
         />
 
