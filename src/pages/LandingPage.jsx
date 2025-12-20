@@ -959,7 +959,7 @@ const LandingPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <img
-                  src="/favicon-white.svg"
+                  src="/favicon_white.svg"
                   alt="Al-Falaah Logo"
                   className="h-8 w-8"
                 />
