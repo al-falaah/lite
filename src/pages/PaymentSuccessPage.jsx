@@ -35,7 +35,7 @@ const PaymentSuccessPage = () => {
                   className="h-8 w-8 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col">
-                  <span className="text-md md:text-xl font-semibold text-emerald-600">Al-Falaah Academy</span>
+                  <span className="text-md md:text-xl font-semibold text-emerald-600">The FastTrack Madrasah</span>
                 </div>
               </Link>
             </div>
@@ -67,7 +67,7 @@ const PaymentSuccessPage = () => {
                 className="h-8 w-8 md:h-10 md:w-10"
               />
               <div className="flex flex-col">
-                <span className="text-md md:text-xl font-semibold text-emerald-600">Al-Falaah Academy</span>
+                <span className="text-md md:text-xl font-semibold text-emerald-600">The FastTrack Madrasah</span>
               </div>
             </Link>
             <Link to="/">
@@ -89,7 +89,7 @@ const PaymentSuccessPage = () => {
                 <CheckCircle className="w-12 h-12 text-emerald-600" />
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Payment Successful!</h1>
-              <p className="text-emerald-50 text-lg">Welcome to Al-Falaah Academy</p>
+              <p className="text-emerald-50 text-lg">Welcome to The FastTrack Madrasah</p>
             </div>
 
           {/* Content */}
@@ -137,10 +137,10 @@ const PaymentSuccessPage = () => {
                 If you have any questions or don't receive your welcome email within 10 minutes,
                 please contact us at{' '}
                 <a
-                  href="mailto:admin@alfalaah-academy.nz"
+                  href="mailto:admin@tftmadrasah.nz"
                   className="text-blue-600 hover:text-blue-800 font-semibold underline"
                 >
-                  admin@alfalaah-academy.nz
+                  admin@tftmadrasah.nz
                 </a>
               </p>
               {sessionId && (
@@ -160,7 +160,7 @@ const PaymentSuccessPage = () => {
                 <ArrowRight className="h-5 w-5" />
               </Link>
               <a
-                href="mailto:admin@alfalaah-academy.nz"
+                href="mailto:admin@tftmadrasah.nz"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-emerald-600 font-semibold rounded-lg border-2 border-emerald-600 hover:bg-emerald-50 transition-all duration-200"
               >
                 <Mail className="h-5 w-5" />
@@ -172,7 +172,7 @@ const PaymentSuccessPage = () => {
           {/* Footer */}
           <div className="bg-gray-50 px-8 py-6 text-center border-t border-gray-200">
             <p className="text-sm text-gray-600">
-              Thank you for choosing Al-Falaah Academy. We look forward to supporting your Islamic education journey.
+              Thank you for choosing The FastTrack Madrasah. We look forward to supporting your Islamic education journey.
             </p>
             <p className="text-xs text-gray-500 mt-2">
               Authentic Islamic Education Rooted in the Qur'an and Sunnah
@@ -187,7 +187,7 @@ const PaymentSuccessPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+              © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
             </p>
           </div>
         </div>

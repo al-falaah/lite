@@ -19,7 +19,7 @@ const NotFoundPage = () => {
                 className="h-8 w-8 md:h-10 md:w-10"
               />
               <div className="flex flex-col">
-                <span className="text-md md:text-xl font-semibold text-emerald-600">Al-Falaah Academy</span>
+                <span className="text-md md:text-xl font-semibold text-emerald-600">The FastTrack Madrasah</span>
               </div>
             </Link>
             <Link to="/">
@@ -137,7 +137,7 @@ const NotFoundPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+              © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
             </p>
             <p className="text-xs text-gray-500 mt-2">
               Authentic Islamic Education Rooted in the Qur'an and Sunnah

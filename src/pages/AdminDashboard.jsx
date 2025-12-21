@@ -316,7 +316,7 @@ const AdminDashboard = () => {
               <BookOpen className="h-8 w-8 text-emerald-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
-            <p className="text-gray-600">Al-Falaah Academy</p>
+            <p className="text-gray-600">The FastTrack Madrasah</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -330,7 +330,7 @@ const AdminDashboard = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                placeholder="admin@alfalaah-academy.nz"
+                placeholder="admin@tftmadrasah.nz"
                 required
                 autoComplete="email"
               />

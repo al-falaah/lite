@@ -50,7 +50,7 @@ serve(async (req) => {
     }
 
     const isFirstPayment = payment.students.status === 'pending_payment'
-    const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
+    const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
     const MINIMUM_ENROLLMENT_AMOUNT = 75
 
     // If this is the first payment, check if minimum amount met
@@ -80,7 +80,7 @@ serve(async (req) => {
             Authorization: `Bearer ${RESEND_API_KEY}`,
           },
           body: JSON.stringify({
-            from: 'Al-Falaah Academy <noreply@alfalaah-academy.nz>',
+            from: 'The FastTrack Madrasah <noreply@tftmadrasah.nz>',
             to: [payment.students.email],
             subject: 'Payment Verified - Additional Payment Needed',
             html: `
@@ -106,9 +106,9 @@ serve(async (req) => {
                   </a>
                 </p>
 
-                <p>If you have any questions, please contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+                <p>If you have any questions, please contact us at <a href="mailto:admin@tftmadrasah.nz">admin@tftmadrasah.nz</a>.</p>
 
-                <p style="margin-top: 30px;">Best regards,<br>Al-Falaah Academy</p>
+                <p style="margin-top: 30px;">Best regards,<br>The FastTrack Madrasah</p>
 
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
                 <p style="font-size: 12px; color: #6b7280;">
@@ -198,9 +198,9 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Al-Falaah Academy <noreply@alfalaah-academy.nz>',
+        from: 'The FastTrack Madrasah <noreply@tftmadrasah.nz>',
         to: [payment.students.email],
-        subject: 'Payment Verified - Al-Falaah Academy',
+        subject: 'Payment Verified - The FastTrack Madrasah',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #059669;">Payment Verified ✓</h2>
@@ -219,7 +219,7 @@ serve(async (req) => {
 
             <p>Thank you for your prompt payment. If you have any questions, please don't hesitate to contact us.</p>
 
-            <p style="margin-top: 30px;">Best regards,<br>Al-Falaah Academy</p>
+            <p style="margin-top: 30px;">Best regards,<br>The FastTrack Madrasah</p>
 
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
             <p style="font-size: 12px; color: #6b7280;">

@@ -25,7 +25,7 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     })
 
-    const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
+    const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
 
     // Create Stripe billing portal session
     const session = await stripe.billingPortal.sessions.create({

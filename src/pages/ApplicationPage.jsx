@@ -364,7 +364,7 @@ const ApplicationPage = () => {
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Application Submitted!</h2>
               <p className="text-gray-600 mb-4">
-                Thank you for applying to the <strong>{programName}</strong> at Al-Falaah Academy.
+                Thank you for applying to the <strong>{programName}</strong> at The FastTrack Madrasah.
               </p>
               <p className="text-gray-600 mb-6">
                 We've received your application and will review it shortly.
@@ -407,14 +407,14 @@ const ApplicationPage = () => {
                 className="h-8 w-8"
               />
               <div className="flex flex-col">
-                <span className="text-lg font-semibold text-gray-900">Al-Falaah Academy</span>
+                <span className="text-lg font-semibold text-gray-900">The FastTrack Madrasah</span>
                 {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
               </div>
             </Link>
           </div>
           <div className="text-center px-4">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Student Application</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">Al-Falaah Academy Programs</p>
+            <p className="text-sm sm:text-base text-gray-600 mt-2">The FastTrack Madrasah Programs</p>
             {formData.program && (
               <div className="mt-4 inline-flex items-center px-3 sm:px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg max-w-full">
                 <div className="text-xs sm:text-sm text-emerald-900 text-center">

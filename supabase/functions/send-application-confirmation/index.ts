@@ -157,7 +157,7 @@ function generateEmailHTML(applicantData: any): string {
                 </tr>
               </table>
             </div>
-            <div class="brand-name">Al-Falaah Academy</div>
+            <div class="brand-name">The FastTrack Madrasah</div>
             <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
             <h1 class="header-title">Application Received</h1>
             <p class="header-subtitle">We have received your application</p>
@@ -166,7 +166,7 @@ function generateEmailHTML(applicantData: any): string {
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
 
-            <p class="paragraph">Jazākumullāhu Khayran for your interest in Al-Falaah Academy. We have received your application and are excited about the possibility of welcoming you to our learning community.</p>
+            <p class="paragraph">Jazākumullāhu Khayran for your interest in The FastTrack Madrasah. We have received your application and are excited about the possibility of welcoming you to our learning community.</p>
 
             <div class="info-box">
               <div class="info-box-title">Application Summary</div>
@@ -197,24 +197,24 @@ function generateEmailHTML(applicantData: any): string {
               <li>After payment, you'll be enrolled and can begin your learning journey</li>
             </ol>
 
-            <p class="paragraph">If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz" style="color: #059669; text-decoration: none;">admin@alfalaah-academy.nz</a>.</p>
+            <p class="paragraph">If you have any questions, please don't hesitate to contact us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none;">admin@tftmadrasah.nz</a>.</p>
 
             <p class="paragraph">May Allah bless your journey of seeking knowledge.</p>
 
             <p class="paragraph" style="margin-top: 32px;">
               JazakAllah Khair,<br>
-              <strong>Al-Falaah Academy Team</strong>
+              <strong>The FastTrack Madrasah Team</strong>
             </p>
           </div>
 
           <div class="footer">
-            <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+            <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
             <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
             <p class="footer-text" style="margin-top: 16px;">
-              <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+              <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
             </p>
             <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-              © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+              © ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
             </p>
             <p class="footer-text">New Zealand</p>
           </div>
@@ -251,7 +251,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: applicantData.email,
-      subject: 'Application Received - Al-Falaah Academy',
+      subject: 'Application Received - The FastTrack Madrasah',
       html: emailHTML,
     });
 

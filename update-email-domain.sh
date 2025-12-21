@@ -7,9 +7,9 @@ echo "🔄 Email Domain Update Script"
 echo "=============================="
 echo ""
 
-# Default to alfalaah-academy.nz if no parameter provided
+# Default to tftmadrasah.nz if no parameter provided
 if [ -z "$1" ]; then
-  DOMAIN="alfalaah-academy.nz"
+  DOMAIN="tftmadrasah.nz"
   echo "Using default domain: $DOMAIN"
 else
   DOMAIN=$1

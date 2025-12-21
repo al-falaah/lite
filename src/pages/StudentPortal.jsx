@@ -390,7 +390,7 @@ const StudentPortal = () => {
                   className="h-8 w-8"
                 />
                 <div className="flex flex-col">
-                  <span className="text-xl font-semibold text-gray-900">Al-Falaah Academy</span>
+                  <span className="text-xl font-semibold text-gray-900">The FastTrack Madrasah</span>
                   <span className="text-xs text-gray-500 font-arabic"> أكاديمية الفلاح</span>
                 </div>
               </Link>
@@ -467,8 +467,8 @@ const StudentPortal = () => {
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <p className="text-sm text-gray-600 text-center">
                   Need help? Contact{' '}
-                  <a href="mailto:admin@alfalaah-academy.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">
-                    admin@alfalaah-academy.nz
+                  <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">
+                    admin@tftmadrasah.nz
                   </a>
                 </p>
               </div>
@@ -492,7 +492,7 @@ const StudentPortal = () => {
                 className="h-6 w-6 sm:h-8 sm:w-8"
               />
               <div className="flex flex-col">
-                <span className="text-sm sm:text-xl font-semibold text-gray-900">Al-Falaah Academy</span>
+                <span className="text-sm sm:text-xl font-semibold text-gray-900">The FastTrack Madrasah</span>
               </div>
             </Link>
             <div className="flex items-center gap-2 sm:gap-3">

@@ -446,9 +446,9 @@ export default function TeacherPortal() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16 sm:h-20">
               <a href="/" className="flex items-center gap-2 sm:gap-3 group">
-                <img src="/favicon.svg" alt="Al-Falaah Academy" className="h-10 w-10 sm:h-12 sm:w-12 group-hover:scale-110 transition-transform" />
+                <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 sm:h-12 sm:w-12 group-hover:scale-110 transition-transform" />
                 <div>
-                  <div className="text-lg sm:text-xl font-bold text-emerald-600">Al-Falaah Academy</div>
+                  <div className="text-lg sm:text-xl font-bold text-emerald-600">The FastTrack Madrasah</div>
                   <div className="text-xs text-gray-600 font-arabic hidden sm:block"> أكاديمية الفلاح</div>
                 </div>
               </a>
@@ -559,10 +559,10 @@ export default function TeacherPortal() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
             <div className="flex items-center gap-1.5 sm:gap-3">
-              <img src="/favicon.svg" alt="Al-Falaah Academy" className="h-6 w-6 sm:h-8 sm:w-8" />
+              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-8 sm:w-8" />
               <div>
                 <div className="text-sm sm:text-xl font-bold text-emerald-600">Teacher Portal</div>
-                <div className="text-[10px] sm:text-xs text-gray-600 hidden sm:block">Al-Falaah Academy</div>
+                <div className="text-[10px] sm:text-xs text-gray-600 hidden sm:block">The FastTrack Madrasah</div>
               </div>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-4">

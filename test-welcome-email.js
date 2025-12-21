@@ -25,7 +25,7 @@ async function testWelcomeEmail() {
       program: 'tajweed', // or 'essentials'
       password: 'test1234' // Test password to verify it appears in email
     },
-    baseUrl: 'https://alfalaah-academy.nz' // Production URL
+    baseUrl: 'https://tftmadrasah.nz' // Production URL
   };
 
   console.log('📤 Sending test email to:', testEmail);

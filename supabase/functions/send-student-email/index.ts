@@ -159,7 +159,7 @@ serve(async (req) => {
             </tr>
           </table>
         </div>
-        <div class="brand-name">Al-Falaah Academy</div>
+        <div class="brand-name">The FastTrack Madrasah</div>
         <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
         <h1 class="header-title">${subject}</h1>
       </div>
@@ -171,18 +171,18 @@ serve(async (req) => {
 
         <p class="paragraph" style="margin-top: 32px;">
           JazakAllah Khair,<br>
-          <strong>Al-Falaah Academy Team</strong>
+          <strong>The FastTrack Madrasah Team</strong>
         </p>
       </div>
 
       <div class="footer">
-        <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+        <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
         <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
         <p class="footer-text" style="margin-top: 16px;">
-          <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+          <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
         </p>
         <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-          © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+          © ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
         </p>
         <p class="footer-text">New Zealand</p>
       </div>

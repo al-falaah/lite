@@ -39,7 +39,7 @@ function generateEmailHTML(applicantData: any, signupUrl: string): string {
         <div class="content">
           <h2>Assalaamu 'alaykum ${full_name},</h2>
 
-          <p>We are delighted to inform you that your application to Al-Falaah Academy has been <strong>approved</strong>!</p>
+          <p>We are delighted to inform you that your application to The FastTrack Madrasah has been <strong>approved</strong>!</p>
 
           <div class="info-box">
             <p><strong>Program:</strong> ${programName}</p>
@@ -65,7 +65,7 @@ function generateEmailHTML(applicantData: any, signupUrl: string): string {
           <p>If the button doesn't work, copy and paste this link into your browser:</p>
           <p style="word-break: break-all; color: #059669;">${signupUrl}</p>
 
-          <p>If you have any questions or need assistance, please contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+          <p>If you have any questions or need assistance, please contact us at <a href="mailto:admin@tftmadrasah.nz">admin@tftmadrasah.nz</a>.</p>
 
           <p>We look forward to having you join our learning community!</p>
 
@@ -74,7 +74,7 @@ function generateEmailHTML(applicantData: any, signupUrl: string): string {
         </div>
 
         <div class="footer">
-          <p>© ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.</p>
           <p>New Zealand</p>
         </div>
       </div>
@@ -112,7 +112,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: applicantData.email,
-      subject: 'Your Application Has Been Approved - Al-Falaah Academy',
+      subject: 'Your Application Has Been Approved - The FastTrack Madrasah',
       html: emailHTML,
     });
 

@@ -1,11 +1,11 @@
 # Email Forwarding Setup Guide
 
 ## Overview
-This guide will help you set up email forwarding from `admin@alfalaah-academy.nz` to your Gmail account `alfalaah.academy.nz@gmail.com` using ImprovMX (free service).
+This guide will help you set up email forwarding from `admin@tftmadrasah.nz` to your Gmail account `alfalaah.academy.nz@gmail.com` using ImprovMX (free service).
 
 ## What You'll Accomplish
-1. ✅ Receive emails sent to admin@alfalaah-academy.nz in your Gmail
-2. ✅ Send emails FROM admin@alfalaah-academy.nz through Gmail
+1. ✅ Receive emails sent to admin@tftmadrasah.nz in your Gmail
+2. ✅ Send emails FROM admin@tftmadrasah.nz through Gmail
 3. ✅ All automated emails will have proper reply-to address
 
 ---
@@ -22,11 +22,11 @@ This guide will help you set up email forwarding from `admin@alfalaah-academy.nz
 ### Step 2: Add Your Domain to ImprovMX
 1. Log in to your ImprovMX dashboard
 2. Click **"Add Domain"**
-3. Enter: **alfalaah-academy.nz**
+3. Enter: **tftmadrasah.nz**
 4. Click **"Add Domain"**
 
 ### Step 3: Create Email Alias
-1. Click on **alfalaah-academy.nz** in your domain list
+1. Click on **tftmadrasah.nz** in your domain list
 2. Click **"Add Alias"** or **"Create Alias"**
 3. Fill in:
    - **Alias**: `admin` (or use `*` for catch-all - forwards ALL emails to your Gmail)
@@ -43,7 +43,7 @@ ImprovMX will provide you with MX records that you need to add to your domain's 
 
 ### Where to Add DNS Records
 
-Your domain **alfalaah-academy.nz** is registered with a domain registrar. Common registrars include:
+Your domain **tftmadrasah.nz** is registered with a domain registrar. Common registrars include:
 - Namecheap
 - GoDaddy
 - Google Domains / Squarespace Domains
@@ -63,7 +63,7 @@ ImprovMX will show you the exact records. They should look like this:
 | MX   | @         | 20       | mx2.improvmx.com     |
 
 **Important Notes**:
-- `@` means your root domain (alfalaah-academy.nz)
+- `@` means your root domain (tftmadrasah.nz)
 - Some registrars use "Host" instead of "Name" - enter `@` or leave blank
 - **Delete any existing MX records** for your domain first!
 - DNS changes can take up to 24 hours to propagate (usually within 1-2 hours)
@@ -98,7 +98,7 @@ ImprovMX will show you the exact records. They should look like this:
 
 ### Step 5: Test Email Forwarding
 
-1. Send a test email to `admin@alfalaah-academy.nz` from any email account
+1. Send a test email to `admin@tftmadrasah.nz` from any email account
 2. Check your Gmail inbox (`alfalaah.academy.nz@gmail.com`)
 3. You should receive the forwarded email within seconds
 
@@ -106,7 +106,7 @@ ImprovMX will show you the exact records. They should look like this:
 
 ## Part 3: Gmail Send-As Configuration (Optional but Recommended)
 
-This allows you to send emails FROM `admin@alfalaah-academy.nz` through Gmail, so recipients see your professional email address.
+This allows you to send emails FROM `admin@tftmadrasah.nz` through Gmail, so recipients see your professional email address.
 
 ### Option A: Simple Method (Send through Gmail)
 
@@ -115,13 +115,13 @@ This allows you to send emails FROM `admin@alfalaah-academy.nz` through Gmail, s
 3. Go to **"Accounts and Import"** tab
 4. Under **"Send mail as"**, click **"Add another email address"**
 5. A popup window will appear:
-   - **Name**: `Al-Falaah Academy`
-   - **Email address**: `admin@alfalaah-academy.nz`
+   - **Name**: `The FastTrack Madrasah`
+   - **Email address**: `admin@tftmadrasah.nz`
    - ☐ **Uncheck** "Treat as an alias"
 6. Click **"Next Step"**
 7. Choose **"Send through Gmail"** (easier, recommended)
 8. Click **"Add Account"**
-9. Gmail will send a verification code to `admin@alfalaah-academy.nz`
+9. Gmail will send a verification code to `admin@tftmadrasah.nz`
 10. Check your Gmail inbox (it will be forwarded from ImprovMX)
 11. Enter the verification code
 12. Done! ✅
@@ -146,10 +146,10 @@ This method uses your existing Resend account for sending, which is more profess
 ### Set Default "From" Address
 
 1. In Gmail Settings → Accounts and Import
-2. Under **"Send mail as"**, find `admin@alfalaah-academy.nz`
+2. Under **"Send mail as"**, find `admin@tftmadrasah.nz`
 3. Click **"make default"**
 
-Now when you compose emails in Gmail, they'll appear from `admin@alfalaah-academy.nz` by default!
+Now when you compose emails in Gmail, they'll appear from `admin@tftmadrasah.nz` by default!
 
 ---
 
@@ -160,35 +160,35 @@ Add a professional signature to emails sent from the academy:
 1. Gmail Settings → General tab
 2. Scroll to **"Signature"**
 3. Click **"+ Create new"**
-4. Name it: "Al-Falaah Academy"
+4. Name it: "The FastTrack Madrasah"
 5. Add your signature:
 
 ```
 --
-Al-Falaah Academy
+The FastTrack Madrasah
 Islamic Institute in New Zealand
 
-📧 admin@alfalaah-academy.nz
-🌐 https://alfalaah-academy.nz
+📧 admin@tftmadrasah.nz
+🌐 https://tftmadrasah.nz
 ```
 
-6. Set it as default for `admin@alfalaah-academy.nz`
+6. Set it as default for `admin@tftmadrasah.nz`
 
 ---
 
 ## Summary of What's Set Up
 
 ✅ **Sending emails**: Already configured with Resend
-✅ **Reply-to address**: All automated emails now include reply-to: admin@alfalaah-academy.nz
+✅ **Reply-to address**: All automated emails now include reply-to: admin@tftmadrasah.nz
 ✅ **Receiving emails**: Set up ImprovMX forwarding to Gmail (once DNS is configured)
-✅ **Sending from Gmail**: Use Gmail send-as to reply from admin@alfalaah-academy.nz
+✅ **Sending from Gmail**: Use Gmail send-as to reply from admin@tftmadrasah.nz
 
 ---
 
 ## Troubleshooting
 
 ### Emails not forwarding after 24 hours?
-- Check DNS records are correct using [mxtoolbox.com](https://mxtoolbox.com/SuperTool.aspx?action=mx%3aalfalaah-academy.nz)
+- Check DNS records are correct using [mxtoolbox.com](https://mxtoolbox.com/SuperTool.aspx?action=mx%3atftmadrasah.nz)
 - Ensure no old MX records exist
 - Contact your domain registrar support
 
@@ -208,9 +208,9 @@ Islamic Institute in New Zealand
 
 1. ✅ Complete ImprovMX setup (Parts 1-2)
 2. ✅ Configure Gmail send-as (Part 3)
-3. ✅ Test by sending email to admin@alfalaah-academy.nz
-4. ✅ Test by sending email FROM admin@alfalaah-academy.nz in Gmail
-5. ✅ Update any email addresses on your website to use admin@alfalaah-academy.nz
+3. ✅ Test by sending email to admin@tftmadrasah.nz
+4. ✅ Test by sending email FROM admin@tftmadrasah.nz in Gmail
+5. ✅ Update any email addresses on your website to use admin@tftmadrasah.nz
 
 ---
 

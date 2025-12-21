@@ -88,17 +88,17 @@ ORDER BY student_id;
 When creating new students, the welcome email should include:
 
 ```
-Subject: Welcome to Al-Falaah Academy
+Subject: Welcome to The FastTrack Madrasah
 
 Dear [Student Name],
 
-Welcome to Al-Falaah Academy! Your enrollment has been confirmed.
+Welcome to The FastTrack Madrasah! Your enrollment has been confirmed.
 
 Your Login Credentials:
 - Student ID: [123456]
 - Password: [auto_generated_password]
 
-Access your student portal: https://www.alfalaah-academy.nz/student
+Access your student portal: https://www.tftmadrasah.nz/student
 
 IMPORTANT: You will be required to change your password on first login for security.
 
@@ -120,12 +120,12 @@ We've enhanced the security of our student portal. Please login with the credent
 Student ID: [123456]
 Temporary Password: [generated_password]
 
-Portal: https://www.alfalaah-academy.nz/student
+Portal: https://www.tftmadrasah.nz/student
 
 You'll be prompted to create a new password on first login.
 
 Best regards,
-Al-Falaah Academy
+The FastTrack Madrasah
 ```
 
 ## Security Notes

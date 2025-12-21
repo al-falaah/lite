@@ -67,7 +67,7 @@ serve(async (req) => {
         .eq('id', student.id)
     }
 
-    const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
+    const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
     const currentProgram = program || 'essentials'
 
     // Create checkout session based on plan type and program
@@ -91,7 +91,7 @@ serve(async (req) => {
         price_data: {
           currency: 'nzd',
           product_data: {
-            name: 'Al-Falaah Academy - Tajweed Program',
+            name: 'The FastTrack Madrasah - Tajweed Program',
             description: '6-Month Tajweed Mastery Course',
           },
           unit_amount: 12000, // $120 in cents
@@ -106,7 +106,7 @@ serve(async (req) => {
           price_data: {
             currency: 'nzd',
             product_data: {
-              name: 'Al-Falaah Academy - Monthly Subscription',
+              name: 'The FastTrack Madrasah - Monthly Subscription',
               description: '2-Year Essential Islamic Studies Course',
             },
             unit_amount: 2500, // $25 in cents
@@ -122,7 +122,7 @@ serve(async (req) => {
           price_data: {
             currency: 'nzd',
             product_data: {
-              name: 'Al-Falaah Academy - Annual Payment',
+              name: 'The FastTrack Madrasah - Annual Payment',
               description: '2-Year Essential Islamic Studies Course (Year 1)',
             },
             unit_amount: 27500, // $275 in cents

@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const ADMIN_EMAIL = 'admin@alfalaah-academy.nz'
+const ADMIN_EMAIL = 'admin@tftmadrasah.nz'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -177,7 +177,7 @@ serve(async (req) => {
             ` : ''}
 
             <center>
-              <a href="${Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'}/admin" class="button">
+              <a href="${Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'}/admin" class="button">
                 Go to Admin Dashboard →
               </a>
             </center>
@@ -188,7 +188,7 @@ serve(async (req) => {
           </div>
 
           <div class="footer">
-            <p>© ${new Date().getFullYear()} Al-Falaah Academy • New Zealand</p>
+            <p>© ${new Date().getFullYear()} The FastTrack Madrasah • New Zealand</p>
             <p>This is an automated digest from your admin system</p>
           </div>
         </div>
@@ -204,7 +204,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Al-Falaah Admin <noreply@alfalaah-academy.nz>',
+        from: 'Al-Falaah Admin <noreply@tftmadrasah.nz>',
         to: [ADMIN_EMAIL],
         subject: `${digestType} Digest: ${applicationCount} New Application${applicationCount !== 1 ? 's' : ''}, ${paymentCount} Payment${paymentCount !== 1 ? 's' : ''} to Review`,
         html: emailHTML,

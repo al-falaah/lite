@@ -164,7 +164,7 @@ const BlogPost = () => {
                 className="h-8 w-8"
               />
               <div className="flex flex-col">
-                <span className="text-lg font-semibold text-gray-900">Al-Falaah Academy</span>
+                <span className="text-lg font-semibold text-gray-900">The FastTrack Madrasah</span>
                 <span className="text-xs text-gray-500">Blog</span>
               </div>
             </Link>

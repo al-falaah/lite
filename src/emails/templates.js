@@ -1,4 +1,4 @@
-// Modern Email templates for Al-Falaah Academy with logo and branding
+// Modern Email templates for The FastTrack Madrasah with logo and branding
 
 const EMAIL_STYLES = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -209,7 +209,7 @@ const getEmailHeader = (title, subtitle = '') => `
   <div class="logo-container">
     ${getLogoSvg()}
   </div>
-  <div class="brand-name">Al-Falaah Academy</div>
+  <div class="brand-name">The FastTrack Madrasah</div>
   <div class="brand-tagline">Authentic Islamic Education</div>
   ${title ? `<h1 class="header-title">${title}</h1>` : ''}
   ${subtitle ? `<p class="header-subtitle">${subtitle}</p>` : ''}
@@ -218,13 +218,13 @@ const getEmailHeader = (title, subtitle = '') => `
 
 const getEmailFooter = () => `
 <div class="footer">
-  <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+  <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
   <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
   <p class="footer-text" style="margin-top: 16px;">
-    <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+    <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
   </p>
   <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-    © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+    © ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
   </p>
   <p class="footer-text">New Zealand</p>
 </div>
@@ -262,7 +262,7 @@ export const genericEmail = (recipientName, subject, message) => {
 
             <p class="paragraph" style="margin-top: 32px;">
               JazakAllah Khair,<br>
-              <strong>Al-Falaah Academy Team</strong>
+              <strong>The FastTrack Madrasah Team</strong>
             </p>
           </div>
 
@@ -295,7 +295,7 @@ export const applicationConfirmationEmail = (applicantData) => {
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
 
-            <p class="paragraph">Jazākumullāhu Khayran for your interest in Al-Falaah Academy. We have received your application and are excited about the possibility of welcoming you to our learning community.</p>
+            <p class="paragraph">Jazākumullāhu Khayran for your interest in The FastTrack Madrasah. We have received your application and are excited about the possibility of welcoming you to our learning community.</p>
 
             <div class="info-box">
               <div class="info-box-title">Application Summary</div>
@@ -329,7 +329,7 @@ export const applicationConfirmationEmail = (applicantData) => {
 
             <div class="divider"></div>
 
-            <p class="paragraph">If you have any questions or need assistance, please don't hesitate to contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+            <p class="paragraph">If you have any questions or need assistance, please don't hesitate to contact us at <a href="mailto:admin@tftmadrasah.nz">admin@tftmadrasah.nz</a>.</p>
 
             <p class="paragraph">May Allah bless your journey of seeking knowledge and make it a means of closeness to Him.</p>
 
@@ -347,7 +347,7 @@ export const applicationConfirmationEmail = (applicantData) => {
   `;
 };
 
-export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://alfalaah-academy.nz') => {
+export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://tftmadrasah.nz') => {
   const { full_name, program } = applicantData;
   const programName = getProgramName(program);
   const signupUrl = `${baseUrl}/signup?token=${inviteToken}`;
@@ -368,7 +368,7 @@ export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://alfal
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
 
-            <p class="paragraph">We are delighted to inform you that your application to Al-Falaah Academy has been <strong>approved</strong>!</p>
+            <p class="paragraph">We are delighted to inform you that your application to The FastTrack Madrasah has been <strong>approved</strong>!</p>
 
             <div class="info-box">
               <div class="info-box-title">Your Program</div>
@@ -399,7 +399,7 @@ export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://alfal
 
             <div class="divider"></div>
 
-            <p class="paragraph">If you have any questions or need assistance with the enrollment process, please contact us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+            <p class="paragraph">If you have any questions or need assistance with the enrollment process, please contact us at <a href="mailto:admin@tftmadrasah.nz">admin@tftmadrasah.nz</a>.</p>
 
             <p class="paragraph">We look forward to having you join our community of learners!</p>
 
@@ -439,7 +439,7 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
 
-            <p class="paragraph">Welcome to Al-Falaah Academy! We are thrilled to have you join our community of dedicated learners on the path of authentic Islamic knowledge.</p>
+            <p class="paragraph">Welcome to The FastTrack Madrasah! We are thrilled to have you join our community of dedicated learners on the path of authentic Islamic knowledge.</p>
 
             <div class="info-box">
               <div class="info-box-title">Your Enrollment Details</div>
@@ -503,13 +503,13 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
               <li>Keep your contact information up to date</li>
             </ul>
 
-            <p class="paragraph">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@alfalaah-academy.nz">admin@alfalaah-academy.nz</a>.</p>
+            <p class="paragraph">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@tftmadrasah.nz">admin@tftmadrasah.nz</a>.</p>
 
             <p class="paragraph">May Allah make this journey beneficial for you, grant you success in your studies, and make this knowledge a means of drawing closer to Him.</p>
 
             <p class="paragraph" style="margin-top: 32px;">
               JazakAllah Khair,<br>
-              <strong>Al-Falaah Academy Team</strong>
+              <strong>The FastTrack Madrasah Team</strong>
             </p>
           </div>
 

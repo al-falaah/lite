@@ -154,7 +154,7 @@ serve(async (req) => {
       // Send welcome email if new student
       if (isNewStudent) {
         try {
-          const appUrl = Deno.env.get('APP_URL') || 'https://alfalaah-academy.nz'
+          const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
           await supabaseClient.functions.invoke('send-welcome-email', {
             body: {
               studentData: {

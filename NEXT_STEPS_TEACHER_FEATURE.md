@@ -80,7 +80,7 @@ import TeacherPortal from './pages/TeacherPortal';
 ### 5. Email Notification (Optional but recommended)
 Create Edge Function or use existing email system to send:
 - Welcome email with Staff ID and Password
-- Subject: "Welcome to Al-Falaah Academy - Teacher Credentials"
+- Subject: "Welcome to The FastTrack Madrasah - Teacher Credentials"
 - Include: Staff ID, temporary password, login URL
 
 ## Helper Functions (Copy-Paste Ready)

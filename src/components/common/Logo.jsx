@@ -33,7 +33,7 @@ const Logo = ({ variant = 'default', size = 'default', className = '' }) => {
       <BookOpen className={colorClass} size={sizeConfig.icon} strokeWidth={2.5} />
       <div className="flex flex-col">
         <span className={`font-bold ${sizeConfig.text} ${colorClass} leading-tight`}>
-          Al-Falaah Academy
+          The FastTrack Madrasah
         </span>
         <span className={`${sizeConfig.subtitle} ${colorClass} opacity-80 leading-tight`}>
           Essential Islamic Studies

@@ -31,7 +31,7 @@ const VacanciesPage = () => {
                 className="h-8 w-8 md:h-10 md:w-10"
               />
               <div className="flex flex-col">
-                <span className="text-md md:text-xl font-semibold text-emerald-600">Al-Falaah Academy</span>
+                <span className="text-md md:text-xl font-semibold text-emerald-600">The FastTrack Madrasah</span>
               </div>
             </Link>
             <Link to="/">
@@ -104,7 +104,7 @@ const VacanciesPage = () => {
                     {/* Contact Button */}
                     <div className="pt-4 border-t border-gray-200">
                       <a
-                        href="mailto:admin@alfalaah-academy.nz?subject=Application for {vacancy.role}"
+                        href="mailto:admin@tftmadrasah.nz?subject=Application for {vacancy.role}"
                         className="inline-block"
                       >
                         <Button
@@ -134,7 +134,7 @@ const VacanciesPage = () => {
                 Feel free to send your CV and we'll keep it on file for future opportunities.
               </p>
               <a
-                href="mailto:admin@alfalaah-academy.nz?subject=General Application - Al-Falaah Academy"
+                href="mailto:admin@tftmadrasah.nz?subject=General Application - The FastTrack Madrasah"
                 className="inline-block"
               >
                 <Button
@@ -154,10 +154,10 @@ const VacanciesPage = () => {
               Questions about working with us?
             </p>
             <a
-              href="mailto:admin@alfalaah-academy.nz"
+              href="mailto:admin@tftmadrasah.nz"
               className="text-emerald-600 hover:text-emerald-700 font-medium"
             >
-              admin@alfalaah-academy.nz
+              admin@tftmadrasah.nz
             </a>
           </div>
         </div>
@@ -168,7 +168,7 @@ const VacanciesPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+              © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
             </p>
             <p className="text-xs text-gray-500 mt-2">
               Authentic Islamic Education Rooted in the Qur'an and Sunnah

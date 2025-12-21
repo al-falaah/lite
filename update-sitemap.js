@@ -49,7 +49,7 @@ async function updateSitemap() {
 
   <!-- Homepage -->
   <url>
-    <loc>https://alfalaah-academy.nz/</loc>
+    <loc>https://tftmadrasah.nz/</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -57,7 +57,7 @@ async function updateSitemap() {
 
   <!-- Application Page -->
   <url>
-    <loc>https://alfalaah-academy.nz/apply</loc>
+    <loc>https://tftmadrasah.nz/apply</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -65,7 +65,7 @@ async function updateSitemap() {
 
   <!-- Blog Main Page -->
   <url>
-    <loc>https://alfalaah-academy.nz/blog</loc>
+    <loc>https://tftmadrasah.nz/blog</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
@@ -73,7 +73,7 @@ async function updateSitemap() {
 
   <!-- Student Portal -->
   <url>
-    <loc>https://alfalaah-academy.nz/student</loc>
+    <loc>https://tftmadrasah.nz/student</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -81,7 +81,7 @@ async function updateSitemap() {
 
   <!-- Teacher Portal -->
   <url>
-    <loc>https://alfalaah-academy.nz/teacher</loc>
+    <loc>https://tftmadrasah.nz/teacher</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -89,7 +89,7 @@ async function updateSitemap() {
 
   <!-- Vacancies/Careers -->
   <url>
-    <loc>https://alfalaah-academy.nz/vacancies</loc>
+    <loc>https://tftmadrasah.nz/vacancies</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -97,7 +97,7 @@ async function updateSitemap() {
 
   <!-- Admin Portal -->
   <url>
-    <loc>https://alfalaah-academy.nz/admin</loc>
+    <loc>https://tftmadrasah.nz/admin</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
@@ -105,7 +105,7 @@ async function updateSitemap() {
 
   <!-- Blog Admin -->
   <url>
-    <loc>https://alfalaah-academy.nz/blog/admin</loc>
+    <loc>https://tftmadrasah.nz/blog/admin</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.2</priority>
@@ -113,7 +113,7 @@ async function updateSitemap() {
 
   <!-- Blog Posts -->
 ${posts.map(post => `  <url>
-    <loc>https://alfalaah-academy.nz/blog/${post.slug}</loc>
+    <loc>https://tftmadrasah.nz/blog/${post.slug}</loc>
     <lastmod>${post.updated_at.split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

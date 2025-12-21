@@ -93,7 +93,7 @@ const LandingPage = () => {
                   className="h-7 w-7 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm sm:text-base md:text-xl font-semibold text-white">Al-Falaah Academy</span>
+                  <span className="text-sm sm:text-base md:text-xl font-semibold text-white">The FastTrack Madrasah</span>
                 </div>
               </Link>
 
@@ -287,7 +287,7 @@ const LandingPage = () => {
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              At Al-Falaah Academy, our mission is to bridge this gap. We combine Islamic scholarship with modern technology to deliver carefully curated learning programs that empower Muslims in New Zealand to move beyond basic recitation to genuine understanding. Our goal is clear: to help you engage directly with the Qur'an in Arabic, with minimal reliance on translations.
+              At The FastTrack Madrasah, our mission is to bridge this gap. We combine Islamic scholarship with modern technology to deliver carefully curated learning programs that empower Muslims in New Zealand to move beyond basic recitation to genuine understanding. Our goal is clear: to help you engage directly with the Qur'an in Arabic, with minimal reliance on translations.
             </p>
           </div>
 
@@ -324,7 +324,7 @@ const LandingPage = () => {
                       </a> 
                       </p>
                     <p className="text-base text-gray-600 mb-3">
-                      Founder, Al-Falaah Academy
+                      Founder, The FastTrack Madrasah
                       </p>
                     {/* <a
                       href="https://www.linkedin.com/in/aalaka"
@@ -780,7 +780,7 @@ const LandingPage = () => {
                 7. Join Our Community
               </h3>
               <p className="text-sm text-gray-700">
-                Receive your certificate of completion and become part of the Al-Falaah Academy alumni network.
+                Receive your certificate of completion and become part of the The FastTrack Madrasah alumni network.
               </p>
             </div>
           </div>
@@ -877,7 +877,7 @@ const LandingPage = () => {
                 Join Our Community
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Receive your certificate of completion and become part of the Al-Falaah Academy alumni network.
+                Receive your certificate of completion and become part of the The FastTrack Madrasah alumni network.
               </p>
             </div>
           </div>
@@ -964,7 +964,7 @@ const LandingPage = () => {
                   className="h-8 w-8"
                 />
                 <div>
-                  <div className="text-lg font-semibold">Al-Falaah Academy</div>
+                  <div className="text-lg font-semibold">The FastTrack Madrasah</div>
                   {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
                 </div>
               </div>
@@ -1005,8 +1005,8 @@ const LandingPage = () => {
               <p className="text-gray-400 text-sm mb-2">
                 Questions about our programs?
               </p>
-              <a href="mailto:info@alfalaah-academy.nz" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                info@alfalaah-academy.nz 
+              <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-400 hover:text-emerald-300 text-sm">
+                salam@tftmadrasah.nz 
               </a><br />
               <a href="tel:+64272131486" className="text-emerald-400 hover:text-emerald-300 text-sm">
                 +6427 213 1486
@@ -1015,7 +1015,7 @@ const LandingPage = () => {
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-            <p>© {new Date().getFullYear()} Al-Falaah Academy. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.</p>
           </div>
         </div>
       </footer>

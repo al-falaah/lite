@@ -1,7 +1,7 @@
 # Donation Link Setup Guide
 
 ## Overview
-A "Donate" button has been added to strategic locations across the Al-Falaah Academy website, linking directly to Stripe for donations.
+A "Donate" button has been added to strategic locations across the The FastTrack Madrasah website, linking directly to Stripe for donations.
 
 ## Locations Where Donate Button Appears
 
@@ -29,7 +29,7 @@ A "Donate" button has been added to strategic locations across the Al-Falaah Aca
 2. Navigate to **Products** → **Payment Links**
 3. Click **Create payment link**
 4. Configure your donation product:
-   - Name: "Support Al-Falaah Academy"
+   - Name: "Support The FastTrack Madrasah"
    - Description: "Help us provide authentic Islamic education"
    - Set up either:
      - **Fixed amount** (e.g., $10, $25, $50 options), OR

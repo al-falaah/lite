@@ -1045,7 +1045,7 @@ const AdminStudentsList = () => {
                     disabled={sendingEmail}
                   />
                   <p className="mt-2 text-sm text-gray-500">
-                    Your message will be automatically formatted with Al-Falaah Academy branding.
+                    Your message will be automatically formatted with The FastTrack Madrasah branding.
                   </p>
                 </div>
               </div>

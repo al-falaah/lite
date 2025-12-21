@@ -142,7 +142,7 @@ function generateEmailHTML(messageData: any, recipientType: string): string {
                 </tr>
               </table>
             </div>
-            <div class="brand-name">Al-Falaah Academy</div>
+            <div class="brand-name">The FastTrack Madrasah</div>
             <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
             <h1 class="header-title">New Message</h1>
           </div>
@@ -175,18 +175,18 @@ function generateEmailHTML(messageData: any, recipientType: string): string {
             </p>
 
             <p style="font-size: 14px; color: #6b7280; margin-top: 32px;">
-              <strong>Note:</strong> This message was sent through the Al-Falaah Academy portal. Please maintain professional and respectful communication at all times.
+              <strong>Note:</strong> This message was sent through the The FastTrack Madrasah portal. Please maintain professional and respectful communication at all times.
             </p>
           </div>
 
           <div class="footer">
-            <p class="footer-text"><strong>Al-Falaah Academy</strong></p>
+            <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
             <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
             <p class="footer-text" style="margin-top: 16px;">
-              <a href="mailto:admin@alfalaah-academy.nz" class="footer-link">admin@alfalaah-academy.nz</a>
+              <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
             </p>
             <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-              © ${new Date().getFullYear()} Al-Falaah Academy. All rights reserved.
+              © ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
             </p>
             <p class="footer-text">New Zealand</p>
           </div>
@@ -230,7 +230,7 @@ serve(async (req) => {
 
     const result = await sendEmail({
       to: messageData.recipientEmail,
-      subject: `Message from ${messageData.senderName} - Al-Falaah Academy`,
+      subject: `Message from ${messageData.senderName} - The FastTrack Madrasah`,
       html: emailHTML,
       replyTo: messageData.senderEmail,
     });

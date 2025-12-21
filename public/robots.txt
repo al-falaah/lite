@@ -1,5 +1,5 @@
-# robots.txt for Al-Falaah Academy
-# https://alfalaah-academy.nz
+# robots.txt for The FastTrack Madrasah
+# https://tftmadrasah.nz
 
 # Allow all search engines to crawl the site
 User-agent: *
@@ -16,7 +16,7 @@ Allow: /blog
 Allow: /blog/*
 
 # Sitemap location
-Sitemap: https://alfalaah-academy.nz/sitemap.xml
+Sitemap: https://tftmadrasah.nz/sitemap.xml
 
 # Crawl delay (optional - be nice to smaller crawlers)
 Crawl-delay: 1

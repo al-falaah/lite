@@ -1,6 +1,6 @@
-# Deploy Al-Falaah Academy - Step by Step
+# Deploy The FastTrack Madrasah - Step by Step
 
-## Your Domain: `alfalaah-academy.nz` ✅
+## Your Domain: `tftmadrasah.nz` ✅
 
 Let's get your site live! Follow these steps in order.
 
@@ -11,7 +11,7 @@ Let's get your site live! Follow these steps in order.
 ```bash
 # Commit all changes
 git add .
-git commit -m "Production ready - Al-Falaah Academy"
+git commit -m "Production ready - The FastTrack Madrasah"
 
 # Push to GitHub
 git push origin main
@@ -19,11 +19,11 @@ git push origin main
 
 If you haven't set up GitHub yet:
 1. Go to [github.com](https://github.com) → New Repository
-2. Name: `alfalaah-academy`
+2. Name: `tftmadrasah`
 3. Create repository
 4. Run:
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/alfalaah-academy.git
+git remote add origin https://github.com/YOUR_USERNAME/tftmadrasah.git
 git branch -M main
 git push -u origin main
 ```
@@ -38,7 +38,7 @@ git push -u origin main
 1. Go to [vercel.com](https://vercel.com)
 2. Click "Sign Up" → Continue with GitHub
 3. Click "Add New" → "Project"
-4. Find and import `alfalaah-academy`
+4. Find and import `tftmadrasah`
 
 ### B. Configure Project
 Vercel will auto-detect Vite. Just verify:
@@ -61,7 +61,7 @@ Value: [Copy from your .env file]
 ### D. Deploy
 1. Click "Deploy"
 2. Wait 2-3 minutes
-3. You'll get a URL like: `https://alfalaah-academy.vercel.app`
+3. You'll get a URL like: `https://tftmadrasah.vercel.app`
 
 ✅ **Check:** Visit the Vercel URL - your site should load!
 
@@ -72,7 +72,7 @@ Value: [Copy from your .env file]
 ### A. In Vercel Dashboard
 1. Go to your project → Settings → Domains
 2. Click "Add Domain"
-3. Enter: `alfalaah-academy.nz`
+3. Enter: `tftmadrasah.nz`
 4. Click "Add"
 5. Vercel will show you DNS records to add
 
@@ -109,7 +109,7 @@ TTL: 3600
 - Check status in Vercel dashboard
 - SSL certificate will be issued automatically
 
-✅ **Check:** Visit `https://alfalaah-academy.nz` - should show your site with 🔒
+✅ **Check:** Visit `https://tftmadrasah.nz` - should show your site with 🔒
 
 ---
 
@@ -118,7 +118,7 @@ TTL: 3600
 ### A. Add Domain
 1. Log into [resend.com/domains](https://resend.com/domains)
 2. Click "Add Domain"
-3. Enter: `alfalaah-academy.nz`
+3. Enter: `tftmadrasah.nz`
 4. Click "Add Domain"
 
 ### B. Add DNS Records
@@ -144,7 +144,7 @@ TTL: 3600
 ```
 Type: TXT
 Name: _dmarc
-Value: v=DMARC1; p=none; rua=mailto:admin@alfalaah-academy.nz
+Value: v=DMARC1; p=none; rua=mailto:admin@tftmadrasah.nz
 TTL: 3600
 ```
 
@@ -171,7 +171,7 @@ git diff
 
 # Commit changes
 git add .
-git commit -m "Update email domain to alfalaah-academy.nz"
+git commit -m "Update email domain to tftmadrasah.nz"
 git push
 ```
 
@@ -190,10 +190,10 @@ supabase functions deploy send-daily-digest
 
 ```bash
 # Set admin email
-supabase secrets set ADMIN_EMAIL=admin@alfalaah-academy.nz
+supabase secrets set ADMIN_EMAIL=admin@tftmadrasah.nz
 
 # Set app URL
-supabase secrets set APP_URL=https://alfalaah-academy.nz
+supabase secrets set APP_URL=https://tftmadrasah.nz
 
 # Verify secrets set
 supabase secrets list
@@ -250,7 +250,7 @@ Click "Save"
 ## Step 9: Final Testing (10 min)
 
 ### Test Application Flow
-1. Visit: `https://alfalaah-academy.nz`
+1. Visit: `https://tftmadrasah.nz`
 2. Click "Apply Now"
 3. Fill out the form with test data
 4. Submit
@@ -260,7 +260,7 @@ Click "Save"
 - ✅ Confirmation email received at test email
 
 ### Test Admin Flow
-1. Visit: `https://alfalaah-academy.nz/admin`
+1. Visit: `https://tftmadrasah.nz/admin`
 2. Log in with admin credentials
 3. View the test application
 4. Click "Approve"
@@ -277,7 +277,7 @@ Click "Save"
 
 **Expected:**
 - ✅ Success response
-- ✅ Digest email received at admin@alfalaah-academy.nz
+- ✅ Digest email received at admin@tftmadrasah.nz
 
 ✅ **Check:** All tests passing!
 
@@ -290,8 +290,8 @@ Click "Save"
 2. Sign up (free)
 3. Add New Monitor:
    - **Monitor Type:** HTTP(s)
-   - **Friendly Name:** Al-Falaah Academy
-   - **URL:** `https://alfalaah-academy.nz`
+   - **Friendly Name:** The FastTrack Madrasah
+   - **URL:** `https://tftmadrasah.nz`
    - **Monitoring Interval:** 5 minutes
    - **Alert Contacts:** Your email
 
@@ -301,7 +301,7 @@ Click "Save"
 
 ## 🎉 You're Live!
 
-Your site is now live at: **https://alfalaah-academy.nz**
+Your site is now live at: **https://tftmadrasah.nz**
 
 ### What's Working:
 - ✅ Public application form
@@ -319,15 +319,15 @@ Your site is now live at: **https://alfalaah-academy.nz**
 ## Quick Reference
 
 **Your URLs:**
-- **Public Site:** https://alfalaah-academy.nz
-- **Admin Dashboard:** https://alfalaah-academy.nz/admin
+- **Public Site:** https://tftmadrasah.nz
+- **Admin Dashboard:** https://tftmadrasah.nz/admin
 - **Vercel Dashboard:** https://vercel.com/dashboard
 - **Supabase Dashboard:** https://supabase.com/dashboard
 - **Resend Dashboard:** https://resend.com/emails
 
 **Important Emails:**
-- **Admin:** admin@alfalaah-academy.nz
-- **No-Reply:** noreply@alfalaah-academy.nz
+- **Admin:** admin@tftmadrasah.nz
+- **No-Reply:** noreply@tftmadrasah.nz
 
 **Credentials:**
 - Saved in your password manager ✓
