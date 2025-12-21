@@ -275,19 +275,11 @@ const LandingPage = () => {
 
           <div className="space-y-6 text-justify">
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              Today, only a small percentage of Muslims worldwide can understand the Arabic language of the Qur'an. While many can recite the words, true comprehension remains out of reach—and as this gap widens, our connection with the divine guidance of the Qur'an and Sunnah weakens.
+              Today, while millions can recite the Qur’an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study—a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur’an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              Traditionally, developing expertise in Qur'anic understanding requires years of dedicated study. In countries like New Zealand and across the Western world, busy lifestyles make such long-term commitments challenging. We need a better solution—one that's both accessible and transformative.
-            </p>
-
-            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-             Through years of teaching and mentoring Muslim students in Palmerston North and Tauranga, I've witnessed something remarkable: learners who can read the Qur'an can understand it when equipped with the right knowledge and skills.
-            </p>
-
-            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              At The FastTrack Madrasah, our mission is to bridge this gap. We combine Islamic scholarship with modern technology to deliver carefully curated learning programs that empower Muslims in New Zealand to move beyond basic recitation to genuine understanding. Our goal is clear: to help you engage directly with the Qur'an in Arabic, with minimal reliance on translations.
+              The FastTrack Madrasah was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we’ve created an accelerator that optimizes the way the Qur’an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
             </p>
           </div>
 
@@ -604,7 +596,7 @@ const LandingPage = () => {
                 </p>
 
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
-                  Perfect your Qur'anic recitation through intensive study of tajweed rules, articulation points, and introduction to Qur'anic sciences.
+                  Perfect your Qur'anic recitation through intensive study of tajweed rules, articulation points, and gain introduction to Qur'anic sciences.
                 </p>
 
                 {/* Key Info - Always Visible */}
@@ -638,8 +630,8 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li>Develop intermediate proficiency in Tajweed (Qur'anic recitation rules)</li>
                         <li> Learn introductory knowledge of Qur'anic Sciences <span style={{fontFamily: 'Traditional Arabic, serif'}}>علوم القرآن</span> | 'Ulūm al-Qur'ān</li>
+                        <li> Master Tajweed (Qur'anic recitation rules) from A to Z</li>
                       </ul>
                     </div>
 
