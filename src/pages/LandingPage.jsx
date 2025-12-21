@@ -279,7 +279,7 @@ const LandingPage = () => {
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              The FastTrack Madrasah was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we’ve created an accelerator that optimizes the way the Qur’an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
+              <span className="font-bold text-gray-900">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we’ve created an accelerator that optimizes the way the Qur’an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
             </p>
           </div>
 
