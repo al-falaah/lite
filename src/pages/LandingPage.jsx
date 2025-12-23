@@ -239,11 +239,14 @@ const LandingPage = () => {
 
             {/* Hero Content */}
             <div>
-              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10">
-                Authentic Islamic Education
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
+                Accelerate Your Mastery of Islamic Knowledge
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                Master Arabic and Islamic sciences through flexible one-on-one online instruction
+                Reclaim your connection to the Qur’an and Sunnah through a structured, time-bound methodology. Master the foundations of our Deen through 
+                <span className="text-emerald-400 font-semibold"> effective teaching</span> of a 
+                <span className="text-emerald-400 font-semibold"> slated curriculum</span>, 
+                reinforced by expert mentoring, regular assessment, and dedicated follow-up.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
@@ -463,12 +466,107 @@ const LandingPage = () => {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                        {/* TMP Program Card */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
+              {/* Always Visible Header */}
+              <div className="p-5 sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                  Track 1: Tajweed Mastery Program (TMP)
+                </h3>
+                <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
+                  برنامج إتقان التجويد
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600 mb-4">
+                  Barnāmij Itqān at-Tajwīd
+                </p>
+
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
+                  Perfect your Qur'anic recitation through intensive study of tajweed rules, articulation points, and gain introduction to Qur'anic sciences.
+                </p>
+
+                {/* Key Info - Always Visible */}
+                <div className="bg-purple-50 rounded-lg p-4 mb-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <p className="text-xs text-purple-800 font-medium mb-1">Duration</p>
+                      <p className="text-base sm:text-lg font-bold text-purple-900">6 months</p>
+                      <p className="text-xs text-purple-700">24 weeks total</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-purple-800 font-medium mb-1">Investment</p>
+                      <p className="text-base sm:text-lg font-bold text-purple-900">$120 NZD</p>
+                      <p className="text-xs text-purple-700">One-time payment</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expand Button */}
+                <button
+                  onClick={() => setExpandedProgram(expandedProgram === 'tmp' ? null : 'tmp')}
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-purple-600 text-purple-700 font-semibold rounded-lg hover:bg-purple-50 transition-colors mb-4"
+                >
+                  <span>{expandedProgram === 'tmp' ? 'Hide Details' : 'View Full Curriculum'}</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform ${expandedProgram === 'tmp' ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Collapsible Details */}
+                {expandedProgram === 'tmp' && (
+                  <div className="border-t border-gray-200 pt-6 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li> Learn introductory knowledge of Qur'anic Sciences <span style={{fontFamily: 'Traditional Arabic, serif'}}>علوم القرآن</span> | 'Ulūm al-Qur'ān</li>
+                        <li> Master Tajweed (Qur'anic recitation rules) from A to Z</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Course</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        <span style={{fontFamily: 'Traditional Arabic, serif'}}>التجويد</span> | At-Tajwīd (Perfecting Qur'anic Recitation)
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Primary Text</h4>
+                      <p className="text-xs text-gray-600">
+                        <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān by Su'ād 'Abdul-Ḥamīd
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Class Schedule</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Two sessions per week</li>
+                        <li>Long session: 2 hours (primary instruction)</li>
+                        <li>Short session: 30 minutes (assessment & homework review)</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">
+                        Must be at least 14 years old and able to read the Qur'an but lack knowledge or application of tajweed rules
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Enroll Button */}
+                <Link to="/apply">
+                  <Button variant="outline" size="md" className="w-full border-purple-600 text-purple-700 hover:bg-purple-50 mt-4">
+                    Enroll in TMP
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
             {/* EAIS Program Card */}
             <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
               {/* Always Visible Header */}
               <div className="p-5 sm:p-6">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                  Essential Arabic & Islamic Studies (EAIS)
+                 Track 2: Essential Arabic & Islamic Studies (EAIS)
                 </h3>
                 <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
                   العربية والدراسات الإسلامية الأساسية
@@ -581,100 +679,6 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* TMP Program Card */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
-              {/* Always Visible Header */}
-              <div className="p-5 sm:p-6">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                  Tajweed Mastery Program (TMP)
-                </h3>
-                <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
-                  برنامج إتقان التجويد
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600 mb-4">
-                  Barnāmij Itqān at-Tajwīd
-                </p>
-
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
-                  Perfect your Qur'anic recitation through intensive study of tajweed rules, articulation points, and gain introduction to Qur'anic sciences.
-                </p>
-
-                {/* Key Info - Always Visible */}
-                <div className="bg-purple-50 rounded-lg p-4 mb-4">
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                      <p className="text-xs text-purple-800 font-medium mb-1">Duration</p>
-                      <p className="text-base sm:text-lg font-bold text-purple-900">6 months</p>
-                      <p className="text-xs text-purple-700">24 weeks total</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-purple-800 font-medium mb-1">Investment</p>
-                      <p className="text-base sm:text-lg font-bold text-purple-900">$120 NZD</p>
-                      <p className="text-xs text-purple-700">One-time payment</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Expand Button */}
-                <button
-                  onClick={() => setExpandedProgram(expandedProgram === 'tmp' ? null : 'tmp')}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-purple-600 text-purple-700 font-semibold rounded-lg hover:bg-purple-50 transition-colors mb-4"
-                >
-                  <span>{expandedProgram === 'tmp' ? 'Hide Details' : 'View Full Curriculum'}</span>
-                  <ChevronDown className={`h-5 w-5 transition-transform ${expandedProgram === 'tmp' ? 'rotate-180' : ''}`} />
-                </button>
-
-                {/* Collapsible Details */}
-                {expandedProgram === 'tmp' && (
-                  <div className="border-t border-gray-200 pt-6 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
-                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li> Learn introductory knowledge of Qur'anic Sciences <span style={{fontFamily: 'Traditional Arabic, serif'}}>علوم القرآن</span> | 'Ulūm al-Qur'ān</li>
-                        <li> Master Tajweed (Qur'anic recitation rules) from A to Z</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Course</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">
-                        <span style={{fontFamily: 'Traditional Arabic, serif'}}>التجويد</span> | At-Tajwīd (Perfecting Qur'anic Recitation)
-                      </p>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Primary Text</h4>
-                      <p className="text-xs text-gray-600">
-                        <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān by Su'ād 'Abdul-Ḥamīd
-                      </p>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Class Schedule</h4>
-                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li>Two sessions per week</li>
-                        <li>Long session: 2 hours (primary instruction)</li>
-                        <li>Short session: 30 minutes (assessment & homework review)</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">
-                        Must be at least 14 years old and able to read the Qur'an but lack knowledge or application of tajweed rules
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Enroll Button */}
-                <Link to="/apply">
-                  <Button variant="outline" size="md" className="w-full border-purple-600 text-purple-700 hover:bg-purple-50 mt-4">
-                    Enroll in TMP
-                  </Button>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </section>
