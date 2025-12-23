@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -243,7 +243,7 @@ const LandingPage = () => {
                 Accelerate Your Mastery of Islamic Knowledge
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                Reclaim your connection to the Qur’an and Sunnah through a structured, time-bound methodology. Master the foundations of our Deen through 
+                Master the foundations of our Deen through 
                 <span className="text-emerald-400 font-semibold"> effective teaching</span> of a 
                 <span className="text-emerald-400 font-semibold"> slated curriculum</span>, 
                 reinforced by expert mentoring, regular assessment, and dedicated follow-up.
@@ -310,7 +310,7 @@ const LandingPage = () => {
                   <div className="flex-1">
                     <p className="text-xl">
                       <a
-                      href="https://www.linkedin.com/in/aalaka"
+                      href=""
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-emerald-800 transition-colors group"
@@ -337,16 +337,31 @@ const LandingPage = () => {
           </div>
 
           {/* Support CTA */}
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 mb-4 text-sm sm:text-base">
-              Help us make authentic Islamic education accessible to all
-            </p>
-            <a href={donationLink} target="_blank" rel="noopener noreferrer">
-              <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-medium rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl">
-                <Heart className="h-5 w-5" />
-                Support Our Mission
-              </button>
-            </a>
+          <div className="mt-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 sm:p-12 border border-blue-100 shadow-sm">
+            <div className="max-w-2xl mx-auto text-center">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                Ready to Begin Your Journey?
+              </h3>
+              <p className="text-base sm:text-lg text-gray-700 mb-8 leading-relaxed">
+                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/apply">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl">
+                    <Rocket className="h-5 w-5" />
+                    Start Your Application
+                  </button>
+                </Link>
+
+                <a href={donationLink} target="_blank" rel="noopener noreferrer">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl">
+                    <Heart className="h-5 w-5" />
+                    Support Our Mission
+                  </button>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -399,10 +414,10 @@ const LandingPage = () => {
 
               <div className="relative z-10">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Accessible Online Delivery
+                  Grounded in Classical Tradition
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  All classes are conducted via video conferencing, making quality Islamic education accessible wherever you are in New Zealand.
+                  Our learning materials are drawn from authentic, time-tested texts from Islamic scholarship. Students actively engage through note-taking and traditional learning methods that have proven effective for centuries.
                 </p>
               </div>
             </div>
@@ -415,10 +430,10 @@ const LandingPage = () => {
 
               <div className="relative z-10">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Grounded in Classical Tradition
+                  Anywhere, Anytime Accessibility
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Our learning materials are drawn from authentic, time-tested texts from Islamic scholarship. Students actively engage through note-taking and traditional learning methods that have proven effective for centuries.
+                  All classes are conducted via video conferencing, making quality Islamic education accessible wherever you are in New Zealand.
                 </p>
               </div>
             </div>
@@ -431,7 +446,7 @@ const LandingPage = () => {
 
               <div className="relative z-10">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Progress Through Assessment
+                  Rigorous Assessment Framework
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   Regular evaluations throughout your learning journey ensure knowledge retention and help identify areas for growth, solidifying your understanding at each stage.
@@ -466,7 +481,7 @@ const LandingPage = () => {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-                        {/* TMP Program Card */}
+            {/* TMP Program Card */}
             <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
               {/* Always Visible Header */}
               <div className="p-5 sm:p-6">
@@ -477,13 +492,16 @@ const LandingPage = () => {
                   برنامج إتقان التجويد
                 </p>
                 <p className="text-xs sm:text-sm text-gray-600 mb-4">
-                  Barnāmij Itqān at-Tajwīd
+                  <span className="italic font-serif tracking-wide">Barnāmij Itqān at-Tajwīd</span>
                 </p>
 
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
-                  Perfect your Qur'anic recitation through intensive study of tajweed rules, articulation points, and gain introduction to Qur'anic sciences.
-                </p>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
+                  <span className="font-semibold">The Mission:</span> An intensive 24-week sprint to transform basic reading into expert-level precision. Through a slated curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
 
+                </p>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
+                  <span className="font-semibold">The Accelerator Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>), grounding your recitation in authentic scholarly and historical context.
+                </p>
                 {/* Key Info - Always Visible */}
                 <div className="bg-purple-50 rounded-lg p-4 mb-4">
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -515,39 +533,47 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li> Learn introductory knowledge of Qur'anic Sciences <span style={{fontFamily: 'Traditional Arabic, serif'}}>علوم القرآن</span> | 'Ulūm al-Qur'ān</li>
-                        <li> Master Tajweed (Qur'anic recitation rules) from A to Z</li>
+                        <li> <span className="font-semibold">Mastery from A to Z:</span> Complete command over Tajweed rules through effective, focused instruction.</li>
+                        <li> <span className="font-semibold">Scholarly Foundation:</span> Attain essential knowledge of <span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>.</li>
+                        <li> <span className="font-semibold">Primary Text:</span> <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | <span className="italic font-serif tracking-wide">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> (Su'ād 'Abdul-Ḥamīd).</li>
                       </ul>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Course</h4>
                       <p className="text-xs sm:text-sm text-gray-600">
                         <span style={{fontFamily: 'Traditional Arabic, serif'}}>التجويد</span> | At-Tajwīd (Perfecting Qur'anic Recitation)
                       </p>
-                    </div>
+                    </div> */}
 
-                    <div>
+                    {/* <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Primary Text</h4>
                       <p className="text-xs text-gray-600">
                         <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān by Su'ād 'Abdul-Ḥamīd
                       </p>
-                    </div>
+                    </div> */}
 
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Class Schedule</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Precision Schedule (Weekly)</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li>Two sessions per week</li>
-                        <li>Long session: 2 hours (primary instruction)</li>
-                        <li>Short session: 30 minutes (assessment & homework review)</li>
+                        <li> <span className="font-semibold">Session 1 (2 Hours): </span> Primary Instruction & Intensive Drill.</li>
+                        <li> <span className="font-semibold">Session 2 (30 mins): </span> Dedicated Follow-up, Oral Assessment, and Mentoring.</li>
                       </ul>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
                       <p className="text-xs sm:text-sm text-gray-600">
                         Must be at least 14 years old and able to read the Qur'an but lack knowledge or application of tajweed rules
                       </p>
+                    </div> */}
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li> <span className="font-semibold">Age: </span> 14+ years old</li>
+                        <li> <span className="font-semibold">Proficiency: </span> Must be able to read the Qur'anic script fluently but currently lacks the technical knowledge or practical application of Tajweed rules.</li>
+                      </ul>
                     </div>
                   </div>
                 )}
@@ -555,7 +581,7 @@ const LandingPage = () => {
                 {/* Enroll Button */}
                 <Link to="/apply">
                   <Button variant="outline" size="md" className="w-full border-purple-600 text-purple-700 hover:bg-purple-50 mt-4">
-                    Enroll in TMP
+                    Apply for the 24-Week Sprint
                   </Button>
                 </Link>
               </div>
@@ -568,16 +594,23 @@ const LandingPage = () => {
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
                  Track 2: Essential Arabic & Islamic Studies (EAIS)
                 </h3>
-                <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
-                  العربية والدراسات الإسلامية الأساسية
+                 <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
+                   العربية والدراسات الإسلامية الأساسية
                 </p>
                 <p className="text-xs sm:text-sm text-gray-600 mb-4">
-                  Al-'Arabiyyah wal-Dirāsāt al-Islāmiyyah al-Asāsiyyah
+                  <span className="italic font-serif tracking-wide">Al-'Arabiyyah wal-Dirāsāt al-Islāmiyyah al-Asāsiyyah</span>
                 </p>
 
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
-                  Equip yourself with intermediate Arabic proficiency and foundational Islamic knowledge in creed, manners, and jurisprudence through comprehensive study of classical texts.
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
+                  <span className="font-semibold">The Mission:</span> A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our slated curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
+
                 </p>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
+                  <span className="font-semibold">The Accelerator Edge:</span> We move beyond isolated language study by integrating Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>). Through expert mentoring and systematic textual study, we equip you with the linguistic and spiritual infrastructure to engage directly with the Qur'an and Sunnah.
+                </p>
+                {/* <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
+                  Equip yourself with intermediate Arabic proficiency and foundational Islamic knowledge in creed, manners, and jurisprudence through comprehensive study of classical texts.
+                </p> */}
 
                 {/* Key Info - Always Visible */}
                 <div className="bg-emerald-50 rounded-lg p-4 mb-4">
@@ -610,62 +643,26 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li>Equip students with intermediate proficiency in Arabic language to enhance their understanding of the Qur'an and Sunnah</li>
-                        <li>Build sound Islamic knowledge in creed ('aqīdah), manners (ādāb), and jurisprudence (fiqh)</li>
+                        <li> <span className="font-semibold">Linguistic Mastery:</span> Achieve intermediate Arabic proficiency through structured study of Grammar (<span className="italic font-serif tracking-wide">An-Naḥw</span>), Morphology (<span className="italic font-serif tracking-wide">Aṣ-Ṣarf</span>), and Spelling (<span className="italic font-serif tracking-wide">Al-Imlā&rsquo;</span>).</li>
+                        <li> <span className="font-semibold">Scholarly Foundation:</span> Build sound Islamic knowledge in Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>).</li>
+                        <li> <span className="font-semibold">Primary Texts:</span> Engage with classical works including <span style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide">Alfiyyat Ibn Mālik</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> (<span className="italic font-serif tracking-wide">An-Naḥw al-Wāḍiḥ</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>المنهاج المختصر</span> (<span className="italic font-serif tracking-wide">Al-Minhāj al-Mukhtaṣar</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>مجموع عقيدة أهل السنة</span> (<span className="italic font-serif tracking-wide">Majmū&rsquo; &lsquo;Aqīdat Ahlus Sunnah</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>الدرر البهية</span> (<span className="italic font-serif tracking-wide">Ad-Durar al-Bahiyyah</span>), and <span style={{fontFamily: 'Traditional Arabic, serif'}}>من آداب الإسلام</span> (<span className="italic font-serif tracking-wide">Min Ādāb al-Islām</span>).</li>
                       </ul>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Structure</h4>
-                      <p className="text-xs sm:text-sm text-gray-600 mb-3">Two comprehensive courses, each covering multiple integrated subjects:</p>
-
-                      <div className="space-y-3 ml-2 sm:ml-4">
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-xs sm:text-sm font-medium text-gray-900 mb-1">Course 1: <span style={{fontFamily: 'Traditional Arabic, serif'}}>العربية</span> | Al-'Arabiyyah</p>
-                          <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside ml-2">
-                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو</span> | An-Naḥw (Grammar)</li>
-                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الصرف</span> | Aṣ-Ṣarf (Morphology)</li>
-                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الإملاء</span> | Al-Imlā' (Spelling & Dictation)</li>
-                          </ul>
-                        </div>
-
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-xs sm:text-sm font-medium text-gray-900 mb-1">Course 2: <span style={{fontFamily: 'Traditional Arabic, serif'}}>الإسلامية</span> | Al-Islāmiyyah</p>
-                          <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside ml-2">
-                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>العقيدة</span> | Al-'Aqīdah (Creed)</li>
-                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الفقه</span> | Al-Fiqh (Jurisprudence)</li>
-                            <li><span style={{fontFamily: 'Traditional Arabic, serif'}}>الآداب</span> | Al-Ādāb (Islamic Manners & Ethics)</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Primary Texts</h4>
-                      <ul className="text-xs text-gray-600 space-y-1.5">
-                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> | Alfiyyat Ibn Mālik</li>
-                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> | An-Naḥw al-Wāḍiḥ</li>
-                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>المنهاج المختصر</span> | Al-Minhāj al-Mukhtaṣar</li>
-                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>مجموع عقيدة أهل السنة</span> | Majmū' 'Aqīdat</li>
-                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>الدرر البهية</span> | Ad-Durar al-Bahiyyah</li>
-                        <li>• <span style={{fontFamily: 'Traditional Arabic, serif'}}>من آداب الإسلام</span> | Min Ādāb al-Islām</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Class Schedule</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Precision Schedule (Weekly)</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li>Two sessions per week</li>
-                        <li>Long session: 2 hours (primary instruction)</li>
-                        <li>Short session: 30 minutes (assessment & homework review)</li>
+                        <li> <span className="font-semibold">Session 1 (2 Hours): </span> Primary Instruction & Comprehensive Study.</li>
+                        <li> <span className="font-semibold">Session 2 (30 mins): </span> Dedicated Follow-up, Assessment, and Mentoring.</li>
                       </ul>
                     </div>
 
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">
-                        Must be at least 14 years old and able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently
-                      </p>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li> <span className="font-semibold">Age: </span> 14+ years old</li>
+                        <li> <span className="font-semibold">Proficiency: </span> Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently.</li>
+                      </ul>
                     </div>
                   </div>
                 )}
@@ -673,7 +670,7 @@ const LandingPage = () => {
                 {/* Enroll Button */}
                 <Link to="/apply">
                   <Button variant="primary" size="md" className="w-full bg-emerald-600 hover:bg-emerald-700 mt-4">
-                    Enroll in EAIS
+                    Begin Your 2-Year Mastery Path
                   </Button>
                 </Link>
               </div>
