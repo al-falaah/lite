@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -38,24 +38,40 @@ const LandingPage = () => {
 
   const faqs = [
     {
-      question: "How does the class schedule work?",
-      answer: "For the 2-Year Essential program, you'll have 2 sessions per week (one 2-hour main session and one 30-minute review session) scheduled at times convenient for you. The Tajweed program also includes 2 weekly sessions (one 1-hour main session and one 30-minute practice session). All classes are one-on-one online via video call."
+      question: "Who is this program designed for?",
+      subQuestion: "Is this program suitable for absolute beginners?",
+      answer: "Our tracks are designed for students who can already read the Arabic script fluently with ḥarakāt (vowel markings). If you can read the Qur'an but lack understanding of the grammar or Tajweed rules, our slated curriculum is specifically engineered to accelerate you toward intermediate mastery."
     },
     {
-      question: "What are the fees and payment options?",
-      answer: "The 2-Year Essential Arabic & Islamic Studies program costs $25 NZD per month or $275 NZD per year (saving you $25 with annual payment). The Tajweed Program is a one-time payment of $120 NZD for the full 6-month course."
+      question: "The \"Accelerator\" Methodology",
+      subQuestion: "What makes the \"FastTrack\" methodology different from traditional classes?",
+      answer: "Unlike open-ended classes, we utilize a slated curriculum with defined timelines (24 weeks for TMP and 104 weeks for EAIS). By combining effective teaching with mandatory 30-minute assessment blocks and expert mentoring, we ensure consistent progress and high accountability that traditional self-paced learning often lacks."
     },
     {
-      question: "How do I access my classes after enrolling?",
-      answer: "After successful enrollment and payment, you'll receive a welcome email with your Student ID. You can access your personalized student portal using this ID to view your class schedule, meeting links, and track your progress."
+      question: "Time Commitment",
+      subQuestion: "How much time do I need to commit each week?",
+      answer: "Students should attend two live sessions per week: one 2-hour primary instruction session and one 30-minute mentoring/assessment session. Additionally, we recommend 2–3 hours of independent study to master the slated objectives for that week."
     },
     {
-      question: "Can I enroll in both programs?",
-      answer: "Yes, you can enroll in both programs simultaneously. Many students find that combining the comprehensive Essential program with focused Tajweed training enhances their overall Islamic learning journey."
+      question: "Selective Admission",
+      subQuestion: "Why do you require a phone interview for admission?",
+      answer: "Because our programs move at a structured pace, we use the interview to verify prerequisites and ensure that every student is placed in the track that best serves their goals. This helps us maintain a high-performance environment for all participants."
     },
     {
-      question: "What if I need to miss a class?",
-      answer: "We understand that life happens. Please contact us in advance if you need to reschedule a session. We'll work with you to find a suitable alternative time within the same week when possible."
+      question: "Learning Materials & Methodology",
+      subQuestion: "Do I need to purchase my own classical texts and materials?",
+      answer: "For Islamic Studies, we provide comprehensive digital learning materials. However, for Arabic and Tajweed, we utilize a traditional \"Live Board\" method. Your teacher will write directly on the board during sessions, and you will be required to take physical notes. This deliberate practice is designed to develop your Arabic handwriting and spelling skills. During onboarding, your mentor will provide a list of the specific notebooks and pens recommended for this high-engagement learning style."
+    },
+    {
+      question: "Mentoring & Support",
+      subQuestion: "What does \"Dedicated Follow-up\" actually look like?",
+      answer: "You aren't just a face in a Zoom gallery. Our team monitors your assessment results weekly. If you struggle with a concept, your mentor provides dedicated follow-up during the short sessions to address gaps in understanding before we move to the next slated module."
+    },
+    {
+      question: "Program Enrollment Strategy",
+      subQuestion: "Can I enroll in both tracks simultaneously?",
+      answer: "To ensure the highest level of mastery and retention, we strongly encourage students to focus on one track at a time. Our methodology is intensive and slated for deep progress; attempting both simultaneously can dilute your focus. For most students, we recommend starting with the Tajweed Mastery Program (TMP). Laying this strong foundational connection with the Qur'anic text provides the ideal spiritual and linguistic springboard for the 2-year Essential Arabic & Islamic Studies (EAIS) track.",
+      isRecommended: true
     }
   ];
 
@@ -384,7 +400,7 @@ const LandingPage = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Flexible & Personalized Learning
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed text-justify">
                   Every student progresses at their own pace. When beneficial, we may group family members or students with similar backgrounds into cohort learning for enhanced engagement and support.
                 </p>
               </div>
@@ -400,7 +416,7 @@ const LandingPage = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Islamic Values at the Core
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed text-justify">
                   Beyond teaching Arabic language, we cultivate Islamic character and values. Our curriculum integrates spiritual development with linguistic mastery.
                 </p>
               </div>
@@ -414,10 +430,10 @@ const LandingPage = () => {
 
               <div className="relative z-10">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Grounded in Classical Tradition
+                  Classical Script & Traditional Pedagogy
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Our learning materials are drawn from authentic, time-tested texts from Islamic scholarship. Students actively engage through note-taking and traditional learning methods that have proven effective for centuries.
+                <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                 Our curriculum is grounded in authentic, time-tested texts of Islamic scholarship. We prioritize traditional knowledge transmission; in Arabic and Tajweed sessions, instructors teach via live board-writing, requiring students to take physical notes. This active engagement develops your Arabic penmanship and ensures deep cognitive retention of linguistic rules through centuries-proven methods.
                 </p>
               </div>
             </div>
@@ -432,7 +448,7 @@ const LandingPage = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Anywhere, Anytime Accessibility
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed text-justify">
                   All classes are conducted via video conferencing, making quality Islamic education accessible wherever you are in New Zealand.
                 </p>
               </div>
@@ -448,7 +464,7 @@ const LandingPage = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Rigorous Assessment Framework
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed text-justify">
                   Regular evaluations throughout your learning journey ensure knowledge retention and help identify areas for growth, solidifying your understanding at each stage.
                 </p>
               </div>
@@ -464,7 +480,7 @@ const LandingPage = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Holistic Mentorship
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed text-justify">
                   We don't just teach—we mentor. Our support extends beyond the classroom to guide students in both their spiritual journey and daily life challenges.
                 </p>
               </div>
@@ -480,21 +496,78 @@ const LandingPage = () => {
             Our Programs
           </h2>
 
+          {/* Quick Comparison - At a Glance */}
+          <div className="mb-10 max-w-4xl mx-auto">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
+              <div className="grid grid-cols-3 text-center">
+                <div className="p-3 border-r border-gray-200 bg-gray-100">
+                  <p className="text-xs font-medium text-gray-600">Track</p>
+                </div>
+                <div className="p-3 border-r border-gray-200 bg-purple-50">
+                  <p className="text-xs font-semibold text-purple-900">TMP</p>
+                </div>
+                <div className="p-3 bg-emerald-50">
+                  <p className="text-xs font-semibold text-emerald-900">EAIS</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 text-center border-t border-gray-200">
+                <div className="p-3 border-r border-gray-200 bg-gray-50">
+                  <p className="text-xs text-gray-600">Duration</p>
+                </div>
+                <div className="p-3 border-r border-gray-200">
+                  <p className="text-sm font-bold text-gray-900">6 months</p>
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-bold text-gray-900">2 years</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 text-center border-t border-gray-200">
+                <div className="p-3 border-r border-gray-200 bg-gray-50">
+                  <p className="text-xs text-gray-600">Cost</p>
+                </div>
+                <div className="p-3 border-r border-gray-200">
+                  <p className="text-sm font-bold text-gray-900">$120</p>
+                  <p className="text-xs text-gray-500">one-time</p>
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-bold text-gray-900">$25/mo</p>
+                  <p className="text-xs text-gray-500">or $275/yr</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 text-center border-t border-gray-200">
+                <div className="p-3 border-r border-gray-200 bg-gray-50">
+                  <p className="text-xs text-gray-600">Focus</p>
+                </div>
+                <div className="p-3 border-r border-gray-200">
+                  <p className="text-xs text-gray-700">Tajweed & Qur'an</p>
+                </div>
+                <div className="p-3">
+                  <p className="text-xs text-gray-700">Arabic & Islamic Studies</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             {/* TMP Program Card */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
-              {/* Always Visible Header */}
-              <div className="p-5 sm:p-6">
+            <div className="bg-white border-2 border-purple-200 rounded-xl overflow-hidden transition-all shadow-sm">
+              {/* Subtle gradient header */}
+              <div className="bg-gradient-to-r from-purple-50 to-white px-5 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
                   Track 1: Tajweed Mastery Program (TMP)
                 </h3>
                 <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
                   برنامج إتقان التجويد
                 </p>
-                <p className="text-xs sm:text-sm text-gray-600 mb-4">
+                <p className="text-xs sm:text-sm text-gray-600">
                   <span className="italic font-serif tracking-wide">Barnāmij Itqān at-Tajwīd</span>
                 </p>
+              </div>
 
+              <div className="px-5 sm:px-6 pb-5 sm:pb-6">
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
                   <span className="font-semibold">The Mission:</span> An intensive 24-week sprint to transform basic reading into expert-level precision. Through a slated curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
 
@@ -588,19 +661,21 @@ const LandingPage = () => {
             </div>
 
             {/* EAIS Program Card */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden transition-all">
-              {/* Always Visible Header */}
-              <div className="p-5 sm:p-6">
+            <div className="bg-white border-2 border-emerald-200 rounded-xl overflow-hidden transition-all shadow-sm">
+              {/* Subtle gradient header */}
+              <div className="bg-gradient-to-r from-emerald-50 to-white px-5 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
                  Track 2: Essential Arabic & Islamic Studies (EAIS)
                 </h3>
                  <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
                    العربية والدراسات الإسلامية الأساسية
                 </p>
-                <p className="text-xs sm:text-sm text-gray-600 mb-4">
+                <p className="text-xs sm:text-sm text-gray-600">
                   <span className="italic font-serif tracking-wide">Al-'Arabiyyah wal-Dirāsāt al-Islāmiyyah al-Asāsiyyah</span>
                 </p>
+              </div>
 
+              <div className="px-5 sm:px-6 pb-5 sm:pb-6">
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
                   <span className="font-semibold">The Mission:</span> A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our slated curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
 
@@ -660,8 +735,8 @@ const LandingPage = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li> <span className="font-semibold">Age: </span> 14+ years old</li>
-                        <li> <span className="font-semibold">Proficiency: </span> Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently.</li>
+                        <li><span className="font-semibold">Age: </span>14+ years old</li>
+                        <li><span className="font-semibold">Proficiency: </span> Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently.</li>
                       </ul>
                     </div>
                   </div>
@@ -677,6 +752,117 @@ const LandingPage = () => {
             </div>
 
           </div>
+
+          {/* Recommended Learning Path Visual */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50 rounded-2xl p-8 sm:p-10 border-2 border-emerald-200 shadow-lg">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full font-semibold text-sm mb-4">
+                  <CheckCircle className="h-4 w-4" />
+                  Recommended Learning Path
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                  The Strategic Success Path
+                </h3>
+                <p className="text-base text-gray-600">
+                  For optimal results, we recommend this proven progression
+                </p>
+              </div>
+
+              {/* Desktop: Horizontal Flow */}
+              <div className="hidden md:flex items-center justify-center gap-6 mb-8">
+                {/* Step 1: TMP */}
+                <div className="flex-1 max-w-xs">
+                  <div className="bg-white rounded-xl p-6 border-2 border-purple-300 shadow-md">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl font-bold text-purple-600">01</span>
+                      <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                        6 months
+                      </span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 mb-2">
+                      Tajweed Mastery Program
+                    </h4>
+                    <p className="text-sm text-gray-600 text-justify">
+                      Build a strong foundation with the Qur'an through precision recitation
+                    </p>
+                  </div>
+                </div>
+
+                {/* Arrow */}
+                <ArrowRight className="h-8 w-8 text-emerald-600 flex-shrink-0" />
+
+                {/* Step 2: EAIS */}
+                <div className="flex-1 max-w-xs">
+                  <div className="bg-white rounded-xl p-6 border-2 border-emerald-300 shadow-md">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-3xl font-bold text-emerald-600">02</span>
+                      <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                        2 years
+                      </span>
+                    </div>
+                    <h4 className="font-bold text-gray-900 mb-2">
+                      Essential Arabic & Islamic Studies
+                    </h4>
+                    <p className="text-sm text-gray-600 text-justify">
+                      Master Arabic linguistics and Islamic sciences for direct comprehension
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mobile: Vertical Flow */}
+              <div className="md:hidden space-y-4 mb-8">
+                {/* Step 1: TMP */}
+                <div className="bg-white rounded-xl p-6 border-2 border-purple-300 shadow-md">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-3xl font-bold text-purple-600">01</span>
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                      6 months
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-gray-900 mb-2">
+                    Tajweed Mastery Program
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Build a strong foundation with the Qur'an through precision recitation
+                  </p>
+                </div>
+
+                {/* Arrow Down */}
+                <div className="flex justify-center">
+                  <div className="h-8 w-0.5 bg-emerald-600"></div>
+                </div>
+
+                {/* Step 2: EAIS */}
+                <div className="bg-white rounded-xl p-6 border-2 border-emerald-300 shadow-md">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-3xl font-bold text-emerald-600">02</span>
+                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                      2 years
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-gray-900 mb-2">
+                    Essential Arabic & Islamic Studies
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Master Arabic linguistics and Islamic sciences for direct comprehension
+                  </p>
+                </div>
+              </div>
+
+              {/* Why This Path */}
+              <div className="bg-white/60 rounded-xl p-6 border border-emerald-200">
+                <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-emerald-600" />
+                  Why This Progression Works
+                </h4>
+                <p className="text-sm text-gray-700 leading-relaxed text-justify">
+                  Starting with TMP establishes your spiritual connection to the Qur'an through perfected recitation. This 6-month foundation primes your mind and heart for the intensive 2-year EAIS journey, where you'll gain the linguistic tools to engage directly with Revelation. This sequential approach maximizes retention and prevents cognitive overload.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -684,7 +870,7 @@ const LandingPage = () => {
       <section className="bg-gray-50 py-16 sm:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
-            How Admission Works
+            The Path to Mastery
           </h2>
 
           {/* Mobile: Vertical Layout */}
@@ -692,10 +878,10 @@ const LandingPage = () => {
             {/* Step 1 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                1. Apply
+                01 | Online Application
               </h3>
-              <p className="text-sm text-gray-700">
-                Submit your application for one of our programs through our online form.
+              <p className="text-sm text-gray-700 text-justify">
+                Submit your details through our streamlined portal to begin the selection process for your chosen track.
               </p>
             </div>
 
@@ -705,10 +891,10 @@ const LandingPage = () => {
             {/* Step 2 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                2. Application Review
+                02 | Evaluation & Interview
               </h3>
-              <p className="text-sm text-gray-700">
-                Our team will review your application and notify you of the outcome within 1-2 weeks. Review may require a short phone interview.
+              <p className="text-sm text-gray-700 text-justify">
+                Our academic team reviews your background to ensure alignment with the program's prerequisites. This stage typically includes a brief phone interview to discuss your goals.
               </p>
             </div>
 
@@ -718,10 +904,10 @@ const LandingPage = () => {
             {/* Step 3 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                3. Secure Your Place
+                03 | Selection & Enrollment
               </h3>
-              <p className="text-sm text-gray-700">
-                Once approved, complete your enrollment by processing payment securely through Stripe.
+              <p className="text-sm text-gray-700 text-justify">
+                Successful applicants will receive a formal offer. Secure your place in the upcoming cohort by processing your enrollment through our secure payment gateway.
               </p>
             </div>
 
@@ -731,10 +917,10 @@ const LandingPage = () => {
             {/* Step 4 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                4. Get Started
+                04 | Onboarding & Mentorship
               </h3>
-              <p className="text-sm text-gray-700">
-                You'll be assigned a dedicated tutor, receive your student ID, and gain access to our learning platform with your login credentials.
+              <p className="text-sm text-gray-700 text-justify">
+                Receive your Student ID and access to the learning platform. You will be matched with an expert mentor who will guide your transition into the slated curriculum.
               </p>
             </div>
 
@@ -744,10 +930,10 @@ const LandingPage = () => {
             {/* Step 5 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                5. Learn & Grow
+                05 | Guided Execution
               </h3>
-              <p className="text-sm text-gray-700">
-                Attend classes and complete regular assessments as you progress through your program.
+              <p className="text-sm text-gray-700 text-justify">
+                Engage in intensive instruction and regular assessments. Our methodology ensures you hit every academic milestone with precision through consistent follow-up.
               </p>
             </div>
 
@@ -757,10 +943,10 @@ const LandingPage = () => {
             {/* Step 6 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                6. Graduate
+                06 | Final Validation
               </h3>
-              <p className="text-sm text-gray-700">
-                Successfully complete your final lesson and graduate from the program.
+              <p className="text-sm text-gray-700 text-justify">
+                Complete your final comprehensive evaluation to demonstrate mastery of the program's core competencies and slated objectives.
               </p>
             </div>
 
@@ -770,10 +956,10 @@ const LandingPage = () => {
             {/* Step 7 */}
             <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <h3 className="text-base font-bold text-emerald-600 mb-2">
-                7. Join Our Community
+                07 | Certification & Alumni Network
               </h3>
-              <p className="text-sm text-gray-700">
-                Receive your certificate of completion and become part of the The FastTrack Madrasah alumni network.
+              <p className="text-sm text-gray-700 text-justify">
+                Graduate with a formal Certificate of Completion and join an elite network of students committed to lifelong learning and traditional scholarship.
               </p>
             </div>
           </div>
@@ -784,39 +970,39 @@ const LandingPage = () => {
             {/* Step 1 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                1
+                01
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Apply
+                Online Application
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Submit your application for one of our programs through our online form.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Submit your details through our streamlined portal to begin the selection process for your chosen track.
               </p>
             </div>
 
             {/* Step 2 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                2
+                02
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Application Review
+                Evaluation & Interview
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Our team will review your application and notify you of the outcome within 1-2 weeks. Review may require a short phone interview.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Our academic team reviews your background to ensure alignment with the program's prerequisites. This stage typically includes a brief phone interview to discuss your goals.
               </p>
             </div>
 
             {/* Step 3 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                3
+                03
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Secure Your Place
+                Selection & Enrollment
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Once approved, complete your enrollment by processing payment securely through Stripe.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Successful applicants will receive a formal offer. Secure your place in the upcoming cohort by processing your enrollment through our secure payment gateway.
               </p>
             </div>
 
@@ -824,39 +1010,39 @@ const LandingPage = () => {
             {/* Step 4 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                4
+                04
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Get Started
+                Onboarding & Mentorship
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                You'll be assigned a dedicated tutor, receive your student ID, and gain access to our learning platform with your login credentials.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Receive your Student ID and access to the learning platform. You will be matched with an expert mentor who will guide your transition into the slated curriculum.
               </p>
             </div>
 
             {/* Step 5 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                5
+                05
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Learn & Grow
+                Guided Execution
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Attend classes and complete regular assessments as you progress through your program.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Engage in intensive instruction and regular assessments. Our methodology ensures you hit every academic milestone with precision through consistent follow-up.
               </p>
             </div>
 
             {/* Step 6 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                6
+                06
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Graduate
+                Final Validation
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Successfully complete your final lesson and graduate from the program.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Complete your final comprehensive evaluation to demonstrate mastery of the program's core competencies and slated objectives.
               </p>
             </div>
 
@@ -864,13 +1050,13 @@ const LandingPage = () => {
             {/* Step 7 */}
             <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm md:col-start-2">
               <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
-                7
+                07
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Join Our Community
+                Certification & Alumni Network
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Receive your certificate of completion and become part of the The FastTrack Madrasah alumni network.
+              <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                Graduate with a formal Certificate of Completion and join an elite network of students committed to lifelong learning and traditional scholarship.
               </p>
             </div>
           </div>
@@ -891,25 +1077,50 @@ const LandingPage = () => {
 
           <div className="space-y-4">
             {faqs.map((faq, idx) => (
-              <div key={idx} className="bg-white rounded-lg border border-gray-200">
+              <div key={idx} className={`bg-white rounded-lg border-2 ${faq.isRecommended ? 'border-emerald-500 shadow-md' : 'border-gray-200'}`}>
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full px-6 py-4 text-left flex items-start justify-between hover:bg-gray-50 transition-colors"
                 >
-                  <span className="font-semibold text-gray-900 pr-4">{faq.question}</span>
+                  <div className="flex-1 pr-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-gray-900">{faq.question}</span>
+                      {faq.isRecommended && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800">
+                          Recommended Path
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm text-gray-600">{faq.subQuestion}</span>
+                  </div>
                   {openFaq === idx ? (
-                    <Minus className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                    <Minus className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-1" />
                   ) : (
-                    <Plus className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                    <Plus className="h-5 w-5 text-gray-400 flex-shrink-0 mt-1" />
                   )}
                 </button>
                 {openFaq === idx && (
                   <div className="px-6 pb-4">
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                    <p className="text-gray-600 leading-relaxed text-justify">{faq.answer}</p>
                   </div>
                 )}
               </div>
             ))}
+          </div>
+          <div className="mt-12 text-center p-8 bg-emerald-50 rounded-2xl border border-emerald-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Still have questions?</h3>
+            <p className="text-gray-600 mb-6">
+              If you're unsure which track is right for you, we're here to help.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+              <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
+                Email Support <ArrowRight className="h-4 w-4" />
+              </a>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <a href="tel:+64272131486" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
+                Call Us <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
