@@ -10,6 +10,7 @@ const LandingPage = () => {
   const [openFaq, setOpenFaq] = useState(null);
   const [expandedProgram, setExpandedProgram] = useState(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [openApproachCard, setOpenApproachCard] = useState(null);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -391,99 +392,221 @@ const LandingPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Card 1 */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
-              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                01
-              </div>
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+              <button
+                onClick={() => setOpenApproachCard(openApproachCard === 0 ? null : 0)}
+                className="w-full p-6 text-left md:cursor-default"
+              >
+                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                  01
+                </div>
 
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Flexible & Personalized Learning
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                  Every student progresses at their own pace. When beneficial, we may group family members or students with similar backgrounds into cohort learning for enhanced engagement and support.
-                </p>
-              </div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Flexible & Personalized Learning
+                    </h3>
+                    {/* Mobile toggle icon */}
+                    <div className="md:hidden flex-shrink-0 mt-1">
+                      {openApproachCard === 0 ? (
+                        <Minus className="h-5 w-5 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Content - hidden on mobile unless expanded, always visible on desktop */}
+                  <div className={`${openApproachCard === 0 ? 'block' : 'hidden'} md:block`}>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
+                      Every student progresses at their own pace within our slated curriculum framework. We recognize that each learner brings unique strengths and challenges to their educational journey.
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                      When beneficial, we strategically group family members or students with similar backgrounds into cohort learning, fostering peer support and collaborative growth while maintaining individual accountability.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
-              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                02
-              </div>
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+              <button
+                onClick={() => setOpenApproachCard(openApproachCard === 1 ? null : 1)}
+                className="w-full p-6 text-left md:cursor-default"
+              >
+                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                  02
+                </div>
 
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Islamic Values at the Core
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                  Beyond teaching Arabic language, we cultivate Islamic character and values. Our curriculum integrates spiritual development with linguistic mastery.
-                </p>
-              </div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Islamic Values at the Core
+                    </h3>
+                    <div className="md:hidden flex-shrink-0 mt-1">
+                      {openApproachCard === 1 ? (
+                        <Minus className="h-5 w-5 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={`${openApproachCard === 1 ? 'block' : 'hidden'} md:block`}>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
+                      Beyond teaching Arabic language and grammar, we cultivate Islamic character rooted in the Qur'an and Sunnah. Our curriculum seamlessly integrates spiritual development with linguistic mastery.
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                      Students learn not just how to read and understand revelation, but how to embody its timeless principles in their daily lives through proper manners and devotion.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
-              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                03
-              </div>
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+              <button
+                onClick={() => setOpenApproachCard(openApproachCard === 2 ? null : 2)}
+                className="w-full p-6 text-left md:cursor-default"
+              >
+                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                  03
+                </div>
 
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Classical Script & Traditional Pedagogy
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                 Our curriculum is grounded in authentic, time-tested texts of Islamic scholarship. We prioritize traditional knowledge transmission; in Arabic and Tajweed sessions, instructors teach via live board-writing, requiring students to take physical notes. This active engagement develops your Arabic penmanship and ensures deep cognitive retention of linguistic rules through centuries-proven methods.
-                </p>
-              </div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Classical Script & Traditional Pedagogy
+                    </h3>
+                    <div className="md:hidden flex-shrink-0 mt-1">
+                      {openApproachCard === 2 ? (
+                        <Minus className="h-5 w-5 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={`${openApproachCard === 2 ? 'block' : 'hidden'} md:block`}>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
+                      Our curriculum is grounded in authentic, time-tested texts of Islamic scholarship that have educated generations of students for centuries.
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                      We prioritize traditional knowledge transmission through live board-writing during Arabic and Tajweed sessions, requiring students to take physical notes. This active engagement develops Arabic penmanship while ensuring deep cognitive retention through centuries-proven methods.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </div>
 
             {/* Card 4 */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
-              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                04
-              </div>
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+              <button
+                onClick={() => setOpenApproachCard(openApproachCard === 3 ? null : 3)}
+                className="w-full p-6 text-left md:cursor-default"
+              >
+                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                  04
+                </div>
 
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Anywhere, Anytime Accessibility
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                  All classes are conducted via video conferencing, making quality Islamic education accessible wherever you are in New Zealand.
-                </p>
-              </div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Anywhere, Anytime Accessibility
+                    </h3>
+                    <div className="md:hidden flex-shrink-0 mt-1">
+                      {openApproachCard === 3 ? (
+                        <Minus className="h-5 w-5 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={`${openApproachCard === 3 ? 'block' : 'hidden'} md:block`}>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
+                      All classes are conducted via secure video conferencing platforms, eliminating geographical barriers to authentic Islamic education. Whether you're in Auckland, Wellington, or Christchurch, quality instruction is just a click away.
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                      This digital approach combines convenience with consistency, allowing students throughout New Zealand to access the same high-caliber teaching without compromising on traditional standards.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </div>
 
             {/* Card 5 */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
-              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                05
-              </div>
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+              <button
+                onClick={() => setOpenApproachCard(openApproachCard === 4 ? null : 4)}
+                className="w-full p-6 text-left md:cursor-default"
+              >
+                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                  05
+                </div>
 
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Rigorous Assessment Framework
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                  Regular evaluations throughout your learning journey ensure knowledge retention and help identify areas for growth, solidifying your understanding at each stage.
-                </p>
-              </div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Rigorous Assessment Framework
+                    </h3>
+                    <div className="md:hidden flex-shrink-0 mt-1">
+                      {openApproachCard === 4 ? (
+                        <Minus className="h-5 w-5 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={`${openApproachCard === 4 ? 'block' : 'hidden'} md:block`}>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
+                      Regular evaluations throughout your learning journey ensure genuine knowledge retention and mastery, not just superficial familiarity with concepts.
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                      Our systematic assessment approach helps identify areas for growth early, allowing for targeted intervention and support to solidify your understanding before advancing to the next slated module.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </div>
 
             {/* Card 6 */}
-            <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow relative">
-              <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                06
-              </div>
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+              <button
+                onClick={() => setOpenApproachCard(openApproachCard === 5 ? null : 5)}
+                className="w-full p-6 text-left md:cursor-default"
+              >
+                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
+                  06
+                </div>
 
-              <div className="relative z-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Holistic Mentorship
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                  We don't just teach—we mentor. Our support extends beyond the classroom to guide students in both their spiritual journey and daily life challenges.
-                </p>
-              </div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      Holistic Mentorship
+                    </h3>
+                    <div className="md:hidden flex-shrink-0 mt-1">
+                      {openApproachCard === 5 ? (
+                        <Minus className="h-5 w-5 text-emerald-600" />
+                      ) : (
+                        <Plus className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className={`${openApproachCard === 5 ? 'block' : 'hidden'} md:block`}>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
+                      We don't just teach—we mentor. Each student is paired with an experienced guide who provides dedicated follow-up and personalized academic support throughout their journey.
+                    </p>
+                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                      Our mentorship extends beyond the virtual classroom to support students in their spiritual development and help them navigate daily life challenges through an Islamic lens.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
         </div>
