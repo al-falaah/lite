@@ -692,11 +692,11 @@ const LandingPage = () => {
 
               <div className="px-5 sm:px-6 pb-5 sm:pb-6">
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  <span className="font-semibold">The Mission:</span> An intensive 24-week sprint to transform basic reading into expert-level precision. Through a slated curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
+                  An intensive 24-week sprint to transform basic reading into expert-level precision. Through a slated curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
 
                 </p>
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  <span className="font-semibold">The Accelerator Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>), grounding your recitation in authentic scholarly and historical context.
+                  <span className="font-semibold">Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>), grounding your recitation in authentic scholarly and historical context.
                 </p>
                 {/* Key Info - Always Visible */}
                 <div className="bg-purple-50 rounded-lg p-4 mb-4">
@@ -800,11 +800,11 @@ const LandingPage = () => {
 
               <div className="px-5 sm:px-6 pb-5 sm:pb-6">
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  <span className="font-semibold">The Mission:</span> A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our slated curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
+                  A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our slated curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
 
                 </p>
                 <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  <span className="font-semibold">The Accelerator Edge:</span> We move beyond isolated language study by integrating Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>). Through expert mentoring and systematic textual study, we equip you with the linguistic and spiritual infrastructure to engage directly with the Qur'an and Sunnah.
+                  <span className="font-semibold">Our Edge:</span> We move beyond isolated language study by integrating Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>). Through expert mentoring and systematic textual study, we equip you with the linguistic and spiritual infrastructure to engage directly with the Qur'an and Sunnah.
                 </p>
                 {/* <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
                   Equip yourself with intermediate Arabic proficiency and foundational Islamic knowledge in creed, manners, and jurisprudence through comprehensive study of classical texts.
@@ -1237,7 +1237,7 @@ const LandingPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
               <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
-                Email Support <ArrowRight className="h-4 w-4" />
+                Email us <ArrowRight className="h-4 w-4" />
               </a>
               <span className="hidden sm:inline text-gray-400">|</span>
               <a href="tel:+64272131486" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
