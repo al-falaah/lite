@@ -43,6 +43,12 @@ const LandingPage = () => {
       subQuestion: "Is this program suitable for absolute beginners?",
       answer: "Our tracks are designed for students who can already read the Arabic script fluently with ḥarakāt (vowel markings). If you can read the Qur'an but lack understanding of the grammar or Tajweed rules, our slated curriculum is specifically engineered to accelerate you toward intermediate mastery."
     },
+        {
+      question: "Program Enrollment Strategy",
+      subQuestion: "Can I enroll in both tracks simultaneously?",
+      answer: "To ensure the highest level of mastery and retention, we strongly encourage students to focus on one track at a time. Our methodology is intensive and slated for deep progress; attempting both simultaneously can dilute your focus. For most students, we recommend starting with the Tajweed Mastery Program (TMP). Laying this strong foundational connection with the Qur'anic text provides the ideal spiritual and linguistic springboard for the 2-year Essential Arabic & Islamic Studies (EAIS) track.",
+      isRecommended: true
+    },
     {
       question: "The \"Accelerator\" Methodology",
       subQuestion: "What makes the \"FastTrack\" methodology different from traditional classes?",
@@ -52,6 +58,11 @@ const LandingPage = () => {
       question: "Time Commitment",
       subQuestion: "How much time do I need to commit each week?",
       answer: "Students should attend two live sessions per week: one 2-hour primary instruction session and one 30-minute mentoring/assessment session. Additionally, we recommend 2–3 hours of independent study to master the slated objectives for that week."
+    },
+    {
+      question: "Commitment & Accountability",
+      subQuestion: "What happens if I struggle to maintain my commitment to the program?",
+      answer: "We understand that life can be unpredictable. However, due to the slated nature of our curriculum, consistent attendance and engagement are crucial. If you find yourself falling behind, we encourage open communication with your tutor (mentor) to explore options for support or adjustments."
     },
     {
       question: "Selective Admission",
@@ -67,12 +78,6 @@ const LandingPage = () => {
       question: "Mentoring & Support",
       subQuestion: "What does \"Dedicated Follow-up\" actually look like?",
       answer: "You aren't just a face in a Zoom gallery. Our team monitors your assessment results weekly. If you struggle with a concept, your mentor provides dedicated follow-up during the short sessions to address gaps in understanding before we move to the next slated module."
-    },
-    {
-      question: "Program Enrollment Strategy",
-      subQuestion: "Can I enroll in both tracks simultaneously?",
-      answer: "To ensure the highest level of mastery and retention, we strongly encourage students to focus on one track at a time. Our methodology is intensive and slated for deep progress; attempting both simultaneously can dilute your focus. For most students, we recommend starting with the Tajweed Mastery Program (TMP). Laying this strong foundational connection with the Qur'anic text provides the ideal spiritual and linguistic springboard for the 2-year Essential Arabic & Islamic Studies (EAIS) track.",
-      isRecommended: true
     }
   ];
 
@@ -791,10 +796,10 @@ const LandingPage = () => {
                  Track 2: Essential Arabic & Islamic Studies (EAIS)
                 </h3>
                  <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
-                   العربية والدراسات الإسلامية الأساسية
+                  الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                 </p>
                 <p className="text-xs sm:text-sm text-gray-600">
-                  <span className="italic font-serif tracking-wide">Al-'Arabiyyah wal-Dirāsāt al-Islāmiyyah al-Asāsiyyah</span>
+                  <span className="italic font-serif tracking-wide">Ad-Dirāsāt al-Asāsiyyah fīl-Lughah al-ʿArabiyyah wal-ʿUlūm al-Islāmiyyah</span>
                 </p>
               </div>
 

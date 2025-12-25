@@ -391,7 +391,7 @@ const StudentPortal = () => {
                 />
                 <div className="flex flex-col">
                   <span className="text-xl font-semibold text-gray-900">The FastTrack Madrasah</span>
-                  <span className="text-xs text-gray-500 font-arabic"> أكاديمية الفلاح</span>
+                  {/* <span className="text-xs text-gray-500 font-arabic"> أكاديمية الفلاح</span> */}
                 </div>
               </Link>
               <Link to="/">

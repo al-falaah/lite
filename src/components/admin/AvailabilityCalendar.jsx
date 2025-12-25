@@ -561,10 +561,10 @@ const AvailabilityCalendar = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900 flex items-center">
             <Calendar className="h-6 w-6 mr-2 text-emerald-600" />
-            Scheduling & Availability
+            Class Schedules
           </h2>
           <p className="text-gray-600 mt-1">
-            View availability, schedule classes, and manage bookings
+            Schedule classes and manage bookings
           </p>
         </div>
       </div>

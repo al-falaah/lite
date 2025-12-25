@@ -438,7 +438,7 @@ const AdminDashboard = () => {
               }`}
             >
               <Calendar className="h-5 w-5" />
-              Class Availability and Scheduling
+              Class Scheduling
             </button>
             <button
               onClick={() => setActiveTab('teachers')}

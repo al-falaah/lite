@@ -449,7 +449,7 @@ export default function TeacherPortal() {
                 <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 sm:h-12 sm:w-12 group-hover:scale-110 transition-transform" />
                 <div>
                   <div className="text-lg sm:text-xl font-bold text-emerald-600">The FastTrack Madrasah</div>
-                  <div className="text-xs text-gray-600 font-arabic hidden sm:block"> أكاديمية الفلاح</div>
+                  {/* <div className="text-xs text-gray-600 font-arabic hidden sm:block"> أكاديمية الفلاح</div> */}
                 </div>
               </a>
               <a
