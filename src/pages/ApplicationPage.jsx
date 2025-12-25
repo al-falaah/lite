@@ -481,60 +481,6 @@ const ApplicationPage = () => {
                     Select Your Program <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {/* Essential Arabic & Islamic Studies Program */}
-                    <label
-                      className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
-                        formData.program === 'essentials'
-                          ? 'border-emerald-600 bg-emerald-50 shadow-md'
-                          : 'border-gray-300 hover:border-emerald-300 bg-white'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="program"
-                        value="essentials"
-                        checked={formData.program === 'essentials'}
-                        onChange={handleChange}
-                        className="sr-only"
-                      />
-                      <div className="flex items-start mb-3">
-                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === 'essentials' ? 'text-emerald-600' : 'text-gray-500'}`} />
-                        <div className="flex-1 min-w-0">
-                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === 'essentials' ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            Essential Arabic & Islamic Studies Program
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mb-3">Comprehensive 2-year Educational Program</p>
-                        </div>
-                      </div>
-                      <div className="space-y-2 text-xs sm:text-sm">
-                        <div className="flex items-center text-gray-700">
-                          <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span>Duration: 2 years (24 months)</span>
-                        </div>
-                        <div className="flex items-start text-gray-700">
-                          <span className="mr-2 flex-shrink-0">💰</span>
-                          <span className="break-words">Monthly: $25 NZD/month or Annual: $275 NZD/year</span>
-                        </div>
-                        <div className="flex items-center text-gray-700">
-                          <span className="mr-2 flex-shrink-0">📚</span>
-                          <span>Personalized one-on-one learning</span>
-                        </div>
-                        <div className="flex items-start text-gray-700">
-                          <span className="mr-2 flex-shrink-0">⏱️</span>
-                          <span className="break-words">2 sessions/week (2 hours + 30 min)</span>
-                        </div>
-                        <div className="mt-3 pt-3 border-t border-gray-200">
-                          <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
-                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: $600 | Annual: $550</p>
-                        </div>
-                      </div>
-                      {formData.program === 'essentials' && (
-                        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
-                          <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
-                        </div>
-                      )}
-                    </label>
-
                     {/* Tajweed Program */}
                     <label
                       className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
@@ -555,9 +501,9 @@ const ApplicationPage = () => {
                         <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === 'tajweed' ? 'text-emerald-600' : 'text-gray-500'}`} />
                         <div className="flex-1 min-w-0">
                           <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === 'tajweed' ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            Tajweed Program
+                            Tajweed Mastery Program
                           </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mb-3">Intensive Qur'anic recitation course</p>
+                          <p className="text-xs sm:text-sm text-gray-600 mb-3">Build a strong foundation with the Qur'an through precision recitation</p>
                         </div>
                       </div>
                       <div className="space-y-2 text-xs sm:text-sm">
@@ -583,6 +529,59 @@ const ApplicationPage = () => {
                         </div>
                       </div>
                       {formData.program === 'tajweed' && (
+                        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
+                          <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
+                        </div>
+                      )}
+                    </label>
+                     {/* Essential Arabic & Islamic Studies Program */}
+                    <label
+                      className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                        formData.program === 'essentials'
+                          ? 'border-emerald-600 bg-emerald-50 shadow-md'
+                          : 'border-gray-300 hover:border-emerald-300 bg-white'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="program"
+                        value="essentials"
+                        checked={formData.program === 'essentials'}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <div className="flex items-start mb-3">
+                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === 'essentials' ? 'text-emerald-600' : 'text-gray-500'}`} />
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === 'essentials' ? 'text-emerald-900' : 'text-gray-900'}`}>
+                            Essential Arabic & Islamic Studies Program
+                          </h3>
+                          <p className="text-xs sm:text-sm text-gray-600 mb-3">Master Arabic linguistics and Islamic sciences for direct comprehension</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2 text-xs sm:text-sm">
+                        <div className="flex items-center text-gray-700">
+                          <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                          <span>Duration: 2 years (24 months)</span>
+                        </div>
+                        <div className="flex items-start text-gray-700">
+                          <span className="mr-2 flex-shrink-0">💰</span>
+                          <span className="break-words">Monthly: $25 NZD/month or Annual: $275 NZD/year</span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <span className="mr-2 flex-shrink-0">📚</span>
+                          <span>Personalized one-on-one learning</span>
+                        </div>
+                        <div className="flex items-start text-gray-700">
+                          <span className="mr-2 flex-shrink-0">⏱️</span>
+                          <span className="break-words">2 sessions/week (2 hours + 30 min)</span>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-gray-200">
+                          <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
+                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: $600 | Annual: $550</p>
+                        </div>
+                      </div>
+                      {formData.program === 'essentials' && (
                         <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
                           <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                         </div>
