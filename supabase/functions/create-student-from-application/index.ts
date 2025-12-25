@@ -81,15 +81,16 @@ serve(async (req) => {
 
       console.log(`Creating new ${program} enrollment for existing student`)
     } else {
-      // Note: Student ID will be generated AFTER payment, not before
-      // Students who haven't paid yet don't get official student IDs
+      // Note: Student ID and password will be generated AFTER payment, not before
+      // Students who haven't paid yet don't get credentials
       console.log('Creating new student record')
 
-      // Create student record without student_id
+      // Create student record without student_id and password (will be set after payment)
       const { data: newStudent, error: studentError } = await supabaseClient
         .from('students')
         .insert({
           student_id: null, // Will be assigned after payment (6-digit random number)
+          password: null, // Will be generated after payment
           full_name: application.full_name,
           email: application.email,
           phone: application.phone,
@@ -132,6 +133,7 @@ serve(async (req) => {
             full_name: student.full_name,
             email: student.email,
             student_id: null, // No student ID until payment
+            password: null, // No password until payment
             program: program // Pass program for program-aware email
           },
           appUrl: appUrl
@@ -161,7 +163,7 @@ serve(async (req) => {
         student: student,
         program: program,
         isNewStudent: isNewStudent,
-        note: 'Enrollment will be created after successful Stripe payment'
+        note: 'Student created with pending_payment status. Student ID and password will be generated after payment. Enrollment will be created after successful Stripe payment.'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

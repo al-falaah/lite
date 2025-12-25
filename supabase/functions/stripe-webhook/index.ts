@@ -54,7 +54,7 @@ serve(async (req) => {
       // Track if this is a new student to send welcome email
       const isNewStudent = student.status === 'pending_payment'
 
-      // If student is pending_payment, generate student ID and update status
+      // If student is pending_payment, generate student ID, password and update status
       if (isNewStudent) {
         // Generate random 6-digit numeric student ID using database function
         const { data: idResult, error: idError } = await supabaseClient
@@ -68,11 +68,25 @@ serve(async (req) => {
         const generatedStudentId = idResult
         console.log(`Generated random student ID: ${generatedStudentId}`)
 
-        // Update student status and Stripe customer ID
+        // Generate temporary password (8 characters: mix of letters and numbers)
+        const generatePassword = () => {
+          const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // Removed similar-looking chars
+          let password = ''
+          for (let i = 0; i < 8; i++) {
+            password += chars.charAt(Math.floor(Math.random() * chars.length))
+          }
+          return password
+        }
+
+        const generatedPassword = generatePassword()
+        console.log('Generated temporary password for student')
+
+        // Update student status, student_id, password, and Stripe customer ID
         const { error: updateError } = await supabaseClient
           .from('students')
           .update({
             student_id: generatedStudentId,
+            password: generatedPassword,
             status: 'enrolled',
             stripe_customer_id: session.customer || null,
           })
@@ -82,8 +96,9 @@ serve(async (req) => {
           console.error('Error updating student:', updateError)
         } else {
           console.log('Student enrolled:', studentId, 'with ID:', generatedStudentId)
-          // Update the student object with the new student_id
+          // Update the student object with the new credentials
           student.student_id = generatedStudentId
+          student.password = generatedPassword
           student.status = 'enrolled'
         }
       }
