@@ -380,7 +380,10 @@ const BlogAdmin = () => {
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity mb-4">
               <img src="/favicon.svg" alt="Al-Falaah Logo" className="h-10 w-10" />
-              <span className="text-2xl font-bold text-gray-900">The FastTrack Madrasah</span>
+              <div className="flex flex-col leading-none -space-y-1">
+                <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+              </div>
             </Link>
             <h2 className="text-2xl font-bold text-gray-900 mt-4">Blog Admin</h2>
             <p className="text-gray-600 mt-2">Sign in to manage blog posts</p>
@@ -465,9 +468,12 @@ const BlogAdmin = () => {
                 alt="Al-Falaah Logo"
                 className="h-8 w-8"
               />
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold text-gray-900">The FastTrack Madrasah</span>
-                <span className="text-xs text-gray-500">Blog Admin</span>
+              <div className="flex flex-col leading-none -space-y-1">
+                <div className="flex flex-col leading-none -space-y-1">
+                  <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                  <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-0.5">Blog Admin</span>
               </div>
             </Link>
             <div className="flex items-center gap-4">

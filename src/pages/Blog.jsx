@@ -100,9 +100,12 @@ const Blog = () => {
                 alt="Al-Falaah Logo"
                 className="h-8 w-8"
               />
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold text-gray-900">The FastTrack Madrasah</span>
-                <span className="text-xs text-gray-500">Blog</span>
+              <div className="flex flex-col leading-none -space-y-1">
+                <div className="flex flex-col leading-none -space-y-1">
+                  <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                  <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                </div>
+                <span className="text-xs text-gray-500 mt-0.5">Blog</span>
               </div>
             </Link>
             <Link

@@ -82,8 +82,9 @@ const StripePaymentPage = () => {
                 alt="Al-Falaah Logo"
                 className="h-8 w-8 md:h-10 md:w-10"
               />
-              <div className="flex flex-col">
-                <span className="text-md md:text-xl font-semibold text-emerald-600">The FastTrack Madrasah</span>
+              <div className="flex flex-col leading-none -space-y-1">
+                <span className="text-sm md:text-base font-semibold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-sm md:text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link to="/">

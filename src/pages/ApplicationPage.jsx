@@ -406,8 +406,9 @@ const ApplicationPage = () => {
                 alt="Al-Falaah Logo"
                 className="h-8 w-8"
               />
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold text-gray-900">The FastTrack Madrasah</span>
+              <div className="flex flex-col leading-none -space-y-1">
+                <span className="text-sm sm:text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-sm sm:text-base font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
               </div>
             </Link>
@@ -793,10 +794,9 @@ const ApplicationPage = () => {
             {/* Step 3: Class Availability */}
             {currentStep === 3 && (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Class Availability</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Preferred Class Timings</h2>
                 <p className="text-gray-600 mb-6">
                   Help us schedule your personalized classes by indicating your preferred days and times.
-                  Classes are one-on-one (2 hours per week).
                 </p>
 
                 {/* Timezone Selection - Moved to top */}
