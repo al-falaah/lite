@@ -288,11 +288,15 @@ const ApplicationPage = () => {
         status: 'pending'
       };
 
+      console.log('[ApplicationPage] Submitting application data:', applicationData);
+
       const { data: newApplication, error: applicationError } = await applications.create(applicationData);
 
+      console.log('[ApplicationPage] Response received:', { data: newApplication, error: applicationError });
+
       if (applicationError) {
-        toast.error('Failed to submit application');
-        console.error(applicationError);
+        toast.error(`Failed to submit application: ${applicationError.message || 'Unknown error'}`);
+        console.error('[ApplicationPage] Application error:', applicationError);
         return;
       }
 
