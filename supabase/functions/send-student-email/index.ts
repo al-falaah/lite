@@ -151,13 +151,7 @@ serve(async (req) => {
     <div class="container">
       <div class="header">
         <div class="logo-container">
-          <table cellpadding="0" cellspacing="0" border="0" align="center">
-            <tr>
-              <td width="64" height="64" style="background: #059669; border-radius: 12px; text-align: center; vertical-align: middle;">
-                <span style="color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; letter-spacing: 1px; line-height: 64px; display: inline-block;">AFA</span>
-              </td>
-            </tr>
-          </table>
+          <img src="https://tftmadrasah.nz/favicon.svg" alt="The FastTrack Madrasah Logo" width="64" height="64" style="display: block; margin: 0 auto;" />
         </div>
         <div class="brand-name">The FastTrack Madrasah</div>
         <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
