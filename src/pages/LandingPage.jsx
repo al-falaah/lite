@@ -324,13 +324,15 @@ const LandingPage = () => {
                 </blockquote>
 
                 {/* Founder Info */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pl-6">
-                  <img
-                    src="/founder.jpeg"
-                    alt="Dr Abdulquadri Alaka"
-                    className="w-24 h-24 rounded-full object-cover bg-gray-200 ring-4 ring-white shadow-md"
-                  />
-                  <div className="flex-1">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 sm:gap-12 pl-6">
+                  <div className="flex-shrink-0">
+                    <img
+                      src="/founder.jpeg"
+                      alt="Dr Abdulquadri Alaka"
+                      className="w-24 h-24 rounded-full object-cover scale-150 bg-gray-200 ring-4 ring-white shadow-md"
+                    />
+                  </div>
+                  <div className="flex-1 sm:ml-4">
                     <p className="text-xl">
                       <a
                       href=""
@@ -339,7 +341,7 @@ const LandingPage = () => {
                       className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-emerald-800 transition-colors group"
                       >
                       Dr Abdulquadri Alaka
-                      </a> 
+                      </a>
                       </p>
                     <p className="text-base text-gray-600 mb-3">
                       Founder, The FastTrack Madrasah
