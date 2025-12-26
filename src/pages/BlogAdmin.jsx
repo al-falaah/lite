@@ -243,19 +243,61 @@ const BlogAdmin = () => {
         console.log('Inserting new post');
         console.log('Insert data:', postData);
 
-        // Add timeout to prevent hanging
-        const insertPromise = supabase
-          .from('blog_posts')
-          .insert([postData])
-          .select()
-          .single();
+        // BYPASS SUPABASE CLIENT - Use direct REST API
+        console.log('[DIRECT API] Bypassing Supabase client, using direct REST API...');
 
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Insert request timed out after 10 seconds')), 10000)
-        );
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-        result = await Promise.race([insertPromise, timeoutPromise]);
-        console.log('Insert result:', result);
+        // Get auth token
+        const { data: { session } } = await supabase.auth.getSession();
+        const accessToken = session?.access_token;
+
+        console.log('[DIRECT API] Auth token:', accessToken ? 'Found' : 'Not found');
+
+        const headers = {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Prefer': 'return=representation'
+        };
+
+        if (accessToken) {
+          headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        console.log('[DIRECT API] Making fetch request...');
+
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(postData)
+          });
+
+          console.log('[DIRECT API] Response status:', response.status, response.statusText);
+
+          const responseData = await response.json();
+          console.log('[DIRECT API] Response data:', responseData);
+
+          if (!response.ok) {
+            result = {
+              data: null,
+              error: {
+                message: responseData.message || response.statusText,
+                details: responseData,
+                code: responseData.code
+              }
+            };
+          } else {
+            result = {
+              data: Array.isArray(responseData) ? responseData[0] : responseData,
+              error: null
+            };
+          }
+        } catch (fetchError) {
+          console.error('[DIRECT API] Fetch error:', fetchError);
+          throw fetchError;
+        }
       }
 
       if (result.error) {
