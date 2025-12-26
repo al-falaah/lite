@@ -39,32 +39,44 @@ export const AuthProvider = ({ children }) => {
     );
 
     return () => {
-      authListener?.subscription?.unsubscribe();
+      // Properly unsubscribe from auth state changes
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, []);
 
   const checkUser = async () => {
     try {
-      // Add timeout to prevent infinite loading
+      console.log('[checkUser] Starting session check...');
+
+      // Reduced timeout to 3 seconds to prevent page hang
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Auth check timeout')), 5000)
+        setTimeout(() => reject(new Error('Auth check timeout')), 3000)
       );
 
       const authCheck = supabase.auth.getSession();
 
       // Race between auth check and timeout
-      const { data: { session } } = await Promise.race([authCheck, timeout]);
+      const result = await Promise.race([authCheck, timeout]);
+      const session = result?.data?.session;
 
       if (session?.user) {
+        console.log('[checkUser] Session found for user:', session.user.id);
         setUser(session.user);
         await loadProfile(session.user.id);
       } else {
-        console.log('No active session found');
+        console.log('[checkUser] No active session found');
+        setUser(null);
+        setProfile(null);
       }
     } catch (error) {
-      console.error('Error checking user:', error);
-      // Even on error, stop loading to prevent infinite spinner
+      console.error('[checkUser] Error checking user:', error);
+      // On timeout or error, clear user state to prevent stuck state
+      setUser(null);
+      setProfile(null);
     } finally {
+      console.log('[checkUser] Auth check complete, setting loading to false');
       setLoading(false);
     }
   };
@@ -214,21 +226,21 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     try {
       console.log('SignOut initiated');
-      setLoading(true); // Set loading while signing out
+      setLoading(true);
 
-      // Add timeout to prevent infinite loading
+      // Add timeout to prevent infinite loading (reduced to 3 seconds)
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('SignOut timeout')), 5000)
+        setTimeout(() => reject(new Error('SignOut timeout')), 3000)
       );
 
       const signOutPromise = auth.signOut();
 
       // Race between sign out and timeout
-      const { error } = await Promise.race([signOutPromise, timeout]);
+      const result = await Promise.race([signOutPromise, timeout]);
 
-      if (error) {
-        console.error('SignOut error:', error);
-        throw error;
+      if (result?.error) {
+        console.error('SignOut error:', result.error);
+        // Don't throw - continue with local cleanup
       }
 
       console.log('SignOut successful, clearing user and profile');
@@ -238,12 +250,16 @@ export const AuthProvider = ({ children }) => {
 
       return { error: null };
     } catch (error) {
-      console.error('SignOut exception:', error);
-      setLoading(false);
-      // Clear user and profile even on timeout to allow logout
+      console.error('SignOut exception (likely timeout):', error);
+
+      // IMPORTANT: Clear user and profile even on timeout/error
+      // This ensures local state is cleared even if server signout fails
       setUser(null);
       setProfile(null);
-      return { error };
+      setLoading(false);
+
+      // Return success because local state is cleared
+      return { error: null };
     }
   };
 

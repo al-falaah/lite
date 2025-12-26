@@ -51,29 +51,29 @@ const AdminDashboard = () => {
 
   // Auto-logout after 15 minutes of inactivity (only for logged-in admins)
   const handleIdleLogout = useCallback(async () => {
-    if (user && profile?.role === 'admin') {
-      toast.error('Session expired due to inactivity. Please log in again.');
-      try {
-        await signOut();
-        navigate('/admin');
-      } catch (error) {
-        console.error('Auto-logout error:', error);
-      }
+    toast.error('Session expired due to inactivity. Please log in again.');
+    try {
+      await signOut();
+      navigate('/admin');
+    } catch (error) {
+      console.error('Auto-logout error:', error);
     }
-  }, [user, profile, signOut, navigate]);
+  }, [signOut, navigate]);
 
   const handleIdleWarning = useCallback(() => {
-    if (user && profile?.role === 'admin') {
-      toast.warning('You will be logged out in 1 minute due to inactivity.');
-    }
-  }, [user, profile]);
+    toast.warning('You will be logged out in 1 minute due to inactivity.');
+  }, []);
 
   // Only activate idle timeout when admin is logged in
+  // Conditionally use the hook based on auth state
+  const isAdminLoggedIn = user && profile?.role === 'admin';
+
   useIdleTimeout({
     onIdle: handleIdleLogout,
     onWarning: handleIdleWarning,
     idleTime: 15 * 60 * 1000, // 15 minutes
-    warningTime: 1 * 60 * 1000 // 1 minute warning
+    warningTime: 1 * 60 * 1000, // 1 minute warning
+    enabled: isAdminLoggedIn // Only enable when admin is logged in
   });
 
   useEffect(() => {
@@ -132,15 +132,20 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
+      console.log('Admin logout initiated');
       const { error } = await signOut();
       if (error) {
-        throw error;
+        console.error('Logout error:', error);
+        // Even if there's an error, navigate away to force logout
+        toast.warning('Logout completed (with errors)');
       }
-      // Navigate to admin login page after successful logout
+      // Navigate to admin login page after logout
       navigate('/admin');
     } catch (error) {
-      console.error('Logout error:', error);
-      toast.error('Failed to logout');
+      console.error('Logout exception:', error);
+      toast.error('Logout failed, redirecting anyway');
+      // Force navigation even on error
+      navigate('/admin');
     }
   };
 

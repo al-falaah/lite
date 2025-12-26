@@ -6,12 +6,14 @@ import { useEffect, useRef } from 'react';
  * @param {number} idleTime - Time in milliseconds before user is considered idle (default: 15 minutes)
  * @param {number} warningTime - Time in milliseconds before idle to show warning (default: 1 minute)
  * @param {Function} onWarning - Optional callback for warning before idle timeout
+ * @param {boolean} enabled - Whether the idle timeout is enabled (default: true)
  */
 const useIdleTimeout = ({
   onIdle,
   idleTime = 15 * 60 * 1000, // 15 minutes
   warningTime = 1 * 60 * 1000, // 1 minute before idle
-  onWarning
+  onWarning,
+  enabled = true
 }) => {
   const idleTimerRef = useRef(null);
   const warningTimerRef = useRef(null);
@@ -40,6 +42,11 @@ const useIdleTimeout = ({
   };
 
   useEffect(() => {
+    // Don't set up timers if not enabled
+    if (!enabled) {
+      return;
+    }
+
     // List of events that indicate user activity
     const events = [
       'mousedown',
@@ -78,7 +85,7 @@ const useIdleTimeout = ({
         clearTimeout(warningTimerRef.current);
       }
     };
-  }, [idleTime, warningTime, onIdle, onWarning]);
+  }, [idleTime, warningTime, onIdle, onWarning, enabled]);
 };
 
 export default useIdleTimeout;
