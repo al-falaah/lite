@@ -326,7 +326,7 @@ const LandingPage = () => {
                 {/* Founder Info */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pl-6">
                   <img
-                    src="/placeholder-founder.svg"
+                    src="/founder.jpeg"
                     alt="Dr Abdulquadri Alaka"
                     className="w-24 h-24 rounded-full object-cover bg-gray-200 ring-4 ring-white shadow-md"
                   />

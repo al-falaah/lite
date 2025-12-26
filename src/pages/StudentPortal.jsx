@@ -680,110 +680,184 @@ const StudentPortal = () => {
               );
             }
 
-            // Get program-specific progress to determine current week
-            const programProgress = programSchedules.find(s => s.status === 'scheduled');
-            const currentWeek = progress?.current_week || programProgress?.week_number || 1;
-            const currentYear = progress?.current_year || programProgress?.academic_year || 1;
+            // Get current active week based on program
+            const getCurrentActiveWeekAndYear = () => {
+              const weeksPerYear = isTajweed ? 24 : 52;
+              const now = new Date();
+              const startDate = new Date(enrollment.start_date);
+              const diffTime = Math.abs(now - startDate);
+              const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+              const year = Math.floor(diffWeeks / weeksPerYear) + 1;
+              const week = (diffWeeks % weeksPerYear) + 1;
+              return { week, year };
+            };
 
-            // Get current week's classes for this program - filter by both week AND year
+            const currentActive = getCurrentActiveWeekAndYear();
+            const weeksPerYear = isTajweed ? 24 : 52;
+            const totalWeeks = isTajweed ? 24 : 104;
+            const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
+            const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
+
             const currentWeekClasses = programSchedules.filter(
-              s => s.status !== 'completed' &&
-                   s.week_number === currentWeek &&
-                   s.academic_year === currentYear
+              s => s.academic_year === currentActive.year && s.week_number === currentActive.week
             );
+
+            const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
+            const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
 
             return (
               <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                {/* Week Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-gray-200 gap-3 sm:gap-0">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{programName}</h2>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Your weekly class schedule • {programSchedules.length} classes total
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                      Week {currentActive.week} of {weeksPerYear}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                      <span className="inline-flex items-center px-2 py-1 rounded-md bg-emerald-100 text-emerald-800 font-medium">
+                        {programName} - Year {currentActive.year}
+                      </span>
                     </p>
                   </div>
-                  <div className="sm:text-right">
-                    <p className="text-sm text-gray-600">Current Week</p>
-                    <p className="text-xl font-bold text-emerald-600">
-                      Year {currentYear}, Week {currentWeek}
-                    </p>
+                  <div className="flex sm:flex-col sm:text-right gap-4 sm:gap-0">
+                    <div className="flex-1 sm:flex-initial">
+                      <p className="text-xs sm:text-sm text-gray-600">Progress</p>
+                      <p className="text-xl sm:text-2xl font-bold text-emerald-600">
+                        {progressPercent}%
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Current Week's Schedule */}
-                <div className="space-y-3">
-                  {currentWeekClasses.length > 0 ? (
-                    currentWeekClasses.map((schedule) => (
-                      <div
-                        key={schedule.id}
-                        className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 bg-white hover:border-emerald-300 transition-colors"
-                      >
-                        <div className="flex-shrink-0">
-                          <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-emerald-100">
-                            <Calendar className="h-6 w-6 text-emerald-600" />
+                {/* Current Week Classes */}
+                {currentWeekClasses.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                    {/* Main Class */}
+                    {mainClass && (
+                      <div className="bg-blue-50 p-4 sm:p-5 rounded-lg border-2 border-blue-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+                            <span className="text-sm sm:text-base font-semibold text-blue-900">
+                              Main Class (2 hrs)
+                            </span>
                           </div>
+                          <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+                            mainClass.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            mainClass.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {mainClass.status}
+                          </span>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-gray-900 whitespace-nowrap">{getDayName(schedule.day_of_week)}</h3>
-                            <span className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap bg-emerald-100 text-emerald-700">
-                              Wk {schedule.week_number}
-                            </span>
-                            <span className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap bg-gray-100 text-gray-700">
-                              Yr {schedule.academic_year}
-                            </span>
-                            <span className="px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap bg-gray-100 text-gray-700">
-                              {schedule.class_type === 'main' ? '2 hrs' : '30 min'}
-                            </span>
+
+                        {mainClass.scheduled_date && (
+                          <div className="mb-3">
+                            <p className="text-xs sm:text-sm text-blue-700 font-medium">
+                              {new Date(mainClass.scheduled_date).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </p>
+                            <p className="text-xs sm:text-sm text-blue-600">
+                              {new Date(mainClass.scheduled_date).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
                           </div>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600">
-                            <div className="flex items-center gap-1 whitespace-nowrap">
-                              <Clock className="h-4 w-4 flex-shrink-0" />
-                              <span>{formatScheduleTime(schedule.class_time)}</span>
-                            </div>
-                            {schedule.meeting_link && (
-                              <a
-                                href={schedule.meeting_link.startsWith('http') ? schedule.meeting_link : `https://${schedule.meeting_link}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-medium whitespace-nowrap"
-                              >
-                                <Video className="h-4 w-4 flex-shrink-0" />
-                                <span>Join Class</span>
-                                <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                        {schedule.status === 'completed' && (
-                          <CheckCircle className="h-6 w-6 text-emerald-600 flex-shrink-0" />
+                        )}
+
+                        {mainClass.meeting_link && mainClass.status === 'scheduled' && (
+                          <a
+                            href={mainClass.meeting_link.startsWith('http') ? mainClass.meeting_link : `https://${mainClass.meeting_link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                          >
+                            Join Class
+                          </a>
                         )}
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      <Calendar className="h-12 w-12 mx-auto mb-3 text-gray-400" />
-                      <p className="text-sm">No upcoming classes this week</p>
-                    </div>
-                  )}
-                </div>
+                    )}
 
-                {/* Schedule Stats */}
-                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                    <p className="text-sm text-gray-600 mb-1">Total Classes</p>
-                    <p className="text-2xl font-bold text-gray-900">{programSchedules.length}</p>
+                    {/* Short Class */}
+                    {shortClass && (
+                      <div className="bg-purple-50 p-4 sm:p-5 rounded-lg border-2 border-purple-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+                            <span className="text-sm sm:text-base font-semibold text-purple-900">
+                              Short Class (30 min)
+                            </span>
+                          </div>
+                          <span className={`text-xs px-3 py-1 rounded-full font-medium ${
+                            shortClass.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            shortClass.status === 'scheduled' ? 'bg-purple-100 text-purple-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {shortClass.status}
+                          </span>
+                        </div>
+
+                        {shortClass.scheduled_date && (
+                          <div className="mb-3">
+                            <p className="text-xs sm:text-sm text-purple-700 font-medium">
+                              {new Date(shortClass.scheduled_date).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </p>
+                            <p className="text-xs sm:text-sm text-purple-600">
+                              {new Date(shortClass.scheduled_date).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        )}
+
+                        {shortClass.meeting_link && shortClass.status === 'scheduled' && (
+                          <a
+                            href={shortClass.meeting_link.startsWith('http') ? shortClass.meeting_link : `https://${shortClass.meeting_link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                          >
+                            Join Class
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <div className="text-center p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                    <p className="text-sm text-gray-600 mb-1">Completed</p>
-                    <p className="text-2xl font-bold text-emerald-600">
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p>No classes scheduled for this week</p>
+                  </div>
+                )}
+
+                {/* Program Stats */}
+                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-gray-900">
                       {programSchedules.filter(s => s.status === 'completed').length}
                     </p>
+                    <p className="text-xs text-gray-600 mt-1">Completed</p>
                   </div>
-                  <div className="text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                    <p className="text-sm text-gray-600 mb-1">Upcoming</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-600">
                       {programSchedules.filter(s => s.status === 'scheduled').length}
                     </p>
+                    <p className="text-xs text-gray-600 mt-1">Upcoming</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-gray-900">
+                      {programSchedules.length}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">Total</p>
                   </div>
                 </div>
               </Card>

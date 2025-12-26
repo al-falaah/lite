@@ -30,40 +30,36 @@ const BlogAdmin = () => {
   }, []);
 
   const fetchAllPosts = async () => {
-    console.log('[BlogAdmin] Fetching all posts...');
-
-    // Set a timeout to ensure loading stops even if request hangs
-    const timeoutId = setTimeout(() => {
-      console.warn('[BlogAdmin] Fetch taking too long, stopping loading state');
-      setLoading(false);
-      setPosts([]);
-    }, 5000); // 5 second timeout
+    console.log('[BlogAdmin] Fetching all posts using direct API...');
+    setLoading(true);
 
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      clearTimeout(timeoutId);
-      console.log('[BlogAdmin] Fetch result:', { data, error });
+      const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?order=created_at.desc&select=*`, {
+        headers: {
+          'apikey': supabaseKey,
+          'Content-Type': 'application/json'
+        }
+      });
 
-      if (error) {
-        console.error('[BlogAdmin] Supabase error:', error);
-        throw error;
+      console.log('[BlogAdmin] Fetch response:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
+      const data = await response.json();
+      console.log('[BlogAdmin] Posts fetched:', data?.length || 0, 'posts');
+
       setPosts(data || []);
-      console.log('[BlogAdmin] Posts set:', data?.length || 0, 'posts');
     } catch (error) {
-      clearTimeout(timeoutId);
       console.error('[BlogAdmin] Error fetching posts:', error);
-      console.error('[BlogAdmin] Error details:', JSON.stringify(error, null, 2));
       toast.error(`Failed to load posts: ${error.message || 'Unknown error'}`);
       setPosts([]);
     } finally {
       setLoading(false);
-      console.log('[BlogAdmin] Loading complete');
     }
   };
 
@@ -249,9 +245,39 @@ const BlogAdmin = () => {
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-        // Get auth token
-        const { data: { session } } = await supabase.auth.getSession();
-        const accessToken = session?.access_token;
+        // Get auth token - check all possible storage locations
+        console.log('[DIRECT API] Looking for auth token in storage...');
+
+        let accessToken = null;
+
+        // Try different localStorage keys that Supabase might use
+        const possibleKeys = [
+          `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`,
+          'supabase.auth.token',
+          'sb-auth-token'
+        ];
+
+        for (const key of possibleKeys) {
+          const data = localStorage.getItem(key);
+          if (data) {
+            console.log('[DIRECT API] Found data in key:', key);
+            try {
+              const parsed = JSON.parse(data);
+              accessToken = parsed.access_token || parsed.accessToken || parsed.currentSession?.access_token;
+              if (accessToken) {
+                console.log('[DIRECT API] Extracted access token from:', key);
+                break;
+              }
+            } catch (e) {
+              console.error('[DIRECT API] Failed to parse data from', key, ':', e);
+            }
+          }
+        }
+
+        // If still no token, just use the apikey (anon key) which should work with RLS disabled
+        if (!accessToken) {
+          console.log('[DIRECT API] No access token found - using apikey only');
+        }
 
         console.log('[DIRECT API] Auth token:', accessToken ? 'Found' : 'Not found');
 
@@ -261,8 +287,12 @@ const BlogAdmin = () => {
           'Prefer': 'return=representation'
         };
 
+        // Add auth token if we have one (but should work without it since RLS is disabled)
         if (accessToken) {
           headers['Authorization'] = `Bearer ${accessToken}`;
+          console.log('[DIRECT API] Added Authorization header');
+        } else {
+          console.log('[DIRECT API] No auth token - relying on apikey only');
         }
 
         console.log('[DIRECT API] Making fetch request...');
@@ -316,8 +346,15 @@ const BlogAdmin = () => {
         : (publishNow ? 'Post published successfully!' : 'Post saved as draft');
 
       toast.success(successMessage);
-      await fetchAllPosts();
+
+      // Reset form immediately, don't wait for fetchAllPosts
       resetForm();
+
+      // Fetch posts in background (don't block on this)
+      fetchAllPosts().catch(err => {
+        console.error('[handleSave] Failed to refresh posts list:', err);
+        // Don't show error to user - they can refresh manually
+      });
     } catch (error) {
       console.error('Error saving post:', error);
       console.error('Error details:', JSON.stringify(error, null, 2));
