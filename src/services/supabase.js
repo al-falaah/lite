@@ -146,9 +146,7 @@ export const students = {
           id,
           program,
           enrolled_date,
-          status,
-          weeks_completed,
-          total_weeks
+          status
         )
       `)
       .eq('id', studentId)

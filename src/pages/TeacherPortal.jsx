@@ -827,6 +827,12 @@ export default function TeacherPortal() {
 
               {/* Current Week Schedule - High Level View */}
               <div className="mb-4 sm:mb-6">
+                {(() => {
+                  console.log('DEBUG: studentEnrollments:', studentEnrollments);
+                  console.log('DEBUG: selectedStudent.status:', selectedStudent?.status);
+                  console.log('DEBUG: currentAssignmentProgram:', currentAssignmentProgram);
+                  return null;
+                })()}
                 {/* Check if enrollment is not active - hide schedule completely */}
                 {studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? (
                   <div className="text-center py-8 bg-red-50 rounded-lg border-2 border-red-200">
