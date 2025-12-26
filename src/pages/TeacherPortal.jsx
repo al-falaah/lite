@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, Key, Edit2, CheckCircle, Mail, Send } from 'lucide-react';
+import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, Key, Edit2, CheckCircle, Mail, Send, XCircle } from 'lucide-react';
 import { teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 
@@ -827,7 +827,16 @@ export default function TeacherPortal() {
 
               {/* Current Week Schedule - High Level View */}
               <div className="mb-4 sm:mb-6">
-                {studentSchedules.length === 0 ? (
+                {/* Check if enrollment is not active - hide schedule completely */}
+                {studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? (
+                  <div className="text-center py-8 bg-red-50 rounded-lg border-2 border-red-200">
+                    <XCircle className="h-12 w-12 text-red-400 mx-auto mb-3" />
+                    <p className="text-red-800 font-semibold mb-2">Schedule Access Disabled</p>
+                    <p className="text-red-600 text-sm">
+                      This student's enrollment is {studentEnrollments[0].status}. Schedule management is not available.
+                    </p>
+                  </div>
+                ) : studentSchedules.length === 0 ? (
                   <div className="text-center py-6 sm:py-8 bg-gray-50 rounded-lg">
                     <Calendar className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-gray-600 text-xs sm:text-sm">No schedules available for this program</p>

@@ -668,6 +668,25 @@ const StudentPortal = () => {
             const programName = getProgramName(enrollment.program);
             const isTajweed = enrollment.program === 'tajweed';
 
+            // If enrollment is not active, show disabled message
+            if (enrollment.status !== 'active') {
+              return (
+                <Card key={enrollment.id} className="border-l-4 border-l-red-600">
+                  <div className="text-center py-8 bg-red-50">
+                    <Calendar className="h-16 w-16 mx-auto mb-4 text-red-400" />
+                    <p className="text-lg font-semibold mb-2 text-red-800">{programName} - Enrollment {enrollment.status}</p>
+                    <p className="text-sm text-red-600">
+                      {enrollment.status === 'withdrawn'
+                        ? 'Your enrollment has been withdrawn. Please contact admin for assistance.'
+                        : enrollment.status === 'completed'
+                        ? 'Congratulations! You have completed this program.'
+                        : 'Your enrollment is not active. Please contact admin for assistance.'}
+                    </p>
+                  </div>
+                </Card>
+              );
+            }
+
             if (programSchedules.length === 0) {
               return (
                 <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
