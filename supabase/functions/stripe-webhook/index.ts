@@ -234,7 +234,7 @@ serve(async (req) => {
       }
     }
 
-    // Handle subscription cancellations (student dropout)
+    // Handle subscription cancellations - FLAG for admin review instead of auto-withdraw
     if (event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
 
@@ -253,25 +253,34 @@ serve(async (req) => {
       }
 
       if (enrollment) {
-        console.log('Marking enrollment as withdrawn (dropout):', enrollment.id)
+        console.log('Flagging enrollment for admin review (subscription canceled):', enrollment.id)
 
-        // Update enrollment status to withdrawn (dropout)
+        // Add admin note flagging the subscription cancellation
+        const cancellationNote = `[${new Date().toISOString()}] SUBSCRIPTION CANCELED - Student canceled Stripe subscription. Needs admin review for withdrawal/dropout.`
+        const existingNotes = enrollment.admin_notes || ''
+        const updatedNotes = existingNotes
+          ? `${existingNotes}\n\n${cancellationNote}`
+          : cancellationNote
+
+        // Update enrollment with admin note - DO NOT auto-withdraw
         const { error: updateError } = await supabaseClient
           .from('enrollments')
           .update({
-            status: 'withdrawn',
+            admin_notes: updatedNotes,
             updated_at: new Date().toISOString(),
           })
           .eq('id', enrollment.id)
 
         if (updateError) {
-          console.error('Error updating enrollment status:', updateError)
+          console.error('Error flagging enrollment:', updateError)
         } else {
-          console.log('Enrollment marked as withdrawn. Student will need to reapply to rejoin.')
+          console.log('Enrollment flagged for admin review. Status remains active until admin manually withdraws.')
 
-          // Note: Schedules will automatically be hidden in the frontend
-          // because we filter by enrollment status = 'active'
-          // If student wants to rejoin, they must reapply and create a new enrollment
+          // TODO: Send notification to admin dashboard
+          // Admin will need to manually review and decide whether to:
+          // 1. Mark as withdrawn/dropout
+          // 2. Contact student for payment arrangement
+          // 3. Other action
         }
       }
     }

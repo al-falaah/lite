@@ -680,16 +680,39 @@ const StudentPortal = () => {
               );
             }
 
-            // Get current active week based on program
+            // Get current active week based on actual schedule data (same logic as TeacherPortal)
             const getCurrentActiveWeekAndYear = () => {
+              if (programSchedules.length === 0) return { year: 1, week: 1 };
+
+              const weekMap = {};
+
+              programSchedules.forEach(schedule => {
+                const key = `${schedule.academic_year}-${schedule.week_number}`;
+                if (!weekMap[key]) {
+                  weekMap[key] = [];
+                }
+                weekMap[key].push(schedule);
+              });
+
+              const totalYears = isTajweed ? 1 : 2;
               const weeksPerYear = isTajweed ? 24 : 52;
-              const now = new Date();
-              const startDate = new Date(enrollment.start_date);
-              const diffTime = Math.abs(now - startDate);
-              const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
-              const year = Math.floor(diffWeeks / weeksPerYear) + 1;
-              const week = (diffWeeks % weeksPerYear) + 1;
-              return { week, year };
+
+              // Check each year for the first incomplete week
+              for (let year = 1; year <= totalYears; year++) {
+                for (let weekNum = 1; weekNum <= weeksPerYear; weekNum++) {
+                  const weekClasses = weekMap[`${year}-${weekNum}`];
+                  if (!weekClasses || weekClasses.length === 0) {
+                    return { year, week: weekNum }; // First week without classes
+                  }
+
+                  const allCompleted = weekClasses.every(c => c.status === 'completed');
+                  if (!allCompleted) {
+                    return { year, week: weekNum }; // First incomplete week
+                  }
+                }
+              }
+
+              return { year: totalYears, week: weeksPerYear }; // All complete
             };
 
             const currentActive = getCurrentActiveWeekAndYear();

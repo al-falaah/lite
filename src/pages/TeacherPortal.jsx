@@ -279,6 +279,12 @@ export default function TeacherPortal() {
   };
 
   const handleEditSchedule = (schedule) => {
+    // Check if enrollment is active before allowing edit mode
+    if (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active') {
+      toast.error('Cannot edit schedule - student enrollment is not active');
+      return;
+    }
+
     setEditingSchedule(schedule.id);
     setEditedScheduleData({
       day_of_week: schedule.day_of_week,
@@ -293,6 +299,12 @@ export default function TeacherPortal() {
   };
 
   const handleSaveSchedule = async (scheduleId) => {
+    // Check if enrollment is active before allowing updates
+    if (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active') {
+      toast.error('Cannot update schedule - student enrollment is not active');
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await classSchedules.update(scheduleId, editedScheduleData);
@@ -324,6 +336,12 @@ export default function TeacherPortal() {
   };
 
   const handleMarkAsComplete = async (scheduleId) => {
+    // Check if enrollment is active before allowing updates
+    if (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active') {
+      toast.error('Cannot mark complete - student enrollment is not active');
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await classSchedules.update(scheduleId, {
@@ -778,9 +796,32 @@ export default function TeacherPortal() {
                     <p className="font-medium capitalize">{selectedStudent.gender}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Status</p>
+                    <p className="text-gray-600">Student Status</p>
                     <p className="font-medium capitalize">{selectedStudent.status.replace('_', ' ')}</p>
                   </div>
+                  {studentEnrollments.length > 0 && (
+                    <div className="sm:col-span-2">
+                      <p className="text-gray-600">Enrollment Status</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                          studentEnrollments[0].status === 'active' ? 'bg-green-100 text-green-800' :
+                          studentEnrollments[0].status === 'withdrawn' ? 'bg-red-100 text-red-800' :
+                          studentEnrollments[0].status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {studentEnrollments[0].status === 'active' ? '✓ Active' :
+                           studentEnrollments[0].status === 'withdrawn' ? '⚠ Withdrawn' :
+                           studentEnrollments[0].status === 'completed' ? '✓ Graduated' :
+                           studentEnrollments[0].status}
+                        </span>
+                        {studentEnrollments[0].status !== 'active' && (
+                          <span className="text-xs text-gray-500 italic">
+                            (Schedule updates disabled)
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -895,8 +936,13 @@ export default function TeacherPortal() {
                                 {mainClass.status === 'scheduled' && (
                                   <button
                                     onClick={() => handleMarkAsComplete(mainClass.id)}
-                                    disabled={loading}
-                                    className="text-sm text-green-700 hover:text-green-800 flex items-center font-medium"
+                                    disabled={loading || (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active')}
+                                    className={`text-sm flex items-center font-medium ${
+                                      studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active'
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-green-700 hover:text-green-800'
+                                    }`}
+                                    title={studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? 'Cannot mark complete - student enrollment is not active' : ''}
                                   >
                                     <CheckCircle className="h-4 w-4 mr-1" />
                                     Mark Complete
@@ -948,8 +994,13 @@ export default function TeacherPortal() {
                                 {shortClass.status === 'scheduled' && (
                                   <button
                                     onClick={() => handleMarkAsComplete(shortClass.id)}
-                                    disabled={loading}
-                                    className="text-sm text-green-700 hover:text-green-800 flex items-center font-medium"
+                                    disabled={loading || (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active')}
+                                    className={`text-sm flex items-center font-medium ${
+                                      studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active'
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-green-700 hover:text-green-800'
+                                    }`}
+                                    title={studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? 'Cannot mark complete - student enrollment is not active' : ''}
                                   >
                                     <CheckCircle className="h-4 w-4 mr-1" />
                                     Mark Complete

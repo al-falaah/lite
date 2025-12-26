@@ -233,6 +233,34 @@ const AdminStudentsList = () => {
     }
   };
 
+  const handleUpdateEnrollmentStatus = async (enrollmentId, newStatus) => {
+    try {
+      const { error } = await supabase
+        .from('enrollments')
+        .update({ status: newStatus })
+        .eq('id', enrollmentId);
+
+      if (error) {
+        console.error('Error updating enrollment status:', error);
+        toast.error('Failed to update enrollment status');
+        return;
+      }
+
+      toast.success('Enrollment status updated successfully');
+
+      // Refresh the student data to show updated enrollment status
+      if (selectedStudent) {
+        const { data: studentData } = await students.getById(selectedStudent.id);
+        if (studentData?.enrollments) {
+          setSelectedStudentEnrollments(studentData.enrollments);
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('An error occurred updating enrollment status');
+    }
+  };
+
   const closeModal = () => {
     setShowModal(false);
     setSelectedStudent(null);
@@ -934,6 +962,82 @@ const AdminStudentsList = () => {
                               <UserCheck className="h-4 w-4 mr-1" />
                               {assignedTeachers[enrollment.program] ? 'Change Teacher' : 'Assign Teacher'}
                             </Button>
+                          </div>
+                        </div>
+
+                        {/* Admin Notes - Show alert for subscription cancellations */}
+                        {enrollment.admin_notes && (
+                          <div className={`mt-4 p-3 rounded-lg border ${
+                            enrollment.admin_notes.includes('SUBSCRIPTION CANCELED')
+                              ? 'bg-red-50 border-red-300'
+                              : 'bg-gray-50 border-gray-300'
+                          }`}>
+                            <div className="flex items-start gap-2">
+                              {enrollment.admin_notes.includes('SUBSCRIPTION CANCELED') && (
+                                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                              )}
+                              <div className="flex-1">
+                                <p className={`text-xs font-semibold mb-1 ${
+                                  enrollment.admin_notes.includes('SUBSCRIPTION CANCELED')
+                                    ? 'text-red-900'
+                                    : 'text-gray-700'
+                                }`}>
+                                  Admin Notes
+                                  {enrollment.admin_notes.includes('SUBSCRIPTION CANCELED') && (
+                                    <span className="ml-2 px-2 py-0.5 bg-red-200 text-red-900 rounded text-xs">
+                                      ACTION REQUIRED
+                                    </span>
+                                  )}
+                                </p>
+                                <p className={`text-xs whitespace-pre-wrap ${
+                                  enrollment.admin_notes.includes('SUBSCRIPTION CANCELED')
+                                    ? 'text-red-800'
+                                    : 'text-gray-600'
+                                }`}>
+                                  {enrollment.admin_notes}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Update Enrollment Status */}
+                        <div className="mt-4 pt-4 border-t border-gray-300">
+                          <p className="text-xs font-semibold text-gray-700 mb-2">Update Enrollment Status</p>
+                          <div className="flex gap-2 flex-wrap">
+                            {enrollment.status !== 'active' && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-green-300 text-green-700 hover:bg-green-50 text-xs"
+                                onClick={() => handleUpdateEnrollmentStatus(enrollment.id, 'active')}
+                              >
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Set Active
+                              </Button>
+                            )}
+                            {enrollment.status !== 'withdrawn' && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-red-300 text-red-700 hover:bg-red-50 text-xs"
+                                onClick={() => handleUpdateEnrollmentStatus(enrollment.id, 'withdrawn')}
+                              >
+                                <XCircle className="h-3 w-3 mr-1" />
+                                Withdraw
+                              </Button>
+                            )}
+                            {enrollment.status !== 'completed' && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-blue-300 text-blue-700 hover:bg-blue-50 text-xs"
+                                onClick={() => handleUpdateEnrollmentStatus(enrollment.id, 'completed')}
+                              >
+                                <GraduationCap className="h-3 w-3 mr-1" />
+                                Mark Completed
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </div>
