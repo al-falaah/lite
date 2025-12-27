@@ -8,7 +8,6 @@ const BlogPost = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showShareMenu, setShowShareMenu] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
@@ -130,8 +129,6 @@ const BlogPost = () => {
     } else if (shareUrls[platform]) {
       window.open(shareUrls[platform], '_blank', 'width=600,height=400');
     }
-
-    setShowShareMenu(false);
   };
 
   // Detect if text contains Arabic characters
@@ -203,7 +200,8 @@ const BlogPost = () => {
 
   const siteUrl = window.location.origin;
   const postUrl = `${siteUrl}/blog/${post.slug}`;
-  const imageUrl = post.featured_image || `${siteUrl}/favicon.png`;
+  // Use absolute URL for OG image - fallback to a larger, more visible image
+  const imageUrl = post.featured_image || 'https://www.tftmadrasah.nz/favicon.png';
   const description = post.excerpt || getExcerpt(post.content);
 
   return (
