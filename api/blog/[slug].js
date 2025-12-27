@@ -1,23 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
+import fs from 'fs';
+import path from 'path';
 
-export const config = {
-  matcher: '/blog/:slug*',
-};
-
-export default async function middleware(request) {
-  const url = new URL(request.url);
-  const slug = url.pathname.split('/blog/')[1];
-
-  // Only handle blog post pages (not /blog or /blog/admin)
-  if (!slug || slug === '' || slug === 'admin') {
-    return;
-  }
+export default async function handler(req, res) {
+  const { slug } = req.query;
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    return;
+    return res.status(500).send('Server configuration error');
   }
 
   try {
@@ -32,7 +24,8 @@ export default async function middleware(request) {
       .single();
 
     if (error || !post) {
-      return;
+      // Redirect to main blog page if post not found
+      return res.redirect(307, '/blog');
     }
 
     // Generate excerpt
@@ -42,43 +35,40 @@ export default async function middleware(request) {
       return text.length > length ? text.substring(0, length) + '...' : text;
     };
 
-    const siteUrl = url.origin;
+    const siteUrl = `https://${req.headers.host}`;
     const postUrl = `${siteUrl}/blog/${post.slug}`;
     const imageUrl = post.featured_image || `${siteUrl}/favicon.png`;
     const description = post.excerpt || getExcerpt(post.content);
 
-    // Inject OG meta tags into the HTML
-    const response = await fetch(`${url.origin}/index.html`);
-    let html = await response.text();
+    // Read the index.html file
+    const indexPath = path.join(process.cwd(), 'dist', 'index.html');
+    let html = fs.readFileSync(indexPath, 'utf-8');
 
-    // Replace the default meta tags with blog-specific ones
+    // Inject OG meta tags
     const ogTags = `
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="${post.title} | The FastTrack Madrasah Blog" />
+    <meta property="og:title" content="${post.title.replace(/"/g, '&quot;')} | The FastTrack Madrasah Blog" />
     <meta property="og:description" content="${description.replace(/"/g, '&quot;')}" />
     <meta property="og:image" content="${imageUrl}" />
     <meta property="og:url" content="${postUrl}" />
     <meta property="og:site_name" content="The FastTrack Madrasah" />
     <meta property="article:published_time" content="${post.published_at}" />
-    <meta property="article:author" content="${post.author_name}" />
+    <meta property="article:author" content="${post.author_name.replace(/"/g, '&quot;')}" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${post.title}" />
+    <meta name="twitter:title" content="${post.title.replace(/"/g, '&quot;')}" />
     <meta name="twitter:description" content="${description.replace(/"/g, '&quot;')}" />
     <meta name="twitter:image" content="${imageUrl}" />
     <meta name="description" content="${description.replace(/"/g, '&quot;')}" />
-    <title>${post.title} | The FastTrack Madrasah Blog</title>
+    <title>${post.title.replace(/"/g, '&quot;')} | The FastTrack Madrasah Blog</title>
 `;
 
-    // Insert OG tags into <head>
+    // Insert OG tags before </head>
     html = html.replace('</head>', `${ogTags}\n  </head>`);
 
-    return new Response(html, {
-      headers: {
-        'content-type': 'text/html;charset=UTF-8',
-      },
-    });
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.status(200).send(html);
   } catch (error) {
-    console.error('Middleware error:', error);
-    return;
+    console.error('Error in blog handler:', error);
+    res.status(500).send('Internal server error');
   }
 }

@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/blog/:slug",
+      "destination": "/api/blog/:slug"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
@@ -15,10 +19,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "middleware.js": {
-      "runtime": "edge"
-    }
-  }
+  ]
 }
