@@ -3,129 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
-
-const EMAIL_STYLES = `
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.6;
-    color: #1f2937;
-    background-color: #f9fafb;
-  }
-  .email-wrapper {
-    background-color: #f9fafb;
-    padding: 40px 20px;
-  }
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-  .header {
-    background: white;
-    padding: 32px 40px 24px;
-    text-align: center;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  .logo-container {
-    margin-bottom: 16px;
-  }
-  .brand-name {
-    font-size: 24px;
-    font-weight: 700;
-    color: #059669;
-    margin: 8px 0 4px;
-  }
-  .brand-tagline {
-    font-size: 13px;
-    color: #6b7280;
-    font-weight: 400;
-  }
-  .header-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #111827;
-    margin: 20px 0 8px;
-  }
-  .header-subtitle {
-    font-size: 15px;
-    color: #6b7280;
-    margin: 0;
-  }
-  .content {
-    padding: 40px;
-  }
-  .greeting {
-    font-size: 20px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 16px;
-  }
-  .paragraph {
-    margin-bottom: 16px;
-    color: #374151;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .info-box {
-    background: #f0fdf4;
-    border-left: 4px solid #059669;
-    padding: 20px;
-    margin: 24px 0;
-    border-radius: 6px;
-  }
-  .info-box-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #047857;
-    margin-bottom: 16px;
-  }
-  .cta-button {
-    display: inline-block;
-    background: #059669;
-    color: white;
-    padding: 16px 40px;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    margin: 24px 0;
-    transition: background 0.2s;
-  }
-  .cta-button:hover {
-    background: #047857;
-  }
-  .highlight-box {
-    background: #fef3c7;
-    border: 2px solid #f59e0b;
-    padding: 20px;
-    margin: 24px 0;
-    border-radius: 8px;
-  }
-  .highlight-box h3 {
-    margin-top: 0;
-    color: #92400e;
-    font-size: 18px;
-  }
-  .footer {
-    text-align: center;
-    padding: 32px 40px;
-    background: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-  }
-  .footer-text {
-    color: #6b7280;
-    font-size: 13px;
-    margin: 4px 0;
-  }
-  .footer-link {
-    color: #059669;
-    text-decoration: none;
-  }
-`;
+import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
 
 function generateEmailHTML(applicantData: any, appUrl: string): string {
   const { full_name, email, program } = applicantData;
@@ -146,15 +24,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
     <body>
       <div class="email-wrapper">
         <div class="container">
-          <div class="header">
-            <div class="logo-container">
-              <img src="https://tftmadrasah.nz/favicon.svg" alt="The FastTrack Madrasah Logo" width="64" height="64" style="display: block; margin: 0 auto;" />
-            </div>
-            <div class="brand-name">The FastTrack Madrasah</div>
-            <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
-            <h1 class="header-title">Congratulations! 🎉</h1>
-            <p class="header-subtitle">Your application has been approved</p>
-          </div>
+          ${getHeaderHTML('Application Approved', 'Your application has been approved')}
 
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
@@ -183,35 +53,25 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
             </p>
 
             <p class="paragraph"><strong>Complete Your Enrollment:</strong></p>
-            <ol style="margin: 16px 0; padding-left: 24px; color: #374151;">
-              <li style="margin-bottom: 8px;">Click the button above to access the payment page</li>
-              <li style="margin-bottom: 8px;">${isTajweed ? 'Complete your $120 payment' : 'Choose your preferred payment plan (monthly or annual)'}</li>
-              <li style="margin-bottom: 8px;">Complete secure payment via Stripe</li>
-              <li style="margin-bottom: 8px;">You'll receive a welcome email with your student details</li>
-              <li style="margin-bottom: 8px;">Your personalized classes will be scheduled</li>
+            <ol style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
+              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">Click the button above to access the payment page</li>
+              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">${isTajweed ? 'Complete your $120 payment' : 'Choose your preferred payment plan (monthly or annual)'}</li>
+              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">Complete secure payment via Stripe</li>
+              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">You'll receive a welcome email with your student details</li>
+              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">Your personalized classes will be scheduled</li>
             </ol>
 
-            <p class="paragraph">If you have any questions about payment, please don't hesitate to contact us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none;">admin@tftmadrasah.nz</a>.</p>
+            <p class="paragraph">If you have any questions about payment, please don't hesitate to contact us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>
 
             <p class="paragraph">We look forward to having you in our academy!</p>
 
-            <p class="paragraph" style="margin-top: 32px;">
-              JazakAllah Khair,<br>
-              <strong>The FastTrack Madrasah Team</strong>
+            <p class="paragraph" style="margin-top: 36px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
+              Jazaakumullaahu Khayran,<br>
+              <strong style="color: #059669;">The FastTrack Madrasah Team</strong>
             </p>
           </div>
 
-          <div class="footer">
-            <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
-            <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
-            <p class="footer-text" style="margin-top: 16px;">
-              <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
-            </p>
-            <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-              © ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
-            </p>
-            <p class="footer-text">New Zealand</p>
-          </div>
+          ${getFooterHTML()}
         </div>
       </div>
     </body>

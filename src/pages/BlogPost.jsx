@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Home } from 'lucide-react';
 
 const BlogPost = () => {
@@ -151,8 +152,46 @@ const BlogPost = () => {
     return null;
   }
 
+  // Generate excerpt from content for description
+  const getExcerpt = (content, length = 160) => {
+    if (!content) return '';
+    const text = content.replace(/<[^>]*>/g, '').trim();
+    return text.length > length ? text.substring(0, length) + '...' : text;
+  };
+
+  const siteUrl = window.location.origin;
+  const postUrl = `${siteUrl}/blog/${post.slug}`;
+  const imageUrl = post.featured_image || `${siteUrl}/favicon.png`;
+  const description = post.excerpt || getExcerpt(post.content);
+
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        {/* Basic meta tags */}
+        <title>{post.title} | The FastTrack Madrasah Blog</title>
+        <meta name="description" content={description} />
+
+        {/* Open Graph meta tags for Facebook, WhatsApp, etc. */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:url" content={postUrl} />
+        <meta property="og:site_name" content="The FastTrack Madrasah" />
+        <meta property="article:published_time" content={post.published_at} />
+        <meta property="article:author" content={post.author_name} />
+
+        {/* Twitter Card meta tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+
+        {/* Additional meta tags */}
+        <meta name="author" content={post.author_name} />
+        <link rel="canonical" href={postUrl} />
+      </Helmet>
+
       {/* Navigation Bar */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

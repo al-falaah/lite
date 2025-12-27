@@ -3,145 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
-
-const EMAIL_STYLES = `
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.6;
-    color: #1f2937;
-    background-color: #f9fafb;
-  }
-  .email-wrapper {
-    background-color: #f9fafb;
-    padding: 40px 20px;
-  }
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-  .header {
-    background: white;
-    padding: 32px 40px 24px;
-    text-align: center;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  .logo-container {
-    margin-bottom: 16px;
-  }
-  .brand-name {
-    font-size: 24px;
-    font-weight: 700;
-    color: #059669;
-    margin: 8px 0 4px;
-  }
-  .brand-tagline {
-    font-size: 13px;
-    color: #6b7280;
-    font-weight: 400;
-  }
-  .header-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #111827;
-    margin: 20px 0 8px;
-  }
-  .header-subtitle {
-    font-size: 15px;
-    color: #6b7280;
-    margin: 0;
-  }
-  .content {
-    padding: 40px;
-  }
-  .greeting {
-    font-size: 20px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 16px;
-  }
-  .paragraph {
-    margin-bottom: 16px;
-    color: #374151;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .info-box {
-    background: #f0fdf4;
-    border-left: 4px solid #059669;
-    padding: 20px;
-    margin: 24px 0;
-    border-radius: 6px;
-  }
-  .info-box-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #047857;
-    margin-bottom: 16px;
-  }
-  .info-box table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .info-box td {
-    padding: 8px 0;
-    border-bottom: 1px solid #d1fae5;
-  }
-  .info-box tr:last-child td {
-    border-bottom: none;
-  }
-  .label {
-    font-weight: 600;
-    color: #065f46;
-    width: 40%;
-  }
-  .value {
-    color: #374151;
-  }
-  .cta-button {
-    display: inline-block;
-    background: #059669;
-    color: white;
-    padding: 16px 40px;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    margin: 24px 0;
-    transition: background 0.2s;
-  }
-  .cta-button:hover {
-    background: #047857;
-  }
-  ul {
-    margin: 16px 0;
-    padding-left: 24px;
-    color: #374151;
-  }
-  ul li {
-    margin-bottom: 8px;
-    line-height: 1.6;
-  }
-  .footer {
-    text-align: center;
-    padding: 32px 40px;
-    background: #f9fafb;
-    border-top: 1px solid #e5e7eb;
-  }
-  .footer-text {
-    color: #6b7280;
-    font-size: 13px;
-    margin: 4px 0;
-  }
-  .footer-link {
-    color: #059669;
-    text-decoration: none;
-  }
-`;
+import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
 
 function generateEmailHTML(studentData: any, baseUrl: string): string {
   const { full_name, email, student_id, program, password } = studentData;
@@ -164,15 +26,7 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
     <body>
       <div class="email-wrapper">
         <div class="container">
-          <div class="header">
-            <div class="logo-container">
-              <img src="https://tftmadrasah.nz/favicon.svg" alt="The FastTrack Madrasah Logo" width="64" height="64" style="display: block; margin: 0 auto;" />
-            </div>
-            <div class="brand-name">The FastTrack Madrasah</div>
-            <div class="brand-tagline">الفلاح • Authentic Islamic Education</div>
-            <h1 class="header-title">Welcome to Al-Falaah! 🌟</h1>
-            <p class="header-subtitle">Your journey of knowledge begins now</p>
-          </div>
+          ${getHeaderHTML('Welcome to The FastTrack Madrasah', 'Your journey of knowledge begins now')}
 
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>
@@ -184,11 +38,11 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
               <table>
                 <tr>
                   <td class="label">Student ID</td>
-                  <td class="value" style="color: #059669; font-size: 16px; font-weight: 600;">${student_id}</td>
+                  <td class="value" style="color: #059669; font-size: 18px; font-weight: 700; font-family: monospace;">${student_id}</td>
                 </tr>
                 <tr>
                   <td class="label">Program</td>
-                  <td class="value">${programName}</td>
+                  <td class="value"><strong>${programName}</strong></td>
                 </tr>
                 <tr>
                   <td class="label">Duration</td>
@@ -196,69 +50,61 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
                 </tr>
                 <tr>
                   <td class="label">Status</td>
-                  <td class="value" style="color: #059669; font-weight: 600;">✓ Active</td>
+                  <td class="value" style="color: #059669; font-weight: 700;">✓ Active</td>
                 </tr>
               </table>
             </div>
 
-            <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; margin: 24px 0; border-radius: 6px;">
-              <div style="font-size: 18px; font-weight: 700; color: #92400e; margin-bottom: 16px;">🔐 Your Login Credentials</div>
-              <table style="width: 100%; border-collapse: collapse;">
+            <div class="highlight-box">
+              <h3>Your Login Credentials</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
                 <tr>
-                  <td style="padding: 8px 0; border-bottom: 1px solid #fde68a; font-weight: 600; color: #92400e; width: 50%;">Student ID</td>
-                  <td style="padding: 8px 0; border-bottom: 1px solid #fde68a; color: #059669; font-size: 16px; font-weight: 600; font-family: monospace;">${student_id}</td>
+                  <td style="padding: 12px 0; border-bottom: 2px solid #fde68a; font-weight: 700; color: #92400e; width: 50%; font-size: 15px;">Student ID</td>
+                  <td style="padding: 12px 0; border-bottom: 2px solid #fde68a; color: #059669; font-size: 17px; font-weight: 700; font-family: monospace;">${student_id}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; font-weight: 600; color: #92400e; width: 50%;">Temporary Password</td>
-                  <td style="padding: 8px 0; color: #92400e; font-size: 16px; font-weight: 600; font-family: monospace;">${password}</td>
+                  <td style="padding: 12px 0; font-weight: 700; color: #92400e; width: 50%; font-size: 15px;">Temporary Password</td>
+                  <td style="padding: 12px 0; color: #92400e; font-size: 17px; font-weight: 700; font-family: monospace;">${password}</td>
                 </tr>
               </table>
-              <p style="margin: 12px 0 0 0; font-size: 14px; color: #92400e; line-height: 1.6;"><strong>⚠️ Important:</strong> You will be required to change your password on first login for security. Please choose a strong password (minimum 8 characters).</p>
+              <p style="margin: 20px 0 0 0; font-size: 14px; color: #92400e; line-height: 1.7;">
+                <strong>Important Security Notice:</strong> You will be required to change your password on first login. Please choose a strong password (minimum 8 characters) that includes letters, numbers, and special characters.
+              </p>
             </div>
 
-            <p class="paragraph"><strong>What You Can Do Now:</strong></p>
-            <ul>
-              <li>Access your student portal at any time using your Student ID</li>
-              <li>View your class schedule and meeting links</li>
-              <li>Track your progress through the program</li>
-              <li>View your enrollment details</li>
-              <li>Apply for additional programs</li>
+            <p class="paragraph" style="margin-top: 32px;"><strong style="font-size: 18px; color: #1a202c;">What You Can Do Now:</strong></p>
+            <ul style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
+              <li style="margin-bottom: 12px; line-height: 1.7;">Access your student portal at any time using your Student ID</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;">View your class schedule and join meeting links</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;">Track your progress through the program</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;">View your enrollment details and payment history</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;">Apply for additional programs when ready</li>
             </ul>
 
             <center>
-              <a href="${baseUrl}/student" class="cta-button">Access Student Portal</a>
+              <a href="${baseUrl}/student" class="cta-button">Access Student Portal →</a>
             </center>
 
-            <p class="paragraph"><strong>Important Reminders:</strong></p>
-            <ul>
-              <li>Save your Student ID and temporary password - you'll need both to access the portal</li>
-              <li>Change your temporary password on first login for security</li>
-              <li>Check your class schedule regularly for upcoming sessions</li>
-              <li>Join classes on time using the meeting links provided</li>
-              <li>Keep your contact information up to date</li>
+            <p class="paragraph" style="margin-top: 36px;"><strong style="font-size: 18px; color: #1a202c;">Important Reminders:</strong></p>
+            <ul style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your credentials</strong> - Keep your Student ID and temporary password safe until you change it</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Change your password</strong> - Do this immediately on first login for security</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Check your schedule</strong> - Review your class times regularly for any updates</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Join on time</strong> - Use the meeting links provided for each session</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Stay updated</strong> - Keep your contact information current in the portal</li>
             </ul>
 
-            <p class="paragraph">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none;">admin@tftmadrasah.nz</a>.</p>
+            <p class="paragraph" style="margin-top: 36px;">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>
 
-            <p class="paragraph">May Allah make this journey beneficial for you and grant you success in your studies.</p>
+            <p class="paragraph" style="margin-top: 32px; font-style: italic; color: #6b7280;">May Allah make this journey beneficial for you and grant you success in your studies.</p>
 
-            <p class="paragraph" style="margin-top: 32px;">
-              JazakAllah Khair,<br>
-              <strong>The FastTrack Madrasah Team</strong>
+            <p class="paragraph" style="margin-top: 36px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
+              Jazaakumullaahu Khayran,<br>
+              <strong style="color: #059669;">The FastTrack Madrasah Team</strong>
             </p>
           </div>
 
-          <div class="footer">
-            <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
-            <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
-            <p class="footer-text" style="margin-top: 16px;">
-              <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
-            </p>
-            <p class="footer-text" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-              © ${new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
-            </p>
-            <p class="footer-text">New Zealand</p>
-          </div>
+          ${getFooterHTML()}
         </div>
       </div>
     </body>
