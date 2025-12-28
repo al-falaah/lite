@@ -17,6 +17,7 @@ import TeacherPortal from './pages/TeacherPortal';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
+import Unsubscribe from './pages/Unsubscribe';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Layout
@@ -41,6 +42,7 @@ function App() {
             <Route path="/teacher" element={<TeacherPortal />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
 
             {/* Protected Blog Admin Route */}
             <Route
