@@ -31,8 +31,46 @@ supabase/.env
 *.sw?
 
 # Database debug/fix scripts (temporary development files)
-debug_*.sql
-fix_*.sql
+*.sql
+*.mjs
+*.html
+!index.html
+!supabase/migrations/*.sql
+!supabase/seed.sql
+
+# Development/debugging scripts (keep repository clean)
+check-*.js
+test-*.js
+test-*.sh
+fix-*.js
+debug-*.js
+setup-test-data.js
+update-*.js
+migrate-*.js
+sync-*.js
+clear-*.js
+generate-*.js
+find-*.js
+link-*.js
+list-*.js
+*.sh
+
+# Development documentation (keep only essential docs)
+*_SETUP*.md
+*_GUIDE*.md
+*_PLAN*.md
+*_PROGRESS*.md
+*_FIXES*.md
+*_DEBUGGING*.md
+*_READY*.md
+*_STEPS*.md
+TROUBLESHOOTING.md
+DEPLOY_*.md
+BROWSER_*.md
+ADDITIONAL_*.md
+ENABLE_*.md
+STUDENT-LOGIN-INSTRUCTIONS.md
+PASSWORD-HASHING-MIGRATION.md
 
 # OS files
 Thumbs.db
