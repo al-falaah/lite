@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import useIdleTimeout from '../hooks/useIdleTimeout';
 import {
-  BookOpen,
   LogOut,
   FileText,
   Users,
@@ -318,7 +317,7 @@ const AdminDashboard = () => {
         <Card className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
-              <BookOpen className="h-8 w-8 text-emerald-600" />
+              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
             <p className="text-gray-600 font-brand">The FastTrack Madrasah</p>
@@ -390,7 +389,7 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-emerald-600" />
+              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
               <span className="ml-2 text-xl font-brand font-bold text-gray-900">
                 The FastTrack Madrasah Admin
               </span>
