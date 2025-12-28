@@ -80,13 +80,15 @@ serve(async (req) => {
         }
 
         const generatedPassword = generatePassword()
-        console.log('Generated temporary password for student')
+        console.log('Generated temporary password for student:', generatedPassword)
 
-        // Hash the password before storing
-        const hashedPassword = await bcrypt.hash(generatedPassword)
-        console.log('Password hashed successfully')
+        // Hash the password before storing (10 salt rounds for security)
+        console.log('Hashing password...')
+        const hashedPassword = await bcrypt.hash(generatedPassword, 10)
+        console.log('Password hashed successfully. Hash length:', hashedPassword.length)
 
         // Update student status, student_id, password, and Stripe customer ID
+        console.log('Updating student record...', { studentId, generatedStudentId, hasEnrolledStatus: true })
         const { error: updateError } = await supabaseClient
           .from('students')
           .update({
@@ -98,9 +100,11 @@ serve(async (req) => {
           .eq('id', studentId)
 
         if (updateError) {
-          console.error('Error updating student:', updateError)
+          console.error('ERROR: Failed to update student:', updateError)
+          console.error('Update error details:', JSON.stringify(updateError, null, 2))
+          return new Response(JSON.stringify({ error: 'Failed to update student status' }), { status: 500 })
         } else {
-          console.log('Student enrolled:', studentId, 'with ID:', generatedStudentId)
+          console.log('✅ Student enrolled successfully:', studentId, 'with ID:', generatedStudentId)
           // Update the student object with the new credentials
           student.student_id = generatedStudentId
           student.password = generatedPassword
