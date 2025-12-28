@@ -63,8 +63,18 @@ export default function TeacherPortal() {
         return;
       }
 
-      // Verify password using bcrypt
-      const passwordMatch = await bcrypt.compare(password, data.password);
+      // Verify password (support both plain text and hashed passwords)
+      let passwordMatch = false;
+
+      // Check if password is hashed (bcrypt hashes start with $2a$, $2b$, or $2y$)
+      if (data.password && data.password.startsWith('$2')) {
+        // Hashed password - use bcrypt compare
+        passwordMatch = await bcrypt.compare(password, data.password);
+      } else {
+        // Plain text password - direct comparison
+        passwordMatch = (data.password === password);
+      }
+
       if (!passwordMatch) {
         toast.error('Invalid Staff ID or password');
         setLoading(false);
