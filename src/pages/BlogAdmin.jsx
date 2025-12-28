@@ -7,6 +7,18 @@ import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/common/Card';
 
+const CATEGORIES = [
+  'General',
+  'Quran & Tafsir',
+  'Hadith & Sunnah',
+  'Aqeedah',
+  'Fiqh',
+  'Arabic Language',
+  'Seerah',
+  'Akhlaq & Adab',
+  'Ramadan & Seasons'
+];
+
 const BlogAdmin = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signIn, signOut } = useAuth();
@@ -22,6 +34,7 @@ const BlogAdmin = () => {
     featured_image: '',
     author_name: '',
     author_bio: '',
+    category: 'General',
     status: 'draft'
   });
 
@@ -148,6 +161,7 @@ const BlogAdmin = () => {
         featured_image: formData.featured_image || null,
         author_name: formData.author_name || 'Admin',
         author_bio: formData.author_bio || null,
+        category: formData.category || 'General',
         author_id: user.id, // CRITICAL: Set author_id to current user
         status: newStatus,
         published_at: publishedAt
@@ -392,6 +406,7 @@ const BlogAdmin = () => {
       featured_image: post.featured_image || '',
       author_name: post.author_name || '',
       author_bio: post.author_bio || '',
+      category: post.category || 'General',
       status: post.status,
       published_at: post.published_at
     });
@@ -664,6 +679,27 @@ const BlogAdmin = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="Brief description for preview cards"
                 />
+              </div>
+
+              {/* Category */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category *
+                </label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                >
+                  {CATEGORIES.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Select the topic area for this article
+                </p>
               </div>
 
               {/* Featured Image */}
