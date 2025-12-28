@@ -44,8 +44,19 @@ export default async function handler(req, res) {
     const indexPath = path.join(process.cwd(), 'dist', 'index.html');
     let html = fs.readFileSync(indexPath, 'utf-8');
 
+    // Remove existing OG and Twitter meta tags from the static HTML
+    html = html.replace(/<meta property="og:[^"]*"[^>]*>\s*/g, '');
+    html = html.replace(/<meta property="twitter:[^"]*"[^>]*>\s*/g, '');
+    html = html.replace(/<meta name="twitter:[^"]*"[^>]*>\s*/g, '');
+    html = html.replace(/<meta property="article:[^"]*"[^>]*>\s*/g, '');
+    // Remove existing title and description
+    html = html.replace(/<title>.*?<\/title>\s*/g, '');
+    html = html.replace(/<meta name="description"[^>]*>\s*/g, '');
+
     // Inject OG meta tags
     const ogTags = `
+    <title>${post.title.replace(/"/g, '&quot;')} | The FastTrack Madrasah Blog</title>
+    <meta name="description" content="${description.replace(/"/g, '&quot;')}" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="${post.title.replace(/"/g, '&quot;')} | The FastTrack Madrasah Blog" />
     <meta property="og:description" content="${description.replace(/"/g, '&quot;')}" />
@@ -58,8 +69,6 @@ export default async function handler(req, res) {
     <meta name="twitter:title" content="${post.title.replace(/"/g, '&quot;')}" />
     <meta name="twitter:description" content="${description.replace(/"/g, '&quot;')}" />
     <meta name="twitter:image" content="${imageUrl}" />
-    <meta name="description" content="${description.replace(/"/g, '&quot;')}" />
-    <title>${post.title.replace(/"/g, '&quot;')} | The FastTrack Madrasah Blog</title>
 `;
 
     // Insert OG tags before </head>
