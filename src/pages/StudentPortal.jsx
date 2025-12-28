@@ -390,8 +390,8 @@ const StudentPortal = () => {
                   className="h-8 w-8"
                 />
                 <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-sm sm:text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-sm sm:text-base font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  <span className="text-sm sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                  <span className="text-sm sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                   {/* <span className="text-xs text-gray-500 font-arabic"> أكاديمية الفلاح</span> */}
                 </div>
               </Link>
@@ -493,8 +493,8 @@ const StudentPortal = () => {
                 className="h-6 w-6 sm:h-8 sm:w-8"
               />
               <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-xs sm:text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-xs sm:text-base font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <div className="flex items-center gap-2 sm:gap-3">

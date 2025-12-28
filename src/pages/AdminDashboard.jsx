@@ -391,8 +391,8 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-emerald-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">
-                Al-Falaah Admin
+              <span className="ml-2 text-xl font-brand font-bold text-gray-900">
+                The FastTrack Madrasah Admin
               </span>
             </div>
             <div className="flex items-center gap-4">
