@@ -468,6 +468,15 @@ const BlogAdmin = () => {
     );
   }
 
+  // Debug logging for auth state
+  console.log('[BlogAdmin] Auth state:', {
+    hasUser: !!user,
+    userEmail: user?.email,
+    hasProfile: !!profile,
+    isAdmin: profile?.is_admin,
+    profileData: profile
+  });
+
   // Show login form if not authenticated as admin
   if (!user || !profile?.is_admin) {
     return (
@@ -483,6 +492,13 @@ const BlogAdmin = () => {
             </Link>
             <h2 className="text-2xl font-bold text-gray-900 mt-4">Blog Admin</h2>
             <p className="text-gray-600 mt-2">Sign in to manage blog posts</p>
+            {user && profile && !profile.is_admin && (
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  Debug: User {user.email} - is_admin: {String(profile.is_admin)}
+                </p>
+              </div>
+            )}
           </div>
 
           {!user ? (
