@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/react';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -69,6 +70,7 @@ function App() {
           </Routes>
 
           <Toaster position="top-right" duration={3000} />
+          <Analytics />
           </div>
         </Router>
       </AuthProvider>
