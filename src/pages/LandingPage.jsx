@@ -115,8 +115,8 @@ const LandingPage = () => {
                   className="h-7 w-7 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-xs sm:text-sm md:text-base font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-xs sm:text-sm md:text-base font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                  <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
               </Link>
 
@@ -305,7 +305,7 @@ const LandingPage = () => {
             </p>
 
             <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              <span className="font-bold text-gray-900">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we’ve created an accelerator that optimizes the way the Qur’an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
+              <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
             </p>
           </div>
 
@@ -1299,7 +1299,7 @@ const LandingPage = () => {
                   className="h-8 w-8"
                 />
                 <div>
-                  <div className="text-lg font-semibold">The FastTrack Madrasah</div>
+                  <div className="text-lg font-brand font-semibold">The FastTrack Madrasah</div>
                   {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
                 </div>
               </div>

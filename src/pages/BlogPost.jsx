@@ -244,8 +244,8 @@ const BlogPost = () => {
               />
               <div className="flex flex-col leading-none -space-y-1">
                 <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-sm sm:text-base md:text-lg font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-sm sm:text-base md:text-lg font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  <span className="text-sm sm:text-base md:text-lg font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                  <span className="text-sm sm:text-base md:text-lg font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
                 <span className="text-xs sm:text-sm text-gray-500 mt-0.5">Blog</span>
               </div>

@@ -15,6 +15,9 @@ export default {
         teal: {
           600: '#0d9488',
         }
+      },
+      fontFamily: {
+        brand: ['Poppins', 'sans-serif'],
       }
     },
   },

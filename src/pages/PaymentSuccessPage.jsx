@@ -91,7 +91,7 @@ const PaymentSuccessPage = () => {
                 <CheckCircle className="w-12 h-12 text-emerald-600" />
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Payment Successful!</h1>
-              <p className="text-emerald-50 text-lg">Welcome to The FastTrack Madrasah</p>
+              <p className="text-emerald-50 text-lg font-brand">Welcome to The FastTrack Madrasah</p>
             </div>
 
           {/* Content */}

@@ -32,7 +32,7 @@ const Logo = ({ variant = 'default', size = 'default', className = '' }) => {
     <div className={`flex items-center gap-3 ${className}`}>
       <BookOpen className={colorClass} size={sizeConfig.icon} strokeWidth={2.5} />
       <div className="flex flex-col">
-        <span className={`font-bold ${sizeConfig.text} ${colorClass} leading-tight`}>
+        <span className={`font-brand font-bold ${sizeConfig.text} ${colorClass} leading-tight`}>
           The FastTrack Madrasah
         </span>
         <span className={`${sizeConfig.subtitle} ${colorClass} opacity-80 leading-tight`}>
