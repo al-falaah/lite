@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
+import bcrypt from 'bcryptjs';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   ArrowLeft, User, LogOut, ExternalLink, CreditCard,
@@ -61,8 +62,9 @@ const StudentPortal = () => {
         return;
       }
 
-      // Check password
-      if (data.password !== password) {
+      // Check password (using bcrypt for hashed passwords)
+      const passwordMatch = await bcrypt.compare(password, data.password);
+      if (!passwordMatch) {
         toast.error('Invalid Student ID or password');
         setLoading(false);
         return;
@@ -242,11 +244,14 @@ const StudentPortal = () => {
     try {
       console.log('Updating password for student ID:', student.id);
 
+      // Hash the new password before storing
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
       // Update password and set first_login to false
       const { data, error } = await supabase
         .from('students')
         .update({
-          password: newPassword, // TODO: Add bcrypt hashing in production
+          password: hashedPassword,
           first_login: false
         })
         .eq('id', student.id)
@@ -261,8 +266,8 @@ const StudentPortal = () => {
         return;
       }
 
-      // Update student data in state and localStorage
-      const updatedStudent = { ...student, first_login: false, password: newPassword };
+      // Update student data in state and localStorage (don't store hashed password in localStorage)
+      const updatedStudent = { ...student, first_login: false };
       setStudent(updatedStudent);
       localStorage.setItem('student', JSON.stringify(updatedStudent));
 

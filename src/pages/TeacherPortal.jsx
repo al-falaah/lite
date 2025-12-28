@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import bcrypt from 'bcryptjs';
 import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, Key, Edit2, CheckCircle, Mail, Send, XCircle } from 'lucide-react';
 import { teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
@@ -62,8 +63,9 @@ export default function TeacherPortal() {
         return;
       }
 
-      // Simple password comparison (in production, use bcrypt)
-      if (data.password !== password) {
+      // Verify password using bcrypt
+      const passwordMatch = await bcrypt.compare(password, data.password);
+      if (!passwordMatch) {
         toast.error('Invalid Staff ID or password');
         setLoading(false);
         return;
@@ -118,9 +120,12 @@ export default function TeacherPortal() {
     setLoading(true);
 
     try {
+      // Hash the new password before storing
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
       // Update password and set first_login to false
       const { data, error } = await teachers.update(teacher.id, {
-        password: newPassword, // TODO: Add bcrypt hashing in production
+        password: hashedPassword,
         first_login: false
       });
 
@@ -131,8 +136,8 @@ export default function TeacherPortal() {
         return;
       }
 
-      // Update teacher data in state and localStorage
-      const updatedTeacher = { ...teacher, first_login: false, password: newPassword };
+      // Update teacher data in state and localStorage (don't store hashed password)
+      const updatedTeacher = { ...teacher, first_login: false };
       setTeacher(updatedTeacher);
       localStorage.setItem('teacher', JSON.stringify(updatedTeacher));
 

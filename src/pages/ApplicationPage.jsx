@@ -295,13 +295,23 @@ const ApplicationPage = () => {
       console.log('[ApplicationPage] Response received:', { data: newApplication, error: applicationError });
 
       if (applicationError) {
-        toast.error(`Failed to submit application: ${applicationError.message || 'Unknown error'}`);
+        const errorMessage = applicationError.message || applicationError.error_description || 'Unknown error';
+        toast.error(`Failed to submit application: ${errorMessage}`);
         console.error('[ApplicationPage] Application error:', applicationError);
+        console.error('[ApplicationPage] Full error details:', JSON.stringify(applicationError, null, 2));
+        setLoading(false);
+        return;
+      }
+
+      if (!newApplication) {
+        toast.error('Failed to submit application: No data returned');
+        console.error('[ApplicationPage] No application data returned');
         setLoading(false);
         return;
       }
 
       setSubmitted(true);
+      setLoading(false); // Reset loading immediately after success
       toast.success('Application submitted successfully!');
 
       // Send confirmation email to applicant (non-blocking)
@@ -344,7 +354,6 @@ const ApplicationPage = () => {
     } catch (error) {
       console.error('Submission error:', error);
       toast.error('An unexpected error occurred');
-    } finally {
       setLoading(false);
     }
   };

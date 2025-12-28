@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.21.0'
+import * as bcrypt from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
   apiVersion: '2023-10-16',
@@ -81,12 +82,16 @@ serve(async (req) => {
         const generatedPassword = generatePassword()
         console.log('Generated temporary password for student')
 
+        // Hash the password before storing
+        const hashedPassword = await bcrypt.hash(generatedPassword)
+        console.log('Password hashed successfully')
+
         // Update student status, student_id, password, and Stripe customer ID
         const { error: updateError } = await supabaseClient
           .from('students')
           .update({
             student_id: generatedStudentId,
-            password: generatedPassword,
+            password: hashedPassword,
             status: 'enrolled',
             stripe_customer_id: session.customer || null,
           })
