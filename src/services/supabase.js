@@ -827,7 +827,10 @@ export const teacherAssignments = {
   remove: async (assignmentId) => {
     const { data, error } = await supabase
       .from('teacher_student_assignments')
-      .update({ status: 'removed' })
+      .update({
+        status: 'removed',
+        removed_at: new Date().toISOString()
+      })
       .eq('id', assignmentId)
       .select()
       .single();

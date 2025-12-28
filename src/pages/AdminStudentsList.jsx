@@ -356,24 +356,42 @@ const AdminStudentsList = () => {
       // Check if there's already an assignment for this student-program combo
       const { data: existing, error: checkError } = await supabase
         .from('teacher_student_assignments')
-        .select('id, status')
+        .select('id, teacher_id, status')
         .eq('student_id', selectedStudent.id)
         .eq('program', selectedEnrollment.program)
         .eq('status', 'assigned')
         .single();
 
       if (existing) {
-        // Update existing assignment
-        const { error: updateError } = await supabase
-          .from('teacher_student_assignments')
-          .update({
-            teacher_id: selectedTeacherId
-          })
-          .eq('id', existing.id);
+        // Check if reassigning to a different teacher
+        if (existing.teacher_id !== selectedTeacherId) {
+          // Mark the old assignment as removed
+          const { error: removeError } = await teacherAssignments.remove(existing.id);
 
-        if (updateError) {
-          toast.error('Failed to update teacher assignment');
-          console.error(updateError);
+          if (removeError) {
+            toast.error('Failed to remove old teacher assignment');
+            console.error(removeError);
+            return;
+          }
+
+          // Create new assignment for the new teacher
+          const { error: createError } = await teacherAssignments.assign(
+            selectedTeacherId,
+            selectedStudent.id,
+            selectedEnrollment.program,
+            'Reassigned from another teacher'
+          );
+
+          if (createError) {
+            toast.error('Failed to assign new teacher');
+            console.error(createError);
+            return;
+          }
+        } else {
+          // Same teacher, no change needed
+          toast.info('Student is already assigned to this teacher');
+          setShowAssignTeacherModal(false);
+          setSelectedTeacherId('');
           return;
         }
       } else {
