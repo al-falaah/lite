@@ -29,41 +29,39 @@ const BlogSubscribe = () => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      const response = await fetch(`${supabaseUrl}/rest/v1/blog_subscribers`, {
+      // Use the smart subscribe function that handles both new subs and reactivations
+      const response = await fetch(`${supabaseUrl}/rest/v1/rpc/subscribe_to_blog`, {
         method: 'POST',
         headers: {
           'apikey': anonKey,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          email: email.toLowerCase().trim(),
-          full_name: fullName.trim() || null,
-          is_active: true
+          subscriber_email: email.toLowerCase().trim(),
+          subscriber_name: fullName.trim() || null
         })
       });
 
-      if (response.ok || response.status === 201) {
-        setSubscribed(true);
-        setEmail('');
-        setFullName('');
-        toast.success('Successfully subscribed to blog updates!');
-      } else if (response.status === 409) {
-        // Duplicate email
-        toast.info('You are already subscribed!');
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.success) {
+          setSubscribed(true);
+          setEmail('');
+          setFullName('');
+          toast.success(data.message);
+        } else if (data.already_subscribed) {
+          toast.info(data.message);
+        } else {
+          throw new Error(data.message || 'Subscription failed');
+        }
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Subscription failed');
       }
     } catch (error) {
       console.error('Subscription error:', error);
-
-      // Check for duplicate key error
-      if (error.message && error.message.includes('duplicate')) {
-        toast.info('You are already subscribed to our blog!');
-      } else {
-        toast.error('Failed to subscribe. Please try again.');
-      }
+      toast.error('Failed to subscribe. Please try again.');
     } finally {
       setLoading(false);
     }
