@@ -297,6 +297,7 @@ const ApplicationPage = () => {
       if (applicationError) {
         toast.error(`Failed to submit application: ${applicationError.message || 'Unknown error'}`);
         console.error('[ApplicationPage] Application error:', applicationError);
+        setLoading(false);
         return;
       }
 
