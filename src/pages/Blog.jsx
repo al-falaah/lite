@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Calendar, ArrowRight, Home } from 'lucide-react';
+import BlogSubscribe from '../components/blog/BlogSubscribe';
 
 const Blog = () => {
   const [posts, setPosts] = useState([]);
@@ -197,6 +198,11 @@ const Blog = () => {
             ))}
           </div>
         )}
+
+        {/* Blog Subscription Section */}
+        <div className="mt-16 sm:mt-20">
+          <BlogSubscribe />
+        </div>
       </div>
     </div>
   );

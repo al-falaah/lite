@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Home, Share2, Facebook, Twitter, Linkedin, Link2, Mail } from 'lucide-react';
+import BlogSubscribe from '../components/blog/BlogSubscribe';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -247,7 +248,7 @@ const BlogPost = () => {
                   <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
                   <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
-                <span className="text-xs sm:text-sm text-gray-500 mt-0.5">Blog</span>
+                {/* <span className="text-xs sm:text-sm text-gray-500 mt-0.5">Blog</span> */}
               </div>
             </Link>
             <div className="flex items-center gap-4">
@@ -426,6 +427,11 @@ const BlogPost = () => {
           </div>
         </div>
       </article>
+
+      {/* Blog Subscription Section */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <BlogSubscribe />
+      </div>
     </div>
   );
 };

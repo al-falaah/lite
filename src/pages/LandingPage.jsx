@@ -111,7 +111,7 @@ const LandingPage = () => {
               <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
                 <img
                   src="/favicon-white.svg"
-                  alt="Al-Falaah Logo"
+                  alt="The FastTrack Madrasah Logo"
                   className="h-7 w-7 md:h-10 md:w-10"
                 />
                 <div className="flex flex-col leading-none -space-y-1">
@@ -1245,7 +1245,7 @@ const LandingPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
               <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
-                Email us <ArrowRight className="h-4 w-4" />
+                Email Us <ArrowRight className="h-4 w-4" />
               </a>
               <span className="hidden sm:inline text-gray-400">|</span>
               <a href="tel:+64272131486" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
@@ -1299,7 +1299,10 @@ const LandingPage = () => {
                   className="h-8 w-8"
                 />
                 <div>
-                  <div className="text-lg font-brand font-semibold">The FastTrack Madrasah</div>
+                  <div className="flex flex-col leading-none -space-y-1">
+                    <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                    <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                </div>
                   {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
                 </div>
               </div>

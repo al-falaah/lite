@@ -71,6 +71,14 @@ body {
 /* Arabic/RTL content always right-aligned */
 .blog-content p[dir="rtl"] {
   text-align: right !important;
+  font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+  font-size: 24px !important;
+  line-height: 2 !important;
+}
+
+.blog-content p[dir="rtl"] strong,
+.blog-content p[dir="rtl"] em {
+  font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
 }
 
 .blog-content ul,
