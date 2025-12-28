@@ -162,6 +162,8 @@ const AdminDashboard = () => {
 
   const createStudentFromApplication = async (app) => {
     try {
+      console.log('[AdminDashboard] Creating student from application:', app.id);
+
       // Call Edge Function to create student and generate payments
       const response = await fetch(
         `${supabaseUrl}/functions/v1/create-student-from-application`,
@@ -175,16 +177,19 @@ const AdminDashboard = () => {
         }
       );
 
+      console.log('[AdminDashboard] Response status:', response.status);
       const result = await response.json();
+      console.log('[AdminDashboard] Response data:', result);
 
       if (!response.ok) {
         throw new Error(result.error || 'Failed to create student');
       }
 
+      console.log('[AdminDashboard] Student created successfully:', result.student);
       toast.success('Student created successfully!');
       return result.student;
     } catch (error) {
-      console.error('Error creating student:', error);
+      console.error('[AdminDashboard] Error creating student:', error);
       toast.error(error.message || 'Failed to create student record');
       throw error;
     }
@@ -211,6 +216,7 @@ const AdminDashboard = () => {
       if (error) {
         toast.error('Failed to update application');
         console.error(error);
+        setSubmittingReview(false);
         return;
       }
 
