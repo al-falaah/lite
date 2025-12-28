@@ -44,14 +44,15 @@ export default async function handler(req, res) {
     const indexPath = path.join(process.cwd(), 'dist', 'index.html');
     let html = fs.readFileSync(indexPath, 'utf-8');
 
-    // Remove existing OG and Twitter meta tags from the static HTML
+    // Remove the entire commented-out OG and Twitter sections
+    html = html.replace(/<!-- Open Graph \/ Facebook -->[\s\S]*?-->/g, '');
+    html = html.replace(/<!-- Twitter -->[\s\S]*?-->/g, '');
+
+    // Also remove any uncommented OG/Twitter tags (just in case)
     html = html.replace(/<meta property="og:[^"]*"[^>]*>\s*/g, '');
     html = html.replace(/<meta property="twitter:[^"]*"[^>]*>\s*/g, '');
     html = html.replace(/<meta name="twitter:[^"]*"[^>]*>\s*/g, '');
     html = html.replace(/<meta property="article:[^"]*"[^>]*>\s*/g, '');
-    // Remove existing title and description
-    html = html.replace(/<title>.*?<\/title>\s*/g, '');
-    html = html.replace(/<meta name="description"[^>]*>\s*/g, '');
 
     // Inject OG meta tags
     const ogTags = `
@@ -75,6 +76,7 @@ export default async function handler(req, res) {
     html = html.replace('</head>', `${ogTags}\n  </head>`);
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
     res.status(200).send(html);
   } catch (error) {
     console.error('Error in blog handler:', error);
