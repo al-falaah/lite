@@ -1,7 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.21.0'
-import * as bcrypt from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
   apiVersion: '2023-10-16',
@@ -82,10 +81,9 @@ serve(async (req) => {
         const generatedPassword = generatePassword()
         console.log('Generated temporary password for student:', generatedPassword)
 
-        // Hash the password before storing (10 salt rounds for security)
-        console.log('Hashing password...')
-        const hashedPassword = await bcrypt.hash(generatedPassword, 10)
-        console.log('Password hashed successfully. Hash length:', hashedPassword.length)
+        // NOTE: Storing plain text password temporarily
+        // Run migrate-passwords.js after deployment to hash all passwords
+        console.log('Storing password (will be hashed by migration script later)')
 
         // Update student status, student_id, password, and Stripe customer ID
         console.log('Updating student record...', { studentId, generatedStudentId, hasEnrolledStatus: true })
@@ -93,7 +91,7 @@ serve(async (req) => {
           .from('students')
           .update({
             student_id: generatedStudentId,
-            password: hashedPassword,
+            password: generatedPassword,
             status: 'enrolled',
             stripe_customer_id: session.customer || null,
           })
