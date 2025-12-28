@@ -411,6 +411,15 @@ export default function TeacherPortal() {
     });
   };
 
+  const formatMeetingLink = (link) => {
+    if (!link) return null;
+    // Add https:// if the link doesn't already have a protocol
+    if (!link.startsWith('http://') && !link.startsWith('https://')) {
+      return `https://${link}`;
+    }
+    return link;
+  };
+
   const handleOpenEmailModal = (student, program) => {
     setEmailRecipient({
       name: student.full_name,
@@ -948,7 +957,7 @@ export default function TeacherPortal() {
                               </div>
                               {mainClass.meeting_link && (
                                 <a
-                                  href={mainClass.meeting_link}
+                                  href={formatMeetingLink(mainClass.meeting_link)}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center text-sm text-blue-700 hover:text-blue-800 font-medium mb-3"
@@ -1006,7 +1015,7 @@ export default function TeacherPortal() {
                               </div>
                               {shortClass.meeting_link && (
                                 <a
-                                  href={shortClass.meeting_link}
+                                  href={formatMeetingLink(shortClass.meeting_link)}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center text-sm text-purple-700 hover:text-purple-800 font-medium mb-3"
