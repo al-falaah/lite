@@ -98,7 +98,7 @@ const Blog = () => {
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
                 src="/favicon.svg"
-                alt="Al-Falaah Logo"
+                alt="The FastTrack Logo"
                 className="h-8 w-8"
               />
               <div className="flex flex-col leading-none -space-y-1">
@@ -106,7 +106,7 @@ const Blog = () => {
                   <span className="text-xs sm:text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
                   <span className="text-xs sm:text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
-                <span className="text-xs text-gray-500 mt-0.5">Blog</span>
+                {/* <span className="text-xs text-gray-500 mt-0.5">Blog</span> */}
               </div>
             </Link>
             <Link
@@ -124,7 +124,7 @@ const Blog = () => {
       <div className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
-            Maqāmāt al-Falāḥī
+            The FastTrack Journal
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
             Reflections on Arabic and Islam for Spiritual Uplift and Intellectual Growth 
