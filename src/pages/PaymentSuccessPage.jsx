@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { CheckCircle2, Loader2, ArrowRight, BookOpen } from 'lucide-react';
+import { CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
 
 const PaymentSuccessPage = () => {
   const [searchParams] = useSearchParams();
@@ -26,14 +26,14 @@ const PaymentSuccessPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link to="/" className="flex items-center gap-3">
-                <BookOpen className="text-emerald-600" size={28} strokeWidth={2.5} />
+                <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
                 <div className="flex flex-col">
                   <span className="text-base font-brand font-bold text-gray-900 leading-tight">
                     The FastTrack Madrasah
                   </span>
-                  <span className="text-xs text-gray-600 leading-tight">
+                  {/* <span className="text-xs text-gray-600 leading-tight">
                     Essential Islamic Studies
-                  </span>
+                  </span> */}
                 </div>
               </Link>
             </div>
@@ -57,14 +57,14 @@ const PaymentSuccessPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-3">
-              <BookOpen className="text-emerald-600" size={28} strokeWidth={2.5} />
+              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
               <div className="flex flex-col">
                 <span className="text-base font-brand font-bold text-gray-900 leading-tight">
                   The FastTrack Madrasah
                 </span>
-                <span className="text-xs text-gray-600 leading-tight">
+                {/* <span className="text-xs text-gray-600 leading-tight">
                   Essential Islamic Studies
-                </span>
+                </span> */}
               </div>
             </Link>
             <Link
