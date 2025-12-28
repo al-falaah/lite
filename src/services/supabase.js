@@ -8,7 +8,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Check your .env file.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storage: window.localStorage,
+    storageKey: `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`
+  }
+});
 
 // Export URL and key for use in Edge Function calls
 export { supabaseUrl, supabaseAnonKey };
