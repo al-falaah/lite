@@ -23,31 +23,27 @@ const Unsubscribe = () => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      // Update the subscriber to mark as inactive
-      const response = await fetch(`${supabaseUrl}/rest/v1/blog_subscribers?email=eq.${encodeURIComponent(email)}`, {
-        method: 'PATCH',
+      // Call the unsubscribe function which bypasses RLS
+      const response = await fetch(`${supabaseUrl}/rest/v1/rpc/unsubscribe_from_blog`, {
+        method: 'POST',
         headers: {
           'apikey': anonKey,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          is_active: false
+          subscriber_email: email.toLowerCase().trim()
         })
       });
 
-      if (response.ok || response.status === 204) {
-        // Check if any rows were actually updated
-        const contentRange = response.headers.get('content-range');
+      if (response.ok) {
         const data = await response.json();
 
-        // If content-range is */* or data is empty array, no rows were updated
-        if (contentRange === '*/*' || (Array.isArray(data) && data.length === 0)) {
-          throw new Error('No subscription found with this email address. You may have already unsubscribed.');
+        if (data.success) {
+          setUnsubscribed(true);
+          toast.success('Successfully unsubscribed from blog updates');
+        } else {
+          throw new Error(data.message || 'No active subscription found with this email');
         }
-
-        setUnsubscribed(true);
-        toast.success('Successfully unsubscribed from blog updates');
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to unsubscribe');
