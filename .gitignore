@@ -46,6 +46,7 @@ fix-*.js
 debug-*.js
 setup-test-data.js
 update-*.js
+!update-sitemap.js
 migrate-*.js
 sync-*.js
 clear-*.js
