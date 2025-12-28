@@ -29,7 +29,7 @@ const Unsubscribe = () => {
         headers: {
           'apikey': anonKey,
           'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=representation'
         },
         body: JSON.stringify({
           is_active: false
@@ -37,6 +37,15 @@ const Unsubscribe = () => {
       });
 
       if (response.ok || response.status === 204) {
+        // Check if any rows were actually updated
+        const contentRange = response.headers.get('content-range');
+        const data = await response.json();
+
+        // If content-range is */* or data is empty array, no rows were updated
+        if (contentRange === '*/*' || (Array.isArray(data) && data.length === 0)) {
+          throw new Error('No subscription found with this email address. You may have already unsubscribed.');
+        }
+
         setUnsubscribed(true);
         toast.success('Successfully unsubscribed from blog updates');
       } else {
