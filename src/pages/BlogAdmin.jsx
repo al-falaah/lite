@@ -37,11 +37,31 @@ const BlogAdmin = () => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?order=created_at.desc&select=*`, {
-        headers: {
-          'apikey': supabaseKey,
-          'Content-Type': 'application/json'
+      // Get auth token from localStorage to fetch both drafts and published posts
+      const storageKey = `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`;
+      const authData = localStorage.getItem(storageKey);
+
+      const headers = {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json'
+      };
+
+      // Add Authorization header if we have an access token (to see draft posts)
+      if (authData) {
+        try {
+          const parsed = JSON.parse(authData);
+          const accessToken = parsed.access_token || parsed.accessToken;
+          if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+            console.log('[BlogAdmin] Added auth header to fetch drafts');
+          }
+        } catch (e) {
+          console.warn('[BlogAdmin] Could not parse auth data:', e);
         }
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?order=created_at.desc&select=*`, {
+        headers
       });
 
       console.log('[BlogAdmin] Fetch response:', response.status);
@@ -434,18 +454,15 @@ const BlogAdmin = () => {
     }, 0);
   };
 
-  // Show loading while auth is loading OR when user exists but profile is loading
-  const isLoading = authLoading || (user && !profile);
-
-  if (isLoading) {
+  // Only show loading while auth is checking
+  // Don't wait indefinitely for profile if user exists
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
         <div className="text-center">
           <img src="/favicon.svg" alt="Al-Falaah Logo" className="h-12 w-12 mx-auto mb-4" />
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="text-sm text-gray-500 mt-4">
-            {user && !profile ? 'Loading profile...' : 'Loading...'}
-          </p>
+          <p className="text-sm text-gray-500 mt-4">Loading...</p>
         </div>
       </div>
     );
