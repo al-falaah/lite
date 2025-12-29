@@ -51,30 +51,30 @@ const CountdownBanner = () => {
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5 flex-shrink-0" />
             <span className="font-semibold text-sm sm:text-base">
-              Launching After Ramadan 1447 A.H. | April 4, 2026
+              Launching After Ramadan 1447 A.H. in shā'a Allāh | April 4, 2026
             </span>
           </div>
 
           {/* Countdown Timer */}
-          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+          <div className="flex items-center gap-1.5 sm:gap-3 text-xs sm:text-sm bg-white/10 px-2 sm:px-3 py-1.5 rounded-lg backdrop-blur-sm">
             <div className="flex flex-col items-center">
-              <span className="font-bold text-lg sm:text-xl">{timeLeft.days}</span>
-              <span className="text-[10px] sm:text-xs text-emerald-100">Days</span>
+              <span className="font-bold text-base sm:text-xl">{timeLeft.days}</span>
+              <span className="text-[9px] sm:text-xs text-emerald-100">Days</span>
             </div>
-            <span className="text-white/50">:</span>
+            <span className="text-white/50 text-sm">:</span>
             <div className="flex flex-col items-center">
-              <span className="font-bold text-lg sm:text-xl">{String(timeLeft.hours).padStart(2, '0')}</span>
-              <span className="text-[10px] sm:text-xs text-emerald-100">Hours</span>
+              <span className="font-bold text-base sm:text-xl">{String(timeLeft.hours).padStart(2, '0')}</span>
+              <span className="text-[9px] sm:text-xs text-emerald-100">Hrs</span>
             </div>
-            <span className="text-white/50">:</span>
+            <span className="text-white/50 text-sm">:</span>
             <div className="flex flex-col items-center">
-              <span className="font-bold text-lg sm:text-xl">{String(timeLeft.minutes).padStart(2, '0')}</span>
-              <span className="text-[10px] sm:text-xs text-emerald-100">Mins</span>
+              <span className="font-bold text-base sm:text-xl">{String(timeLeft.minutes).padStart(2, '0')}</span>
+              <span className="text-[9px] sm:text-xs text-emerald-100">Min</span>
             </div>
-            <span className="text-white/50 hidden sm:inline">:</span>
-            <div className="flex-col items-center hidden sm:flex">
-              <span className="font-bold text-lg sm:text-xl">{String(timeLeft.seconds).padStart(2, '0')}</span>
-              <span className="text-[10px] sm:text-xs text-emerald-100">Secs</span>
+            <span className="text-white/50 text-sm">:</span>
+            <div className="flex flex-col items-center">
+              <span className="font-bold text-base sm:text-xl">{String(timeLeft.seconds).padStart(2, '0')}</span>
+              <span className="text-[9px] sm:text-xs text-emerald-100">Sec</span>
             </div>
           </div>
         </div>
