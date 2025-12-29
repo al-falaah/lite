@@ -317,6 +317,16 @@ const Blog = () => {
             <div className="mt-16 sm:mt-20">
               <BlogSubscribe />
             </div>
+
+            {/* Admin Link */}
+            <div className="mt-8 text-center">
+              <Link
+                to="/blog/admin"
+                className="text-sm text-gray-400 hover:text-emerald-600 transition-colors"
+              >
+                Admin
+              </Link>
+            </div>
           </div>
         </div>
       </div>
