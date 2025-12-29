@@ -565,6 +565,11 @@ const BlogAdmin = () => {
                 )}
               </Button>
             </form>
+          ) : user && !profile ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+              <p className="text-gray-600 text-sm">Loading profile...</p>
+            </div>
           ) : !profile?.is_admin ? (
             <div className="text-center">
               <p className="text-red-600 mb-4">You do not have admin access to the blog.</p>
