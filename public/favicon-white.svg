@@ -7,43 +7,11 @@
    width="1024"
    height="1024"
    viewBox="0 0 1024 1024"
-   sodipodi:docname="tft.png"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs1" />
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="0.84082031"
-     inkscape:cx="512"
-     inkscape:cy="512"
-     inkscape:window-width="1920"
-     inkscape:window-height="1080"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="g1">
-    <inkscape:page
-       x="0"
-       y="0"
-       width="1024"
-       height="1024"
-       id="page2"
-       margin="0"
-       bleed="0" />
-  </sodipodi:namedview>
   <g
-     inkscape:groupmode="layer"
-     inkscape:label="Image"
      id="g1">
     <g
        id="g1193"
@@ -59,7 +27,7 @@
     </g>
     <path
        d="m 477.5394,190.34263 c -1.75636,0 -8.81666,5.60799 -15.6914,12.46093 -44.44072,44.29962 -25.1523,114.48655 36.95507,134.47266 13.02086,4.1901 39.17888,1.23718 53.97657,-6.09375 14.42039,-7.14404 31.33698,-22.20955 28.30664,-25.20899 -0.94515,-0.93554 -7.51241,1.23931 -14.59375,4.83204 -15.41356,7.82006 -40.19413,8.66165 -56.23633,1.91211 -15.20646,-6.39788 -33.71366,-23.81028 -40.88086,-38.46485 -9.51021,-19.44529 -8.45011,-46.63573 2.63086,-67.48633 4.80015,-9.03225 7.28959,-16.42382 5.5332,-16.42382 z"
-       style="display:inline;fill:#000000;fill-opacity:0.992593"
+       style="display:inline;fill:#b9c1bc;fill-opacity:1"
        id="path1195" />
   </g>
 </svg>
