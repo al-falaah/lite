@@ -21,6 +21,9 @@ import BlogAdmin from './pages/BlogAdmin';
 import Unsubscribe from './pages/Unsubscribe';
 import NotFoundPage from './pages/NotFoundPage';
 
+// Components
+import CountdownBanner from './components/CountdownBanner';
+
 // Layout
 import AdminRoute from './components/common/AdminRoute';
 
@@ -30,6 +33,7 @@ function App() {
       <AuthProvider>
         <Router>
           <div className="min-h-screen bg-gray-50">
+          <CountdownBanner />
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
