@@ -564,14 +564,14 @@ const BlogAdmin = () => {
                 )}
               </Button>
             </form>
-          ) : (
+          ) : !profile?.is_admin ? (
             <div className="text-center">
               <p className="text-red-600 mb-4">You do not have admin access to the blog.</p>
               <Button onClick={signOut} variant="outline" className="w-full">
                 Sign Out
               </Button>
             </div>
-          )}
+          ) : null}
 
           <div className="mt-6 text-center">
             <Link to="/" className="text-sm text-emerald-600 hover:text-emerald-700">
