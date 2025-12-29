@@ -492,8 +492,9 @@ const BlogAdmin = () => {
     profileData: profile
   });
 
-  // Show login form if not authenticated as admin
-  if (!user || !profile?.is_admin) {
+  // Show login/error if not authenticated as admin
+  // Wait for profile to load if user exists
+  if (!user || (user && !profile) || (user && profile && !profile.is_admin)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
@@ -507,10 +508,10 @@ const BlogAdmin = () => {
             </Link>
             <h2 className="text-2xl font-bold text-gray-900 mt-4">Blog Admin</h2>
             <p className="text-gray-600 mt-2">Sign in to manage blog posts</p>
-            {user && profile && !profile.is_admin && (
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-800">
-                  Debug: User {user.email} - is_admin: {String(profile.is_admin)}
+            {user && profile && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-xs text-blue-800 font-mono">
+                  Debug: email={user.email}, is_admin={String(profile.is_admin)}, role={profile.role}
                 </p>
               </div>
             )}
