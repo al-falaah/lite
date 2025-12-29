@@ -226,7 +226,7 @@ const LandingPage = () => {
 
         {/* Centered Hero Content with Slider and CTA */}
         <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto w-full text-center">
+          <div className="max-w-4xl mx-auto w-full text-center -mt-12 sm:-mt-16 md:-mt-20">
             {/* Quote Slider */}
             <div className="mb-6 md:mb-10">
               <p className="text-emerald-400 font-semibold text-xs md:text-lg mb-2 md:mb-3 font-arabic">
