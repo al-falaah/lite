@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Calendar, ArrowRight, Home, Filter, PenSquare } from 'lucide-react';
+import { Calendar, ArrowRight, Home, Filter } from 'lucide-react';
 import BlogSubscribe from '../components/blog/BlogSubscribe';
-import { useAuth } from '../context/AuthContext';
 
 const CATEGORIES = [
   'All',
@@ -31,7 +30,6 @@ const CATEGORY_COLORS = {
 };
 
 const Blog = () => {
-  const { user, profile } = useAuth();
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -159,24 +157,13 @@ const Blog = () => {
                 </div>
               </div>
             </Link>
-            <div className="flex items-center gap-4">
-              {user && profile?.role === 'admin' && (
-                <Link
-                  to="/blog/admin"
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
-                >
-                  <PenSquare className="h-4 w-4" />
-                  <span className="hidden sm:inline">Write Article</span>
-                </Link>
-              )}
-              <Link
-                to="/"
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
-              >
-                <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">Back to Home</span>
-              </Link>
-            </div>
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+            >
+              <Home className="h-4 w-4" />
+              <span className="hidden sm:inline">Back to Home</span>
+            </Link>
           </div>
         </div>
       </nav>
