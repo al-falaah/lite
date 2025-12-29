@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -1245,11 +1245,18 @@ const LandingPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
               <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
-                Email Us <ArrowRight className="h-4 w-4" />
+                <Mail className="h-4 w-4" />
+                salam@tftmadrasah.nz
               </a>
               <span className="hidden sm:inline text-gray-400">|</span>
               <a href="tel:+64272131486" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
-                Call Us <ArrowRight className="h-4 w-4" />
+                <Phone className="h-4 w-4" />
+                +6427 213 1486
+              </a>
+              <span className="hidden sm:inline text-gray-400">|</span>
+              <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
+                <MessageCircle className="h-4 w-4" />
+                +6422 465 3509
               </a>
             </div>
           </div>
@@ -1340,15 +1347,23 @@ const LandingPage = () => {
             {/* Contact */}
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
-              <p className="text-gray-400 text-sm mb-2">
+              <p className="text-gray-400 text-sm mb-4">
                 Questions about our programs?
               </p>
-              <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                salam@tftmadrasah.nz 
-              </a><br />
-              <a href="tel:+64272131486" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                +6427 213 1486
-              </a>
+              <div className="space-y-2">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  salam@tftmadrasah.nz
+                </a>
+                <a href="tel:+64272131486" className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  +6427 213 1486
+                </a>
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-2">
+                  <MessageCircle className="h-4 w-4" />
+                  +6422 465 3509
+                </a>
+              </div>
             </div>
           </div>
 
