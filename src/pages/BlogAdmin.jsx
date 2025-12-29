@@ -623,6 +623,12 @@ const BlogAdmin = () => {
                 <Home className="h-4 w-4" />
                 <span className="hidden sm:inline">Home</span>
               </Link>
+              <button
+                onClick={signOut}
+                className="text-sm text-gray-600 hover:text-red-600 transition-colors"
+              >
+                Sign Out
+              </button>
             </div>
           </div>
         </div>
