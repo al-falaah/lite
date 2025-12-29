@@ -10,8 +10,8 @@ const CountdownBanner = () => {
     seconds: 0
   });
 
-  // Launch date: April 4, 2025 (After Ramadan 1447 A.H.)
-  const launchDate = new Date('2025-04-04T00:00:00').getTime();
+  // Launch date: April 4, 2026 (After Ramadan 1447 A.H.)
+  const launchDate = new Date('2026-04-04T00:00:00').getTime();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -51,7 +51,7 @@ const CountdownBanner = () => {
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5 flex-shrink-0" />
             <span className="font-semibold text-sm sm:text-base">
-              Launching After Ramadan 1447 A.H. | April 4, 2025
+              Launching After Ramadan 1447 A.H. | April 4, 2026
             </span>
           </div>
 
