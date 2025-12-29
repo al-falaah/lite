@@ -162,7 +162,7 @@ const LandingPage = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-              <div className="md:hidden py-3 border-t border-white/10 bg-black/20 backdrop-blur-md rounded-b-lg">
+              <div className="md:hidden py-3 px-3 mt-3 border-t border-white/10 bg-black/20 backdrop-blur-md rounded-b-lg">
                 <div className="flex flex-col gap-1">
                   <a href="#mission" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
