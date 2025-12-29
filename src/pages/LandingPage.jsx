@@ -105,7 +105,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation - Fixed for sticky positioning */}
-      <nav className="sticky top-0 left-0 right-0 z-50 backdrop-blur-sm bg-black/30 transition-all duration-300">
+      <nav className="sticky top-0 left-0 right-0 z-50 backdrop-blur-sm bg-black/30 transition-all duration-300 pb-3">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 md:h-16">
               <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
