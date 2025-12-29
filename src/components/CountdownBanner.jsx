@@ -45,7 +45,7 @@ const CountdownBanner = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-600 text-white py-3 px-4 relative z-50">
+    <div className="bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-600 text-white py-2.5 px-4 fixed top-0 left-0 right-0 z-[60] shadow-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
           <div className="flex items-center gap-2">

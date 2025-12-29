@@ -105,7 +105,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation - Fixed for sticky positioning */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-black/30 transition-all duration-300">
+      <nav className="fixed top-[52px] left-0 right-0 z-50 backdrop-blur-sm bg-black/30 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 md:h-16">
               <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
@@ -212,7 +212,7 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section - Full Screen with Background */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden bg-black pt-14 md:pt-16">
+      <section className="relative min-h-screen flex flex-col overflow-hidden bg-black pt-[108px] md:pt-[116px]">
         {/* Background Image with Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
