@@ -286,7 +286,7 @@ const LandingPage = () => {
               </div>
 
               {/* Scroll Down Indicator */}
-              <div className="mt-12 md:mt-16 flex justify-center animate-bounce">
+              <div className="mt-8 md:mt-16 flex justify-center animate-bounce">
                 <a
                   href="#mission"
                   className="flex flex-col items-center gap-2 text-white/80 hover:text-white transition-colors group"
