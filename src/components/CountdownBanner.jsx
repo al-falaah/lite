@@ -14,13 +14,6 @@ const CountdownBanner = () => {
   const launchDate = new Date('2025-04-04T00:00:00').getTime();
 
   useEffect(() => {
-    // Check if user has dismissed the banner
-    const dismissed = localStorage.getItem('countdownBannerDismissed');
-    if (dismissed) {
-      setIsVisible(false);
-      return;
-    }
-
     const calculateTimeLeft = () => {
       const now = new Date().getTime();
       const difference = launchDate - now;

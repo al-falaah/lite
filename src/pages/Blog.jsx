@@ -13,6 +13,7 @@ const CATEGORIES = [
   'Arabic Language',
   'Seerah',
   'Akhlaq & Adab',
+  'Heart Softeners',
   'Ramadan & Seasons',
   'General'
 ];
@@ -25,6 +26,7 @@ const CATEGORY_COLORS = {
   'Arabic Language': 'bg-rose-100 text-rose-700 border-rose-200',
   'Seerah': 'bg-indigo-100 text-indigo-700 border-indigo-200',
   'Akhlaq & Adab': 'bg-teal-100 text-teal-700 border-teal-200',
+  'Heart Softeners': 'bg-pink-100 text-pink-700 border-pink-200',
   'Ramadan & Seasons': 'bg-cyan-100 text-cyan-700 border-cyan-200',
   'General': 'bg-gray-100 text-gray-700 border-gray-200'
 };

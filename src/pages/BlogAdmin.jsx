@@ -16,6 +16,7 @@ const CATEGORIES = [
   'Arabic Language',
   'Seerah',
   'Akhlaq & Adab',
+  'Heart Softeners',
   'Ramadan & Seasons'
 ];
 
