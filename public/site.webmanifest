@@ -1,0 +1,22 @@
+{
+  "name": "The FastTrack Madrasah",
+  "short_name": "TFT Madrasah",
+  "description": "Premier Islamic school and online madrasah in New Zealand. Learn Arabic, Qur'an, Tajweed & Islamic studies online.",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0a9369",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}
