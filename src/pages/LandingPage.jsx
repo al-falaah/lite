@@ -286,6 +286,18 @@ const LandingPage = () => {
               </div>
             </div>
           </div>
+
+          {/* Scroll Down Indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a
+              href="#mission"
+              className="flex flex-col items-center gap-2 text-white/80 hover:text-white transition-colors group"
+              aria-label="Scroll down to learn more"
+            >
+              <span className="text-sm font-medium hidden sm:block">Scroll Down</span>
+              <ChevronDown className="h-8 w-8 group-hover:scale-110 transition-transform" />
+            </a>
+          </div>
         </div>
       </section>
 
