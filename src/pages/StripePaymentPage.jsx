@@ -194,7 +194,7 @@ const StripePaymentPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Monthly Plan</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">$25</span>
+                  <span className="text-4xl font-bold text-emerald-600">$35</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <p className="text-gray-600 mb-6">
@@ -211,7 +211,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Total: $600 over 24 months</span>
+                    <span className="text-sm text-gray-700">Total: $840 over 24 months</span>
                   </li>
                 </ul>
                 <Button
@@ -228,7 +228,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Pay $25/month
+                      Pay $35/month
                     </>
                   )}
                 </Button>
@@ -238,7 +238,7 @@ const StripePaymentPage = () => {
             {/* Annual Plan */}
             <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500 relative">
               <div className="absolute -top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                Save $25!
+                Save $90!
               </div>
               <div className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
@@ -246,7 +246,7 @@ const StripePaymentPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Annual Plan</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">$275</span>
+                  <span className="text-4xl font-bold text-emerald-600">$375</span>
                   <span className="text-gray-600">/year</span>
                 </div>
                 <p className="text-gray-600 mb-6">
@@ -263,7 +263,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Total: $550 over 2 years (save $50!)</span>
+                    <span className="text-sm text-gray-700">Total: $750 over 2 years (save $90!)</span>
                   </li>
                 </ul>
                 <Button
@@ -279,7 +279,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <DollarSign className="h-5 w-5 mr-2" />
-                      Pay $275/year
+                      Pay $375/year
                     </>
                   )}
                 </Button>

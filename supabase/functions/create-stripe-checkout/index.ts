@@ -101,7 +101,7 @@ serve(async (req) => {
     } else {
       // Essentials Program pricing
       if (planType === 'monthly') {
-        // Monthly subscription: $25/month
+        // Monthly subscription: $35/month
         sessionConfig.line_items.push({
           price_data: {
             currency: 'nzd',
@@ -109,7 +109,7 @@ serve(async (req) => {
               name: 'The FastTrack Madrasah - Monthly Subscription',
               description: '2-Year Essential Islamic Studies Course',
             },
-            unit_amount: 2500, // $25 in cents
+            unit_amount: 3500, // $35 in cents
             recurring: {
               interval: 'month',
             },
@@ -117,7 +117,7 @@ serve(async (req) => {
           quantity: 1,
         })
       } else {
-        // Annual one-time payment: $275
+        // Annual one-time payment: $375
         sessionConfig.line_items.push({
           price_data: {
             currency: 'nzd',
@@ -125,7 +125,7 @@ serve(async (req) => {
               name: 'The FastTrack Madrasah - Annual Payment',
               description: '2-Year Essential Islamic Studies Course (Year 1)',
             },
-            unit_amount: 27500, // $275 in cents
+            unit_amount: 37500, // $375 in cents
           },
           quantity: 1,
         })

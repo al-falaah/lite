@@ -368,7 +368,7 @@ const ApplicationPage = () => {
     const programName = formData.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
     const paymentInfo = formData.program === 'tajweed'
       ? 'One-time payment of $120 NZD'
-      : 'Monthly ($25/month) or Annual ($275/year) payment options';
+      : 'Monthly ($35/month) or Annual ($375/year) payment options';
 
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -441,7 +441,7 @@ const ApplicationPage = () => {
                     <>
                       <span className="font-semibold block sm:inline">Essential Arabic & Islamic Studies</span>
                       <span className="hidden sm:inline"> • </span>
-                      <span className="block sm:inline">2 years • $25-$275/payment</span>
+                      <span className="block sm:inline">2 years • $35-$375/payment</span>
                     </>
                   )}
                 </div>
@@ -581,7 +581,7 @@ const ApplicationPage = () => {
                         </div>
                         <div className="flex items-start text-gray-700">
                           <span className="mr-2 flex-shrink-0">💰</span>
-                          <span className="break-words">Monthly: $25 NZD/month or Annual: $275 NZD/year</span>
+                          <span className="break-words">Monthly: $35 NZD/month or Annual: $375 NZD/year</span>
                         </div>
                         <div className="flex items-center text-gray-700">
                           <span className="mr-2 flex-shrink-0">📚</span>
@@ -593,7 +593,7 @@ const ApplicationPage = () => {
                         </div>
                         <div className="mt-3 pt-3 border-t border-gray-200">
                           <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
-                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: $600 | Annual: $550</p>
+                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: $840 | Annual: $750</p>
                         </div>
                       </div>
                       {formData.program === 'essentials' && (

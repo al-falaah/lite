@@ -19,7 +19,7 @@ const EnrollAdditionalProgram = () => {
   const [processingPayment, setProcessingPayment] = useState(false);
 
   const availablePrograms = [
-    { id: 'essentials', name: 'Islamic Essentials', duration: '24 months', price: { monthly: 25, annual: 275 } },
+    { id: 'essentials', name: 'Islamic Essentials', duration: '24 months', price: { monthly: 35, annual: 375 } },
     { id: 'tajweed', name: 'Tajweed Mastery', duration: '6 months', price: { oneTime: 120 } },
   ];
 
@@ -108,9 +108,9 @@ const EnrollAdditionalProgram = () => {
       if (selectedProgram === 'tajweed') {
         amount = program.price.oneTime * 100; // $120 in cents
       } else if (paymentType === 'monthly') {
-        amount = program.price.monthly * 100; // $25 in cents
+        amount = program.price.monthly * 100; // $35 in cents
       } else {
-        amount = program.price.annual * 100; // $275 in cents
+        amount = program.price.annual * 100; // $375 in cents
       }
 
       // Create Stripe checkout session

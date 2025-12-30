@@ -675,8 +675,8 @@ const LandingPage = () => {
                   <p className="text-xs text-gray-500">one-time</p>
                 </div>
                 <div className="p-3">
-                  <p className="text-sm font-bold text-gray-900">$25/mo</p>
-                  <p className="text-xs text-gray-500">or $275/yr</p>
+                  <p className="text-sm font-bold text-gray-900">$35/mo</p>
+                  <p className="text-xs text-gray-500">or $375/yr</p>
                 </div>
               </div>
 
@@ -840,8 +840,8 @@ const LandingPage = () => {
                     </div>
                     <div>
                       <p className="text-xs text-emerald-800 font-medium mb-1">Investment</p>
-                      <p className="text-base sm:text-lg font-bold text-emerald-900">$25 NZD/mo</p>
-                      <p className="text-xs text-emerald-700">or $275/year</p>
+                      <p className="text-base sm:text-lg font-bold text-emerald-900">$35 NZD/mo</p>
+                      <p className="text-xs text-emerald-700">or $375/year</p>
                     </div>
                   </div>
                 </div>
