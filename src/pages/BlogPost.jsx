@@ -15,6 +15,35 @@ const BlogPost = () => {
     fetchPost();
   }, [slug]);
 
+  useEffect(() => {
+    // Increment view count when post is loaded
+    if (post?.id) {
+      incrementViewCount(post.id);
+    }
+  }, [post?.id]);
+
+  const incrementViewCount = async (postId) => {
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      // Use RPC to increment view count atomically
+      await fetch(`${supabaseUrl}/rest/v1/rpc/increment_blog_views`, {
+        method: 'POST',
+        headers: {
+          'apikey': anonKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ post_id: postId })
+      });
+
+      console.log('[BlogPost] View count incremented for post:', postId);
+    } catch (error) {
+      console.error('[BlogPost] Error incrementing view count:', error);
+      // Don't show error to user - this is background operation
+    }
+  };
+
   const fetchPost = async () => {
     console.log('[BlogPost] Fetching post with slug:', slug);
 

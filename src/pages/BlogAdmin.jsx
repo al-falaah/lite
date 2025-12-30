@@ -33,8 +33,8 @@ const BlogAdmin = () => {
     excerpt: '',
     content: '',
     featured_image: '',
-    author_name: '',
-    author_bio: '',
+    author_name: 'Dr Abdulquadri Alaka',
+    author_bio: "Allah's servant who is most in need of His help.",
     category: 'General',
     status: 'draft'
   });
@@ -493,8 +493,9 @@ const BlogAdmin = () => {
       excerpt: '',
       content: '',
       featured_image: '',
-      author_name: '',
-      author_bio: '',
+      author_name: 'Dr Abdulquadri Alaka',
+      author_bio: "Allah's servant who is most in need of His help.",
+      category: 'General',
       status: 'draft'
     });
   };
@@ -982,21 +983,27 @@ const BlogAdmin = () => {
                           </button>
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(post)}
-                          className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
-                        >
-                          <Edit2 className="h-3 w-3" />
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(post.id)}
-                          className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                          Delete
-                        </button>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEdit(post)}
+                            className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                          >
+                            <Edit2 className="h-3 w-3" />
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(post.id)}
+                            className="text-xs text-red-600 hover:text-red-700 flex items-center gap-1"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Delete
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-500" title="Views">
+                          <Eye className="h-3 w-3" />
+                          <span className="text-xs">{post.views || 0}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
