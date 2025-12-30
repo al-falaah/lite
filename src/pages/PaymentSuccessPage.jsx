@@ -138,7 +138,7 @@ const PaymentSuccessPage = () => {
           {sessionId && (
             <div className="bg-white border border-gray-200 rounded-lg p-4 mb-8">
               <p className="text-xs text-gray-500 mb-1">Payment Reference</p>
-              <p className="font-mono text-sm text-gray-700">{sessionId}</p>
+              <p className="font-mono text-sm text-gray-700 break-all overflow-wrap-anywhere">{sessionId}</p>
             </div>
           )}
 
