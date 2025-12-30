@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { UserCheck, Plus, Edit2, Trash2, Mail, Phone, Globe, UserCircle, X } from 'lucide-react';
-import { supabase, teachers } from '../services/supabase';
+import { supabase, teachers, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 
 export default function AdminTeachersList() {
   const [teachersList, setTeachersList] = useState([]);
@@ -79,25 +79,29 @@ export default function AdminTeachersList() {
       const staffId = await generateStaffId();
       const password = generatePassword();
 
-      // Create Supabase Auth user with email and generated password
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: formData.email,
-        password: password,
-        email_confirm: true, // Auto-confirm email
-        user_metadata: {
+      // Call Edge Function to create Supabase Auth user
+      const response = await fetch(`${supabaseUrl}/functions/v1/create-teacher-auth`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: password,
           full_name: formData.full_name,
           staff_id: staffId,
-          role: 'teacher',
-          first_login: true,
-        },
+        }),
       });
 
-      if (authError) {
-        if (authError.message?.includes('already registered')) {
+      const authResult = await response.json();
+
+      if (!response.ok || authResult.error) {
+        if (authResult.error?.includes('already registered')) {
           toast.error('A teacher with this email already exists');
         } else {
-          toast.error(`Failed to create teacher auth: ${authError.message}`);
-          console.error(authError);
+          toast.error(`Failed to create teacher auth: ${authResult.error}`);
+          console.error(authResult.error);
         }
         setLoading(false);
         return;
@@ -107,13 +111,11 @@ export default function AdminTeachersList() {
       const { data, error } = await teachers.create({
         ...formData,
         staff_id: staffId,
-        auth_user_id: authData.user.id,
+        auth_user_id: authResult.auth_user_id,
         is_active: true,
       });
 
       if (error) {
-        // If teacher record creation fails, we should clean up the auth user
-        // but for now just log the error
         toast.error('Failed to create teacher record');
         console.error(error);
         setLoading(false);
@@ -210,22 +212,25 @@ export default function AdminTeachersList() {
 
     const newPassword = generatePassword();
 
-    // Reset password using Supabase Auth admin API
-    const { data, error } = await supabase.auth.admin.updateUserById(
-      teacher.auth_user_id,
-      { password: newPassword }
-    );
+    // Call Edge Function to reset password
+    const response = await fetch(`${supabaseUrl}/functions/v1/reset-teacher-password`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        auth_user_id: teacher.auth_user_id,
+        new_password: newPassword,
+      }),
+    });
 
-    if (error) {
+    const result = await response.json();
+
+    if (!response.ok || result.error) {
       toast.error('Failed to reset password');
-      console.error(error);
+      console.error(result.error);
     } else {
-      // Also reset first_login flag to true so teacher must change password
-      await supabase.auth.admin.updateUserById(
-        teacher.auth_user_id,
-        { user_metadata: { first_login: true } }
-      );
-
       toast.success('Password reset successfully!');
       alert(`New password for ${teacher.full_name}:\n\nStaff ID: ${teacher.staff_id}\nPassword: ${newPassword}\n\nPlease save this information and share it with the teacher.`);
     }
