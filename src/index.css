@@ -16,6 +16,25 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
+/* Fix date input alignment - ensure it matches other inputs */
+input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-sizing: border-box !important;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: block;
+  opacity: 1;
+}
+
+/* Ensure date input doesn't add extra width */
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+
 /* RTL Support for Arabic text */
 [dir="rtl"],
 .prose [dir="rtl"],
