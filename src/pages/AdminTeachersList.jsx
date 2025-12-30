@@ -122,6 +122,38 @@ export default function AdminTeachersList() {
         return;
       }
 
+      // Send welcome email to teacher
+      try {
+        const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-teacher-welcome-email`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            teacherData: {
+              full_name: formData.full_name,
+              email: formData.email,
+              staff_id: staffId,
+              password: password,
+            },
+            baseUrl: window.location.origin,
+          }),
+        });
+
+        const emailResult = await emailResponse.json();
+
+        if (!emailResponse.ok || emailResult.error) {
+          console.error('Failed to send welcome email:', emailResult.error);
+          toast.warning('Teacher created but welcome email failed to send');
+        } else {
+          console.log('Welcome email sent successfully');
+        }
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError);
+        toast.warning('Teacher created but welcome email failed to send');
+      }
+
       // Store credentials to show to admin
       setGeneratedCredentials({
         staff_id: staffId,
@@ -210,29 +242,34 @@ export default function AdminTeachersList() {
 
     setLoading(true);
 
-    const newPassword = generatePassword();
+    try {
+      const newPassword = generatePassword();
 
-    // Call Edge Function to reset password
-    const response = await fetch(`${supabaseUrl}/functions/v1/reset-teacher-password`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${supabaseAnonKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        auth_user_id: teacher.auth_user_id,
-        new_password: newPassword,
-      }),
-    });
+      // Call Edge Function to reset password
+      const response = await fetch(`${supabaseUrl}/functions/v1/reset-teacher-password`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          auth_user_id: teacher.auth_user_id,
+          new_password: newPassword,
+        }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (!response.ok || result.error) {
-      toast.error('Failed to reset password');
-      console.error(result.error);
-    } else {
-      toast.success('Password reset successfully!');
-      alert(`New password for ${teacher.full_name}:\n\nStaff ID: ${teacher.staff_id}\nPassword: ${newPassword}\n\nPlease save this information and share it with the teacher.`);
+      if (!response.ok || result.error) {
+        toast.error(`Failed to reset password: ${result.error || 'Unknown error'}`);
+        console.error(result.error);
+      } else {
+        toast.success('Password reset successfully!');
+        alert(`New password for ${teacher.full_name}:\n\nStaff ID: ${teacher.staff_id}\nPassword: ${newPassword}\n\nPlease save this information and share it with the teacher.`);
+      }
+    } catch (error) {
+      toast.error('An error occurred while resetting password');
+      console.error(error);
     }
 
     setLoading(false);
