@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import bcrypt from 'bcryptjs';
 import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, Key, Edit2, CheckCircle, Mail, Send, XCircle } from 'lucide-react';
-import { teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
+import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 
 export default function TeacherPortal() {
@@ -55,52 +54,75 @@ export default function TeacherPortal() {
     setLoading(true);
 
     try {
-      const { data, error } = await teachers.getByStaffId(staffId);
+      // Determine if staffId is an email or staff ID
+      const isEmail = staffId.includes('@');
+      let teacherEmail = staffId;
 
-      if (error || !data) {
-        toast.error('Invalid Staff ID or password');
+      // If it's a staff ID, look up the teacher to get their email
+      if (!isEmail) {
+        const { data: teacherData, error: teacherError } = await teachers.getByStaffId(staffId);
+
+        if (teacherError || !teacherData) {
+          toast.error('Invalid Staff ID or password');
+          setLoading(false);
+          return;
+        }
+
+        if (!teacherData.is_active) {
+          toast.error('Your account is inactive. Please contact admin.');
+          setLoading(false);
+          return;
+        }
+
+        teacherEmail = teacherData.email;
+      }
+
+      // Authenticate with Supabase Auth using email and password
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: teacherEmail,
+        password: password,
+      });
+
+      if (authError) {
+        console.error('Auth error:', authError);
+        toast.error('Invalid credentials or password');
         setLoading(false);
         return;
       }
 
-      // Verify password (support both plain text and hashed passwords)
-      let passwordMatch = false;
+      // Get teacher record using auth_user_id
+      const { data: teacherRecord, error: teacherRecordError } = await teachers.getByAuthUserId(authData.user.id);
 
-      // Check if password is hashed (bcrypt hashes start with $2a$, $2b$, or $2y$)
-      if (data.password && data.password.startsWith('$2')) {
-        // Hashed password - use bcrypt compare
-        passwordMatch = await bcrypt.compare(password, data.password);
-      } else {
-        // Plain text password - direct comparison
-        passwordMatch = (data.password === password);
-      }
-
-      if (!passwordMatch) {
-        toast.error('Invalid Staff ID or password');
+      if (teacherRecordError || !teacherRecord) {
+        toast.error('Teacher account not found');
         setLoading(false);
         return;
       }
 
-      if (!data.is_active) {
+      if (!teacherRecord.is_active) {
         toast.error('Your account is inactive. Please contact admin.');
+        await supabase.auth.signOut();
         setLoading(false);
         return;
       }
+
+      // Get first_login status from user metadata
+      const firstLogin = authData.user?.user_metadata?.first_login || false;
 
       // Login successful
-      setTeacher(data);
+      setTeacher(teacherRecord);
       setIsAuthenticated(true);
-      localStorage.setItem('teacher', JSON.stringify(data));
+      localStorage.setItem('teacher', JSON.stringify(teacherRecord));
 
       // Check if first login - show password change modal
-      if (data.first_login) {
+      if (firstLogin) {
         toast.info('Please change your password');
         setShowPasswordModal(true);
         setLoading(false); // Reset loading so password change button isn't stuck
       } else {
-        toast.success(`Welcome, ${data.full_name}!`);
+        toast.success(`Welcome, ${teacherRecord.full_name}!`);
         // Load teacher data
-        await loadTeacherData(data.id);
+        await loadTeacherData(teacherRecord.id);
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -130,26 +152,26 @@ export default function TeacherPortal() {
     setLoading(true);
 
     try {
-      // Hash the new password before storing
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      // Update password and set first_login to false
-      const { data, error } = await teachers.update(teacher.id, {
-        password: hashedPassword,
-        first_login: false
+      // Update password using Supabase Auth
+      const { error: passwordError } = await supabase.auth.updateUser({
+        password: newPassword,
       });
 
-      if (error) {
-        toast.error('Failed to update password');
-        console.error(error);
+      if (passwordError) {
+        toast.error(`Failed to update password: ${passwordError.message}`);
+        console.error('Password update error:', passwordError);
         setLoading(false);
         return;
       }
 
-      // Update teacher data in state and localStorage (don't store hashed password)
-      const updatedTeacher = { ...teacher, first_login: false };
-      setTeacher(updatedTeacher);
-      localStorage.setItem('teacher', JSON.stringify(updatedTeacher));
+      // Update user metadata to mark first_login as false
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: { first_login: false }
+      });
+
+      if (metadataError) {
+        console.error('Metadata update error:', metadataError);
+      }
 
       toast.success('Password changed successfully!');
       setShowPasswordModal(false);
@@ -166,7 +188,10 @@ export default function TeacherPortal() {
     setLoading(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Sign out from Supabase Auth
+    await supabase.auth.signOut();
+
     setIsAuthenticated(false);
     setTeacher(null);
     setAssignedStudents([]);

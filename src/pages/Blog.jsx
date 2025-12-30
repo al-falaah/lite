@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Calendar, ArrowRight, Home, Filter } from 'lucide-react';
+import { Calendar, ArrowRight, Home, Filter, Mail } from 'lucide-react';
 import BlogSubscribe from '../components/blog/BlogSubscribe';
 
 const CATEGORIES = [
@@ -37,6 +37,8 @@ const Blog = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [categoryCounts, setCategoryCounts] = useState({});
+  const [showSubscribeButton, setShowSubscribeButton] = useState(false);
+  const subscribeRef = useRef(null);
 
   useEffect(() => {
     fetchPosts();
@@ -60,6 +62,27 @@ const Blog = () => {
     });
     setCategoryCounts(counts);
   }, [posts]);
+
+  useEffect(() => {
+    // Show/hide floating subscribe button based on scroll position
+    const handleScroll = () => {
+      if (subscribeRef.current) {
+        const subscribePosition = subscribeRef.current.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        // Show button when subscribe section is below viewport
+        setShowSubscribeButton(subscribePosition > windowHeight);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSubscribe = () => {
+    subscribeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const fetchPosts = async () => {
     console.log('[Blog] Fetching published blog posts...');
@@ -316,7 +339,7 @@ const Blog = () => {
             )}
 
             {/* Blog Subscription Section */}
-            <div className="mt-16 sm:mt-20">
+            <div ref={subscribeRef} className="mt-16 sm:mt-20">
               <BlogSubscribe />
             </div>
 
@@ -332,6 +355,18 @@ const Blog = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Subscribe Button - Shows when subscribe section is off-screen */}
+      {showSubscribeButton && (
+        <button
+          onClick={scrollToSubscribe}
+          className="fixed bottom-6 right-6 z-40 bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition-all hover:scale-105 flex items-center gap-2 group"
+          aria-label="Subscribe to newsletter"
+        >
+          <Mail className="h-5 w-5" />
+          <span className="font-medium hidden sm:inline">Subscribe</span>
+        </button>
+      )}
     </div>
   );
 };

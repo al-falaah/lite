@@ -81,17 +81,34 @@ serve(async (req) => {
         const generatedPassword = generatePassword()
         console.log('Generated temporary password for student:', generatedPassword)
 
-        // NOTE: Storing plain text password temporarily
-        // Run migrate-passwords.js after deployment to hash all passwords
-        console.log('Storing password (will be hashed by migration script later)')
+        // Create Supabase Auth user with email and generated password
+        console.log('Creating Supabase Auth user...')
+        const { data: authData, error: authError } = await supabaseClient.auth.admin.createUser({
+          email: student.email,
+          password: generatedPassword,
+          email_confirm: true, // Auto-confirm email
+          user_metadata: {
+            full_name: student.full_name,
+            student_id: generatedStudentId,
+            role: 'student',
+            first_login: true,
+          },
+        })
 
-        // Update student status, student_id, password, and Stripe customer ID
-        console.log('Updating student record...', { studentId, generatedStudentId, hasEnrolledStatus: true })
+        if (authError || !authData.user) {
+          console.error('Failed to create Supabase Auth user:', authError)
+          throw new Error('Failed to create authentication user')
+        }
+
+        console.log('✅ Supabase Auth user created:', authData.user.id)
+
+        // Update student record with student_id, auth_user_id, and status
+        console.log('Updating student record...', { studentId, generatedStudentId, authUserId: authData.user.id })
         const { error: updateError } = await supabaseClient
           .from('students')
           .update({
             student_id: generatedStudentId,
-            password: generatedPassword,
+            auth_user_id: authData.user.id,
             status: 'enrolled',
             stripe_customer_id: session.customer || null,
           })

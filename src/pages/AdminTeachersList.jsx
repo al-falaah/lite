@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { UserCheck, Plus, Edit2, Trash2, Mail, Phone, Globe, UserCircle, X } from 'lucide-react';
-import { teachers } from '../services/supabase';
+import { supabase, teachers } from '../services/supabase';
 
 export default function AdminTeachersList() {
   const [teachersList, setTeachersList] = useState([]);
@@ -79,21 +79,43 @@ export default function AdminTeachersList() {
       const staffId = await generateStaffId();
       const password = generatePassword();
 
-      // Create teacher
+      // Create Supabase Auth user with email and generated password
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        email: formData.email,
+        password: password,
+        email_confirm: true, // Auto-confirm email
+        user_metadata: {
+          full_name: formData.full_name,
+          staff_id: staffId,
+          role: 'teacher',
+          first_login: true,
+        },
+      });
+
+      if (authError) {
+        if (authError.message?.includes('already registered')) {
+          toast.error('A teacher with this email already exists');
+        } else {
+          toast.error(`Failed to create teacher auth: ${authError.message}`);
+          console.error(authError);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Create teacher record with auth_user_id
       const { data, error } = await teachers.create({
         ...formData,
         staff_id: staffId,
-        password: password, // TODO: Add bcrypt hashing in production
+        auth_user_id: authData.user.id,
         is_active: true,
       });
 
       if (error) {
-        if (error.code === '23505') {
-          toast.error('A teacher with this email already exists');
-        } else {
-          toast.error('Failed to create teacher');
-          console.error(error);
-        }
+        // If teacher record creation fails, we should clean up the auth user
+        // but for now just log the error
+        toast.error('Failed to create teacher record');
+        console.error(error);
         setLoading(false);
         return;
       }
@@ -187,14 +209,23 @@ export default function AdminTeachersList() {
     setLoading(true);
 
     const newPassword = generatePassword();
-    const { data, error } = await teachers.update(teacher.id, {
-      password: newPassword, // TODO: Add bcrypt hashing in production
-    });
+
+    // Reset password using Supabase Auth admin API
+    const { data, error } = await supabase.auth.admin.updateUserById(
+      teacher.auth_user_id,
+      { password: newPassword }
+    );
 
     if (error) {
       toast.error('Failed to reset password');
       console.error(error);
     } else {
+      // Also reset first_login flag to true so teacher must change password
+      await supabase.auth.admin.updateUserById(
+        teacher.auth_user_id,
+        { user_metadata: { first_login: true } }
+      );
+
       toast.success('Password reset successfully!');
       alert(`New password for ${teacher.full_name}:\n\nStaff ID: ${teacher.staff_id}\nPassword: ${newPassword}\n\nPlease save this information and share it with the teacher.`);
     }

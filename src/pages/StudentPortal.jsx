@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
-import bcrypt from 'bcryptjs';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   ArrowLeft, User, LogOut, ExternalLink, CreditCard,
@@ -49,49 +48,47 @@ const StudentPortal = () => {
 
     setLoading(true);
     try {
-      // Find student by student_id
-      const { data, error } = await supabase
+      // Find student by student_id to get their email
+      const { data: studentData, error: studentError } = await supabase
         .from('students')
         .select('*')
         .eq('student_id', studentId.trim())
         .single();
 
-      if (error || !data) {
+      if (studentError || !studentData) {
         toast.error('Invalid Student ID or password');
         setLoading(false);
         return;
       }
 
-      // Check password (support both plain text and hashed passwords)
-      let passwordMatch = false;
+      // Authenticate with Supabase Auth using email and password
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: studentData.email,
+        password: password,
+      });
 
-      // Check if password is hashed (bcrypt hashes start with $2a$, $2b$, or $2y$)
-      if (data.password && data.password.startsWith('$2')) {
-        // Hashed password - use bcrypt compare
-        passwordMatch = await bcrypt.compare(password, data.password);
-      } else {
-        // Plain text password - direct comparison
-        passwordMatch = (data.password === password);
-      }
-
-      if (!passwordMatch) {
+      if (authError) {
+        console.error('Auth error:', authError);
         toast.error('Invalid Student ID or password');
         setLoading(false);
         return;
       }
 
-      setStudent(data);
+      // Get first_login status from user metadata
+      const firstLogin = authData.user?.user_metadata?.first_login || false;
+
+      setStudent(studentData);
       setAuthenticated(true);
 
       // Check if first login - show password change modal
-      if (data.first_login) {
+      if (firstLogin) {
         toast.info('Please change your password');
         setShowPasswordModal(true);
         setLoading(false); // Reset loading so password change button isn't stuck
       } else {
-        toast.success(`Welcome, ${data.full_name}!`);
+        toast.success(`Welcome, ${studentData.full_name}!`);
         // Load enrollments and student data
-        await loadStudentData(data.id);
+        await loadStudentData(studentData.id);
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -254,32 +251,26 @@ const StudentPortal = () => {
     try {
       console.log('Updating password for student ID:', student.id);
 
-      // Hash the new password before storing
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      // Update password using Supabase Auth
+      const { error: passwordError } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
 
-      // Update password and set first_login to false
-      const { data, error } = await supabase
-        .from('students')
-        .update({
-          password: hashedPassword,
-          first_login: false
-        })
-        .eq('id', student.id)
-        .select();
-
-      console.log('Update response:', { data, error });
-
-      if (error) {
-        toast.error(`Failed to update password: ${error.message}`);
-        console.error('Password update error:', error);
+      if (passwordError) {
+        toast.error(`Failed to update password: ${passwordError.message}`);
+        console.error('Password update error:', passwordError);
         setLoading(false);
         return;
       }
 
-      // Update student data in state and localStorage (don't store hashed password in localStorage)
-      const updatedStudent = { ...student, first_login: false };
-      setStudent(updatedStudent);
-      localStorage.setItem('student', JSON.stringify(updatedStudent));
+      // Update user metadata to mark first_login as false
+      const { error: metadataError } = await supabase.auth.updateUser({
+        data: { first_login: false }
+      });
+
+      if (metadataError) {
+        console.error('Metadata update error:', metadataError);
+      }
 
       toast.success('Password changed successfully!');
       setShowPasswordModal(false);
@@ -296,7 +287,10 @@ const StudentPortal = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Sign out from Supabase Auth
+    await supabase.auth.signOut();
+
     setAuthenticated(false);
     setStudent(null);
     setEnrollments([]);

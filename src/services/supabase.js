@@ -721,6 +721,15 @@ export const teachers = {
     return { data, error };
   },
 
+  getByAuthUserId: async (authUserId) => {
+    const { data, error } = await supabase
+      .from('teachers')
+      .select('*')
+      .eq('auth_user_id', authUserId)
+      .single();
+    return { data, error };
+  },
+
   create: async (teacher) => {
     const { data, error } = await supabase
       .from('teachers')
