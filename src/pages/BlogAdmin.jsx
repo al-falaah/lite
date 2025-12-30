@@ -433,6 +433,58 @@ const BlogAdmin = () => {
     }
   };
 
+  const handleToggleStatus = async (post) => {
+    const newStatus = post.status === 'published' ? 'draft' : 'published';
+    const publishedAt = newStatus === 'published' ? new Date().toISOString() : null;
+
+    try {
+      // Get auth token from localStorage
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const storageKey = `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`;
+      const authData = localStorage.getItem(storageKey);
+
+      let accessToken = null;
+      if (authData) {
+        try {
+          const parsed = JSON.parse(authData);
+          accessToken = parsed.access_token || parsed.accessToken;
+        } catch (e) {
+          console.error('Failed to parse auth data:', e);
+        }
+      }
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+        'Prefer': 'return=representation'
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?id=eq.${post.id}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          status: newStatus,
+          published_at: publishedAt
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update status');
+      }
+
+      toast.success(`Post ${newStatus === 'published' ? 'published' : 'unpublished'} successfully`);
+      fetchAllPosts();
+    } catch (error) {
+      console.error('Error toggling status:', error);
+      toast.error('Failed to update post status');
+    }
+  };
+
   const resetForm = () => {
     setEditingPost(null);
     setFormData({
@@ -900,18 +952,35 @@ const BlogAdmin = () => {
                       className="border border-gray-200 rounded-lg p-3 hover:border-emerald-300 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="font-medium text-sm text-gray-900 line-clamp-2">
+                        <h3 className="font-medium text-sm text-gray-900 line-clamp-2 flex-1">
                           {post.title}
                         </h3>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            post.status === 'published'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-gray-100 text-gray-700'
-                          }`}
-                        >
-                          {post.status}
-                        </span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span
+                            className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
+                              post.status === 'published'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-gray-100 text-gray-700'
+                            }`}
+                          >
+                            {post.status}
+                          </span>
+                          <button
+                            onClick={() => handleToggleStatus(post)}
+                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+                              post.status === 'published'
+                                ? 'bg-emerald-600'
+                                : 'bg-gray-300'
+                            }`}
+                            title={post.status === 'published' ? 'Switch to draft' : 'Publish'}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                post.status === 'published' ? 'translate-x-5' : 'translate-x-0.5'
+                              }`}
+                            />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex gap-2">
                         <button
