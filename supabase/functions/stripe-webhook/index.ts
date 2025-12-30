@@ -150,7 +150,7 @@ serve(async (req) => {
       }
 
       // Determine payment amount
-      const amount = planType === 'monthly' ? 25 : (planType === 'annual' ? 275 : 120)
+      const amount = planType === 'monthly' ? 35 : (planType === 'annual' ? 375 : 120)
 
       // Create payment record linked to enrollment
       const { error: paymentError } = await supabaseClient
