@@ -200,7 +200,7 @@ const Blog = () => {
             The FastTrack Journal
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-            Reflections on Arabic and Islam for Spiritual Uplift and Intellectual Growth
+            Reflections on Arabic language and Islam for Spiritual Uplift and Intellectual Growth
           </p>
         </div>
       </div>
