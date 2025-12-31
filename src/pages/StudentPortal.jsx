@@ -282,37 +282,16 @@ const StudentPortal = () => {
         console.error('Metadata update error:', metadataError);
       }
 
-      // Re-authenticate with new password to maintain session
-      console.log('Re-authenticating with new password...');
-      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: studentEmail,
-        password: newPassword,
-      });
-
-      if (signInError) {
-        console.error('Re-authentication error:', signInError);
-        toast.warning('Password changed but re-authentication failed. Please log in again.');
-        setShowPasswordModal(false);
-        setNewPassword('');
-        setConfirmPassword('');
-        setLoading(false);
-        return;
-      }
-
-      console.log('Re-authentication successful, session:', authData.session?.access_token ? 'active' : 'missing');
-
-      // Wait a moment for session to be fully established
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      toast.success('Password changed successfully!');
+      toast.success('Password changed successfully! Reloading page...');
       setShowPasswordModal(false);
       setNewPassword('');
       setConfirmPassword('');
+      setLoading(false);
 
-      // Load student data now
-      console.log('Loading student data after password change...');
-      await loadStudentData(student.id);
-      // Note: loadStudentData will call setLoading(false) in its finally block
+      // Reload the page after a short delay to reset everything with new session
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       console.error('Password change error:', err);
       toast.error('An error occurred while changing password');
