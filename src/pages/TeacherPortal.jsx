@@ -748,77 +748,75 @@ export default function TeacherPortal() {
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Welcome Message */}
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Welcome back, {teacher.full_name}!</h1>
-          <p className="text-sm sm:text-base text-gray-600">Manage your assigned students and track their progress</p>
+        <div className="mb-5 sm:mb-8">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">Welcome, {teacher.full_name.split(' ')[0]}!</h1>
+          <p className="text-xs sm:text-base text-gray-600">Manage students and track progress</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-5 sm:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-emerald-400 text-white transform hover:scale-105 transition-transform">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-emerald-100 font-medium mb-1">Assigned Students</p>
-                <p className="text-3xl sm:text-4xl font-bold">{assignedStudents.length}</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 mb-5 sm:mb-8">
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-emerald-400 text-white">
+            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
+              <div className="mb-2 sm:mb-0">
+                <p className="text-[10px] sm:text-sm text-emerald-100 font-medium mb-0.5 sm:mb-1">Assigned</p>
+                <p className="text-2xl sm:text-4xl font-bold">{assignedStudents.length}</p>
               </div>
-              <div className="p-2 sm:p-3 bg-white/20 rounded-lg sm:rounded-xl backdrop-blur-sm">
-                <Users className="h-6 w-6 sm:h-8 sm:w-8" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-gray-500 to-gray-600 p-5 sm:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-gray-400 text-white transform hover:scale-105 transition-transform">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-gray-100 font-medium mb-1">Removed Students</p>
-                <p className="text-3xl sm:text-4xl font-bold">{removedStudents.length}</p>
-              </div>
-              <div className="p-2 sm:p-3 bg-white/20 rounded-lg sm:rounded-xl backdrop-blur-sm">
-                <UserX className="h-6 w-6 sm:h-8 sm:w-8" />
+              <div className="hidden sm:block p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <Users className="h-8 w-8" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-5 sm:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-blue-400 text-white transform hover:scale-105 transition-transform sm:col-span-2 md:col-span-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-blue-100 font-medium mb-1">Total Students</p>
-                <p className="text-3xl sm:text-4xl font-bold">{assignedStudents.length + removedStudents.length}</p>
+          <div className="bg-gradient-to-br from-gray-500 to-gray-600 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-gray-400 text-white">
+            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
+              <div className="mb-2 sm:mb-0">
+                <p className="text-[10px] sm:text-sm text-gray-100 font-medium mb-0.5 sm:mb-1">Removed</p>
+                <p className="text-2xl sm:text-4xl font-bold">{removedStudents.length}</p>
               </div>
-              <div className="p-2 sm:p-3 bg-white/20 rounded-lg sm:rounded-xl backdrop-blur-sm">
-                <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8" />
+              <div className="hidden sm:block p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <UserX className="h-8 w-8" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-blue-400 text-white col-span-2 sm:col-span-1">
+            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
+              <div className="mb-2 sm:mb-0">
+                <p className="text-[10px] sm:text-sm text-blue-100 font-medium mb-0.5 sm:mb-1">Total</p>
+                <p className="text-2xl sm:text-4xl font-bold">{assignedStudents.length + removedStudents.length}</p>
+              </div>
+              <div className="hidden sm:block p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <BarChart3 className="h-8 w-8" />
               </div>
             </div>
           </div>
         </div>
 
         {/* View Toggle */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6 sm:mb-8">
+        <div className="flex gap-2 mb-5 sm:mb-8">
           <button
             onClick={() => setActiveView('assigned')}
-            className={`px-4 sm:px-6 py-3 sm:py-3.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all shadow-md ${
+            className={`flex-1 px-3 sm:px-6 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl text-xs sm:text-base font-semibold transition-all ${
               activeView === 'assigned'
-                ? 'bg-emerald-600 text-white shadow-emerald-200'
+                ? 'bg-emerald-600 text-white shadow-md'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             }`}
           >
-            <Users className="h-4 w-4 sm:h-5 sm:w-5 inline mr-2" />
-            <span className="hidden sm:inline">Assigned Students ({assignedStudents.length})</span>
-            <span className="sm:hidden">Assigned ({assignedStudents.length})</span>
+            <Users className="h-3.5 w-3.5 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
+            <span>Assigned ({assignedStudents.length})</span>
           </button>
           <button
             onClick={() => setActiveView('removed')}
-            className={`px-4 sm:px-6 py-3 sm:py-3.5 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all shadow-md ${
+            className={`flex-1 px-3 sm:px-6 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl text-xs sm:text-base font-semibold transition-all ${
               activeView === 'removed'
-                ? 'bg-gray-600 text-white shadow-gray-200'
+                ? 'bg-gray-600 text-white shadow-md'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             }`}
           >
-            <UserX className="h-4 w-4 sm:h-5 sm:w-5 inline mr-2" />
-            <span className="hidden sm:inline">Removed Students ({removedStudents.length})</span>
-            <span className="sm:hidden">Removed ({removedStudents.length})</span>
+            <UserX className="h-3.5 w-3.5 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
+            <span>Removed ({removedStudents.length})</span>
           </button>
         </div>
 
@@ -843,36 +841,36 @@ export default function TeacherPortal() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
             {displayedStudents.map((assignment) => (
               <div
                 key={assignment.id}
-                className="bg-white p-5 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:border-emerald-200 transition-all transform hover:-translate-y-1"
+                className="bg-white p-4 sm:p-6 rounded-lg sm:rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-emerald-200 transition-all"
               >
-                <div className="flex justify-between items-start mb-3 sm:mb-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 truncate">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1 min-w-0 pr-2">
+                    <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-1.5 truncate">
                       {assignment.student.full_name}
                     </h3>
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
+                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
                       assignment.program === 'essentials'
-                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                        : 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-purple-600 text-white'
                     }`}>
                       {assignment.program === 'essentials' ? 'Essentials' : 'Tajweed'}
                     </span>
                   </div>
-                  <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
+                  <div className="flex gap-1 flex-shrink-0">
                     <button
                       onClick={() => handleOpenEmailModal(assignment.student, assignment.program)}
-                      className="p-2 sm:p-2.5 text-blue-600 hover:bg-blue-50 rounded-lg sm:rounded-xl transition-all shadow-sm hover:shadow-md"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors active:scale-95"
                       title="Send email"
                     >
                       <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
                     </button>
                     <button
                       onClick={() => handleViewStudent(assignment)}
-                      className="p-2 sm:p-2.5 text-emerald-600 hover:bg-emerald-50 rounded-lg sm:rounded-xl transition-all shadow-sm hover:shadow-md"
+                      className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors active:scale-95"
                       title="View details"
                     >
                       <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -880,15 +878,15 @@ export default function TeacherPortal() {
                   </div>
                 </div>
 
-                <div className="space-y-2 text-xs sm:text-sm text-gray-600">
+                <div className="space-y-1.5 text-[11px] sm:text-sm text-gray-600">
                   <p className="truncate">
-                    <span className="font-medium">Email:</span> {assignment.student.email}
+                    <span className="font-medium text-gray-700">Email:</span> {assignment.student.email}
                   </p>
                   <p>
-                    <span className="font-medium">Student ID:</span> {assignment.student.student_id}
+                    <span className="font-medium text-gray-700">ID:</span> {assignment.student.student_id}
                   </p>
-                  <p>
-                    <span className="font-medium">Assigned:</span> {formatDate(assignment.assigned_at)}
+                  <p className="hidden sm:block">
+                    <span className="font-medium text-gray-700">Assigned:</span> {formatDate(assignment.assigned_at)}
                   </p>
                   {assignment.status === 'removed' && assignment.removed_at && (
                     <p className="text-red-600">
@@ -896,7 +894,7 @@ export default function TeacherPortal() {
                     </p>
                   )}
                   {assignment.notes && (
-                    <p className="text-xs italic mt-2 p-2 bg-gray-50 rounded">
+                    <p className="text-[10px] sm:text-xs italic mt-2 p-2 bg-gray-50 rounded">
                       {assignment.notes}
                     </p>
                   )}
@@ -909,21 +907,24 @@ export default function TeacherPortal() {
 
       {/* Student Details Modal */}
       {showStudentModal && selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-4 sm:p-6">
-              <div className="flex justify-between items-start sm:items-center mb-4 sm:mb-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl">
+              <div className="flex justify-between items-center">
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{selectedStudent.full_name}</h2>
-                  <p className="text-xs sm:text-sm text-gray-600">Student ID: {selectedStudent.student_id}</p>
+                  <h2 className="text-base sm:text-2xl font-bold text-gray-900 truncate">{selectedStudent.full_name}</h2>
+                  <p className="text-xs sm:text-sm text-gray-600">ID: {selectedStudent.student_id}</p>
                 </div>
                 <button
                   onClick={closeStudentModal}
-                  className="text-gray-500 hover:text-gray-700 ml-2 flex-shrink-0"
+                  className="text-gray-500 hover:text-gray-700 ml-2 p-2 -mr-2 active:scale-95"
                 >
                   <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
               </div>
+            </div>
+
+            <div className="p-4 sm:p-6">
 
               {/* Student Info */}
               <div className="mb-4 sm:mb-6">
@@ -1238,16 +1239,16 @@ export default function TeacherPortal() {
 
       {/* Email Modal */}
       {showEmailModal && emailRecipient && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-4 sm:p-6">
-              <div className="flex items-start sm:items-center justify-between mb-4 sm:mb-6">
-                <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                  <div className="p-2 sm:p-3 bg-blue-100 rounded-full flex-shrink-0">
-                    <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                  <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                    <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">Send Message</h2>
+                    <h2 className="text-sm sm:text-xl font-bold text-gray-900">Send Message</h2>
                     <p className="text-xs sm:text-sm text-gray-600 truncate">To: {emailRecipient.name}</p>
                   </div>
                 </div>
@@ -1257,11 +1258,14 @@ export default function TeacherPortal() {
                     setEmailMessage('');
                     setEmailRecipient(null);
                   }}
-                  className="text-gray-500 hover:text-gray-700 ml-2 flex-shrink-0"
+                  className="text-gray-500 hover:text-gray-700 p-2 -mr-2 active:scale-95"
                 >
                   <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
               </div>
+            </div>
+
+            <div className="p-4 sm:p-6">
 
               <div className="mb-4 sm:mb-6">
                 <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-4">
@@ -1412,47 +1416,49 @@ export default function TeacherPortal() {
 
       {/* Settings Modal */}
       {showSettingsModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-              <h3 className="text-2xl font-bold text-gray-900">Settings</h3>
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between rounded-t-2xl">
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-900">Settings</h3>
               <button
                 onClick={() => setShowSettingsModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-600 p-2 -mr-2 active:scale-95"
               >
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-gray-200 px-6">
-              <div className="flex gap-4">
+            <div className="border-b border-gray-200 px-4 sm:px-6">
+              <div className="flex gap-2 sm:gap-4">
                 <button
                   onClick={() => setSettingsTab('password')}
-                  className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  className={`py-2.5 sm:py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors ${
                     settingsTab === 'password'
                       ? 'border-emerald-600 text-emerald-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <Key className="h-4 w-4 inline mr-2" />
-                  Change Password
+                  <Key className="h-3.5 w-3.5 sm:h-4 sm:w-4 inline mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Change Password</span>
+                  <span className="sm:hidden">Password</span>
                 </button>
                 <button
                   onClick={() => setSettingsTab('profile')}
-                  className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  className={`py-2.5 sm:py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors ${
                     settingsTab === 'profile'
                       ? 'border-emerald-600 text-emerald-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  <Edit2 className="h-4 w-4 inline mr-2" />
-                  Update Profile
+                  <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 inline mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Update Profile</span>
+                  <span className="sm:hidden">Profile</span>
                 </button>
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Password Tab */}
               {settingsTab === 'password' && (
                 <div className="space-y-4">
