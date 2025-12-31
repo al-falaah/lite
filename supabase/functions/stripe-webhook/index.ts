@@ -68,39 +68,34 @@ serve(async (req) => {
         const generatedStudentId = idResult
         console.log(`Generated random student ID: ${generatedStudentId}`)
 
-        // Generate temporary password (8 characters: mix of letters and numbers)
-        const generatePassword = () => {
-          const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // Removed similar-looking chars
-          let password = ''
-          for (let i = 0; i < 8; i++) {
-            password += chars.charAt(Math.floor(Math.random() * chars.length))
-          }
-          return password
-        }
+        // Call create-student-auth edge function to create auth user and generate invite link
+        console.log('Creating Supabase Auth user via edge function...')
+        const supabaseUrl = Deno.env.get('SUPABASE_URL')
+        const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
-        const generatedPassword = generatePassword()
-        console.log('Generated temporary password for student:', generatedPassword)
-
-        // Create Supabase Auth user with email and generated password
-        console.log('Creating Supabase Auth user...')
-        const { data: authData, error: authError } = await supabaseClient.auth.admin.createUser({
-          email: student.email,
-          password: generatedPassword,
-          email_confirm: true, // Auto-confirm email
-          user_metadata: {
+        const authResponse = await fetch(`${supabaseUrl}/functions/v1/create-student-auth`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${serviceRoleKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: student.email,
             full_name: student.full_name,
             student_id: generatedStudentId,
-            role: 'student',
-            first_login: true,
-          },
+          }),
         })
 
-        if (authError || !authData.user) {
-          console.error('Failed to create Supabase Auth user:', authError)
-          throw new Error('Failed to create authentication user')
+        const authResult = await authResponse.json()
+
+        if (!authResponse.ok || authResult.error) {
+          console.error('Failed to create student auth:', authResult.error)
+          throw new Error(authResult.error || 'Failed to create authentication user')
         }
 
-        console.log('✅ Supabase Auth user created:', authData.user.id)
+        console.log('✅ Supabase Auth user created:', authResult.auth_user_id)
+        const authData = { user: { id: authResult.auth_user_id } }
+        const inviteLink = authResult.invite_link
 
         // Update student record with student_id, auth_user_id, and status
         console.log('Updating student record...', { studentId, generatedStudentId, authUserId: authData.user.id })
@@ -122,7 +117,7 @@ serve(async (req) => {
           console.log('✅ Student enrolled successfully:', studentId, 'with ID:', generatedStudentId)
           // Update the student object with the new credentials
           student.student_id = generatedStudentId
-          student.password = generatedPassword
+          student.invite_link = inviteLink
           student.status = 'enrolled'
         }
       }
@@ -206,7 +201,7 @@ serve(async (req) => {
       // Send welcome email if new student
       if (isNewStudent) {
         try {
-          const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
+          const appUrl = Deno.env.get('APP_URL') || 'https://www.tftmadrasah.nz'
           const supabaseUrl = Deno.env.get('SUPABASE_URL')
           const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
@@ -230,8 +225,8 @@ serve(async (req) => {
                 email: student.email,
                 student_id: student.student_id,
                 program: program,
-                password: student.password,
               },
+              inviteLink: student.invite_link,
               baseUrl: appUrl,
             }),
           })
