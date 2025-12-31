@@ -49,18 +49,33 @@ serve(async (req) => {
     // Create or get Stripe customer
     let customerId = student.stripe_customer_id
 
+    // Try to verify existing customer or create new one
+    if (customerId) {
+      try {
+        // Verify the customer exists in Stripe
+        await stripe.customers.retrieve(customerId)
+        console.log('Using existing Stripe customer:', customerId)
+      } catch (error) {
+        // Customer doesn't exist (wrong account, deleted, etc.)
+        console.warn('Invalid Stripe customer ID, creating new:', error.message)
+        customerId = null
+      }
+    }
+
     if (!customerId) {
+      // Create new customer
       const customer = await stripe.customers.create({
         email: student.email,
         name: student.full_name,
         metadata: {
           student_id: student.id,
-          student_number: student.student_id,
+          student_number: student.student_id || 'pending',
         },
       })
       customerId = customer.id
+      console.log('Created new Stripe customer:', customerId)
 
-      // Save customer ID
+      // Save customer ID to database
       await supabaseClient
         .from('students')
         .update({ stripe_customer_id: customerId })
