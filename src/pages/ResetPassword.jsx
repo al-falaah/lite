@@ -92,14 +92,23 @@ export default function ResetPassword() {
       // Get the user's role from metadata and redirect to appropriate portal
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Keep loading state true during redirect
+      console.log('User role:', user?.user_metadata?.role);
+      console.log('User data:', user);
+
+      // Redirect after a brief delay to show success message
       setTimeout(() => {
-        if (user?.user_metadata?.role === 'teacher') {
-          navigate('/teacher');
-        } else if (user?.user_metadata?.role === 'student') {
-          navigate('/student');
+        setLoading(false); // Stop loading before navigation
+
+        const role = user?.user_metadata?.role;
+        if (role === 'teacher') {
+          console.log('Navigating to teacher portal');
+          navigate('/teacher', { replace: true });
+        } else if (role === 'student') {
+          console.log('Navigating to student portal');
+          navigate('/student', { replace: true });
         } else {
-          navigate('/login');
+          console.log('Navigating to login');
+          navigate('/login', { replace: true });
         }
       }, 1500);
 
