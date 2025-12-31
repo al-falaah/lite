@@ -89,9 +89,17 @@ export default function ResetPassword() {
 
       toast.success('Password updated successfully!');
 
-      // Redirect to login after a short delay
-      setTimeout(() => {
-        navigate('/login');
+      // Get the user's role from metadata and redirect to appropriate portal
+      const { data: { user } } = await supabase.auth.getUser();
+
+      setTimeout(async () => {
+        if (user?.user_metadata?.role === 'teacher') {
+          navigate('/teacher');
+        } else if (user?.user_metadata?.role === 'student') {
+          navigate('/student');
+        } else {
+          navigate('/login');
+        }
       }, 1500);
 
     } catch (err) {
@@ -128,7 +136,7 @@ export default function ResetPassword() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-900 mb-2">Al-Falaah</h1>
+          <h1 className="text-4xl font-bold text-emerald-900 mb-2">The FastTrack Madrasah</h1>
           <p className="text-gray-600">Set your new password</p>
         </div>
 
@@ -218,7 +226,7 @@ export default function ResetPassword() {
 
         {/* Footer */}
         <div className="text-center mt-6 text-sm text-gray-500">
-          <p>Need help? Contact support@al-falaah.nz</p>
+          <p>Need help? Contact admin@tftmadrasah.nz</p>
         </div>
       </div>
     </div>

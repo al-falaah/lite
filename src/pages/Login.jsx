@@ -63,7 +63,7 @@ export default function Login() {
 
       if (teacherData) {
         toast.success('Welcome back!');
-        navigate('/teacher-portal');
+        navigate('/teacher');
         return;
       }
 
@@ -76,7 +76,7 @@ export default function Login() {
 
       if (studentData) {
         toast.success('Welcome back!');
-        navigate('/student-portal');
+        navigate('/student');
         return;
       }
 
@@ -97,7 +97,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-900 mb-2">Al-Falaah</h1>
+          <h1 className="text-4xl font-bold text-emerald-900 mb-2">The FastTrack Madrasah</h1>
           <p className="text-gray-600">Sign in to your account</p>
         </div>
 
@@ -183,7 +183,7 @@ export default function Login() {
           <div className="mt-6 text-center text-sm text-gray-600">
             <p>
               New student?{' '}
-              <Link to="/application" className="text-emerald-600 hover:text-emerald-700 font-medium">
+              <Link to="/apply" className="text-emerald-600 hover:text-emerald-700 font-medium">
                 Apply here
               </Link>
             </p>
@@ -192,7 +192,7 @@ export default function Login() {
 
         {/* Footer */}
         <div className="text-center mt-6 text-sm text-gray-500">
-          <p>Need help? Contact support@al-falaah.nz</p>
+          <p>Need help? Contact admin@tftmadrasah.nz</p>
         </div>
       </div>
     </div>
