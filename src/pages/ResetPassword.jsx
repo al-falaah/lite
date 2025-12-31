@@ -14,6 +14,7 @@ export default function ResetPassword() {
   const [validToken, setValidToken] = useState(false);
   const [checkingToken, setCheckingToken] = useState(true);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
+  const [authSubscription, setAuthSubscription] = useState(null);
 
   useEffect(() => {
     // Skip token validation if password has been updated
@@ -33,6 +34,9 @@ export default function ResetPassword() {
         console.log('Password updated');
       }
     });
+
+    // Store subscription reference so we can unsubscribe from handleResetPassword
+    setAuthSubscription(subscription);
 
     // Also check immediately in case session already exists
     const checkSession = async () => {
@@ -91,6 +95,12 @@ export default function ResetPassword() {
         toast.error(error.message || 'Failed to update password');
         setLoading(false);
         return;
+      }
+
+      // Immediately unsubscribe from auth state listener to prevent interference
+      if (authSubscription) {
+        authSubscription.unsubscribe();
+        console.log('Auth listener unsubscribed');
       }
 
       // Mark password as updated to prevent token validation from redirecting
