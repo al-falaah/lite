@@ -133,6 +133,9 @@ export default function TeacherPortal() {
   };
 
   const handleChangePassword = async () => {
+    console.log('=== handleChangePassword STARTED ===');
+    console.log('Teacher:', teacher);
+
     // Validation
     if (!newPassword || !confirmPassword) {
       toast.error('Please fill in all fields');
@@ -150,11 +153,14 @@ export default function TeacherPortal() {
     }
 
     setLoading(true);
+    console.log('Loading set to true');
 
     try {
       // Get current session before password update
+      console.log('Getting current session...');
       const { data: { session } } = await supabase.auth.getSession();
       const teacherEmail = session?.user?.email;
+      console.log('Teacher email:', teacherEmail);
 
       if (!teacherEmail) {
         toast.error('Session error. Please log in again.');
@@ -163,6 +169,7 @@ export default function TeacherPortal() {
       }
 
       // Update password using Supabase Auth
+      console.log('Updating password...');
       const { error: passwordError } = await supabase.auth.updateUser({
         password: newPassword,
       });
@@ -174,13 +181,18 @@ export default function TeacherPortal() {
         return;
       }
 
+      console.log('Password updated successfully');
+
       // Update user metadata to mark first_login as false
+      console.log('Updating metadata...');
       const { error: metadataError } = await supabase.auth.updateUser({
         data: { first_login: false }
       });
 
       if (metadataError) {
         console.error('Metadata update error:', metadataError);
+      } else {
+        console.log('Metadata updated successfully');
       }
 
       // Re-authenticate with new password to maintain session
@@ -203,22 +215,31 @@ export default function TeacherPortal() {
       console.log('Re-authentication successful, session:', authData.session?.access_token ? 'active' : 'missing');
 
       // Wait a moment for session to be fully established
+      console.log('Waiting 500ms for session to establish...');
       await new Promise(resolve => setTimeout(resolve, 500));
 
+      console.log('Closing modal and clearing form...');
       toast.success('Password changed successfully!');
       setShowPasswordModal(false);
       setNewPassword('');
       setConfirmPassword('');
 
       // Load teacher data now
-      console.log('Loading teacher data after password change...');
+      console.log('Loading teacher data after password change... Teacher ID:', teacher.id);
       await loadTeacherData(teacher.id);
+      console.log('Teacher data loaded successfully');
     } catch (err) {
-      console.error('Password change error:', err);
-      toast.error('An error occurred');
+      console.error('=== PASSWORD CHANGE ERROR ===');
+      console.error('Error type:', err.name);
+      console.error('Error message:', err.message);
+      console.error('Full error:', err);
+      console.error('Error stack:', err.stack);
+      toast.error(`An error occurred: ${err.message}`);
+    } finally {
+      console.log('Setting loading to false');
+      setLoading(false);
+      console.log('=== handleChangePassword FINISHED ===');
     }
-
-    setLoading(false);
   };
 
   const handleLogout = async () => {
