@@ -70,7 +70,7 @@ serve(async (req) => {
     console.log('✅ Teacher auth user created:', authData.user.id)
 
     // Generate password reset link (this is the invite link)
-    const redirectUrl = `${Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'}/reset-password`
+    const redirectUrl = `${Deno.env.get('APP_URL') || 'https://www.tftmadrasah.nz'}/reset-password`
 
     const { data: resetData, error: resetError } = await supabaseClient.auth.admin.generateLink({
       type: 'invite',
