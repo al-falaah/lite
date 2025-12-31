@@ -138,20 +138,33 @@ serve(async (req) => {
 
       const applicationId = application?.id || null
 
-      // Create enrollment for this program
-      const { data: enrollment, error: enrollmentError } = await supabaseClient
-        .rpc('create_enrollment', {
-          p_student_id: studentId,
-          p_program: program,
-          p_payment_type: planType,
-          p_application_id: applicationId,
+      // Create enrollment for this program - using direct INSERT
+      const totalFees = program === 'tajweed' ? 120 : (planType === 'monthly' ? 35 * 24 : 375 * 2)
+      const duration = program === 'tajweed' ? 6 : 24
+
+      const { data: enrollmentData, error: enrollmentError } = await supabaseClient
+        .from('enrollments')
+        .insert({
+          student_id: studentId,
+          program: program,
+          payment_type: planType,
+          total_fees: totalFees,
+          total_paid: 0,
+          balance_remaining: totalFees,
+          program_duration_months: duration,
+          status: 'active',
+          application_id: applicationId,
+          timezone: 'Pacific/Auckland'
         })
+        .select()
+        .single()
 
       if (enrollmentError) {
         console.error('Error creating enrollment:', enrollmentError)
         return new Response('Error creating enrollment', { status: 500 })
       }
 
+      const enrollment = enrollmentData.id
       console.log('Enrollment created:', enrollment)
 
       // Update enrollment with Stripe subscription ID
