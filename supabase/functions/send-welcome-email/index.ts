@@ -5,8 +5,8 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
 
-function generateEmailHTML(studentData: any, baseUrl: string): string {
-  const { full_name, email, student_id, program, password } = studentData;
+function generateEmailHTML(studentData: any, baseUrl: string, inviteLink: string): string {
+  const { full_name, email, student_id, program } = studentData;
 
   // Determine program name based on program field
   const programName = program === 'tajweed'
@@ -56,19 +56,15 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
             </div>
 
             <div class="highlight-box">
-              <h3>Your Login Credentials</h3>
-              <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-                <tr>
-                  <td style="padding: 12px 0; border-bottom: 2px solid #fde68a; font-weight: 700; color: #92400e; width: 50%; font-size: 15px;">Student ID</td>
-                  <td style="padding: 12px 0; border-bottom: 2px solid #fde68a; color: #059669; font-size: 17px; font-weight: 700; font-family: monospace;">${student_id}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0; font-weight: 700; color: #92400e; width: 50%; font-size: 15px;">Temporary Password</td>
-                  <td style="padding: 12px 0; color: #92400e; font-size: 17px; font-weight: 700; font-family: monospace;">${password}</td>
-                </tr>
-              </table>
+              <h3>Activate Your Account</h3>
+              <p style="margin: 16px 0; font-size: 15px; color: #92400e; line-height: 1.7;">
+                Click the button below to set up your password and activate your student portal access. This link will expire in 24 hours.
+              </p>
+              <center style="margin: 24px 0;">
+                <a href="${inviteLink}" class="cta-button" style="background: #059669; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">Set Up Your Account →</a>
+              </center>
               <p style="margin: 20px 0 0 0; font-size: 14px; color: #92400e; line-height: 1.7;">
-                <strong>Important Security Notice:</strong> You will be required to change your password on first login. Please choose a strong password (minimum 8 characters) that includes letters, numbers, and special characters.
+                <strong>Security Tip:</strong> Choose a strong password (minimum 8 characters) that includes letters, numbers, and special characters.
               </p>
             </div>
 
@@ -81,14 +77,10 @@ function generateEmailHTML(studentData: any, baseUrl: string): string {
               <li style="margin-bottom: 12px; line-height: 1.7;">Apply for additional programs when ready</li>
             </ul>
 
-            <center>
-              <a href="${baseUrl}/student" class="cta-button">Access Student Portal →</a>
-            </center>
-
-            <p class="paragraph" style="margin-top: 36px;"><strong style="font-size: 18px; color: #1a202c;">Important Reminders:</strong></p>
+            <p class="paragraph" style="margin-top: 36px;"><strong style="font-size: 18px; color: #1a202c;">Getting Started:</strong></p>
             <ul style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
-              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your credentials</strong> - Keep your Student ID and temporary password safe until you change it</li>
-              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Change your password</strong> - Do this immediately on first login for security</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Activate your account</strong> - Click the activation link above to set your password</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your Student ID</strong> - You'll use your email (${email}) to log in</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Check your schedule</strong> - Review your class times regularly for any updates</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Join on time</strong> - Use the meeting links provided for each session</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Stay updated</strong> - Keep your contact information current in the portal</li>
@@ -125,7 +117,7 @@ serve(async (req) => {
   }
 
   try {
-    const { studentData, baseUrl } = await req.json();
+    const { studentData, baseUrl, inviteLink } = await req.json();
 
     if (!studentData || !studentData.email || !studentData.full_name) {
       return new Response(
@@ -134,8 +126,15 @@ serve(async (req) => {
       );
     }
 
+    if (!inviteLink) {
+      return new Response(
+        JSON.stringify({ error: 'Missing invite link' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const appUrl = baseUrl || Deno.env.get('APP_URL') || 'https://tftmadrasah.nz';
-    const emailHTML = generateEmailHTML(studentData, appUrl);
+    const emailHTML = generateEmailHTML(studentData, appUrl, inviteLink);
 
     const result = await sendEmail({
       to: studentData.email,

@@ -17,7 +17,6 @@ export default function AdminTeachersList() {
     gender: 'male',
     country_of_residence: '',
   });
-  const [generatedCredentials, setGeneratedCredentials] = useState(null);
 
   useEffect(() => {
     fetchTeachers();
@@ -49,14 +48,6 @@ export default function AdminTeachersList() {
     return staffId;
   };
 
-  const generatePassword = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-    let password = '';
-    for (let i = 0; i < 8; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
-  };
 
   const handleCreateTeacher = async () => {
     // Validation
@@ -75,11 +66,10 @@ export default function AdminTeachersList() {
     setLoading(true);
 
     try {
-      // Generate credentials
+      // Generate staff ID
       const staffId = await generateStaffId();
-      const password = generatePassword();
 
-      // Call Edge Function to create Supabase Auth user
+      // Call Edge Function to create Supabase Auth user and get invite link
       const response = await fetch(`${supabaseUrl}/functions/v1/create-teacher-auth`, {
         method: 'POST',
         headers: {
@@ -88,7 +78,6 @@ export default function AdminTeachersList() {
         },
         body: JSON.stringify({
           email: formData.email,
-          password: password,
           full_name: formData.full_name,
           staff_id: staffId,
         }),
@@ -122,7 +111,7 @@ export default function AdminTeachersList() {
         return;
       }
 
-      // Send welcome email to teacher
+      // Send welcome email with invite link
       try {
         const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-teacher-welcome-email`, {
           method: 'POST',
@@ -135,8 +124,8 @@ export default function AdminTeachersList() {
               full_name: formData.full_name,
               email: formData.email,
               staff_id: staffId,
-              password: password,
             },
+            inviteLink: authResult.invite_link,
             baseUrl: window.location.origin,
           }),
         });
@@ -154,18 +143,11 @@ export default function AdminTeachersList() {
         toast.warning('Teacher created but welcome email failed to send');
       }
 
-      // Store credentials to show to admin
-      setGeneratedCredentials({
-        staff_id: staffId,
-        password: password,
-        email: formData.email,
-        full_name: formData.full_name,
-      });
-
-      toast.success('Teacher created successfully!');
+      // Success!
+      toast.success('Teacher created and invite email sent!');
       fetchTeachers();
 
-      // Reset form
+      // Reset form and close modal
       setFormData({
         full_name: '',
         email: '',
@@ -173,8 +155,7 @@ export default function AdminTeachersList() {
         gender: 'male',
         country_of_residence: '',
       });
-
-      // Don't close modal yet - show credentials first
+      setShowCreateModal(false);
     } catch (err) {
       toast.error('An error occurred');
       console.error(err);
@@ -236,39 +217,26 @@ export default function AdminTeachersList() {
   };
 
   const handleResetPassword = async (teacher) => {
-    if (!window.confirm(`Reset password for ${teacher.full_name}?`)) {
+    if (!window.confirm(`Send password reset email to ${teacher.full_name}?`)) {
       return;
     }
 
     setLoading(true);
 
     try {
-      const newPassword = generatePassword();
-
-      // Call Edge Function to reset password
-      const response = await fetch(`${supabaseUrl}/functions/v1/reset-teacher-password`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          auth_user_id: teacher.auth_user_id,
-          new_password: newPassword,
-        }),
+      // Send password reset email using Supabase Auth
+      const { error } = await supabase.auth.resetPasswordForEmail(teacher.email, {
+        redirectTo: `${window.location.origin}/reset-password`,
       });
 
-      const result = await response.json();
-
-      if (!response.ok || result.error) {
-        toast.error(`Failed to reset password: ${result.error || 'Unknown error'}`);
-        console.error(result.error);
+      if (error) {
+        toast.error(`Failed to send reset email: ${error.message}`);
+        console.error(error);
       } else {
-        toast.success('Password reset successfully!');
-        alert(`New password for ${teacher.full_name}:\n\nStaff ID: ${teacher.staff_id}\nPassword: ${newPassword}\n\nPlease save this information and share it with the teacher.`);
+        toast.success(`Password reset email sent to ${teacher.email}`);
       }
     } catch (error) {
-      toast.error('An error occurred while resetting password');
+      toast.error('An error occurred while sending reset email');
       console.error(error);
     }
 
@@ -289,7 +257,6 @@ export default function AdminTeachersList() {
 
   const closeCreateModal = () => {
     setShowCreateModal(false);
-    setGeneratedCredentials(null);
     setFormData({
       full_name: '',
       email: '',
@@ -527,9 +494,7 @@ export default function AdminTeachersList() {
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-900">
-                  {generatedCredentials ? 'Teacher Created!' : 'Add New Teacher'}
-                </h2>
+                <h2 className="text-xl font-bold text-gray-900">Add New Teacher</h2>
                 <button
                   onClick={closeCreateModal}
                   className="text-gray-500 hover:text-gray-700"
@@ -538,40 +503,7 @@ export default function AdminTeachersList() {
                 </button>
               </div>
 
-              {generatedCredentials ? (
-                <div className="space-y-4">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-                    <p className="text-sm text-emerald-800 mb-3">
-                      Please save these credentials and share them with the teacher:
-                    </p>
-                    <div className="space-y-2">
-                      <div>
-                        <p className="text-xs text-gray-600">Full Name</p>
-                        <p className="font-mono font-semibold text-gray-900">{generatedCredentials.full_name}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600">Email</p>
-                        <p className="font-mono font-semibold text-gray-900">{generatedCredentials.email}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600">Staff ID</p>
-                        <p className="font-mono font-semibold text-gray-900">{generatedCredentials.staff_id}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600">Password</p>
-                        <p className="font-mono font-semibold text-gray-900">{generatedCredentials.password}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={closeCreateModal}
-                    className="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
-                  >
-                    Close
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
+              <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Full Name *
@@ -640,7 +572,7 @@ export default function AdminTeachersList() {
 
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                     <p className="text-xs text-blue-800">
-                      Staff ID and password will be automatically generated after creation.
+                      Staff ID will be automatically generated. An invite email will be sent to the teacher to set up their password.
                     </p>
                   </div>
 
@@ -660,7 +592,6 @@ export default function AdminTeachersList() {
                     </button>
                   </div>
                 </div>
-              )}
             </div>
           </div>
         </div>

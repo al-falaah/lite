@@ -19,6 +19,9 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
 import Unsubscribe from './pages/Unsubscribe';
+import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -48,6 +51,15 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
+
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+
+            {/* Legacy route redirects */}
+            <Route path="/student-portal" element={<Navigate to="/student" replace />} />
+            <Route path="/teacher-portal" element={<Navigate to="/teacher" replace />} />
 
             {/* Protected Blog Admin Route */}
             <Route

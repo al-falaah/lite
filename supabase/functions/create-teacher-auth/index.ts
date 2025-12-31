@@ -21,9 +21,9 @@ serve(async (req) => {
   }
 
   try {
-    const { email, password, full_name, staff_id } = await req.json()
+    const { email, full_name, staff_id } = await req.json()
 
-    if (!email || !password || !full_name || !staff_id) {
+    if (!email || !full_name || !staff_id) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         {
@@ -48,21 +48,19 @@ serve(async (req) => {
       }
     )
 
-    // Create Supabase Auth user
+    // Create user without password - they'll set it via invite link
     const { data: authData, error: authError } = await supabaseClient.auth.admin.createUser({
       email: email,
-      password: password,
-      email_confirm: true, // Auto-confirm email
+      email_confirm: false, // Don't auto-confirm - they need to set password first
       user_metadata: {
         full_name: full_name,
         staff_id: staff_id,
         role: 'teacher',
-        first_login: true,
       },
     })
 
     if (authError) {
-      console.error('Failed to create auth user:', authError)
+      console.error('Failed to create teacher auth:', authError)
       return new Response(
         JSON.stringify({ error: authError.message }),
         { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
@@ -71,10 +69,32 @@ serve(async (req) => {
 
     console.log('✅ Teacher auth user created:', authData.user.id)
 
+    // Generate password reset link (this is the invite link)
+    const redirectUrl = `${Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'}/reset-password`
+
+    const { data: resetData, error: resetError } = await supabaseClient.auth.admin.generateLink({
+      type: 'invite',
+      email: email,
+      options: {
+        redirectTo: redirectUrl,
+      },
+    })
+
+    if (resetError) {
+      console.error('Failed to generate invite link:', resetError)
+      return new Response(
+        JSON.stringify({ error: 'Failed to generate invite link', auth_user_id: authData.user.id }),
+        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
+    }
+
+    console.log('✅ Invite link generated')
+
     return new Response(
       JSON.stringify({
         success: true,
-        auth_user_id: authData.user.id
+        auth_user_id: authData.user.id,
+        invite_link: resetData.properties.action_link, // This is the link to include in our custom email
       }),
       {
         status: 200,

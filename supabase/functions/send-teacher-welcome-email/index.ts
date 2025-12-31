@@ -10,8 +10,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-function generateEmailHTML(teacherData: any, baseUrl: string): string {
-  const { full_name, email, staff_id, password } = teacherData;
+function generateEmailHTML(teacherData: any, baseUrl: string, inviteLink: string): string {
+  const { full_name, email, staff_id } = teacherData;
 
   return `
     <!DOCTYPE html>
@@ -50,19 +50,15 @@ function generateEmailHTML(teacherData: any, baseUrl: string): string {
             </div>
 
             <div class="highlight-box">
-              <h3>Your Login Credentials</h3>
-              <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
-                <tr>
-                  <td style="padding: 12px 0; border-bottom: 2px solid #fde68a; font-weight: 700; color: #92400e; width: 50%; font-size: 15px;">Staff ID</td>
-                  <td style="padding: 12px 0; border-bottom: 2px solid #fde68a; color: #059669; font-size: 17px; font-weight: 700; font-family: monospace;">${staff_id}</td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0; font-weight: 700; color: #92400e; width: 50%; font-size: 15px;">Temporary Password</td>
-                  <td style="padding: 12px 0; color: #92400e; font-size: 17px; font-weight: 700; font-family: monospace;">${password}</td>
-                </tr>
-              </table>
+              <h3>Activate Your Account</h3>
+              <p style="margin: 16px 0; font-size: 15px; color: #92400e; line-height: 1.7;">
+                Click the button below to set up your password and activate your account. This link will expire in 24 hours.
+              </p>
+              <center style="margin: 24px 0;">
+                <a href="${inviteLink}" class="cta-button" style="background: #059669; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">Set Up Your Account →</a>
+              </center>
               <p style="margin: 20px 0 0 0; font-size: 14px; color: #92400e; line-height: 1.7;">
-                <strong>Important Security Notice:</strong> You will be required to change your password on first login. Please choose a strong password (minimum 8 characters) that includes letters, numbers, and special characters.
+                <strong>Security Tip:</strong> Choose a strong password (minimum 8 characters) that includes letters, numbers, and special characters.
               </p>
             </div>
 
@@ -75,17 +71,13 @@ function generateEmailHTML(teacherData: any, baseUrl: string): string {
               <li style="margin-bottom: 12px; line-height: 1.7;">Access teaching resources and materials</li>
             </ul>
 
-            <center>
-              <a href="${baseUrl}/teacher" class="cta-button">Access Teacher Portal →</a>
-            </center>
-
-            <p class="paragraph" style="margin-top: 36px;"><strong style="font-size: 18px; color: #1a202c;">Important Reminders:</strong></p>
+            <p class="paragraph" style="margin-top: 36px;"><strong style="font-size: 18px; color: #1a202c;">Getting Started:</strong></p>
             <ul style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
-              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your credentials</strong> - Keep your Staff ID and temporary password safe until you change it</li>
-              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Change your password</strong> - Do this immediately on first login for security</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Activate your account</strong> - Click the activation link above to set your password</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Review your profile</strong> - Ensure your contact information is up to date</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Check assigned students</strong> - Review your student roster when available</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Prepare materials</strong> - Familiarize yourself with the curriculum and resources</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your Staff ID</strong> - You'll use your email (${email}) to log in</li>
             </ul>
 
             <p class="paragraph" style="margin-top: 36px;">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>
@@ -118,7 +110,7 @@ serve(async (req) => {
   }
 
   try {
-    const { teacherData, baseUrl } = await req.json();
+    const { teacherData, baseUrl, inviteLink } = await req.json();
 
     if (!teacherData || !teacherData.email || !teacherData.full_name) {
       return new Response(
@@ -127,8 +119,15 @@ serve(async (req) => {
       );
     }
 
+    if (!inviteLink) {
+      return new Response(
+        JSON.stringify({ error: 'Missing invite link' }),
+        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      );
+    }
+
     const appUrl = baseUrl || Deno.env.get('APP_URL') || 'https://tftmadrasah.nz';
-    const emailHTML = generateEmailHTML(teacherData, appUrl);
+    const emailHTML = generateEmailHTML(teacherData, appUrl, inviteLink);
 
     const result = await sendEmail({
       to: teacherData.email,
