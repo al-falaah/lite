@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
 import { Loader2, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 

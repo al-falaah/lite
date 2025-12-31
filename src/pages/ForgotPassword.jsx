@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
 import { Loader2, Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 
