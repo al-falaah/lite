@@ -36,6 +36,7 @@ const StudentPortal = () => {
   // Settings modal state
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [settingsTab, setSettingsTab] = useState('password'); // password or profile
+  const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsFormData, setSettingsFormData] = useState({
     full_name: '',
     phone: '',
@@ -305,7 +306,7 @@ const StudentPortal = () => {
       return;
     }
 
-    setLoading(true);
+    setSettingsLoading(true);
     try {
       const { error } = await supabase
         .from('students')
@@ -318,6 +319,7 @@ const StudentPortal = () => {
       if (error) {
         toast.error('Failed to update profile');
         console.error(error);
+        setSettingsLoading(false);
         return;
       }
 
@@ -330,11 +332,11 @@ const StudentPortal = () => {
       setStudent(updatedStudent);
 
       toast.success('Profile updated successfully!');
+      setSettingsLoading(false);
     } catch (err) {
       console.error('Error updating profile:', err);
       toast.error('An error occurred');
-    } finally {
-      setLoading(false);
+      setSettingsLoading(false);
     }
   };
 
@@ -354,7 +356,7 @@ const StudentPortal = () => {
       return;
     }
 
-    setLoading(true);
+    setSettingsLoading(true);
     try {
       const { error } = await supabase.auth.updateUser({
         password: settingsFormData.newPassword,
@@ -362,7 +364,7 @@ const StudentPortal = () => {
 
       if (error) {
         toast.error(`Failed to update password: ${error.message}`);
-        setLoading(false);
+        setSettingsLoading(false);
         return;
       }
 
@@ -374,11 +376,11 @@ const StudentPortal = () => {
         confirmNewPassword: '',
       });
       setShowSettingsModal(false);
-      setLoading(false);
+      setSettingsLoading(false);
     } catch (err) {
       console.error('Error updating password:', err);
       toast.error('An error occurred');
-      setLoading(false);
+      setSettingsLoading(false);
     }
   };
 
@@ -1236,15 +1238,15 @@ const StudentPortal = () => {
                     <Button
                       variant="secondary"
                       onClick={() => setShowSettingsModal(false)}
-                      disabled={loading}
+                      disabled={settingsLoading}
                     >
                       Cancel
                     </Button>
                     <Button
                       onClick={handleUpdatePassword}
-                      disabled={loading}
+                      disabled={settingsLoading}
                     >
-                      {loading ? 'Updating...' : 'Update Password'}
+                      {settingsLoading ? 'Updating...' : 'Update Password'}
                     </Button>
                   </div>
                 </div>
@@ -1289,15 +1291,15 @@ const StudentPortal = () => {
                     <Button
                       variant="secondary"
                       onClick={() => setShowSettingsModal(false)}
-                      disabled={loading}
+                      disabled={settingsLoading}
                     >
                       Cancel
                     </Button>
                     <Button
                       onClick={handleUpdateProfile}
-                      disabled={loading}
+                      disabled={settingsLoading}
                     >
-                      {loading ? 'Updating...' : 'Update Profile'}
+                      {settingsLoading ? 'Updating...' : 'Update Profile'}
                     </Button>
                   </div>
                 </div>
