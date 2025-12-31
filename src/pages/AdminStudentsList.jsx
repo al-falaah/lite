@@ -207,6 +207,82 @@ const AdminStudentsList = () => {
     }
   };
 
+  const handleResendWelcomeEmail = async (student) => {
+    try {
+      setSendingEmail(true);
+
+      if (!student.auth_user_id) {
+        throw new Error('Student does not have an auth account. Cannot generate invite link.');
+      }
+
+      // Generate a new invite link for the existing auth user
+      const { data: inviteLinkData, error: inviteError } = await supabase.auth.admin.generateLink({
+        type: 'invite',
+        email: student.email,
+        options: {
+          redirectTo: `${window.location.origin}/reset-password`,
+        },
+      });
+
+      if (inviteError) {
+        throw new Error(`Failed to generate invite link: ${inviteError.message}`);
+      }
+
+      const inviteLink = inviteLinkData?.properties?.action_link;
+
+      if (!inviteLink) {
+        throw new Error('No invite link returned from auth service');
+      }
+
+      // Get the student's primary enrollment to find the program
+      const { data: enrollment } = await supabase
+        .from('enrollments')
+        .select('program')
+        .eq('student_id', student.id)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      const program = enrollment?.program || 'essentials';
+
+      // Send the welcome email with the new invite link
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/send-welcome-email`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            studentData: {
+              full_name: student.full_name,
+              email: student.email,
+              student_id: student.student_id,  // Uses existing student ID
+              program: program,
+            },
+            inviteLink: inviteLink,
+            baseUrl: window.location.origin,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send welcome email');
+      }
+
+      toast.success(`Welcome email resent to ${student.full_name}!`);
+    } catch (error) {
+      console.error('Error resending welcome email:', error);
+      toast.error(error.message || 'Failed to resend welcome email');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   const handleSendEmail = async () => {
     if (selectedStudentIds.length === 0) {
       toast.error('Please select at least one student');
@@ -825,6 +901,18 @@ const AdminStudentsList = () => {
                       >
                         <Mail className="h-4 w-4" />
                         {sendingEmail ? 'Sending...' : 'Resend Approval'}
+                      </Button>
+                    )}
+                    {student.status === 'enrolled' && student.student_id && student.auth_user_id && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleResendWelcomeEmail(student)}
+                        disabled={sendingEmail}
+                        className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:border-blue-600"
+                      >
+                        <Mail className="h-4 w-4" />
+                        {sendingEmail ? 'Sending...' : 'Resend Welcome'}
                       </Button>
                     )}
                   </div>
