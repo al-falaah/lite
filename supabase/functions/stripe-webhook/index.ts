@@ -194,8 +194,24 @@ serve(async (req) => {
       if (isNewStudent) {
         try {
           const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
-          await supabaseClient.functions.invoke('send-welcome-email', {
-            body: {
+          const supabaseUrl = Deno.env.get('SUPABASE_URL')
+          const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+          console.log('Sending welcome email to:', student.email)
+          console.log('Student data:', {
+            full_name: student.full_name,
+            email: student.email,
+            student_id: student.student_id,
+            program: program,
+          })
+
+          const emailResponse = await fetch(`${supabaseUrl}/functions/v1/send-welcome-email`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${serviceRoleKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
               studentData: {
                 full_name: student.full_name,
                 email: student.email,
@@ -204,11 +220,20 @@ serve(async (req) => {
                 password: student.password,
               },
               baseUrl: appUrl,
-            },
+            }),
           })
-          console.log('Welcome email sent')
+
+          const emailResult = await emailResponse.json()
+
+          if (!emailResponse.ok) {
+            console.error('❌ Welcome email failed:', emailResult)
+            throw new Error(emailResult.error || 'Failed to send welcome email')
+          }
+
+          console.log('✅ Welcome email sent successfully to:', student.email)
         } catch (emailError) {
-          console.error('Error sending welcome email:', emailError)
+          console.error('❌ Error sending welcome email:', emailError)
+          // Don't throw - enrollment is complete, email is non-critical
         }
       }
     }
