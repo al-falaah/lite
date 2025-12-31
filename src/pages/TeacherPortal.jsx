@@ -133,9 +133,6 @@ export default function TeacherPortal() {
   };
 
   const handleChangePassword = async () => {
-    console.log('=== handleChangePassword STARTED ===');
-    console.log('Teacher:', teacher);
-
     // Validation
     if (!newPassword || !confirmPassword) {
       toast.error('Please fill in all fields');
@@ -153,71 +150,31 @@ export default function TeacherPortal() {
     }
 
     setLoading(true);
-    console.log('Loading set to true');
 
     try {
-      // Get current session before password update
-      console.log('Getting current session...');
-      const { data: { session } } = await supabase.auth.getSession();
-      const teacherEmail = session?.user?.email;
-      console.log('Teacher email:', teacherEmail);
-
-      if (!teacherEmail) {
-        toast.error('Session error. Please log in again.');
-        setLoading(false);
-        return;
-      }
-
-      // Update password using Supabase Auth
-      console.log('Updating password...');
+      // Update password using Supabase Auth and metadata in one call
       const { error: passwordError } = await supabase.auth.updateUser({
         password: newPassword,
+        data: { first_login: false }
       });
 
       if (passwordError) {
         toast.error(`Failed to update password: ${passwordError.message}`);
-        console.error('Password update error:', passwordError);
         setLoading(false);
         return;
       }
 
-      console.log('Password updated successfully');
+      // Show success message and reload
+      toast.success('Password changed successfully! Reloading...');
 
-      // Update user metadata to mark first_login as false
-      console.log('Updating metadata...');
-      const { error: metadataError } = await supabase.auth.updateUser({
-        data: { first_login: false }
-      });
-
-      if (metadataError) {
-        console.error('Metadata update error:', metadataError);
-      } else {
-        console.log('Metadata updated successfully');
-      }
-
-      console.log('Closing modal and clearing form...');
-      toast.success('Password changed successfully! Reloading page...');
-      setShowPasswordModal(false);
-      setNewPassword('');
-      setConfirmPassword('');
-      setLoading(false);
-
-      // Reload the page after a short delay to reset everything with new session
-      console.log('Reloading page in 1 second...');
+      // Reload immediately to avoid auth state change interference
       setTimeout(() => {
         window.location.reload();
-      }, 1000);
+      }, 500);
     } catch (err) {
-      console.error('=== PASSWORD CHANGE ERROR ===');
-      console.error('Error type:', err.name);
-      console.error('Error message:', err.message);
-      console.error('Full error:', err);
-      console.error('Error stack:', err.stack);
+      console.error('Password change error:', err);
       toast.error(`An error occurred: ${err.message}`);
-    } finally {
-      console.log('Setting loading to false');
       setLoading(false);
-      console.log('=== handleChangePassword FINISHED ===');
     }
   };
 
