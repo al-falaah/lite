@@ -216,33 +216,6 @@ export default function AdminTeachersList() {
     setLoading(false);
   };
 
-  const handleResetPassword = async (teacher) => {
-    if (!window.confirm(`Send password reset email to ${teacher.full_name}?`)) {
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // Send password reset email using Supabase Auth
-      const { error } = await supabase.auth.resetPasswordForEmail(teacher.email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-
-      if (error) {
-        toast.error(`Failed to send reset email: ${error.message}`);
-        console.error(error);
-      } else {
-        toast.success(`Password reset email sent to ${teacher.email}`);
-      }
-    } catch (error) {
-      toast.error('An error occurred while sending reset email');
-      console.error(error);
-    }
-
-    setLoading(false);
-  };
-
   const openEditModal = (teacher) => {
     setSelectedTeacher(teacher);
     setFormData({
@@ -476,12 +449,6 @@ export default function AdminTeachersList() {
                 >
                   {teacher.is_active ? 'Active' : 'Inactive'}
                 </span>
-                <button
-                  onClick={() => handleResetPassword(teacher)}
-                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
-                >
-                  Reset Password
-                </button>
               </div>
             </div>
           ))}

@@ -41,11 +41,10 @@ export default function TeacherPortal() {
 
   // Settings modal state
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [settingsTab, setSettingsTab] = useState('password'); // password or profile
+  const [settingsTab, setSettingsTab] = useState('profile'); // password or profile
   const [settingsFormData, setSettingsFormData] = useState({
     full_name: '',
     phone: '',
-    currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   });
@@ -509,11 +508,10 @@ export default function TeacherPortal() {
     setSettingsFormData({
       full_name: teacher.full_name || '',
       phone: teacher.phone || '',
-      currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
     });
-    setSettingsTab('password');
+    setSettingsTab('profile');
     setShowSettingsModal(true);
   };
 
@@ -584,11 +582,10 @@ export default function TeacherPortal() {
       toast.success('Password updated successfully!');
       setSettingsFormData({
         ...settingsFormData,
-        currentPassword: '',
         newPassword: '',
         confirmNewPassword: '',
       });
-      setShowSettingsModal(false);
+      setSettingsTab('profile');
     } catch (err) {
       console.error('Error updating password:', err);
       toast.error('An error occurred');
@@ -1432,6 +1429,18 @@ export default function TeacherPortal() {
             <div className="border-b border-gray-200 px-4 sm:px-6">
               <div className="flex gap-2 sm:gap-4">
                 <button
+                  onClick={() => setSettingsTab('profile')}
+                  className={`py-2.5 sm:py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors ${
+                    settingsTab === 'profile'
+                      ? 'border-emerald-600 text-emerald-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 inline mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Profile</span>
+                  <span className="sm:hidden">Profile</span>
+                </button>
+                <button
                   onClick={() => setSettingsTab('password')}
                   className={`py-2.5 sm:py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors ${
                     settingsTab === 'password'
@@ -1443,76 +1452,10 @@ export default function TeacherPortal() {
                   <span className="hidden sm:inline">Change Password</span>
                   <span className="sm:hidden">Password</span>
                 </button>
-                <button
-                  onClick={() => setSettingsTab('profile')}
-                  className={`py-2.5 sm:py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors ${
-                    settingsTab === 'profile'
-                      ? 'border-emerald-600 text-emerald-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 inline mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Update Profile</span>
-                  <span className="sm:hidden">Profile</span>
-                </button>
               </div>
             </div>
 
             <div className="p-4 sm:p-6">
-              {/* Password Tab */}
-              {settingsTab === 'password' && (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      New Password *
-                    </label>
-                    <input
-                      type="password"
-                      value={settingsFormData.newPassword}
-                      onChange={(e) => setSettingsFormData({ ...settingsFormData, newPassword: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="At least 8 characters"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Confirm New Password *
-                    </label>
-                    <input
-                      type="password"
-                      value={settingsFormData.confirmNewPassword}
-                      onChange={(e) => setSettingsFormData({ ...settingsFormData, confirmNewPassword: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Re-enter your password"
-                    />
-                  </div>
-
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-800">
-                      <strong>Password requirements:</strong>
-                      <br />• Minimum 8 characters
-                      <br />• Use a strong, unique password
-                    </p>
-                  </div>
-
-                  <Button
-                    onClick={handleUpdatePassword}
-                    disabled={loading}
-                    className="w-full"
-                  >
-                    {loading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Updating Password...
-                      </>
-                    ) : (
-                      'Update Password'
-                    )}
-                  </Button>
-                </div>
-              )}
-
               {/* Profile Tab */}
               {settingsTab === 'profile' && (
                 <div className="space-y-4">
@@ -1564,6 +1507,60 @@ export default function TeacherPortal() {
                       </>
                     ) : (
                       'Update Profile'
+                    )}
+                  </Button>
+                </div>
+              )}
+
+              {/* Password Tab */}
+              {settingsTab === 'password' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      New Password *
+                    </label>
+                    <input
+                      type="password"
+                      value={settingsFormData.newPassword}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, newPassword: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="At least 8 characters"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Confirm New Password *
+                    </label>
+                    <input
+                      type="password"
+                      value={settingsFormData.confirmNewPassword}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, confirmNewPassword: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Re-enter your password"
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>Password requirements:</strong>
+                      <br />• Minimum 8 characters
+                      <br />• Use a strong, unique password
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={handleUpdatePassword}
+                    disabled={loading}
+                    className="w-full"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Updating Password...
+                      </>
+                    ) : (
+                      'Update Password'
                     )}
                   </Button>
                 </div>
