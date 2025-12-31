@@ -92,7 +92,8 @@ export default function ResetPassword() {
       // Get the user's role from metadata and redirect to appropriate portal
       const { data: { user } } = await supabase.auth.getUser();
 
-      setTimeout(async () => {
+      // Keep loading state true during redirect
+      setTimeout(() => {
         if (user?.user_metadata?.role === 'teacher') {
           navigate('/teacher');
         } else if (user?.user_metadata?.role === 'student') {
