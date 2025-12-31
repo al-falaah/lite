@@ -357,10 +357,19 @@ const StudentPortal = () => {
     }
 
     setSettingsLoading(true);
+
+    // Add timeout to prevent infinite hanging
+    const timeoutId = setTimeout(() => {
+      setSettingsLoading(false);
+      toast.error('Password update timed out. Please try again.');
+    }, 10000); // 10 second timeout
+
     try {
       const { error } = await supabase.auth.updateUser({
         password: settingsFormData.newPassword,
       });
+
+      clearTimeout(timeoutId);
 
       if (error) {
         toast.error(`Failed to update password: ${error.message}`);
@@ -378,6 +387,7 @@ const StudentPortal = () => {
       setShowSettingsModal(false);
       setSettingsLoading(false);
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('Error updating password:', err);
       toast.error('An error occurred');
       setSettingsLoading(false);
