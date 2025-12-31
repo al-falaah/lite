@@ -13,8 +13,14 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [validToken, setValidToken] = useState(false);
   const [checkingToken, setCheckingToken] = useState(true);
+  const [passwordUpdated, setPasswordUpdated] = useState(false);
 
   useEffect(() => {
+    // Skip token validation if password has been updated
+    if (passwordUpdated) {
+      return;
+    }
+
     // Listen for auth state changes to catch when Supabase processes the hash
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session);
@@ -53,7 +59,7 @@ export default function ResetPassword() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate, validToken]);
+  }, [navigate, validToken, passwordUpdated]);
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -86,6 +92,9 @@ export default function ResetPassword() {
         setLoading(false);
         return;
       }
+
+      // Mark password as updated to prevent token validation from redirecting
+      setPasswordUpdated(true);
 
       toast.success('Password updated successfully!');
 
