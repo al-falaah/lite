@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Loader2, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
