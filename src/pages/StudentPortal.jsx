@@ -251,6 +251,16 @@ const StudentPortal = () => {
     try {
       console.log('Updating password for student ID:', student.id);
 
+      // Get current session before password update
+      const { data: { session } } = await supabase.auth.getSession();
+      const studentEmail = session?.user?.email;
+
+      if (!studentEmail) {
+        toast.error('Session error. Please log in again.');
+        setLoading(false);
+        return;
+      }
+
       // Update password using Supabase Auth
       const { error: passwordError } = await supabase.auth.updateUser({
         password: newPassword,
@@ -270,6 +280,22 @@ const StudentPortal = () => {
 
       if (metadataError) {
         console.error('Metadata update error:', metadataError);
+      }
+
+      // Re-authenticate with new password to maintain session
+      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: studentEmail,
+        password: newPassword,
+      });
+
+      if (signInError) {
+        console.error('Re-authentication error:', signInError);
+        toast.warning('Password changed but re-authentication failed. Please log in again.');
+        setShowPasswordModal(false);
+        setNewPassword('');
+        setConfirmPassword('');
+        setLoading(false);
+        return;
       }
 
       toast.success('Password changed successfully!');
