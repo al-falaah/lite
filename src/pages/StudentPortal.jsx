@@ -249,49 +249,26 @@ const StudentPortal = () => {
     setLoading(true);
 
     try {
-      console.log('Updating password for student ID:', student.id);
-
-      // Get current session before password update
-      const { data: { session } } = await supabase.auth.getSession();
-      const studentEmail = session?.user?.email;
-
-      if (!studentEmail) {
-        toast.error('Session error. Please log in again.');
-        setLoading(false);
-        return;
-      }
-
-      // Update password using Supabase Auth
-      const { error: passwordError } = await supabase.auth.updateUser({
+      // Update password and metadata in a single call
+      const { error } = await supabase.auth.updateUser({
         password: newPassword,
-      });
-
-      if (passwordError) {
-        toast.error(`Failed to update password: ${passwordError.message}`);
-        console.error('Password update error:', passwordError);
-        setLoading(false);
-        return;
-      }
-
-      // Update user metadata to mark first_login as false
-      const { error: metadataError } = await supabase.auth.updateUser({
         data: { first_login: false }
       });
 
-      if (metadataError) {
-        console.error('Metadata update error:', metadataError);
+      if (error) {
+        toast.error(`Failed to update password: ${error.message}`);
+        console.error('Password update error:', error);
+        setLoading(false);
+        return;
       }
 
-      toast.success('Password changed successfully! Reloading page...');
+      toast.success('Password changed successfully!');
       setShowPasswordModal(false);
       setNewPassword('');
       setConfirmPassword('');
-      setLoading(false);
 
-      // Reload the page after a short delay to reset everything with new session
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // Load student data to show the portal
+      await loadStudentData(student.id);
     } catch (err) {
       console.error('Password change error:', err);
       toast.error('An error occurred while changing password');
