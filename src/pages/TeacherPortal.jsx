@@ -14,9 +14,6 @@ export default function TeacherPortal() {
   const [password, setPassword] = useState('');
 
   // Password change modal
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Data
   const [assignedStudents, setAssignedStudents] = useState([]);
@@ -113,24 +110,14 @@ export default function TeacherPortal() {
         return;
       }
 
-      // Get first_login status from user metadata
-      const firstLogin = authData.user?.user_metadata?.first_login || false;
-
       // Login successful
       setTeacher(teacherRecord);
       setIsAuthenticated(true);
       localStorage.setItem('teacher', JSON.stringify(teacherRecord));
 
-      // Check if first login - show password change modal
-      if (firstLogin) {
-        toast.info('Please change your password');
-        setShowPasswordModal(true);
-        setLoading(false); // Reset loading so password change button isn't stuck
-      } else {
-        toast.success(`Welcome, ${teacherRecord.full_name}!`);
-        // Load teacher data
-        await loadTeacherData(teacherRecord.id);
-      }
+      toast.success(`Welcome, ${teacherRecord.full_name}!`);
+      // Load teacher data
+      await loadTeacherData(teacherRecord.id);
     } catch (err) {
       console.error('Login error:', err);
       toast.error('An error occurred during login');
@@ -139,51 +126,6 @@ export default function TeacherPortal() {
     setLoading(false);
   };
 
-  const handleChangePassword = async () => {
-    // Validation
-    if (!newPassword || !confirmPassword) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // Update password using Supabase Auth and metadata in one call
-      const { error: passwordError } = await supabase.auth.updateUser({
-        password: newPassword,
-        data: { first_login: false }
-      });
-
-      if (passwordError) {
-        toast.error(`Failed to update password: ${passwordError.message}`);
-        setLoading(false);
-        return;
-      }
-
-      // Show success message and reload
-      toast.success('Password changed successfully! Reloading...');
-
-      // Reload immediately to avoid auth state change interference
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    } catch (err) {
-      console.error('Password change error:', err);
-      toast.error(`An error occurred: ${err.message}`);
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     // Sign out from Supabase Auth
@@ -194,9 +136,6 @@ export default function TeacherPortal() {
     setAssignedStudents([]);
     setRemovedStudents([]);
     setSelectedStudent(null);
-    setShowPasswordModal(false);
-    setNewPassword('');
-    setConfirmPassword('');
     localStorage.removeItem('teacher');
     toast.success('Logged out successfully');
   };
@@ -1290,80 +1229,6 @@ export default function TeacherPortal() {
                       <Send className="h-4 w-4 mr-2" />
                       Send Message
                     </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Password Change Modal (First Login) */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-5 sm:p-6">
-              <div className="flex items-start sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <div className="p-2 sm:p-3 bg-emerald-100 rounded-full flex-shrink-0">
-                  <Key className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">Change Your Password</h2>
-                  <p className="text-xs sm:text-sm text-gray-600">Please set a new password to continue</p>
-                </div>
-              </div>
-
-              <div className="space-y-3 sm:space-y-4">
-                <div>
-                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                    New Password *
-                  </label>
-                  <input
-                    id="newPassword"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="At least 8 characters"
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                    Confirm Password *
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="Re-enter your password"
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-xs text-blue-800">
-                    <strong>Password requirements:</strong>
-                    <br />• Minimum 8 characters
-                    <br />• Use a strong, unique password
-                  </p>
-                </div>
-
-                <Button
-                  onClick={handleChangePassword}
-                  disabled={loading}
-                  className="w-full"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Changing Password...
-                    </>
-                  ) : (
-                    'Change Password'
                   )}
                 </Button>
               </div>

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   ArrowLeft, User, LogOut, ExternalLink, CreditCard,
-  DollarSign, AlertCircle, GraduationCap, Key, X, UserCheck, Mail, Send, Settings
+  DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -23,10 +23,6 @@ const StudentPortal = () => {
   const [processingPayment, setProcessingPayment] = useState(null);
   const [assignedTeachers, setAssignedTeachers] = useState({});
 
-  // Password change modal
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -35,14 +31,10 @@ const StudentPortal = () => {
 
   // Settings modal state
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [settingsTab, setSettingsTab] = useState('password'); // password or profile
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsFormData, setSettingsFormData] = useState({
     full_name: '',
     phone: '',
-    currentPassword: '',
-    newPassword: '',
-    confirmNewPassword: '',
   });
 
   const handleLogin = async (e) => {
@@ -86,22 +78,12 @@ const StudentPortal = () => {
         return;
       }
 
-      // Get first_login status from user metadata
-      const firstLogin = authData.user?.user_metadata?.first_login || false;
-
       setStudent(studentData);
       setAuthenticated(true);
 
-      // Check if first login - show password change modal
-      if (firstLogin) {
-        toast.info('Please change your password');
-        setShowPasswordModal(true);
-        setLoading(false); // Reset loading so password change button isn't stuck
-      } else {
-        toast.success(`Welcome, ${studentData.full_name}!`);
-        // Load enrollments and student data
-        await loadStudentData(studentData.id);
-      }
+      toast.success(`Welcome, ${studentData.full_name}!`);
+      // Load enrollments and student data
+      await loadStudentData(studentData.id);
     } catch (error) {
       console.error('Login error:', error);
       toast.error('Failed to login. Please try again.');
@@ -241,62 +223,12 @@ const StudentPortal = () => {
     return days[dayNum] || `Day ${dayNum}`;
   };
 
-  const handleChangePassword = async () => {
-    // Validation
-    if (!newPassword || !confirmPassword) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // Update password and metadata in a single call
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
-        data: { first_login: false }
-      });
-
-      if (error) {
-        toast.error(`Failed to update password: ${error.message}`);
-        console.error('Password update error:', error);
-        setLoading(false);
-        return;
-      }
-
-      toast.success('Password changed successfully!');
-      setShowPasswordModal(false);
-      setNewPassword('');
-      setConfirmPassword('');
-
-      // Load student data to show the portal
-      await loadStudentData(student.id);
-    } catch (err) {
-      console.error('Password change error:', err);
-      toast.error('An error occurred while changing password');
-      setLoading(false);
-    }
-  };
 
   const handleOpenSettings = () => {
     setSettingsFormData({
       full_name: student.full_name || '',
       phone: student.phone || '',
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
     });
-    setSettingsTab('password');
     setShowSettingsModal(true);
   };
 
@@ -332,63 +264,10 @@ const StudentPortal = () => {
       setStudent(updatedStudent);
 
       toast.success('Profile updated successfully!');
-      setSettingsLoading(false);
-    } catch (err) {
-      console.error('Error updating profile:', err);
-      toast.error('An error occurred');
-      setSettingsLoading(false);
-    }
-  };
-
-  const handleUpdatePassword = async () => {
-    if (!settingsFormData.newPassword || !settingsFormData.confirmNewPassword) {
-      toast.error('Please fill in all password fields');
-      return;
-    }
-
-    if (settingsFormData.newPassword.length < 8) {
-      toast.error('Password must be at least 8 characters');
-      return;
-    }
-
-    if (settingsFormData.newPassword !== settingsFormData.confirmNewPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-
-    setSettingsLoading(true);
-
-    // Add timeout to prevent infinite hanging
-    const timeoutId = setTimeout(() => {
-      setSettingsLoading(false);
-      toast.error('Password update timed out. Please try again.');
-    }, 10000); // 10 second timeout
-
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: settingsFormData.newPassword,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (error) {
-        toast.error(`Failed to update password: ${error.message}`);
-        setSettingsLoading(false);
-        return;
-      }
-
-      toast.success('Password updated successfully!');
-      setSettingsFormData({
-        ...settingsFormData,
-        currentPassword: '',
-        newPassword: '',
-        confirmNewPassword: '',
-      });
       setShowSettingsModal(false);
       setSettingsLoading(false);
     } catch (err) {
-      clearTimeout(timeoutId);
-      console.error('Error updating password:', err);
+      console.error('Error updating profile:', err);
       toast.error('An error occurred');
       setSettingsLoading(false);
     }
@@ -405,9 +284,6 @@ const StudentPortal = () => {
     setProgress(null);
     setStudentId('');
     setPassword('');
-    setShowPasswordModal(false);
-    setNewPassword('');
-    setConfirmPassword('');
     toast.info('Logged out successfully');
   };
 
@@ -565,9 +441,16 @@ const StudentPortal = () => {
                     required
                     autoComplete="current-password"
                   />
-                  <p className="mt-2 text-xs text-gray-500 text-center">
-                    If this is your first time logging in, use the temporary password provided in your welcome email.
-                  </p>
+                </div>
+
+                {/* Forgot Password Link */}
+                <div className="text-right">
+                  <a
+                    href="/forgot-password"
+                    className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                  >
+                    Forgot password?
+                  </a>
                 </div>
 
                 <Button
@@ -581,8 +464,8 @@ const StudentPortal = () => {
                 </Button>
               </form>
 
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className="text-sm text-gray-600 text-center">
+              <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+                <p className="text-sm text-gray-600">
                   Need help? Contact{' '}
                   <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">
                     admin@tftmadrasah.nz
@@ -1171,8 +1054,8 @@ const StudentPortal = () => {
                     <Settings className="h-6 w-6 text-emerald-600" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">Settings</h2>
-                    <p className="text-sm text-gray-600">Manage your account</p>
+                    <h2 className="text-xl font-bold text-gray-900">Profile Settings</h2>
+                    <p className="text-sm text-gray-600">Update your profile information</p>
                   </div>
                 </div>
                 <button
@@ -1183,215 +1066,61 @@ const StudentPortal = () => {
                 </button>
               </div>
 
-              {/* Tabs */}
-              <div className="flex border-b border-gray-200 mb-6">
-                <button
-                  onClick={() => setSettingsTab('password')}
-                  className={`px-4 py-2 font-medium text-sm ${
-                    settingsTab === 'password'
-                      ? 'text-emerald-600 border-b-2 border-emerald-600'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Password
-                </button>
-                <button
-                  onClick={() => setSettingsTab('profile')}
-                  className={`px-4 py-2 font-medium text-sm ${
-                    settingsTab === 'profile'
-                      ? 'text-emerald-600 border-b-2 border-emerald-600'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Profile
-                </button>
-              </div>
-
-              {/* Password Tab */}
-              {settingsTab === 'password' && (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      New Password *
-                    </label>
-                    <input
-                      type="password"
-                      value={settingsFormData.newPassword}
-                      onChange={(e) => setSettingsFormData({ ...settingsFormData, newPassword: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="At least 8 characters"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Confirm Password *
-                    </label>
-                    <input
-                      type="password"
-                      value={settingsFormData.confirmNewPassword}
-                      onChange={(e) => setSettingsFormData({ ...settingsFormData, confirmNewPassword: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Re-enter your password"
-                    />
-                  </div>
-
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                    <p className="text-xs text-blue-800">
-                      <strong>Password requirements:</strong>
-                      <br />• Minimum 8 characters
-                      <br />• Use a strong, unique password
-                    </p>
-                  </div>
-
-                  <div className="flex justify-end gap-3">
-                    <Button
-                      variant="secondary"
-                      onClick={() => setShowSettingsModal(false)}
-                      disabled={settingsLoading}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleUpdatePassword}
-                      disabled={settingsLoading}
-                    >
-                      {settingsLoading ? 'Updating...' : 'Update Password'}
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Profile Tab */}
-              {settingsTab === 'profile' && (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={settingsFormData.full_name}
-                      onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="Your full name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      value={settingsFormData.phone}
-                      onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                      placeholder="+64 21 123 4567"
-                    />
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-                    <p className="text-xs text-gray-600">
-                      <strong>Note:</strong> Your email and student ID cannot be changed. Contact admin if you need to update these details.
-                    </p>
-                  </div>
-
-                  <div className="flex justify-end gap-3">
-                    <Button
-                      variant="secondary"
-                      onClick={() => setShowSettingsModal(false)}
-                      disabled={settingsLoading}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleUpdateProfile}
-                      disabled={settingsLoading}
-                    >
-                      {settingsLoading ? 'Updating...' : 'Update Profile'}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Password Change Modal (First Login) */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-emerald-100 rounded-full">
-                  <Key className="h-6 w-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">Change Your Password</h2>
-                  <p className="text-sm text-gray-600">Please set a new password to continue</p>
-                </div>
-              </div>
-
+              {/* Profile Form */}
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                    New Password *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
                   </label>
                   <input
-                    id="newPassword"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    type="text"
+                    value={settingsFormData.full_name}
+                    onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="At least 8 characters"
-                    autoComplete="new-password"
+                    placeholder="Your full name"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                    Confirm Password *
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
                   </label>
                   <input
-                    id="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    type="tel"
+                    value={settingsFormData.phone}
+                    onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="Re-enter your password"
-                    autoComplete="new-password"
+                    placeholder="+64 21 123 4567"
                   />
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-xs text-blue-800">
-                    <strong>Password requirements:</strong>
-                    <br />• Minimum 8 characters
-                    <br />• Use a strong, unique password
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                  <p className="text-xs text-gray-600">
+                    <strong>Note:</strong> Your email and student ID cannot be changed. Contact admin if you need to update these details.
                   </p>
                 </div>
 
-                <Button
-                  onClick={handleChangePassword}
-                  disabled={loading}
-                  className="w-full"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Changing Password...
-                    </>
-                  ) : (
-                    'Change Password'
-                  )}
-                </Button>
+                <div className="flex justify-end gap-3">
+                  <Button
+                    variant="secondary"
+                    onClick={() => setShowSettingsModal(false)}
+                    disabled={settingsLoading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleUpdateProfile}
+                    disabled={settingsLoading}
+                  >
+                    {settingsLoading ? 'Updating...' : 'Update Profile'}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };
