@@ -184,6 +184,7 @@ export default function TeacherPortal() {
       }
 
       // Re-authenticate with new password to maintain session
+      console.log('Re-authenticating with new password...');
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: teacherEmail,
         password: newPassword,
@@ -199,12 +200,18 @@ export default function TeacherPortal() {
         return;
       }
 
+      console.log('Re-authentication successful, session:', authData.session?.access_token ? 'active' : 'missing');
+
+      // Wait a moment for session to be fully established
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       toast.success('Password changed successfully!');
       setShowPasswordModal(false);
       setNewPassword('');
       setConfirmPassword('');
 
       // Load teacher data now
+      console.log('Loading teacher data after password change...');
       await loadTeacherData(teacher.id);
     } catch (err) {
       console.error('Password change error:', err);

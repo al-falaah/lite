@@ -283,6 +283,7 @@ const StudentPortal = () => {
       }
 
       // Re-authenticate with new password to maintain session
+      console.log('Re-authenticating with new password...');
       const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: studentEmail,
         password: newPassword,
@@ -298,12 +299,18 @@ const StudentPortal = () => {
         return;
       }
 
+      console.log('Re-authentication successful, session:', authData.session?.access_token ? 'active' : 'missing');
+
+      // Wait a moment for session to be fully established
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       toast.success('Password changed successfully!');
       setShowPasswordModal(false);
       setNewPassword('');
       setConfirmPassword('');
 
       // Load student data now
+      console.log('Loading student data after password change...');
       await loadStudentData(student.id);
       // Note: loadStudentData will call setLoading(false) in its finally block
     } catch (err) {
