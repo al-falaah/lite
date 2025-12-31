@@ -157,6 +157,56 @@ const AdminStudentsList = () => {
     setShowEmailModal(true);
   };
 
+  const handleResendApprovalEmail = async (student) => {
+    try {
+      setSendingEmail(true);
+
+      // Get the student's application to find the program
+      const { data: application } = await supabase
+        .from('applications')
+        .select('program')
+        .eq('email', student.email)
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      const program = application?.program || 'essentials';
+
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/send-payment-instructions`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            applicantData: {
+              full_name: student.full_name,
+              email: student.email,
+              program: program,
+            },
+            appUrl: window.location.origin,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send approval email');
+      }
+
+      toast.success(`Approval email resent to ${student.full_name}!`);
+    } catch (error) {
+      console.error('Error resending approval email:', error);
+      toast.error(error.message || 'Failed to resend approval email');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   const handleSendEmail = async () => {
     if (selectedStudentIds.length === 0) {
       toast.error('Please select at least one student');
@@ -765,6 +815,18 @@ const AdminStudentsList = () => {
                       <Send className="h-4 w-4" />
                       Send Email
                     </Button>
+                    {student.status === 'pending_payment' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleResendApprovalEmail(student)}
+                        disabled={sendingEmail}
+                        className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 hover:border-emerald-600"
+                      >
+                        <Mail className="h-4 w-4" />
+                        {sendingEmail ? 'Sending...' : 'Resend Approval'}
+                      </Button>
+                    )}
                   </div>
                 </div>
               </Card>
