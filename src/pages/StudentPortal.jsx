@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   ArrowLeft, User, LogOut, ExternalLink, CreditCard,
-  DollarSign, AlertCircle, GraduationCap, Key, X, UserCheck, Mail, Send
+  DollarSign, AlertCircle, GraduationCap, Key, X, UserCheck, Mail, Send, Settings
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -32,6 +32,17 @@ const StudentPortal = () => {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailRecipient, setEmailRecipient] = useState(null);
   const [emailMessage, setEmailMessage] = useState('');
+
+  // Settings modal state
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settingsTab, setSettingsTab] = useState('password'); // password or profile
+  const [settingsFormData, setSettingsFormData] = useState({
+    full_name: '',
+    phone: '',
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+  });
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -276,6 +287,100 @@ const StudentPortal = () => {
     }
   };
 
+  const handleOpenSettings = () => {
+    setSettingsFormData({
+      full_name: student.full_name || '',
+      phone: student.phone || '',
+      currentPassword: '',
+      newPassword: '',
+      confirmNewPassword: '',
+    });
+    setSettingsTab('password');
+    setShowSettingsModal(true);
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!settingsFormData.full_name.trim()) {
+      toast.error('Full name is required');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('students')
+        .update({
+          full_name: settingsFormData.full_name,
+          phone: settingsFormData.phone,
+        })
+        .eq('id', student.id);
+
+      if (error) {
+        toast.error('Failed to update profile');
+        console.error(error);
+        return;
+      }
+
+      // Update local state
+      const updatedStudent = {
+        ...student,
+        full_name: settingsFormData.full_name,
+        phone: settingsFormData.phone,
+      };
+      setStudent(updatedStudent);
+
+      toast.success('Profile updated successfully!');
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      toast.error('An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (!settingsFormData.newPassword || !settingsFormData.confirmNewPassword) {
+      toast.error('Please fill in all password fields');
+      return;
+    }
+
+    if (settingsFormData.newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+
+    if (settingsFormData.newPassword !== settingsFormData.confirmNewPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: settingsFormData.newPassword,
+      });
+
+      if (error) {
+        toast.error(`Failed to update password: ${error.message}`);
+        return;
+      }
+
+      toast.success('Password updated successfully!');
+      setSettingsFormData({
+        ...settingsFormData,
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: '',
+      });
+      setShowSettingsModal(false);
+    } catch (err) {
+      console.error('Error updating password:', err);
+      toast.error('An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogout = async () => {
     // Sign out from Supabase Auth
     await supabase.auth.signOut();
@@ -505,6 +610,13 @@ const StudentPortal = () => {
                   </span>
                 )}
               </div>
+              <button
+                onClick={handleOpenSettings}
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors"
+              >
+                <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Settings</span>
+              </button>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
@@ -1030,6 +1142,165 @@ const StudentPortal = () => {
                   )}
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-emerald-100 rounded-full">
+                    <Settings className="h-6 w-6 text-emerald-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">Settings</h2>
+                    <p className="text-sm text-gray-600">Manage your account</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowSettingsModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Tabs */}
+              <div className="flex border-b border-gray-200 mb-6">
+                <button
+                  onClick={() => setSettingsTab('password')}
+                  className={`px-4 py-2 font-medium text-sm ${
+                    settingsTab === 'password'
+                      ? 'text-emerald-600 border-b-2 border-emerald-600'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Password
+                </button>
+                <button
+                  onClick={() => setSettingsTab('profile')}
+                  className={`px-4 py-2 font-medium text-sm ${
+                    settingsTab === 'profile'
+                      ? 'text-emerald-600 border-b-2 border-emerald-600'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Profile
+                </button>
+              </div>
+
+              {/* Password Tab */}
+              {settingsTab === 'password' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      New Password *
+                    </label>
+                    <input
+                      type="password"
+                      value={settingsFormData.newPassword}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, newPassword: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="At least 8 characters"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Confirm Password *
+                    </label>
+                    <input
+                      type="password"
+                      value={settingsFormData.confirmNewPassword}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, confirmNewPassword: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Re-enter your password"
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-xs text-blue-800">
+                      <strong>Password requirements:</strong>
+                      <br />• Minimum 8 characters
+                      <br />• Use a strong, unique password
+                    </p>
+                  </div>
+
+                  <div className="flex justify-end gap-3">
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowSettingsModal(false)}
+                      disabled={loading}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleUpdatePassword}
+                      disabled={loading}
+                    >
+                      {loading ? 'Updating...' : 'Update Password'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Profile Tab */}
+              {settingsTab === 'profile' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={settingsFormData.full_name}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Your full name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={settingsFormData.phone}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="+64 21 123 4567"
+                    />
+                  </div>
+
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <p className="text-xs text-gray-600">
+                      <strong>Note:</strong> Your email and student ID cannot be changed. Contact admin if you need to update these details.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-end gap-3">
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowSettingsModal(false)}
+                      disabled={loading}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleUpdateProfile}
+                      disabled={loading}
+                    >
+                      {loading ? 'Updating...' : 'Update Profile'}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
