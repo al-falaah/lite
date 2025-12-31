@@ -215,9 +215,10 @@ const AdminStudentsList = () => {
         throw new Error('Student does not have an auth account. Cannot generate invite link.');
       }
 
-      // Generate a new invite link for the existing auth user
+      // Generate a password reset link for the existing auth user
+      // Use 'recovery' type instead of 'invite' because the user has already set their password
       const { data: inviteLinkData, error: inviteError } = await supabase.auth.admin.generateLink({
-        type: 'invite',
+        type: 'recovery',
         email: student.email,
         options: {
           redirectTo: `${window.location.origin}/reset-password`,
