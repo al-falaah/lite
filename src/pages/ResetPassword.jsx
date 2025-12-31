@@ -15,22 +15,45 @@ export default function ResetPassword() {
   const [checkingToken, setCheckingToken] = useState(true);
 
   useEffect(() => {
-    // Check if we have a valid session from the reset link
+    // Listen for auth state changes to catch when Supabase processes the hash
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session);
+
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        setValidToken(true);
+        setCheckingToken(false);
+      } else if (event === 'USER_UPDATED') {
+        // Password was updated
+        console.log('Password updated');
+      }
+    });
+
+    // Also check immediately in case session already exists
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
 
       if (session) {
         setValidToken(true);
+        setCheckingToken(false);
       } else {
-        toast.error('Invalid or expired reset link');
-        setTimeout(() => navigate('/forgot-password'), 2000);
+        // Wait a bit for the auth state change to fire
+        setTimeout(() => {
+          if (!validToken) {
+            toast.error('Invalid or expired reset link');
+            setTimeout(() => navigate('/forgot-password'), 2000);
+            setCheckingToken(false);
+          }
+        }, 2000);
       }
-
-      setCheckingToken(false);
     };
 
     checkSession();
-  }, [navigate]);
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate, validToken]);
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
