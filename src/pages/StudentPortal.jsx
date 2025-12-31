@@ -362,6 +362,7 @@ const StudentPortal = () => {
 
       if (error) {
         toast.error(`Failed to update password: ${error.message}`);
+        setLoading(false);
         return;
       }
 
@@ -373,10 +374,10 @@ const StudentPortal = () => {
         confirmNewPassword: '',
       });
       setShowSettingsModal(false);
+      setLoading(false);
     } catch (err) {
       console.error('Error updating password:', err);
       toast.error('An error occurred');
-    } finally {
       setLoading(false);
     }
   };
