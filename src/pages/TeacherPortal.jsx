@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, Key, Edit2, CheckCircle, Mail, Send, XCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, Key, Edit2, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 
@@ -38,6 +38,17 @@ export default function TeacherPortal() {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailRecipient, setEmailRecipient] = useState(null);
   const [emailMessage, setEmailMessage] = useState('');
+
+  // Settings modal state
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settingsTab, setSettingsTab] = useState('password'); // password or profile
+  const [settingsFormData, setSettingsFormData] = useState({
+    full_name: '',
+    phone: '',
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
+  });
 
   useEffect(() => {
     const savedTeacher = localStorage.getItem('teacher');
@@ -494,6 +505,98 @@ export default function TeacherPortal() {
     }
   };
 
+  const handleOpenSettings = () => {
+    setSettingsFormData({
+      full_name: teacher.full_name || '',
+      phone: teacher.phone || '',
+      currentPassword: '',
+      newPassword: '',
+      confirmNewPassword: '',
+    });
+    setSettingsTab('password');
+    setShowSettingsModal(true);
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!settingsFormData.full_name.trim()) {
+      toast.error('Full name is required');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await teachers.update(teacher.id, {
+        full_name: settingsFormData.full_name,
+        phone: settingsFormData.phone,
+      });
+
+      if (error) {
+        toast.error('Failed to update profile');
+        console.error(error);
+        return;
+      }
+
+      // Update local state and localStorage
+      const updatedTeacher = {
+        ...teacher,
+        full_name: settingsFormData.full_name,
+        phone: settingsFormData.phone,
+      };
+      setTeacher(updatedTeacher);
+      localStorage.setItem('teacher', JSON.stringify(updatedTeacher));
+
+      toast.success('Profile updated successfully!');
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      toast.error('An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (!settingsFormData.newPassword || !settingsFormData.confirmNewPassword) {
+      toast.error('Please fill in all password fields');
+      return;
+    }
+
+    if (settingsFormData.newPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+
+    if (settingsFormData.newPassword !== settingsFormData.confirmNewPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: settingsFormData.newPassword,
+      });
+
+      if (error) {
+        toast.error(`Failed to update password: ${error.message}`);
+        return;
+      }
+
+      toast.success('Password updated successfully!');
+      setSettingsFormData({
+        ...settingsFormData,
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: '',
+      });
+      setShowSettingsModal(false);
+    } catch (err) {
+      console.error('Error updating password:', err);
+      toast.error('An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Login Screen
   if (!isAuthenticated) {
     return (
@@ -631,6 +734,10 @@ export default function TeacherPortal() {
                 <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate max-w-[100px] sm:max-w-none">{teacher.full_name}</p>
                 <p className="text-[10px] sm:text-xs text-gray-600 hidden sm:block">Staff ID: {teacher.staff_id}</p>
               </div>
+              <Button variant="outline" onClick={handleOpenSettings} className="shadow-sm text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
+                <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Settings</span>
+              </Button>
               <Button variant="secondary" onClick={handleLogout} className="shadow-sm text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
                 <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
@@ -1298,6 +1405,163 @@ export default function TeacherPortal() {
                   )}
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+              <h3 className="text-2xl font-bold text-gray-900">Settings</h3>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200 px-6">
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setSettingsTab('password')}
+                  className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+                    settingsTab === 'password'
+                      ? 'border-emerald-600 text-emerald-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <Key className="h-4 w-4 inline mr-2" />
+                  Change Password
+                </button>
+                <button
+                  onClick={() => setSettingsTab('profile')}
+                  className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
+                    settingsTab === 'profile'
+                      ? 'border-emerald-600 text-emerald-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  <Edit2 className="h-4 w-4 inline mr-2" />
+                  Update Profile
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {/* Password Tab */}
+              {settingsTab === 'password' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      New Password *
+                    </label>
+                    <input
+                      type="password"
+                      value={settingsFormData.newPassword}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, newPassword: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="At least 8 characters"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Confirm New Password *
+                    </label>
+                    <input
+                      type="password"
+                      value={settingsFormData.confirmNewPassword}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, confirmNewPassword: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Re-enter your password"
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>Password requirements:</strong>
+                      <br />• Minimum 8 characters
+                      <br />• Use a strong, unique password
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={handleUpdatePassword}
+                    disabled={loading}
+                    className="w-full"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Updating Password...
+                      </>
+                    ) : (
+                      'Update Password'
+                    )}
+                  </Button>
+                </div>
+              )}
+
+              {/* Profile Tab */}
+              {settingsTab === 'profile' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={settingsFormData.full_name}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Your full name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={settingsFormData.phone}
+                      onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Your phone number"
+                    />
+                  </div>
+
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p className="text-sm text-gray-700">
+                      <strong>Read-only Information:</strong>
+                    </p>
+                    <div className="mt-2 space-y-1 text-sm text-gray-600">
+                      <p><strong>Email:</strong> {teacher.email}</p>
+                      <p><strong>Staff ID:</strong> {teacher.staff_id}</p>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleUpdateProfile}
+                    disabled={loading}
+                    className="w-full"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Updating Profile...
+                      </>
+                    ) : (
+                      'Update Profile'
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
