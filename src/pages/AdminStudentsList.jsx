@@ -215,24 +215,31 @@ const AdminStudentsList = () => {
         throw new Error('Student does not have an auth account. Cannot generate invite link.');
       }
 
-      // Generate a password reset link for the existing auth user
-      // Use 'recovery' type instead of 'invite' because the user has already set their password
-      const { data: inviteLinkData, error: inviteError } = await supabase.auth.admin.generateLink({
-        type: 'recovery',
-        email: student.email,
-        options: {
-          redirectTo: `${window.location.origin}/reset-password`,
-        },
-      });
+      // Call edge function to generate recovery link using service role
+      const recoveryResponse = await fetch(
+        `${supabaseUrl}/functions/v1/generate-student-recovery-link`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: student.email,
+          }),
+        }
+      );
 
-      if (inviteError) {
-        throw new Error(`Failed to generate invite link: ${inviteError.message}`);
+      const recoveryResult = await recoveryResponse.json();
+
+      if (!recoveryResponse.ok) {
+        throw new Error(recoveryResult.error || 'Failed to generate recovery link');
       }
 
-      const inviteLink = inviteLinkData?.properties?.action_link;
+      const inviteLink = recoveryResult.recovery_link;
 
       if (!inviteLink) {
-        throw new Error('No invite link returned from auth service');
+        throw new Error('No recovery link returned from service');
       }
 
       // Get the student's primary enrollment to find the program
