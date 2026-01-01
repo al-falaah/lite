@@ -214,14 +214,31 @@ Unsubscribe: ${unsubscribeUrl}
     const successCount = results.filter(r => r.status === 'fulfilled').length
     const failCount = results.filter(r => r.status === 'rejected').length
 
+    // Log detailed failure information
+    const failures = results
+      .map((result, index) => {
+        if (result.status === 'rejected') {
+          return {
+            email: subscribers[index].email,
+            error: result.reason?.message || String(result.reason)
+          }
+        }
+        return null
+      })
+      .filter(Boolean)
+
     console.log(`Emails sent: ${successCount} successful, ${failCount} failed`)
+    if (failures.length > 0) {
+      console.error('Failed email details:', JSON.stringify(failures, null, 2))
+    }
 
     return new Response(
       JSON.stringify({
         message: `Notification emails sent to ${successCount} subscribers`,
         total: subscribers.length,
         successful: successCount,
-        failed: failCount
+        failed: failCount,
+        failures: failures.length > 0 ? failures : undefined
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
