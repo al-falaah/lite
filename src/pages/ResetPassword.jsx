@@ -42,16 +42,19 @@ export default function ResetPassword() {
         setPasswordUpdated(true);
         toast.success('Password updated successfully!');
 
-        // Get user role and navigate
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log('User role:', user?.user_metadata?.role);
+        // Use the session data from the event instead of calling getUser
+        console.log('Session user:', session?.user);
+        const user = session?.user;
+        const role = user?.user_metadata?.role;
+
+        console.log('User role:', role);
         console.log('Email confirmed:', user?.email_confirmed_at);
 
         // Redirect after a brief delay
         setTimeout(() => {
+          console.log('Timeout executing, stopping loading and navigating...');
           setLoading(false);
 
-          const role = user?.user_metadata?.role;
           if (role === 'teacher') {
             console.log('Navigating to teacher portal');
             navigate('/teacher', { replace: true });
@@ -59,7 +62,7 @@ export default function ResetPassword() {
             console.log('Navigating to student portal');
             navigate('/student', { replace: true });
           } else {
-            console.log('Navigating to login');
+            console.log('No role found, navigating to login');
             navigate('/login', { replace: true });
           }
         }, 1500);
