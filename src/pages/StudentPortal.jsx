@@ -66,6 +66,7 @@ const StudentPortal = () => {
       }
 
       // Authenticate with Supabase Auth using email and password
+      console.log('Attempting login with email:', studentData.email);
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: studentData.email,
         password: password,
@@ -73,10 +74,14 @@ const StudentPortal = () => {
 
       if (authError) {
         console.error('Auth error:', authError);
+        console.error('Auth error details:', JSON.stringify(authError, null, 2));
         toast.error('Invalid Student ID or password');
         setLoading(false);
         return;
       }
+
+      console.log('Login successful:', authData.user.email);
+      console.log('Email confirmed:', authData.user.email_confirmed_at);
 
       setStudent(studentData);
       setAuthenticated(true);
@@ -92,6 +97,7 @@ const StudentPortal = () => {
   };
 
   const loadStudentData = async (studentId) => {
+    console.log('Loading student data for ID:', studentId);
     try {
       // Load enrollments (only active ones)
       const { data: enrollmentsData, error: enrollmentsError } = await supabase
@@ -101,7 +107,11 @@ const StudentPortal = () => {
         .eq('status', 'active') // Only show active enrollments
         .order('created_at', { ascending: false });
 
-      if (enrollmentsError) throw enrollmentsError;
+      if (enrollmentsError) {
+        console.error('Enrollments error:', enrollmentsError);
+        throw enrollmentsError;
+      }
+      console.log('Enrollments loaded:', enrollmentsData?.length || 0);
       setEnrollments(enrollmentsData || []);
 
       // Get the programs for active enrollments

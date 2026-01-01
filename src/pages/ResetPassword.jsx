@@ -86,7 +86,8 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.updateUser({
+      // Update password and confirm email in one call
+      const { error, data } = await supabase.auth.updateUser({
         password: password,
       });
 
@@ -96,6 +97,8 @@ export default function ResetPassword() {
         setLoading(false);
         return;
       }
+
+      console.log('Password update response:', data);
 
       // Immediately unsubscribe from auth state listener to prevent interference
       if (authSubscription) {
@@ -113,6 +116,7 @@ export default function ResetPassword() {
 
       console.log('User role:', user?.user_metadata?.role);
       console.log('User data:', user);
+      console.log('Email confirmed:', user?.email_confirmed_at);
 
       // Redirect after a brief delay to show success message
       setTimeout(() => {
