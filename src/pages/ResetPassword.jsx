@@ -36,8 +36,33 @@ export default function ResetPassword() {
         setValidToken(true);
         setCheckingToken(false);
       } else if (event === 'USER_UPDATED') {
-        // Password was updated
-        console.log('Password updated via auth event');
+        // Password was successfully updated, now navigate
+        console.log('Password updated via USER_UPDATED event');
+
+        setPasswordUpdated(true);
+        toast.success('Password updated successfully!');
+
+        // Get user role and navigate
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log('User role:', user?.user_metadata?.role);
+        console.log('Email confirmed:', user?.email_confirmed_at);
+
+        // Redirect after a brief delay
+        setTimeout(() => {
+          setLoading(false);
+
+          const role = user?.user_metadata?.role;
+          if (role === 'teacher') {
+            console.log('Navigating to teacher portal');
+            navigate('/teacher', { replace: true });
+          } else if (role === 'student') {
+            console.log('Navigating to student portal');
+            navigate('/student', { replace: true });
+          } else {
+            console.log('Navigating to login');
+            navigate('/login', { replace: true });
+          }
+        }, 1500);
       }
     });
 
@@ -94,59 +119,21 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      // Update password and confirm email in one call
+      // Update password - don't await, let the USER_UPDATED event handle navigation
       console.log('Calling supabase.auth.updateUser...');
-      const { error, data } = await supabase.auth.updateUser({
-        password: password,
+      supabase.auth.updateUser({ password: password }).then(({ error, data }) => {
+        console.log('updateUser promise resolved. Error:', error, 'Data:', data);
+
+        if (error) {
+          console.error('Password update error:', error);
+          toast.error(error.message || 'Failed to update password');
+          setLoading(false);
+          setPasswordUpdated(false);
+        }
       });
 
-      console.log('updateUser completed. Error:', error, 'Data:', data);
-
-      if (error) {
-        console.error('Password update error:', error);
-        toast.error(error.message || 'Failed to update password');
-        setLoading(false);
-        return;
-      }
-
-      console.log('Password update response:', data);
-
-      // Immediately unsubscribe from auth state listener to prevent interference
-      if (authSubscription) {
-        console.log('Unsubscribing from auth listener...');
-        authSubscription.unsubscribe();
-        console.log('Auth listener unsubscribed');
-      }
-
-      // Mark password as updated to prevent token validation from redirecting
-      console.log('Setting passwordUpdated to true');
-      setPasswordUpdated(true);
-
-      toast.success('Password updated successfully!');
-
-      // Get the user's role from metadata and redirect to appropriate portal
-      const { data: { user } } = await supabase.auth.getUser();
-
-      console.log('User role:', user?.user_metadata?.role);
-      console.log('User data:', user);
-      console.log('Email confirmed:', user?.email_confirmed_at);
-
-      // Redirect after a brief delay to show success message
-      setTimeout(() => {
-        setLoading(false); // Stop loading before navigation
-
-        const role = user?.user_metadata?.role;
-        if (role === 'teacher') {
-          console.log('Navigating to teacher portal');
-          navigate('/teacher', { replace: true });
-        } else if (role === 'student') {
-          console.log('Navigating to student portal');
-          navigate('/student', { replace: true });
-        } else {
-          console.log('Navigating to login');
-          navigate('/login', { replace: true });
-        }
-      }, 1500);
+      // Mark as updating immediately to trigger auth event handler
+      console.log('Password update initiated, waiting for USER_UPDATED event...');
 
     } catch (err) {
       console.error('Password update error:', err);
