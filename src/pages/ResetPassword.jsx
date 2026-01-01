@@ -24,6 +24,12 @@ export default function ResetPassword() {
 
     // Listen for auth state changes to catch when Supabase processes the hash
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // Ignore all events if password has been updated
+      if (passwordUpdated) {
+        console.log('Auth event ignored (password already updated):', event);
+        return;
+      }
+
       console.log('Auth state changed:', event, session);
 
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
@@ -31,7 +37,7 @@ export default function ResetPassword() {
         setCheckingToken(false);
       } else if (event === 'USER_UPDATED') {
         // Password was updated
-        console.log('Password updated');
+        console.log('Password updated via auth event');
       }
     });
 
@@ -67,6 +73,7 @@ export default function ResetPassword() {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    console.log('=== handleResetPassword called ===');
 
     if (!password || !confirmPassword) {
       toast.error('Please fill in all fields');
@@ -83,13 +90,17 @@ export default function ResetPassword() {
       return;
     }
 
+    console.log('Validation passed, updating password...');
     setLoading(true);
 
     try {
       // Update password and confirm email in one call
+      console.log('Calling supabase.auth.updateUser...');
       const { error, data } = await supabase.auth.updateUser({
         password: password,
       });
+
+      console.log('updateUser completed. Error:', error, 'Data:', data);
 
       if (error) {
         console.error('Password update error:', error);
@@ -102,11 +113,13 @@ export default function ResetPassword() {
 
       // Immediately unsubscribe from auth state listener to prevent interference
       if (authSubscription) {
+        console.log('Unsubscribing from auth listener...');
         authSubscription.unsubscribe();
         console.log('Auth listener unsubscribed');
       }
 
       // Mark password as updated to prevent token validation from redirecting
+      console.log('Setting passwordUpdated to true');
       setPasswordUpdated(true);
 
       toast.success('Password updated successfully!');
