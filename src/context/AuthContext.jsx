@@ -267,26 +267,19 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setProfile(null);
 
-      // Add timeout to prevent infinite loading (5 seconds to be safe)
-      const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('SignOut timeout')), 5000)
-      );
-
-      const signOutPromise = auth.signOut();
-
-      // Race between sign out and timeout
+      // Use 'local' scope for instant logout (doesn't contact server)
+      // This is what enterprise apps do - clear local state immediately
       try {
-        const result = await Promise.race([signOutPromise, timeout]);
+        const { error } = await supabase.auth.signOut({ scope: 'local' });
 
-        if (result?.error) {
-          console.error('SignOut error:', result.error);
-          // Local state already cleared, so this is fine
+        if (error) {
+          console.warn('Local signout error (non-critical):', error);
         } else {
-          console.log('SignOut successful on server');
+          console.log('SignOut successful (local)');
         }
-      } catch (timeoutError) {
-        console.warn('SignOut timed out, but local state already cleared:', timeoutError.message);
-        // This is fine - local state is cleared and user appears logged out
+      } catch (signOutError) {
+        console.warn('SignOut error (non-critical):', signOutError);
+        // Local state is already cleared, so this is fine
       }
 
       setLoading(false);
@@ -295,7 +288,7 @@ export const AuthProvider = ({ children }) => {
       console.error('SignOut exception:', error);
 
       // IMPORTANT: Clear user and profile even on error
-      // This ensures local state is cleared even if server signout fails
+      // This ensures local state is cleared even if signout fails
       setUser(null);
       setProfile(null);
       setLoading(false);
