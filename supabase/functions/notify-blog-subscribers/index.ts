@@ -87,8 +87,8 @@ serve(async (req) => {
     const postUrl = `${siteUrl}/blog/${post.slug}`
     const unsubscribeBaseUrl = `${siteUrl}/unsubscribe`
 
-    // Send emails via Resend
-    const emailPromises = subscribers.map(async (subscriber: Subscriber) => {
+    // Helper function to send a single email
+    const sendEmail = async (subscriber: Subscriber) => {
       const unsubscribeUrl = `${unsubscribeBaseUrl}?email=${encodeURIComponent(subscriber.email)}`
 
       const emailHtml = `
@@ -207,9 +207,36 @@ Unsubscribe: ${unsubscribeUrl}
       }
 
       return await res.json()
-    })
+    }
 
-    const results = await Promise.allSettled(emailPromises)
+    // Helper function to delay execution
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+    // Send emails with rate limiting (max 2 per second = 500ms delay)
+    const results: PromiseSettledResult<any>[] = []
+
+    console.log(`Starting to send emails to ${subscribers.length} subscribers with rate limiting...`)
+
+    for (let i = 0; i < subscribers.length; i++) {
+      const subscriber = subscribers[i]
+
+      try {
+        console.log(`Sending email ${i + 1}/${subscribers.length} to ${subscriber.email}`)
+        const result = await sendEmail(subscriber)
+        results.push({ status: 'fulfilled', value: result })
+        console.log(`✅ Email ${i + 1}/${subscribers.length} sent successfully`)
+      } catch (error) {
+        console.error(`❌ Email ${i + 1}/${subscribers.length} failed:`, error)
+        results.push({ status: 'rejected', reason: error })
+      }
+
+      // Add 500ms delay between emails (except after the last one)
+      if (i < subscribers.length - 1) {
+        await delay(500)
+      }
+    }
+
+    console.log(`Finished sending all emails`)
 
     const successCount = results.filter(r => r.status === 'fulfilled').length
     const failCount = results.filter(r => r.status === 'rejected').length
