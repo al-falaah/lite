@@ -21,14 +21,22 @@ export const AuthProvider = ({ children }) => {
     // Check active session
     checkUser();
 
-    // Listen for auth changes (including TOKEN_REFRESHED)
+    // Listen for auth changes (including TOKEN_REFRESHED and SIGNED_OUT)
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed. Event:', event, 'Session:', session?.user?.id);
 
-        // Handle token refresh to keep user state updated
+        // Handle different auth events
         if (event === 'TOKEN_REFRESHED') {
-          console.log('Token refreshed, updating user state');
+          console.log('Token refreshed, session is still valid');
+        }
+
+        if (event === 'SIGNED_OUT') {
+          console.log('User signed out, clearing state');
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+          return;
         }
 
         if (session?.user) {
@@ -53,34 +61,15 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    // Periodically verify session is still valid (every 60 seconds)
-    // Use a ref to track current user without causing re-renders
-    const sessionCheckInterval = setInterval(async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-
-        if (error) {
-          console.error('Session check error:', error);
-          return;
-        }
-
-        // Session validation without triggering state updates
-        // Let the auth state change handler manage state updates
-        if (!session) {
-          console.log('Session check: no active session');
-        }
-      } catch (error) {
-        console.error('Session check failed:', error);
-      }
-    }, 60000); // Check every 60 seconds (reduced from 30s)
+    // No need for periodic session checks - Supabase handles this automatically
+    // The onAuthStateChange listener will fire on TOKEN_REFRESHED events
+    // If session expires, SIGNED_OUT event will fire automatically
 
     return () => {
       // Properly unsubscribe from auth state changes
       if (authListener?.subscription) {
         authListener.subscription.unsubscribe();
       }
-      // Clear interval
-      clearInterval(sessionCheckInterval);
     };
   }, []); // Empty dependency array - only run once on mount
 
