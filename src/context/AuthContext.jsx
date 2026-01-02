@@ -21,10 +21,16 @@ export const AuthProvider = ({ children }) => {
     // Check active session
     checkUser();
 
-    // Listen for auth changes
+    // Listen for auth changes (including TOKEN_REFRESHED)
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed. Event:', event, 'Session:', session?.user?.id);
+
+        // Handle token refresh to keep user state updated
+        if (event === 'TOKEN_REFRESHED') {
+          console.log('Token refreshed, updating user state');
+        }
+
         if (session?.user) {
           console.log('Setting user from auth state change:', session.user.id);
           setUser(session.user);
@@ -47,13 +53,48 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
+    // Periodically verify session is still valid (every 30 seconds)
+    // This ensures we catch any session issues early
+    const sessionCheckInterval = setInterval(async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('Session check error:', error);
+          // Don't clear state on error - let the auth state change handler deal with it
+          return;
+        }
+
+        // If we have a user in state but no session, clear the state
+        if (user && !session) {
+          console.warn('Session expired, clearing user state');
+          setUser(null);
+          setProfile(null);
+        }
+
+        // If we have a session but no user in state, update the state
+        if (!user && session?.user) {
+          console.log('Session found but no user in state, updating');
+          setUser(session.user);
+          const userRole = session.user.user_metadata?.role;
+          if (userRole !== 'teacher') {
+            await loadProfile(session.user.id);
+          }
+        }
+      } catch (error) {
+        console.error('Session check failed:', error);
+      }
+    }, 30000); // Check every 30 seconds
+
     return () => {
       // Properly unsubscribe from auth state changes
       if (authListener?.subscription) {
         authListener.subscription.unsubscribe();
       }
+      // Clear interval
+      clearInterval(sessionCheckInterval);
     };
-  }, []);
+  }, [user]); // Add user as dependency to track changes
 
   const checkUser = async () => {
     try {
@@ -245,31 +286,38 @@ export const AuthProvider = ({ children }) => {
       console.log('SignOut initiated');
       setLoading(true);
 
-      // Add timeout to prevent infinite loading (reduced to 3 seconds)
+      // First, immediately clear local state to provide instant feedback
+      setUser(null);
+      setProfile(null);
+
+      // Add timeout to prevent infinite loading (5 seconds to be safe)
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('SignOut timeout')), 3000)
+        setTimeout(() => reject(new Error('SignOut timeout')), 5000)
       );
 
       const signOutPromise = auth.signOut();
 
       // Race between sign out and timeout
-      const result = await Promise.race([signOutPromise, timeout]);
+      try {
+        const result = await Promise.race([signOutPromise, timeout]);
 
-      if (result?.error) {
-        console.error('SignOut error:', result.error);
-        // Don't throw - continue with local cleanup
+        if (result?.error) {
+          console.error('SignOut error:', result.error);
+          // Local state already cleared, so this is fine
+        } else {
+          console.log('SignOut successful on server');
+        }
+      } catch (timeoutError) {
+        console.warn('SignOut timed out, but local state already cleared:', timeoutError.message);
+        // This is fine - local state is cleared and user appears logged out
       }
 
-      console.log('SignOut successful, clearing user and profile');
-      setUser(null);
-      setProfile(null);
       setLoading(false);
-
       return { error: null };
     } catch (error) {
-      console.error('SignOut exception (likely timeout):', error);
+      console.error('SignOut exception:', error);
 
-      // IMPORTANT: Clear user and profile even on timeout/error
+      // IMPORTANT: Clear user and profile even on error
       // This ensures local state is cleared even if server signout fails
       setUser(null);
       setProfile(null);
