@@ -53,38 +53,26 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    // Periodically verify session is still valid (every 30 seconds)
-    // This ensures we catch any session issues early
+    // Periodically verify session is still valid (every 60 seconds)
+    // Use a ref to track current user without causing re-renders
     const sessionCheckInterval = setInterval(async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error) {
           console.error('Session check error:', error);
-          // Don't clear state on error - let the auth state change handler deal with it
           return;
         }
 
-        // If we have a user in state but no session, clear the state
-        if (user && !session) {
-          console.warn('Session expired, clearing user state');
-          setUser(null);
-          setProfile(null);
-        }
-
-        // If we have a session but no user in state, update the state
-        if (!user && session?.user) {
-          console.log('Session found but no user in state, updating');
-          setUser(session.user);
-          const userRole = session.user.user_metadata?.role;
-          if (userRole !== 'teacher') {
-            await loadProfile(session.user.id);
-          }
+        // Session validation without triggering state updates
+        // Let the auth state change handler manage state updates
+        if (!session) {
+          console.log('Session check: no active session');
         }
       } catch (error) {
         console.error('Session check failed:', error);
       }
-    }, 30000); // Check every 30 seconds
+    }, 60000); // Check every 60 seconds (reduced from 30s)
 
     return () => {
       // Properly unsubscribe from auth state changes
@@ -94,7 +82,7 @@ export const AuthProvider = ({ children }) => {
       // Clear interval
       clearInterval(sessionCheckInterval);
     };
-  }, [user]); // Add user as dependency to track changes
+  }, []); // Empty dependency array - only run once on mount
 
   const checkUser = async () => {
     try {
