@@ -212,7 +212,7 @@ Unsubscribe: ${unsubscribeUrl}
     // Helper function to delay execution
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-    // Send emails with rate limiting (max 2 per second = 500ms delay)
+    // Send emails with rate limiting (max 10 per second = 100ms delay)
     const results: PromiseSettledResult<any>[] = []
 
     console.log(`Starting to send emails to ${subscribers.length} subscribers with rate limiting...`)
@@ -230,9 +230,9 @@ Unsubscribe: ${unsubscribeUrl}
         results.push({ status: 'rejected', reason: error })
       }
 
-      // Add 500ms delay between emails (except after the last one)
+      // Add 100ms delay between emails (except after the last one)
       if (i < subscribers.length - 1) {
-        await delay(500)
+        await delay(100)
       }
     }
 
