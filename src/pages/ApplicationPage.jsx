@@ -365,7 +365,7 @@ const ApplicationPage = () => {
   ];
 
   if (submitted) {
-    const programName = formData.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+    const programName = formData.program === 'tajweed' ? 'Tajweed Track' : 'Essential Arabic & Islamic Studies Track';
     const paymentInfo = formData.program === 'tajweed'
       ? 'One-time payment of $120 NZD'
       : 'Monthly ($35/month) or Annual ($375/year) payment options';
@@ -435,11 +435,11 @@ const ApplicationPage = () => {
                 <div className="text-xs sm:text-sm text-emerald-900 text-center">
                   {formData.program === 'tajweed' ? (
                     <>
-                      <span className="font-semibold">Tajweed Program</span> • 6 months • $120 NZD
+                      <span className="font-semibold">Tajweed Track</span> • 6 months • $120 NZD
                     </>
                   ) : (
                     <>
-                      <span className="font-semibold block sm:inline">Essential Arabic & Islamic Studies</span>
+                      <span className="font-semibold block sm:inline">Essential Arabic & Islamic Studies Track</span>
                       <span className="hidden sm:inline"> • </span>
                       <span className="block sm:inline">2 years • $35-$375/payment</span>
                     </>
@@ -493,10 +493,10 @@ const ApplicationPage = () => {
                 {/* Program Selection */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-4">
-                    Select Your Program <span className="text-red-500">*</span>
+                    Select Your Track <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {/* Tajweed Program */}
+                    {/* Tajweed Track */}
                     <label
                       className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
                         formData.program === 'tajweed'
@@ -549,7 +549,7 @@ const ApplicationPage = () => {
                         </div>
                       )}
                     </label>
-                     {/* Essential Arabic & Islamic Studies Program */}
+                     {/* Essential Arabic & Islamic Studies Track */}
                     <label
                       className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
                         formData.program === 'essentials'
@@ -569,7 +569,7 @@ const ApplicationPage = () => {
                         <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === 'essentials' ? 'text-emerald-600' : 'text-gray-500'}`} />
                         <div className="flex-1 min-w-0">
                           <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === 'essentials' ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            Essential Arabic & Islamic Studies Program
+                            Essential Arabic & Islamic Studies Track
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-600 mb-3">Master Arabic linguistics and Islamic sciences for direct comprehension</p>
                         </div>

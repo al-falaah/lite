@@ -261,9 +261,9 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     try {
       console.log('SignOut initiated');
-      setLoading(true);
 
       // First, immediately clear local state to provide instant feedback
+      // DO NOT set loading to true - this prevents the loading screen from appearing
       setUser(null);
       setProfile(null);
 
@@ -282,7 +282,6 @@ export const AuthProvider = ({ children }) => {
         // Local state is already cleared, so this is fine
       }
 
-      setLoading(false);
       return { error: null };
     } catch (error) {
       console.error('SignOut exception:', error);
@@ -291,7 +290,6 @@ export const AuthProvider = ({ children }) => {
       // This ensures local state is cleared even if signout fails
       setUser(null);
       setProfile(null);
-      setLoading(false);
 
       // Return success because local state is cleared
       return { error: null };

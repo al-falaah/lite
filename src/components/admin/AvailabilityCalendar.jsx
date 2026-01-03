@@ -949,7 +949,7 @@ const AvailabilityCalendar = () => {
                   return (
                     <div className="mt-4">
                       <Card>
-                        {/* Program Selector */}
+                        {/* Track Selector */}
                         {selectedApplicant?.enrollments?.filter(e => e.status === 'active').length > 1 && (
                           <div className="mb-4 pb-4 border-b border-gray-200">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -967,8 +967,8 @@ const AvailabilityCalendar = () => {
                                   }`}
                                 >
                                   {enrollment.program === 'tajweed'
-                                    ? 'Tajweed Program'
-                                    : 'Essential Islamic Studies'}
+                                    ? 'Tajweed Track'
+                                    : 'Essential Islamic Studies Track'}
                                 </button>
                               ))}
                             </div>
@@ -984,7 +984,7 @@ const AvailabilityCalendar = () => {
                             <p className="text-sm text-gray-600 mt-1">
                               {isTajweed ? (
                                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  Tajweed Program (6 months)
+                                  Tajweed Track (6 months)
                                 </span>
                               ) : currentActive.year === 1 ? (
                                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -1159,11 +1159,11 @@ const AvailabilityCalendar = () => {
                   <Card>
                     <div className="text-center py-12">
                       <Calendar className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
-                      <p className="text-lg font-medium mb-2 text-gray-900">Generate Program Schedule</p>
+                      <p className="text-lg font-medium mb-2 text-gray-900">Generate Track Schedule</p>
                       <p className="text-sm mb-6 text-gray-600">
                         {unscheduledPrograms.length === 1
-                          ? `${unscheduledPrograms[0].program === 'tajweed' ? 'Tajweed Program' : 'Essentials Program'} needs scheduling`
-                          : `${unscheduledPrograms.length} programs need scheduling`}
+                          ? `${unscheduledPrograms[0].program === 'tajweed' ? 'Tajweed Track' : 'Essentials Track'} needs scheduling`
+                          : `${unscheduledPrograms.length} tracks need scheduling`}
                       </p>
                       <button
                         onClick={() => setShowGenerateModal(true)}
@@ -1319,10 +1319,10 @@ const AvailabilityCalendar = () => {
             </div>
 
             <div className="space-y-4">
-              {/* Program Selector - Only show programs student is enrolled in WITHOUT schedules */}
+              {/* Track Selector - Only show tracks student is enrolled in WITHOUT schedules */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Program <span className="text-red-600">*</span>
+                  Track <span className="text-red-600">*</span>
                 </label>
                 <select
                   value={generateForm.program}
@@ -1330,7 +1330,7 @@ const AvailabilityCalendar = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   required
                 >
-                  <option value="">Select program</option>
+                  <option value="">Select track</option>
                   {(() => {
                     // Get active enrollments
                     const activeEnrollments = selectedApplicant?.enrollments?.filter(e => e.status === 'active') || [];
@@ -1345,8 +1345,8 @@ const AvailabilityCalendar = () => {
                     return unscheduledEnrollments.map(enrollment => (
                       <option key={enrollment.program} value={enrollment.program}>
                         {enrollment.program === 'tajweed'
-                          ? 'Tajweed Program (6 months)'
-                          : 'Essential Arabic & Islamic Studies (2 years)'}
+                          ? 'Tajweed Track (6 months)'
+                          : 'Essential Arabic & Islamic Studies Track (2 years)'}
                       </option>
                     ));
                   })()}
@@ -1356,7 +1356,7 @@ const AvailabilityCalendar = () => {
                     ? 'Will create 48 classes (24 weeks × 2 classes)'
                     : generateForm.program === 'essentials'
                     ? 'Will create 208 classes (2 years × 52 weeks × 2 classes)'
-                    : 'Choose a program to continue'}
+                    : 'Choose a track to continue'}
                 </p>
               </div>
 
@@ -1364,7 +1364,13 @@ const AvailabilityCalendar = () => {
               {generateForm.program && (() => {
                 const selectedEnrollment = selectedApplicant?.enrollments?.find(e => e.program === generateForm.program);
 
-                if (!selectedEnrollment || (!selectedEnrollment.preferred_days && !selectedEnrollment.preferred_times)) {
+                // Fall back to student-level availability if enrollment doesn't have it
+                const preferredDays = selectedEnrollment?.preferred_days || selectedApplicant?.preferred_days;
+                const preferredTimes = selectedEnrollment?.preferred_times || selectedApplicant?.preferred_times;
+                const availabilityNotes = selectedEnrollment?.availability_notes || selectedApplicant?.availability_notes;
+                const timezone = selectedEnrollment?.timezone || selectedApplicant?.timezone;
+
+                if (!preferredDays && !preferredTimes) {
                   return null;
                 }
 
@@ -1372,23 +1378,29 @@ const AvailabilityCalendar = () => {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="text-sm font-semibold text-blue-900 mb-2">Student's Preferred Availability</h4>
                     <div className="grid grid-cols-2 gap-4 text-sm">
-                      {selectedEnrollment.preferred_days && selectedEnrollment.preferred_days.length > 0 && (
+                      {preferredDays && preferredDays.length > 0 && (
                         <div>
                           <span className="font-medium text-blue-800">Preferred Days:</span>
-                          <p className="text-blue-700 capitalize">{selectedEnrollment.preferred_days.join(', ')}</p>
+                          <p className="text-blue-700 capitalize">{preferredDays.join(', ')}</p>
                         </div>
                       )}
-                      {selectedEnrollment.preferred_times && selectedEnrollment.preferred_times.length > 0 && (
+                      {preferredTimes && preferredTimes.length > 0 && (
                         <div>
                           <span className="font-medium text-blue-800">Preferred Times:</span>
-                          <p className="text-blue-700 capitalize">{selectedEnrollment.preferred_times.join(', ')}</p>
+                          <p className="text-blue-700 capitalize">{preferredTimes.join(', ')}</p>
                         </div>
                       )}
                     </div>
-                    {selectedEnrollment.availability_notes && (
+                    {timezone && (
+                      <div className="mt-2">
+                        <span className="font-medium text-blue-800 text-sm">Timezone:</span>
+                        <p className="text-blue-700 text-sm">{timezone}</p>
+                      </div>
+                    )}
+                    {availabilityNotes && (
                       <div className="mt-2">
                         <span className="font-medium text-blue-800 text-sm">Notes:</span>
-                        <p className="text-blue-700 text-sm">{selectedEnrollment.availability_notes}</p>
+                        <p className="text-blue-700 text-sm">{availabilityNotes}</p>
                       </div>
                     )}
                   </div>

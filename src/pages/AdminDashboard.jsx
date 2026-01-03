@@ -394,19 +394,19 @@ const AdminDashboard = () => {
       <nav className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
-              <span className="ml-2 text-xl font-brand font-bold text-gray-900">
-                The FastTrack Madrasah Admin
+            <div className="flex items-center min-w-0">
+              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8 flex-shrink-0" />
+              <span className="ml-2 text-base sm:text-xl font-brand font-bold text-gray-900 truncate">
+                <span className="hidden sm:inline">The FastTrack Madrasah </span>Admin
               </span>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <span className="text-xs sm:text-sm text-gray-600 hidden md:inline truncate max-w-[120px]">
                 {profile?.full_name || 'Admin'}
               </span>
-              <Button variant="secondary" onClick={handleLogout}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
+              <Button variant="secondary" onClick={handleLogout} className="text-xs sm:text-sm px-2 sm:px-4 py-1.5 sm:py-2">
+                <LogOut className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </div>
           </div>
@@ -414,52 +414,52 @@ const AdminDashboard = () => {
       </nav>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-gray-200 overflow-x-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-8">
+          <div className="flex gap-4 sm:gap-8 min-w-max sm:min-w-0">
             <button
               onClick={() => setActiveTab('applications')}
-              className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
                 activeTab === 'applications'
                   ? 'border-emerald-600 text-emerald-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              <FileText className="h-5 w-5" />
-              Applications
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden xs:inline">Applications</span>
             </button>
             <button
               onClick={() => setActiveTab('students')}
-              className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
                 activeTab === 'students'
                   ? 'border-emerald-600 text-emerald-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              <Users className="h-5 w-5" />
-              Students
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden xs:inline">Students</span>
             </button>
             <button
               onClick={() => setActiveTab('availability')}
-              className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
                 activeTab === 'availability'
                   ? 'border-emerald-600 text-emerald-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              <Calendar className="h-5 w-5" />
-              Class Scheduling
+              <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden xs:inline">Scheduling</span>
             </button>
             <button
               onClick={() => setActiveTab('teachers')}
-              className={`py-4 px-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
                 activeTab === 'teachers'
                   ? 'border-emerald-600 text-emerald-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
               }`}
             >
-              <UserCheck className="h-5 w-5" />
-              Teachers
+              <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden xs:inline">Teachers</span>
             </button>
           </div>
         </div>
@@ -469,7 +469,7 @@ const AdminDashboard = () => {
         {activeTab === 'applications' && (
           <>
             {/* Stats */}
-            <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
               <Card>
                 <div className="flex items-center justify-between">
                   <div>
@@ -520,13 +520,13 @@ const AdminDashboard = () => {
             </div>
 
             {/* Filters */}
-            <div className="mb-6 flex justify-between items-center">
-              <div className="flex gap-2">
+            <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
+              <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
                 {['all', 'pending', 'approved', 'rejected'].map((filter) => (
                   <button
                     key={filter}
                     onClick={() => setStatusFilter(filter)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
+                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium capitalize whitespace-nowrap ${
                       statusFilter === filter
                         ? 'bg-emerald-600 text-white'
                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -539,11 +539,11 @@ const AdminDashboard = () => {
               <button
                 onClick={() => loadApplications()}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Refresh applications"
               >
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                Refresh
+                <span className="hidden sm:inline">Refresh</span>
               </button>
             </div>
 
@@ -571,16 +571,16 @@ const AdminDashboard = () => {
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {applicationsData.map((app) => (
                   <Card key={app.id} className="hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                             {app.full_name}
                           </h3>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                               app.program === 'tajweed'
                                 ? 'bg-purple-100 text-purple-700'
@@ -590,7 +590,7 @@ const AdminDashboard = () => {
                             </span>
                             {getStatusIcon(app.status)}
                             <span
-                              className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                              className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${getStatusColor(
                                 app.status
                               )}`}
                             >
@@ -599,7 +599,7 @@ const AdminDashboard = () => {
                           </div>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
+                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
                           <div>
                             <span className="font-medium">Email:</span> {app.email}
                           </div>
@@ -626,7 +626,7 @@ const AdminDashboard = () => {
 
                         {app.motivation && (
                           <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-                            <p className="text-sm text-gray-700">
+                            <p className="text-xs sm:text-sm text-gray-700 line-clamp-2 sm:line-clamp-none">
                               <span className="font-medium">Motivation:</span>{' '}
                               {app.motivation}
                             </p>
@@ -634,14 +634,15 @@ const AdminDashboard = () => {
                         )}
                       </div>
 
-                      <div className="ml-4 flex flex-col gap-2">
+                      <div className="flex sm:flex-col gap-2 sm:ml-4 w-full sm:w-auto">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleViewApplication(app)}
+                          className="flex-1 sm:flex-none"
                         >
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
+                          <Eye className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                          <span className="hidden xs:inline">View</span>
                         </Button>
 
                         {app.status === 'pending' && (
@@ -650,17 +651,19 @@ const AdminDashboard = () => {
                               size="sm"
                               variant="primary"
                               onClick={() => handleReviewApplication(app, 'approved')}
+                              className="flex-1 sm:flex-none text-xs sm:text-sm"
                             >
-                              <Check className="h-4 w-4 mr-1" />
-                              Approve
+                              <Check className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                              <span className="hidden xs:inline">Approve</span>
                             </Button>
                             <Button
                               size="sm"
                               variant="secondary"
                               onClick={() => handleReviewApplication(app, 'rejected')}
+                              className="flex-1 sm:flex-none text-xs sm:text-sm"
                             >
-                              <X className="h-4 w-4 mr-1" />
-                              Reject
+                              <X className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                              <span className="hidden xs:inline">Reject</span>
                             </Button>
                           </>
                         )}
@@ -767,7 +770,7 @@ const AdminDashboard = () => {
                         ? 'bg-purple-100 text-purple-800'
                         : 'bg-blue-100 text-blue-800'
                     }`}>
-                      {selectedApplication.program === 'tajweed' ? 'Tajweed Program' : 'Essential Islamic Studies'}
+                      {selectedApplication.program === 'tajweed' ? 'Tajweed Track' : 'Essential Islamic Studies Track'}
                     </span>
                     <p className="text-sm text-gray-500">
                       ID: <span className="font-mono">{selectedApplication.id}</span>
