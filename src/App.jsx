@@ -19,7 +19,7 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
 import Unsubscribe from './pages/Unsubscribe';
-import BookstorePage from './pages/BookstorePage';
+import StorePage from './pages/StorePage';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -51,7 +51,7 @@ function App() {
             <Route path="/teacher" element={<TeacherPortal />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/bookstore" element={<BookstorePage />} />
+            <Route path="/store" element={<StorePage />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
 
             {/* Auth Routes */}

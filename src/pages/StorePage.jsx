@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { BookOpen, ArrowLeft, Sparkles } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
-const BookstorePage = () => {
+const StorePage = () => {
   return (
     <>
       <Helmet>
-        <title>Bookstore - Coming Soon | The FastTrack Madrasah</title>
-        <meta name="description" content="Islamic bookstore coming soon to The FastTrack Madrasah" />
+        <title>Store - Coming Soon | The FastTrack Madrasah</title>
+        <meta name="description" content="Islamic store for madrasah books and souvenirs coming soon to The FastTrack Madrasah" />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 flex items-center justify-center px-4">
@@ -24,7 +24,7 @@ const BookstorePage = () => {
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Bookstore Coming Soon
+            Store Coming Soon
           </h1>
 
           {/* Subheading */}
@@ -38,8 +38,8 @@ const BookstorePage = () => {
 
           {/* Description */}
           <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
-            We're working on bringing you a curated collection of Islamic books to support your learning journey.
-            Stay tuned for quality resources on Tajweed, Arabic, and Islamic Studies.
+            We're working on bringing you a curated collection of Islamic books and madrasah souvenirs to support your learning journey.
+            Stay tuned for quality resources and meaningful items.
           </p>
 
           {/* Features Preview */}
@@ -68,6 +68,12 @@ const BookstorePage = () => {
                 <div className="bg-emerald-100 rounded-full p-1 mt-0.5">
                   <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
                 </div>
+                <span>Madrasah souvenirs and meaningful items</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="bg-emerald-100 rounded-full p-1 mt-0.5">
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
+                </div>
                 <span>Easy online ordering and secure payment</span>
               </li>
             </ul>
@@ -87,4 +93,4 @@ const BookstorePage = () => {
   );
 };
 
-export default BookstorePage;
+export default StorePage;
