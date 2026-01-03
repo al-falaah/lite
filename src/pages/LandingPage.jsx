@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -139,7 +139,7 @@ const LandingPage = () => {
                 </Link>
                 <Link to="/store">
                   <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
-                    <BookOpen className="h-4 w-4" />
+                    <ShoppingBag className="h-4 w-4" />
                     Store
                   </button>
                 </Link>
@@ -187,7 +187,7 @@ const LandingPage = () => {
                   </Link>
                   <Link to="/store" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
-                      <BookOpen className="h-4 w-4" />
+                      <ShoppingBag className="h-4 w-4" />
                       Store
                     </button>
                   </Link>
