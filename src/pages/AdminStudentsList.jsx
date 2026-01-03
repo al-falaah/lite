@@ -649,75 +649,75 @@ const AdminStudentsList = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Students Management</h2>
-          <p className="text-gray-600 mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Students Management</h2>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
             View and manage all students
           </p>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-6">
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-gray-600">Total Students</div>
-              <div className="text-3xl font-bold text-gray-900">{stats.total}</div>
+              <div className="text-xs sm:text-sm text-gray-600">Total Students</div>
+              <div className="text-xl sm:text-3xl font-bold text-gray-900">{stats.total}</div>
             </div>
-            <Users className="h-10 w-10 text-gray-400" />
+            <Users className="h-8 w-8 sm:h-10 sm:w-10 text-gray-400" />
           </div>
         </Card>
 
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-gray-600">Enrolled</div>
-              <div className="text-3xl font-bold text-green-600">{stats.enrolled}</div>
+              <div className="text-xs sm:text-sm text-gray-600">Enrolled</div>
+              <div className="text-xl sm:text-3xl font-bold text-green-600">{stats.enrolled}</div>
             </div>
-            <CheckCircle className="h-10 w-10 text-green-400" />
+            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-green-400" />
           </div>
         </Card>
 
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-gray-600">Graduated</div>
-              <div className="text-3xl font-bold text-blue-600">{stats.graduated}</div>
+              <div className="text-xs sm:text-sm text-gray-600">Graduated</div>
+              <div className="text-xl sm:text-3xl font-bold text-blue-600">{stats.graduated}</div>
             </div>
-            <CheckCircle className="h-10 w-10 text-blue-400" />
+            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-blue-400" />
           </div>
         </Card>
 
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-gray-600">Dropout</div>
-              <div className="text-3xl font-bold text-red-600">{stats.dropout}</div>
+              <div className="text-xs sm:text-sm text-gray-600">Dropout</div>
+              <div className="text-xl sm:text-3xl font-bold text-red-600">{stats.dropout}</div>
             </div>
-            <XCircle className="h-10 w-10 text-red-400" />
+            <XCircle className="h-8 w-8 sm:h-10 sm:w-10 text-red-400" />
           </div>
         </Card>
 
         <Card className="bg-blue-50 border-blue-200">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-blue-700">Essentials</div>
-              <div className="text-3xl font-bold text-blue-900">{stats.essentialsEnrollments}</div>
+              <div className="text-xs sm:text-sm text-blue-700">Essentials</div>
+              <div className="text-xl sm:text-3xl font-bold text-blue-900">{stats.essentialsEnrollments}</div>
             </div>
-            <BookOpen className="h-10 w-10 text-blue-400" />
+            <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-blue-400" />
           </div>
         </Card>
 
         <Card className="bg-purple-50 border-purple-200">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm text-purple-700">Tajweed</div>
-              <div className="text-3xl font-bold text-purple-900">{stats.tajweedEnrollments}</div>
+              <div className="text-xs sm:text-sm text-purple-700">Tajweed</div>
+              <div className="text-xl sm:text-3xl font-bold text-purple-900">{stats.tajweedEnrollments}</div>
             </div>
-            <GraduationCap className="h-10 w-10 text-purple-400" />
+            <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 text-purple-400" />
           </div>
         </Card>
       </div>
@@ -737,17 +737,17 @@ const AdminStudentsList = () => {
       </Card>
 
       {/* Filters and Bulk Actions */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Status Filter */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-2 block">Filter by Status</label>
-            <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="flex-1">
+            <label className="text-xs sm:text-sm font-medium text-gray-700 mb-2 block">Filter by Status</label>
+            <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
               {['all', 'pending_payment', 'enrolled', 'graduated', 'dropout'].map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setStatusFilter(filter)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium capitalize whitespace-nowrap ${
                     statusFilter === filter
                       ? 'bg-emerald-600 text-white'
                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -760,17 +760,18 @@ const AdminStudentsList = () => {
           </div>
 
           {selectedStudentIds.length > 0 && (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-xs sm:text-sm text-gray-600">
                 {selectedStudentIds.length} selected
               </span>
               <Button
                 onClick={() => handleOpenEmailModal()}
                 variant="primary"
-                className="flex items-center gap-2"
+                className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2"
               >
-                <Send className="h-4 w-4" />
-                Send Bulk Email
+                <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Send Bulk Email</span>
+                <span className="xs:hidden">Email</span>
               </Button>
             </div>
           )}
@@ -778,8 +779,8 @@ const AdminStudentsList = () => {
 
         {/* Program Filter */}
         <div>
-          <label className="text-sm font-medium text-gray-700 mb-2 block">Filter by Program</label>
-          <div className="flex gap-2 flex-wrap">
+          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-2 block">Filter by Program</label>
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
             {[
               { value: 'all', label: 'All Programs' },
               { value: 'essentials', label: 'Essential Arabic & Islamic Studies' },
@@ -788,7 +789,7 @@ const AdminStudentsList = () => {
               <button
                 key={filter.value}
                 onClick={() => setProgramFilter(filter.value)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap ${
                   programFilter === filter.value
                     ? 'bg-blue-600 text-white'
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -810,12 +811,12 @@ const AdminStudentsList = () => {
         </Card>
       ) : (
         <>
-          <div className="grid gap-4">
+          <div className="grid gap-3 sm:gap-4">
             {paginatedStudents.map((student) => (
               <Card key={student.id} className="hover:shadow-lg transition-shadow">
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
                   {/* Checkbox for bulk selection */}
-                  <div className="pt-1">
+                  <div className="pt-1 hidden sm:block">
                     <input
                       type="checkbox"
                       checked={selectedStudentIds.includes(student.id)}
@@ -824,45 +825,56 @@ const AdminStudentsList = () => {
                     />
                   </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {student.full_name}
-                      </h3>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
                       <div className="flex items-center gap-2">
+                        {/* Checkbox on mobile - inline with name */}
+                        <div className="sm:hidden">
+                          <input
+                            type="checkbox"
+                            checked={selectedStudentIds.includes(student.id)}
+                            onChange={() => handleToggleStudentSelection(student.id)}
+                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
+                          />
+                        </div>
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                          {student.full_name}
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap">
                         {getStatusIcon(student.status)}
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(student.status)}`}>
+                        <span className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${getStatusColor(student.status)}`}>
                           {student.status === 'pending_payment' ? 'Pending Payment' : student.status}
                         </span>
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        {student.email}
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Mail className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                        <span className="truncate">{student.email}</span>
                         <button
                           onClick={() => copyToClipboard(student.email, 'Email')}
-                          className="ml-1 p-1 hover:bg-gray-100 rounded transition-colors"
+                          className="ml-1 p-1 hover:bg-gray-100 rounded transition-colors flex-shrink-0"
                           title="Copy email"
                         >
                           <Copy className="h-3 w-3 text-gray-500" />
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
+                        <Phone className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                         {student.phone}
                       </div>
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
+                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                         Enrolled: {formatDate(student.enrolled_date)}
                       </div>
                     </div>
 
                     <div className="mt-3 flex items-center gap-3 flex-wrap">
-                      <span className="text-sm text-gray-500 font-mono">{student.student_id || 'No ID yet'}</span>
+                      <span className="text-xs sm:text-sm text-gray-500 font-mono">{student.student_id || 'No ID yet'}</span>
                       {getStudentEnrollments(student.id).length > 0 && (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs text-gray-500">Programs:</span>
                           {getStudentEnrollments(student.id).map((enrollment) => (
                             <span
@@ -881,23 +893,26 @@ const AdminStudentsList = () => {
                     </div>
                   </div>
 
-                  <div className="ml-4 flex flex-col gap-2">
+                  <div className="flex sm:flex-col gap-2 w-full sm:w-auto sm:ml-4">
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleViewStudent(student)}
+                      className="flex-1 sm:flex-none text-xs sm:text-sm"
                     >
-                      <Eye className="h-4 w-4 mr-1" />
-                      View Details
+                      <Eye className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                      <span className="hidden xs:inline">View Details</span>
+                      <span className="xs:hidden">View</span>
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleOpenEmailModal(student.id)}
-                      className="flex items-center gap-1"
+                      className="flex-1 sm:flex-none flex items-center gap-1 text-xs sm:text-sm"
                     >
-                      <Send className="h-4 w-4" />
-                      Send Email
+                      <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="hidden xs:inline">Send Email</span>
+                      <span className="xs:hidden">Email</span>
                     </Button>
                     {student.status === 'pending_payment' && (
                       <Button
@@ -905,10 +920,10 @@ const AdminStudentsList = () => {
                         variant="outline"
                         onClick={() => handleResendApprovalEmail(student)}
                         disabled={sendingEmail}
-                        className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 hover:border-emerald-600"
+                        className="flex-1 sm:flex-none flex items-center gap-1 text-emerald-600 hover:text-emerald-700 hover:border-emerald-600 text-xs sm:text-sm"
                       >
-                        <Mail className="h-4 w-4" />
-                        {sendingEmail ? 'Sending...' : 'Resend Approval'}
+                        <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+                        {sendingEmail ? 'Sending...' : <><span className="hidden xs:inline">Resend Approval</span><span className="xs:hidden">Approval</span></>}
                       </Button>
                     )}
                     {student.status === 'enrolled' && student.student_id && student.auth_user_id && (
@@ -917,10 +932,10 @@ const AdminStudentsList = () => {
                         variant="outline"
                         onClick={() => handleResendWelcomeEmail(student)}
                         disabled={sendingEmail}
-                        className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:border-blue-600"
+                        className="flex-1 sm:flex-none flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:border-blue-600 text-xs sm:text-sm"
                       >
-                        <Mail className="h-4 w-4" />
-                        {sendingEmail ? 'Sending...' : 'Resend Welcome'}
+                        <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
+                        {sendingEmail ? 'Sending...' : <><span className="hidden xs:inline">Resend Welcome</span><span className="xs:hidden">Welcome</span></>}
                       </Button>
                     )}
                   </div>
@@ -979,22 +994,22 @@ const AdminStudentsList = () => {
 
       {/* Student Details Modal */}
       {showModal && selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b px-6 py-4">
-              <h2 className="text-2xl font-bold text-gray-900">
+            <div className="sticky top-0 bg-white border-b px-4 sm:px-6 py-3 sm:py-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                 Student Details
               </h2>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Basic Info */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <Users className="h-5 w-5" />
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5" />
                   Personal Information
                 </h3>
-                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                   <div>
                     <p className="text-gray-600">Full Name</p>
                     <p className="font-semibold">{selectedStudent.full_name}</p>
@@ -1028,11 +1043,11 @@ const AdminStudentsList = () => {
               </div>
 
               {/* Enrollment Info */}
-              <div className="bg-emerald-50 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">
+              <div className="bg-emerald-50 rounded-lg p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3">
                   Student Status
                 </h3>
-                <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                   <div>
                     <p className="text-gray-600">Enrollment Date</p>
                     <p className="font-semibold">{formatDate(selectedStudent.enrolled_date)}</p>
@@ -1052,29 +1067,29 @@ const AdminStudentsList = () => {
               {/* Program Enrollments */}
               {selectedStudentEnrollments.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <BookOpen className="h-5 w-5" />
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 sm:h-5 sm:w-5" />
                     Program Enrollments ({selectedStudentEnrollments.length})
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {selectedStudentEnrollments.map((enrollment) => (
                       <div
                         key={enrollment.id}
-                        className={`rounded-lg p-4 border-2 ${
+                        className={`rounded-lg p-3 sm:p-4 border-2 ${
                           enrollment.program === 'tajweed'
                             ? 'bg-purple-50 border-purple-200'
                             : 'bg-blue-50 border-blue-200'
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-semibold text-gray-900">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                          <h4 className="text-sm sm:text-base font-semibold text-gray-900">
                             {getProgramName(enrollment.program)}
                           </h4>
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getEnrollmentStatusColor(enrollment.status)}`}>
+                          <span className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${getEnrollmentStatusColor(enrollment.status)} self-start sm:self-auto`}>
                             {enrollment.status}
                           </span>
                         </div>
-                        <div className="grid md:grid-cols-3 gap-4 text-sm mb-3">
+                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm mb-3">
                           <div>
                             <p className="text-gray-600">Total Fees</p>
                             <p className="font-semibold">${enrollment.total_fees?.toFixed(2)}</p>
@@ -1090,7 +1105,7 @@ const AdminStudentsList = () => {
                             </p>
                           </div>
                         </div>
-                        <div className="grid md:grid-cols-2 gap-4 text-sm">
+                        <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                           <div>
                             <p className="text-gray-600">Payment Type</p>
                             <p className="font-semibold capitalize">{enrollment.payment_type?.replace('_', ' ')}</p>
@@ -1112,30 +1127,30 @@ const AdminStudentsList = () => {
                         </div>
 
                         {/* Assigned Teacher */}
-                        <div className="mt-4 pt-4 border-t border-gray-300">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
-                                <UserCheck className="h-4 w-4" />
+                        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-300">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div className="flex-1">
+                              <p className="text-xs sm:text-sm text-gray-600 mb-1 flex items-center gap-1">
+                                <UserCheck className="h-3 w-3 sm:h-4 sm:w-4" />
                                 Assigned Teacher
                               </p>
                               {assignedTeachers[enrollment.program] ? (
-                                <p className="font-semibold text-gray-900">
+                                <p className="text-sm sm:text-base font-semibold text-gray-900">
                                   {assignedTeachers[enrollment.program].full_name}
-                                  <span className="text-gray-500 text-sm ml-2">
+                                  <span className="text-gray-500 text-xs sm:text-sm ml-2">
                                     (Staff ID: {assignedTeachers[enrollment.program].staff_id})
                                   </span>
                                 </p>
                               ) : (
-                                <p className="text-sm text-gray-500 italic">No teacher assigned</p>
+                                <p className="text-xs sm:text-sm text-gray-500 italic">No teacher assigned</p>
                               )}
                             </div>
                             <Button
                               onClick={() => handleOpenAssignTeacher(enrollment)}
-                              className="text-sm"
+                              className="text-xs sm:text-sm w-full sm:w-auto"
                               size="sm"
                             >
-                              <UserCheck className="h-4 w-4 mr-1" />
+                              <UserCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                               {assignedTeachers[enrollment.program] ? 'Change Teacher' : 'Assign Teacher'}
                             </Button>
                           </div>
@@ -1178,9 +1193,9 @@ const AdminStudentsList = () => {
                         )}
 
                         {/* Update Enrollment Status */}
-                        <div className="mt-4 pt-4 border-t border-gray-300">
+                        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-300">
                           <p className="text-xs font-semibold text-gray-700 mb-2">Update Enrollment Status</p>
-                          <div className="flex gap-2 flex-wrap">
+                          <div className="grid grid-cols-2 sm:flex gap-2">
                             {enrollment.status !== 'active' && (
                               <Button
                                 variant="outline"
@@ -1231,9 +1246,9 @@ const AdminStudentsList = () => {
 
               {/* Update Status */}
               {selectedStudent.status !== 'graduated' && (
-                <div className="border-t pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Update Status</h3>
-                  <div className="flex gap-3 flex-wrap">
+                <div className="border-t pt-3 sm:pt-4">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3">Update Status</h3>
+                  <div className="grid grid-cols-2 sm:flex gap-2 sm:gap-3">
                     {selectedStudent.status !== 'enrolled' && (
                       <Button
                         variant="primary"
@@ -1273,14 +1288,14 @@ const AdminStudentsList = () => {
 
       {/* Email Composition Modal */}
       {showEmailModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Header */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Send Email</h2>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Send Email</h2>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
                     Sending to {selectedStudentIds.length} student{selectedStudentIds.length > 1 ? 's' : ''}
                   </p>
                 </div>
@@ -1369,34 +1384,34 @@ const AdminStudentsList = () => {
 
       {/* Assign Teacher Modal */}
       {showAssignTeacherModal && selectedEnrollment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-emerald-100 rounded-full">
-                  <UserCheck className="h-6 w-6 text-emerald-600" />
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <div className="p-2 sm:p-3 bg-emerald-100 rounded-full flex-shrink-0">
+                  <UserCheck className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">Assign Teacher</h2>
-                  <p className="text-sm text-gray-600">
+                <div className="min-w-0">
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">Assign Teacher</h2>
+                  <p className="text-xs sm:text-sm text-gray-600 truncate">
                     {getProgramName(selectedEnrollment.program)}
                   </p>
                 </div>
               </div>
 
-              <div className="mb-6">
-                <p className="text-sm text-gray-700 mb-2">
+              <div className="mb-4 sm:mb-6">
+                <p className="text-xs sm:text-sm text-gray-700 mb-2">
                   Student: <span className="font-semibold">{selectedStudent?.full_name}</span>
                 </p>
                 {assignedTeachers[selectedEnrollment.program] && (
-                  <p className="text-sm text-gray-600 mb-4">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-4">
                     Current Teacher: <span className="font-semibold">{assignedTeachers[selectedEnrollment.program].full_name}</span>
                   </p>
                 )}
               </div>
 
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-4 sm:mb-6">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                   Select Teacher *
                 </label>
                 <select

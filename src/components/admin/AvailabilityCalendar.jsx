@@ -555,15 +555,15 @@ const AvailabilityCalendar = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Calendar className="h-6 w-6 mr-2 text-emerald-600" />
-            Class Schedules
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
+            <Calendar className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-emerald-600" />
+            <span>Class Schedules</span>
           </h2>
-          <p className="text-gray-600 mt-1">
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
             Schedule classes and manage bookings
           </p>
         </div>
@@ -580,38 +580,38 @@ const AvailabilityCalendar = () => {
         ).length;
 
         return (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 font-medium">Filter by schedule:</span>
-            <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <span className="text-xs sm:text-sm text-gray-600 font-medium">Filter by schedule:</span>
+            <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
               <button
                 onClick={() => setScheduleFilter('all')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'all'
                     ? 'bg-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                All Students ({enrolledStudents.length})
+                All ({enrolledStudents.length})
               </button>
               <button
                 onClick={() => setScheduleFilter('with-schedules')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'with-schedules'
                     ? 'bg-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                With Schedules ({studentsWithSchedules})
+                With ({studentsWithSchedules})
               </button>
               <button
                 onClick={() => setScheduleFilter('without-schedules')}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'without-schedules'
                     ? 'bg-emerald-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                Without Schedules ({studentsWithoutSchedules})
+                Without ({studentsWithoutSchedules})
               </button>
             </div>
           </div>
@@ -619,31 +619,31 @@ const AvailabilityCalendar = () => {
       })()}
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600 truncate">
                 {viewMode === 'applicants' ? 'Pending Applicants' : 'Enrolled Students'}
               </p>
-              <p className="text-2xl font-bold text-amber-600">
+              <p className="text-xl sm:text-2xl font-bold text-amber-600">
                 {viewMode === 'applicants' ? stats.totalApplicants : stats.totalStudents}
               </p>
             </div>
             {viewMode === 'applicants' ? (
-              <AlertCircle className="h-8 w-8 text-amber-600" />
+              <AlertCircle className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 flex-shrink-0" />
             ) : (
-              <Users className="h-8 w-8 text-emerald-600" />
+              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600 flex-shrink-0" />
             )}
           </div>
         </Card>
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Current Bookings</p>
-              <p className="text-2xl font-bold text-blue-600">{stats.totalBookings}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Current Bookings</p>
+              <p className="text-xl sm:text-2xl font-bold text-blue-600">{stats.totalBookings}</p>
             </div>
-            <CheckCircle className="h-8 w-8 text-blue-600" />
+            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 flex-shrink-0" />
           </div>
         </Card>
         <Card>

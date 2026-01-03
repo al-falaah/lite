@@ -269,67 +269,68 @@ export default function AdminTeachersList() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Teachers</h1>
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Teachers</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
+          className="flex items-center gap-1.5 sm:gap-2 bg-emerald-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-emerald-700 transition text-xs sm:text-sm"
         >
-          <Plus className="h-5 w-5" />
-          Add Teacher
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+          <span className="hidden xs:inline">Add Teacher</span>
+          <span className="xs:hidden">Add</span>
         </button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Teachers</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Total Teachers</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <UserCheck className="h-8 w-8 text-emerald-600" />
+            <UserCheck className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Male Teachers</p>
-              <p className="text-2xl font-bold text-blue-600">{stats.male}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Male Teachers</p>
+              <p className="text-xl sm:text-2xl font-bold text-blue-600">{stats.male}</p>
             </div>
-            <UserCircle className="h-8 w-8 text-blue-600" />
+            <UserCircle className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Female Teachers</p>
-              <p className="text-2xl font-bold text-pink-600">{stats.female}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Female Teachers</p>
+              <p className="text-xl sm:text-2xl font-bold text-pink-600">{stats.female}</p>
             </div>
-            <UserCircle className="h-8 w-8 text-pink-600" />
+            <UserCircle className="h-6 w-6 sm:h-8 sm:w-8 text-pink-600" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Active Teachers</p>
-              <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Active Teachers</p>
+              <p className="text-xl sm:text-2xl font-bold text-green-600">{stats.active}</p>
             </div>
-            <UserCheck className="h-8 w-8 text-green-600" />
+            <UserCheck className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 mb-4 sm:mb-6">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'all'
               ? 'bg-emerald-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -339,7 +340,7 @@ export default function AdminTeachersList() {
         </button>
         <button
           onClick={() => setFilter('male')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'male'
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -349,7 +350,7 @@ export default function AdminTeachersList() {
         </button>
         <button
           onClick={() => setFilter('female')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'female'
               ? 'bg-pink-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -359,7 +360,7 @@ export default function AdminTeachersList() {
         </button>
         <button
           onClick={() => setFilter('active')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'active'
               ? 'bg-green-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -369,7 +370,7 @@ export default function AdminTeachersList() {
         </button>
         <button
           onClick={() => setFilter('inactive')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'inactive'
               ? 'bg-red-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -383,65 +384,65 @@ export default function AdminTeachersList() {
       {loading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-          <p className="mt-2 text-gray-600">Loading teachers...</p>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">Loading teachers...</p>
         </div>
       ) : filteredTeachers.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-          <UserCheck className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No teachers found</p>
+          <UserCheck className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mx-auto mb-4" />
+          <p className="text-sm sm:text-base text-gray-600">No teachers found</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {filteredTeachers.map((teacher) => (
             <div
               key={teacher.id}
-              className="bg-white p-4 rounded-lg shadow border border-gray-200 hover:shadow-lg transition"
+              className="bg-white p-3 sm:p-4 rounded-lg shadow border border-gray-200 hover:shadow-lg transition"
             >
               <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{teacher.full_name}</h3>
-                  <p className="text-sm text-gray-600">Staff ID: {teacher.staff_id}</p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">{teacher.full_name}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600">Staff ID: {teacher.staff_id}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2 flex-shrink-0 ml-2">
                   <button
                     onClick={() => openEditModal(teacher)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                    className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                     title="Edit teacher"
                   >
-                    <Edit2 className="h-4 w-4" />
+                    <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteTeacher(teacher)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                    className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
                     title="Delete teacher"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="space-y-2 mb-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Mail className="h-4 w-4" />
-                  {teacher.email}
+              <div className="space-y-1.5 sm:space-y-2 mb-3">
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 min-w-0">
+                  <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                  <span className="truncate">{teacher.email}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Phone className="h-4 w-4" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                  <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   {teacher.phone}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Globe className="h-4 w-4" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                  <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   {teacher.country_of_residence}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <UserCircle className="h-4 w-4" />
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                  <UserCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                   {teacher.gender.charAt(0).toUpperCase() + teacher.gender.slice(1)}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+              <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-gray-200">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
                     teacher.is_active
                       ? 'bg-green-100 text-green-800'
                       : 'bg-red-100 text-red-800'
@@ -457,20 +458,20 @@ export default function AdminTeachersList() {
 
       {/* Create Teacher Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Add New Teacher</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">Add New Teacher</h2>
                 <button
                   onClick={closeCreateModal}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 flex-shrink-0"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Full Name *
@@ -566,20 +567,20 @@ export default function AdminTeachersList() {
 
       {/* Edit Teacher Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Edit Teacher</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">Edit Teacher</h2>
                 <button
                   onClick={closeEditModal}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-500 hover:text-gray-700 flex-shrink-0"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Full Name *
