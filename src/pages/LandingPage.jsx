@@ -137,6 +137,12 @@ const LandingPage = () => {
                     Blog
                   </button>
                 </Link>
+                <Link to="/bookstore">
+                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
+                    <BookOpen className="h-4 w-4" />
+                    Bookstore
+                  </button>
+                </Link>
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
                   <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
                     <Heart className="h-4 w-4" />
@@ -177,6 +183,12 @@ const LandingPage = () => {
                   <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Blog
+                    </button>
+                  </Link>
+                  <Link to="/bookstore" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
+                      <BookOpen className="h-4 w-4" />
+                      Bookstore
                     </button>
                   </Link>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
