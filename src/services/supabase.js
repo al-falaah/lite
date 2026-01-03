@@ -854,3 +854,192 @@ export const teacherAssignments = {
     return { error };
   }
 };
+
+// Store Products helpers
+export const storeProducts = {
+  getAll: async (activeOnly = true) => {
+    let query = supabase
+      .from('store_products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (activeOnly) {
+      query = query.eq('is_active', true);
+    }
+
+    const { data, error } = await query;
+    return { data, error };
+  },
+
+  getBySlug: async (slug) => {
+    const { data, error } = await supabase
+      .from('store_products')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+    return { data, error };
+  },
+
+  getById: async (id) => {
+    const { data, error } = await supabase
+      .from('store_products')
+      .select('*')
+      .eq('id', id)
+      .single();
+    return { data, error };
+  },
+
+  getByCategory: async (category, activeOnly = true) => {
+    let query = supabase
+      .from('store_products')
+      .select('*')
+      .eq('category', category)
+      .order('created_at', { ascending: false });
+
+    if (activeOnly) {
+      query = query.eq('is_active', true);
+    }
+
+    const { data, error } = await query;
+    return { data, error };
+  },
+
+  create: async (product) => {
+    const { data, error } = await supabase
+      .from('store_products')
+      .insert(product)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  update: async (id, updates) => {
+    const { data, error } = await supabase
+      .from('store_products')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  delete: async (id) => {
+    const { error } = await supabase
+      .from('store_products')
+      .delete()
+      .eq('id', id);
+    return { error };
+  }
+};
+
+// Store Orders helpers
+export const storeOrders = {
+  create: async (orderData) => {
+    const { data, error } = await supabase
+      .from('store_orders')
+      .insert(orderData)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  getAll: async (statusFilter = null) => {
+    let query = supabase
+      .from('store_orders')
+      .select(`
+        *,
+        items:store_order_items(*)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (statusFilter) {
+      query = query.eq('status', statusFilter);
+    }
+
+    const { data, error } = await query;
+    return { data, error };
+  },
+
+  getById: async (id) => {
+    const { data, error } = await supabase
+      .from('store_orders')
+      .select(`
+        *,
+        items:store_order_items(*)
+      `)
+      .eq('id', id)
+      .single();
+    return { data, error };
+  },
+
+  getByOrderNumber: async (orderNumber) => {
+    const { data, error } = await supabase
+      .from('store_orders')
+      .select(`
+        *,
+        items:store_order_items(*)
+      `)
+      .eq('order_number', orderNumber)
+      .single();
+    return { data, error };
+  },
+
+  update: async (id, updates) => {
+    const { data, error } = await supabase
+      .from('store_orders')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  updateStatus: async (id, status) => {
+    // Auto-set timestamp fields based on status
+    const updates = { status };
+
+    if (status === 'invoice_sent' && !updates.invoice_sent_at) {
+      updates.invoice_sent_at = new Date().toISOString();
+    } else if (status === 'paid' && !updates.paid_at) {
+      updates.paid_at = new Date().toISOString();
+    } else if (status === 'shipped' && !updates.shipped_at) {
+      updates.shipped_at = new Date().toISOString();
+    }
+
+    const { data, error } = await supabase
+      .from('store_orders')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    return { data, error };
+  }
+};
+
+// Store Order Items helpers
+export const storeOrderItems = {
+  create: async (orderItem) => {
+    const { data, error } = await supabase
+      .from('store_order_items')
+      .insert(orderItem)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  createMany: async (orderItems) => {
+    const { data, error } = await supabase
+      .from('store_order_items')
+      .insert(orderItems)
+      .select();
+    return { data, error };
+  },
+
+  getByOrder: async (orderId) => {
+    const { data, error } = await supabase
+      .from('store_order_items')
+      .select('*')
+      .eq('order_id', orderId);
+    return { data, error };
+  }
+};

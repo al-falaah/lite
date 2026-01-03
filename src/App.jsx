@@ -20,6 +20,10 @@ import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
 import Unsubscribe from './pages/Unsubscribe';
 import StorePage from './pages/StorePage';
+import StoreOrderPage from './pages/StoreOrderPage';
+import StoreOrderConfirmation from './pages/StoreOrderConfirmation';
+import AdminStoreProducts from './pages/AdminStoreProducts';
+import AdminStoreOrders from './pages/AdminStoreOrders';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -52,6 +56,8 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/store" element={<StorePage />} />
+            <Route path="/store/order" element={<StoreOrderPage />} />
+            <Route path="/store/order-confirmation" element={<StoreOrderConfirmation />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
 
             {/* Auth Routes */}
@@ -79,6 +85,24 @@ function App() {
               element={
                 <AdminRoute>
                   <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+
+            {/* Admin Store Routes */}
+            <Route
+              path="/admin/store-products"
+              element={
+                <AdminRoute>
+                  <AdminStoreProducts />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/store-orders"
+              element={
+                <AdminRoute>
+                  <AdminStoreOrders />
                 </AdminRoute>
               }
             />
