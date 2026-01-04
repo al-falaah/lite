@@ -409,14 +409,14 @@ const StoreAdmin = () => {
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-3">
-                  <ShoppingBag className="h-8 w-8 text-emerald-600" />
-                  <h1 className="text-2xl font-bold text-gray-900">Store Admin</h1>
+              <div className="flex items-center gap-3 sm:gap-6">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600" />
+                  <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Store Admin</h1>
                 </div>
                 <Link
                   to={backLink}
-                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                  className="hidden md:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                 >
                   <Home className="h-4 w-4" />
                   Back to Dashboard
@@ -424,10 +424,10 @@ const StoreAdmin = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <LogOut className="h-4 w-4" />
-                Logout
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
@@ -467,9 +467,9 @@ const StoreAdmin = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {activeTab === 'products' && (
             <div>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Products Management</h2>
-                <p className="text-gray-600">Add and manage products for the online store</p>
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Products Management</h2>
+                <p className="text-sm sm:text-base text-gray-600">Add and manage products for the online store</p>
               </div>
 
               {productsLoading ? (
@@ -478,11 +478,11 @@ const StoreAdmin = () => {
                   <p className="text-gray-600">Loading products...</p>
                 </div>
               ) : (
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                   {/* Product Form */}
                   <div className="lg:col-span-2">
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                      <h3 className="text-xl font-bold text-gray-900 mb-6">
+                    <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                         {editingProduct ? 'Edit Product' : 'New Product'}
                       </h3>
                       <form onSubmit={handleSaveProduct} className="space-y-4">
@@ -622,8 +622,8 @@ const StoreAdmin = () => {
 
                   {/* Product List */}
                   <div>
-                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">
+                    <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-4">
                         All Products ({products.length})
                       </h3>
                       <div className="space-y-3 max-h-[600px] overflow-y-auto">
@@ -679,15 +679,15 @@ const StoreAdmin = () => {
 
           {activeTab === 'orders' && (
             <div>
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Orders Management</h2>
-                <p className="text-gray-600">View and manage customer orders</p>
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Orders Management</h2>
+                <p className="text-sm sm:text-base text-gray-600">View and manage customer orders</p>
               </div>
 
               {/* Filters */}
-              <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-                <div className="flex flex-wrap gap-4 items-center">
-                  <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
+              <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
+                <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
+                  <label className="text-sm font-medium text-gray-700">Filter:</label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -733,19 +733,19 @@ const StoreAdmin = () => {
                       <div key={order.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                         {/* Order Header */}
                         <div
-                          className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+                          className="p-4 sm:p-6 cursor-pointer hover:bg-gray-50 transition-colors"
                           onClick={() => toggleOrderExpansion(order.id)}
                         >
                           <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-lg font-bold text-gray-900">{order.order_number}</h3>
-                                <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${statusConfig[order.status]?.color}`}>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
+                                <h3 className="text-base sm:text-lg font-bold text-gray-900">{order.order_number}</h3>
+                                <span className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${statusConfig[order.status]?.color}`}>
                                   <StatusIcon className="h-3 w-3" />
-                                  {statusConfig[order.status]?.label}
+                                  <span className="hidden xs:inline">{statusConfig[order.status]?.label}</span>
                                 </span>
                               </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
                                 <div className="flex items-center gap-2 text-gray-600">
                                   <Mail className="h-4 w-4" />
                                   {order.customer_name}
@@ -772,13 +772,13 @@ const StoreAdmin = () => {
 
                         {/* Order Details - Expanded */}
                         {isExpanded && (
-                          <div className="border-t border-gray-200 p-6 bg-gray-50">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          <div className="border-t border-gray-200 p-4 sm:p-6 bg-gray-50">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                               {/* Left: Items & Customer Info */}
-                              <div className="space-y-6">
+                              <div className="space-y-4 sm:space-y-6">
                                 {/* Order Items */}
                                 <div>
-                                  <h4 className="text-sm font-semibold text-gray-900 mb-3">Order Items</h4>
+                                  <h4 className="text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3">Order Items</h4>
                                   <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-200">
                                     {order.items?.map((item) => (
                                       <div key={item.id} className="p-3 flex justify-between items-center">
