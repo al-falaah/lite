@@ -69,7 +69,7 @@ const AdminDashboard = () => {
 
   // Only activate idle timeout when admin is logged in
   // Conditionally use the hook based on auth state
-  const isAdminLoggedIn = user && profile?.role === 'admin';
+  const isAdminLoggedIn = user && profile?.is_admin;
 
   useIdleTimeout({
     onIdle: handleIdleLogout,

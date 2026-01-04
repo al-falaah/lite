@@ -317,7 +317,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAdmin = () => {
-    return profile?.role === 'admin';
+    return profile?.is_admin === true;
   };
 
   const isStudent = () => {
