@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Shield, UserCog, Save, Home } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../services/supabase';
 import Button from '../components/common/Button';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -71,18 +72,22 @@ const AdminRoles = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('supabase.auth.token');
+      // Get session directly from Supabase for reliable token
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session?.session?.access_token;
+
+      if (!accessToken) {
+        console.error('No access token available');
+        toast.error('Authentication required. Please log in again.');
+        setLoading(false);
+        return;
+      }
+
       const headers = {
         'apikey': supabaseKey,
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       };
-
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
-      }
 
       // Fetch all users with profiles (not just admins)
       const response = await fetch(
@@ -90,9 +95,13 @@ const AdminRoles = () => {
         { headers }
       );
 
-      if (!response.ok) throw new Error('Failed to fetch users');
+      if (!response.ok) {
+        console.error('Failed to fetch users:', response.status, response.statusText);
+        throw new Error('Failed to fetch users');
+      }
 
       const data = await response.json();
+      console.log('Fetched users:', data.length);
       setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -105,19 +114,23 @@ const AdminRoles = () => {
   const handleUpdateRole = async (adminId, newRole) => {
     setUpdating(adminId);
     try {
-      const token = localStorage.getItem('supabase.auth.token');
+      // Get session directly from Supabase for reliable token
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session?.session?.access_token;
+
+      if (!accessToken) {
+        console.error('No access token available');
+        toast.error('Authentication required. Please log in again.');
+        setUpdating(null);
+        return;
+      }
+
       const headers = {
         'apikey': supabaseKey,
+        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       };
-
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
-      }
 
       const response = await fetch(
         `${supabaseUrl}/rest/v1/profiles?id=eq.${adminId}`,
@@ -128,7 +141,10 @@ const AdminRoles = () => {
         }
       );
 
-      if (!response.ok) throw new Error('Failed to update role');
+      if (!response.ok) {
+        console.error('Failed to update role:', response.status, response.statusText);
+        throw new Error('Failed to update role');
+      }
 
       toast.success('Role updated successfully');
       fetchUsers();
