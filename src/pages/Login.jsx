@@ -44,53 +44,60 @@ export default function Login() {
       // Check user profile and role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('id, role, is_admin, full_name')
+        .select('id, role, is_admin, full_name, email')
         .eq('id', data.user.id)
         .single();
 
       if (profileError || !profile) {
         console.error('Profile error:', profileError);
-        toast.error('Account not found. Please contact support.');
+        toast.error('Account not found. Please contact admin@tftmadrasah.nz');
         await supabase.auth.signOut();
         setLoading(false);
         return;
       }
 
-      // Route based on role
-      if (profile.is_admin) {
-        // Admin users (director, madrasah_admin, blog_admin, store_admin)
-        toast.success(`Welcome back, ${profile.full_name || 'Admin'}!`);
+      // Check if user has a valid admin role
+      const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin'];
+      const isValidAdmin = profile.is_admin && validAdminRoles.includes(profile.role);
 
-        // Route to appropriate admin dashboard based on role
-        if (profile.role === 'director' || profile.role === 'madrasah_admin') {
-          navigate('/admin');
-        } else if (profile.role === 'blog_admin') {
-          navigate('/blog/admin');
-        } else if (profile.role === 'store_admin') {
-          navigate('/store/admin');
-        } else {
-          navigate('/admin'); // Default to main admin
+      if (!isValidAdmin) {
+        console.error('Invalid admin role:', profile.role);
+
+        // More helpful error messages
+        if (profile.role === 'teacher') {
+          toast.error('Teachers should use the Teacher Portal');
+          await supabase.auth.signOut();
+          setLoading(false);
+          return;
         }
+
+        if (profile.role === 'student') {
+          toast.error('Students should use the Student Portal');
+          await supabase.auth.signOut();
+          setLoading(false);
+          return;
+        }
+
+        // Invalid or missing role
+        toast.error(`Your account role is invalid (${profile.role || 'none'}). Please contact admin@tftmadrasah.nz`);
+        await supabase.auth.signOut();
+        setLoading(false);
         return;
       }
 
-      // Non-admin users (teacher, student)
-      if (profile.role === 'teacher') {
-        toast.success(`Welcome back, ${profile.full_name || 'Teacher'}!`);
-        navigate('/teacher');
-        return;
-      }
+      // Valid admin - route to appropriate dashboard
+      toast.success(`Welcome back, ${profile.full_name || 'Admin'}!`);
 
-      if (profile.role === 'student') {
-        toast.success(`Welcome back, ${profile.full_name || 'Student'}!`);
-        navigate('/student');
-        return;
+      // Route based on specific admin role
+      if (profile.role === 'director' || profile.role === 'madrasah_admin') {
+        navigate('/admin');
+      } else if (profile.role === 'blog_admin') {
+        navigate('/blog/admin');
+      } else if (profile.role === 'store_admin') {
+        navigate('/store/admin');
+      } else {
+        navigate('/admin'); // Fallback to main admin
       }
-
-      // User has no role assigned
-      toast.error('Your account is not configured yet. Please contact support.');
-      await supabase.auth.signOut();
-      setLoading(false);
 
     } catch (err) {
       console.error('Login error:', err);
@@ -105,7 +112,10 @@ export default function Login() {
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-emerald-900 mb-2">The FastTrack Madrasah</h1>
-          <p className="text-gray-600">Sign in to your account</p>
+          <p className="text-gray-600">Admin Login</p>
+          <p className="text-sm text-gray-500 mt-2">
+            For staff and administrators only
+          </p>
         </div>
 
         {/* Login Form */}
@@ -186,14 +196,31 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Additional Links */}
-          <div className="mt-6 text-center text-sm text-gray-600">
-            <p>
-              New student?{' '}
-              <Link to="/apply" className="text-emerald-600 hover:text-emerald-700 font-medium">
-                Apply here
-              </Link>
-            </p>
+          {/* Portal Links */}
+          <div className="mt-6 space-y-3">
+            <div className="text-center text-sm text-gray-600 border-t pt-4">
+              <p className="font-medium mb-3">Not an admin?</p>
+              <div className="flex gap-3">
+                <Link
+                  to="/student"
+                  className="flex-1 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+                >
+                  Student Portal
+                </Link>
+                <Link
+                  to="/teacher"
+                  className="flex-1 px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors font-medium"
+                >
+                  Teacher Portal
+                </Link>
+              </div>
+              <p className="mt-3 text-xs">
+                New student?{' '}
+                <Link to="/apply" className="text-emerald-600 hover:text-emerald-700 font-medium">
+                  Apply here
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
 
