@@ -24,6 +24,7 @@ import StoreOrderPage from './pages/StoreOrderPage';
 import StoreOrderConfirmation from './pages/StoreOrderConfirmation';
 import StoreAdmin from './pages/StoreAdmin';
 import AdminRoles from './pages/AdminRoles';
+import DirectorDashboard from './pages/DirectorDashboard';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -76,6 +77,16 @@ function App() {
               element={
                 <RoleRoute allowedRoles={['blog_admin', 'director']}>
                   <BlogAdmin />
+                </RoleRoute>
+              }
+            />
+
+            {/* Director Dashboard - director only */}
+            <Route
+              path="/director"
+              element={
+                <RoleRoute allowedRoles={['director']}>
+                  <DirectorDashboard />
                 </RoleRoute>
               }
             />

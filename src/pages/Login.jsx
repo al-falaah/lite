@@ -89,7 +89,10 @@ export default function Login() {
       toast.success(`Welcome back, ${profile.full_name || 'Admin'}!`);
 
       // Route based on specific admin role
-      if (profile.role === 'director' || profile.role === 'madrasah_admin') {
+      if (profile.role === 'director') {
+        // Director gets their own dashboard to choose admin areas
+        navigate('/director');
+      } else if (profile.role === 'madrasah_admin') {
         navigate('/admin');
       } else if (profile.role === 'blog_admin') {
         navigate('/blog/admin');
