@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import useIdleTimeout from '../hooks/useIdleTimeout';
 import {
@@ -18,7 +18,8 @@ import {
   Loader2,
   RefreshCw,
   AlertCircle,
-  UserCheck
+  UserCheck,
+  Home
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -31,6 +32,9 @@ import AdminTeachersList from './AdminTeachersList';
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, profile, signIn, signOut } = useAuth();
+
+  // Determine back link based on user role
+  const backLink = profile?.role === 'director' ? '/director' : '/';
   const [activeTab, setActiveTab] = useState('applications');
   const [loading, setLoading] = useState(false);
   const [applicationsData, setApplicationsData] = useState([]);
@@ -401,6 +405,13 @@ const AdminDashboard = () => {
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
+              <Link
+                to={backLink}
+                className="inline-flex items-center gap-2 px-3 py-2 text-xs sm:text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+              >
+                <Home className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
               <span className="text-xs sm:text-sm text-gray-600 hidden md:inline truncate max-w-[120px]">
                 {profile?.full_name || 'Admin'}
               </span>
