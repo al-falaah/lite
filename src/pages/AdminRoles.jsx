@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Shield, UserCog, Save, Home } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import Button from '../components/common/Button';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;

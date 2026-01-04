@@ -21,7 +21,7 @@ import {
   ChevronUp,
   Send
 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { supabase } from '../services/supabase';
 import Button from '../components/common/Button';
 
