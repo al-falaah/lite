@@ -23,6 +23,7 @@ import StorePage from './pages/StorePage';
 import StoreOrderPage from './pages/StoreOrderPage';
 import StoreOrderConfirmation from './pages/StoreOrderConfirmation';
 import StoreAdmin from './pages/StoreAdmin';
+import AdminRoles from './pages/AdminRoles';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -33,6 +34,7 @@ import CountdownBanner from './components/CountdownBanner';
 
 // Layout
 import AdminRoute from './components/common/AdminRoute';
+import RoleRoute from './components/common/RoleRoute';
 
 function App() {
   return (
@@ -68,33 +70,43 @@ function App() {
             <Route path="/student-portal" element={<Navigate to="/student" replace />} />
             <Route path="/teacher-portal" element={<Navigate to="/teacher" replace />} />
 
-            {/* Protected Blog Admin Route */}
+            {/* Protected Blog Admin Route - blog_admin or director */}
             <Route
               path="/blog/admin"
               element={
-                <AdminRoute>
+                <RoleRoute allowedRoles={['blog_admin', 'director']}>
                   <BlogAdmin />
-                </AdminRoute>
+                </RoleRoute>
               }
             />
 
-            {/* Admin Route - Login and Dashboard */}
+            {/* Admin Route - madrasah_admin or director */}
             <Route
               path="/admin"
               element={
-                <AdminRoute>
+                <RoleRoute allowedRoles={['madrasah_admin', 'director']}>
                   <AdminDashboard />
-                </AdminRoute>
+                </RoleRoute>
               }
             />
 
-            {/* Store Admin Route */}
+            {/* Store Admin Route - store_admin or director */}
             <Route
               path="/store/admin"
               element={
-                <AdminRoute>
+                <RoleRoute allowedRoles={['store_admin', 'director']}>
                   <StoreAdmin />
-                </AdminRoute>
+                </RoleRoute>
+              }
+            />
+
+            {/* Admin Roles Management - director only */}
+            <Route
+              path="/admin/roles"
+              element={
+                <RoleRoute allowedRoles={['director']}>
+                  <AdminRoles />
+                </RoleRoute>
               }
             />
 
