@@ -327,7 +327,11 @@ const StoreAdmin = () => {
         body: JSON.stringify(updates)
       });
 
-      if (!response.ok) throw new Error('Failed to update order');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Update order error:', response.status, errorText);
+        throw new Error('Failed to update order');
+      }
 
       toast.success('Order updated successfully');
       setEditingOrder(null);
@@ -1023,13 +1027,18 @@ const StoreAdmin = () => {
                                       >
                                         Edit Order Details
                                       </button>
-                                      <button
-                                        onClick={() => toast('Invoice email feature coming soon')}
-                                        className="w-full px-4 py-2 border border-emerald-600 text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors font-medium flex items-center justify-center gap-2"
-                                      >
-                                        <Send className="h-4 w-4" />
-                                        Send Invoice Email
-                                      </button>
+                                      <div className="space-y-2">
+                                        <button
+                                          onClick={() => toast.info('Invoices are sent via Stripe')}
+                                          className="w-full px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium flex items-center justify-center gap-2"
+                                        >
+                                          <Send className="h-4 w-4" />
+                                          Send Stripe Invoice
+                                        </button>
+                                        <p className="text-xs text-gray-500 text-center">
+                                          Invoices are sent via Stripe payment links
+                                        </p>
+                                      </div>
                                     </div>
                                   </>
                                 )}
