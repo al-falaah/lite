@@ -22,9 +22,7 @@ import Unsubscribe from './pages/Unsubscribe';
 import StorePage from './pages/StorePage';
 import StoreOrderPage from './pages/StoreOrderPage';
 import StoreOrderConfirmation from './pages/StoreOrderConfirmation';
-import AdminStoreProducts from './pages/AdminStoreProducts';
-import AdminStoreOrders from './pages/AdminStoreOrders';
-import StoreAdminDashboard from './pages/StoreAdminDashboard';
+import StoreAdmin from './pages/StoreAdmin';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -90,28 +88,12 @@ function App() {
               }
             />
 
-            {/* Admin Store Routes */}
+            {/* Store Admin Route */}
             <Route
-              path="/admin/store"
+              path="/store/admin"
               element={
                 <AdminRoute>
-                  <StoreAdminDashboard />
-                </AdminRoute>
-              }
-            />
-            <Route
-              path="/admin/store-products"
-              element={
-                <AdminRoute>
-                  <AdminStoreProducts />
-                </AdminRoute>
-              }
-            />
-            <Route
-              path="/admin/store-orders"
-              element={
-                <AdminRoute>
-                  <AdminStoreOrders />
+                  <StoreAdmin />
                 </AdminRoute>
               }
             />
