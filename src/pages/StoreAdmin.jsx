@@ -306,25 +306,34 @@ const StoreAdmin = () => {
       const headers = await getAuthHeaders();
       headers['Prefer'] = 'return=representation';
 
-      const order = orders.find(o => o.id === orderId);
-      if (updates.shipping_cost_nzd !== undefined && order) {
-        updates.total_nzd = parseFloat(order.subtotal_nzd) + parseFloat(updates.shipping_cost_nzd || 0);
+      // Sanitize numeric fields: convert empty strings to null
+      const sanitizedUpdates = { ...updates };
+      if (sanitizedUpdates.shipping_cost_nzd === '') {
+        sanitizedUpdates.shipping_cost_nzd = null;
+      }
+      if (sanitizedUpdates.total_nzd === '') {
+        sanitizedUpdates.total_nzd = null;
       }
 
-      if (updates.status === 'invoice_sent' && !order?.invoice_sent_at) {
-        updates.invoice_sent_at = new Date().toISOString();
+      const order = orders.find(o => o.id === orderId);
+      if (sanitizedUpdates.shipping_cost_nzd !== undefined && order) {
+        sanitizedUpdates.total_nzd = parseFloat(order.subtotal_nzd) + parseFloat(sanitizedUpdates.shipping_cost_nzd || 0);
       }
-      if (updates.status === 'paid' && !order?.paid_at) {
-        updates.paid_at = new Date().toISOString();
+
+      if (sanitizedUpdates.status === 'invoice_sent' && !order?.invoice_sent_at) {
+        sanitizedUpdates.invoice_sent_at = new Date().toISOString();
       }
-      if (updates.status === 'shipped' && !order?.shipped_at) {
-        updates.shipped_at = new Date().toISOString();
+      if (sanitizedUpdates.status === 'paid' && !order?.paid_at) {
+        sanitizedUpdates.paid_at = new Date().toISOString();
+      }
+      if (sanitizedUpdates.status === 'shipped' && !order?.shipped_at) {
+        sanitizedUpdates.shipped_at = new Date().toISOString();
       }
 
       const response = await fetch(`${supabaseUrl}/rest/v1/store_orders?id=eq.${orderId}`, {
         method: 'PATCH',
         headers,
-        body: JSON.stringify(updates)
+        body: JSON.stringify(sanitizedUpdates)
       });
 
       if (!response.ok) {
