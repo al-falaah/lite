@@ -57,8 +57,11 @@ export default function Login() {
         }
       );
 
+      console.log('Profile fetch status:', profileResponse.status);
+
       if (!profileResponse.ok) {
-        console.error('Profile fetch error:', profileResponse.status);
+        const errorText = await profileResponse.text();
+        console.error('Profile fetch error:', profileResponse.status, errorText);
         toast.error('Account not found. Please contact admin@tftmadrasah.nz');
         await supabase.auth.signOut();
         setLoading(false);
@@ -66,9 +69,10 @@ export default function Login() {
       }
 
       const profileData = await profileResponse.json();
+      console.log('Profile data received:', profileData);
 
       if (!profileData || profileData.length === 0) {
-        console.error('No profile found for user');
+        console.error('No profile found for user:', data.user.id);
         toast.error('Account not found. Please contact admin@tftmadrasah.nz');
         await supabase.auth.signOut();
         setLoading(false);
@@ -76,6 +80,7 @@ export default function Login() {
       }
 
       const profile = profileData[0]; // REST API returns array
+      console.log('Profile loaded:', profile);
 
       // Check if user has a valid admin role
       const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin'];
