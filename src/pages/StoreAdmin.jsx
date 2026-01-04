@@ -50,6 +50,22 @@ const StoreAdmin = () => {
   // Determine back link based on user role
   const backLink = profile?.role === 'director' ? '/director' : '/admin';
 
+  // Helper function to get authenticated headers
+  const getAuthHeaders = async () => {
+    const { data: session } = await supabase.auth.getSession();
+    const accessToken = session?.session?.access_token;
+
+    if (!accessToken) {
+      throw new Error('No access token available');
+    }
+
+    return {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    };
+  };
+
   // Products state
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -102,20 +118,13 @@ const StoreAdmin = () => {
   const fetchProducts = async () => {
     setProductsLoading(true);
     try {
-      const token = localStorage.getItem('supabase.auth.token');
-      const headers = {
-        'apikey': supabaseKey,
-        'Content-Type': 'application/json'
-      };
+      const headers = await getAuthHeaders();
+      const response = await fetch(`${supabaseUrl}/rest/v1/store_products?order=created_at.desc`, { headers });
 
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const response = await fetch(`${supabaseUrl}/rest/v1/store_products?order=created_at.desc`, { headers });
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -161,19 +170,8 @@ const StoreAdmin = () => {
     }
 
     try {
-      const token = localStorage.getItem('supabase.auth.token');
-      const headers = {
-        'apikey': supabaseKey,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      };
-
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
-      }
+      const headers = await getAuthHeaders();
+      headers['Prefer'] = 'return=representation';
 
       const productData = {
         ...productFormData,
@@ -188,7 +186,11 @@ const StoreAdmin = () => {
           body: JSON.stringify(productData)
         });
 
-        if (!response.ok) throw new Error('Failed to update product');
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Update error:', response.status, errorText);
+          throw new Error('Failed to update product');
+        }
         toast.success('Product updated successfully');
       } else {
         const response = await fetch(`${supabaseUrl}/rest/v1/store_products`, {
@@ -197,7 +199,11 @@ const StoreAdmin = () => {
           body: JSON.stringify(productData)
         });
 
-        if (!response.ok) throw new Error('Failed to create product');
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Create error:', response.status, errorText);
+          throw new Error('Failed to create product');
+        }
         toast.success('Product created successfully');
       }
 
@@ -227,25 +233,19 @@ const StoreAdmin = () => {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const token = localStorage.getItem('supabase.auth.token');
-      const headers = {
-        'apikey': supabaseKey,
-        'Content-Type': 'application/json'
-      };
-
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
-      }
+      const headers = await getAuthHeaders();
 
       const response = await fetch(`${supabaseUrl}/rest/v1/store_products?id=eq.${productId}`, {
         method: 'DELETE',
         headers
       });
 
-      if (!response.ok) throw new Error('Failed to delete product');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Delete error:', response.status, errorText);
+        throw new Error('Failed to delete product');
+      }
+
       toast.success('Product deleted successfully');
       fetchProducts();
     } catch (error) {
@@ -275,18 +275,7 @@ const StoreAdmin = () => {
   const fetchOrders = async () => {
     setOrdersLoading(true);
     try {
-      const token = localStorage.getItem('supabase.auth.token');
-      const headers = {
-        'apikey': supabaseKey,
-        'Content-Type': 'application/json'
-      };
-
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
-      }
+      const headers = await getAuthHeaders();
 
       let url = `${supabaseUrl}/rest/v1/store_orders?select=*,items:store_order_items(*)&order=created_at.desc`;
 
@@ -295,7 +284,12 @@ const StoreAdmin = () => {
       }
 
       const response = await fetch(url, { headers });
-      if (!response.ok) throw new Error('Failed to fetch orders');
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Fetch orders error:', response.status, errorText);
+        throw new Error('Failed to fetch orders');
+      }
 
       const data = await response.json();
       setOrders(data);
@@ -309,19 +303,8 @@ const StoreAdmin = () => {
 
   const handleUpdateOrder = async (orderId, updates) => {
     try {
-      const token = localStorage.getItem('supabase.auth.token');
-      const headers = {
-        'apikey': supabaseKey,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
-      };
-
-      if (token) {
-        const authData = JSON.parse(token);
-        if (authData?.currentSession?.access_token) {
-          headers['Authorization'] = `Bearer ${authData.currentSession.access_token}`;
-        }
-      }
+      const headers = await getAuthHeaders();
+      headers['Prefer'] = 'return=representation';
 
       const order = orders.find(o => o.id === orderId);
       if (updates.shipping_cost_nzd !== undefined && order) {
