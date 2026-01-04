@@ -41,20 +41,41 @@ export default function Login() {
         return;
       }
 
-      // Check user profile and role
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, role, is_admin, full_name, email')
-        .eq('id', data.user.id)
-        .single();
+      // Check user profile and role using direct REST API call
+      // This bypasses RLS timing issues during login
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      if (profileError || !profile) {
-        console.error('Profile error:', profileError);
+      const profileResponse = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?id=eq.${data.user.id}&select=id,role,is_admin,full_name,email`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${data.session.access_token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!profileResponse.ok) {
+        console.error('Profile fetch error:', profileResponse.status);
         toast.error('Account not found. Please contact admin@tftmadrasah.nz');
         await supabase.auth.signOut();
         setLoading(false);
         return;
       }
+
+      const profileData = await profileResponse.json();
+
+      if (!profileData || profileData.length === 0) {
+        console.error('No profile found for user');
+        toast.error('Account not found. Please contact admin@tftmadrasah.nz');
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
+
+      const profile = profileData[0]; // REST API returns array
 
       // Check if user has a valid admin role
       const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin'];
