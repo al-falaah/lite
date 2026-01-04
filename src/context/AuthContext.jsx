@@ -119,69 +119,109 @@ export const AuthProvider = ({ children }) => {
   const loadProfile = async (userId) => {
     try {
       console.log('[loadProfile] Loading profile for userId:', userId);
-      const { data, error } = await profiles.get(userId);
-      console.log('[loadProfile] Profile query completed. Data:', data, 'Error:', error);
 
-      if (error) {
-        console.error('[loadProfile] Error loading profile:', error);
-        console.error('[loadProfile] Profile error details:', JSON.stringify(error, null, 2));
+      // Use direct REST API call to bypass potential RLS timing issues during auth state changes
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session?.session?.access_token;
 
-        // If profile doesn't exist (PGRST116 error), try to create it
-        if (error.code === 'PGRST116') {
+      if (!accessToken) {
+        console.error('[loadProfile] No access token available');
+        setProfile(null);
+        return;
+      }
+
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      console.log('[loadProfile] Fetching profile via REST API...');
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}&select=*`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        console.error('[loadProfile] Profile fetch failed:', response.status, response.statusText);
+
+        // If profile doesn't exist, try to create it
+        if (response.status === 404 || response.status === 406) {
           console.log('[loadProfile] Profile not found, attempting to create...');
           const currentUser = await auth.getCurrentUser();
 
           if (currentUser.user) {
-            const { data: newProfile, error: createError } = await profiles.create({
-              id: userId,
-              email: currentUser.user.email,
-              full_name: currentUser.user.user_metadata?.full_name || currentUser.user.email,
-              role: 'student' // Default role
-            });
+            const createResponse = await fetch(
+              `${supabaseUrl}/rest/v1/profiles`,
+              {
+                method: 'POST',
+                headers: {
+                  'apikey': supabaseKey,
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+                  'Prefer': 'return=representation'
+                },
+                body: JSON.stringify({
+                  id: userId,
+                  email: currentUser.user.email,
+                  full_name: currentUser.user.user_metadata?.full_name || currentUser.user.email,
+                  role: 'student',
+                  is_admin: false
+                })
+              }
+            );
 
-            if (createError) {
-              console.error('[loadProfile] Failed to create profile:', createError);
-              // Set a minimal profile to allow the app to continue
+            if (createResponse.ok) {
+              const [newProfile] = await createResponse.json();
+              console.log('[loadProfile] Profile created successfully:', newProfile);
+              setProfile(newProfile);
+            } else {
+              console.error('[loadProfile] Failed to create profile');
               setProfile({
                 id: userId,
                 email: currentUser.user.email,
                 full_name: currentUser.user.email,
-                role: 'student'
+                role: 'student',
+                is_admin: false
               });
-            } else {
-              console.log('[loadProfile] Profile created successfully:', newProfile);
-              setProfile(newProfile);
             }
           }
         } else {
-          // For other errors, set minimal profile to prevent app hang
-          console.error('[loadProfile] Non-recoverable error, setting minimal profile');
+          // For other errors, set minimal profile
           const currentUser = await auth.getCurrentUser();
           setProfile({
             id: userId,
             email: currentUser.user?.email || 'unknown',
             full_name: currentUser.user?.email || 'Unknown User',
-            role: 'student'
+            role: 'student',
+            is_admin: false
           });
         }
         return;
       }
 
-      if (!data) {
+      const data = await response.json();
+      console.log('[loadProfile] Profile fetch response:', data);
+
+      if (!data || data.length === 0) {
         console.error('[loadProfile] No profile data returned for user:', userId);
-        // Set minimal profile to prevent app hang
         const currentUser = await auth.getCurrentUser();
         setProfile({
           id: userId,
           email: currentUser.user?.email || 'unknown',
           full_name: currentUser.user?.email || 'Unknown User',
-          role: 'student'
+          role: 'student',
+          is_admin: false
         });
         return;
       }
 
-      console.log('[loadProfile] Profile loaded successfully:', { id: data.id, role: data.role, name: data.full_name });
-      setProfile(data);
+      const profile = data[0]; // REST API returns array
+      console.log('[loadProfile] Profile loaded successfully:', { id: profile.id, role: profile.role, name: profile.full_name });
+      setProfile(profile);
     } catch (error) {
       console.error('[loadProfile] Exception in loadProfile:', error);
       // Even on exception, set minimal profile to prevent app hang
@@ -191,7 +231,8 @@ export const AuthProvider = ({ children }) => {
           id: userId,
           email: currentUser.user?.email || 'unknown',
           full_name: currentUser.user?.email || 'Unknown User',
-          role: 'student'
+          role: 'student',
+          is_admin: false
         });
       } catch (innerError) {
         console.error('[loadProfile] Failed to create fallback profile:', innerError);
