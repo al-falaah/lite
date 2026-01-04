@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
@@ -15,6 +16,45 @@ import { toast } from 'sonner';
 
 const DirectorDashboard = () => {
   const { profile } = useAuth();
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalPosts: 0,
+    totalOrders: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      // Fetch total users count
+      const { count: usersCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+
+      // Fetch total blog posts count
+      const { count: postsCount } = await supabase
+        .from('blog_posts')
+        .select('*', { count: 'exact', head: true });
+
+      // Fetch total store orders count
+      const { count: ordersCount } = await supabase
+        .from('store_orders')
+        .select('*', { count: 'exact', head: true });
+
+      setStats({
+        totalUsers: usersCount || 0,
+        totalPosts: postsCount || 0,
+        totalOrders: ordersCount || 0
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -134,21 +174,39 @@ const DirectorDashboard = () => {
               <h2 className="text-2xl font-bold text-gray-900">Quick Overview</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-blue-50 rounded-lg">
-                <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+              <Link
+                to="/admin/roles"
+                className="text-center p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group"
+              >
+                <Users className="h-8 w-8 text-blue-600 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <p className="text-sm text-gray-600 mb-1">Total Users</p>
-                <p className="text-2xl font-bold text-blue-600">View in Roles</p>
-              </div>
-              <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <BookOpen className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                <p className="text-3xl font-bold text-blue-600">
+                  {loading ? '...' : stats.totalUsers}
+                </p>
+                <p className="text-xs text-blue-500 mt-2">Click to manage →</p>
+              </Link>
+              <Link
+                to="/blog/admin"
+                className="text-center p-6 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors group"
+              >
+                <BookOpen className="h-8 w-8 text-orange-600 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <p className="text-sm text-gray-600 mb-1">Blog Posts</p>
-                <p className="text-2xl font-bold text-orange-600">Manage Content</p>
-              </div>
-              <div className="text-center p-6 bg-emerald-50 rounded-lg">
-                <ShoppingBag className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
+                <p className="text-3xl font-bold text-orange-600">
+                  {loading ? '...' : stats.totalPosts}
+                </p>
+                <p className="text-xs text-orange-500 mt-2">Click to manage →</p>
+              </Link>
+              <Link
+                to="/store/admin?tab=orders"
+                className="text-center p-6 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors group"
+              >
+                <ShoppingBag className="h-8 w-8 text-emerald-600 mx-auto mb-2 group-hover:scale-110 transition-transform" />
                 <p className="text-sm text-gray-600 mb-1">Store Orders</p>
-                <p className="text-2xl font-bold text-emerald-600">View Orders</p>
-              </div>
+                <p className="text-3xl font-bold text-emerald-600">
+                  {loading ? '...' : stats.totalOrders}
+                </p>
+                <p className="text-xs text-emerald-500 mt-2">Click to manage →</p>
+              </Link>
             </div>
           </div>
 

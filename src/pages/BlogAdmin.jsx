@@ -23,6 +23,9 @@ const CATEGORIES = [
 const BlogAdmin = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signIn, signOut } = useAuth();
+
+  // Determine back link based on user role
+  const backLink = profile?.role === 'director' ? '/director' : '/admin';
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loggingIn, setLoggingIn] = useState(false);
@@ -665,17 +668,17 @@ const BlogAdmin = () => {
             </Link>
             <div className="flex items-center gap-4">
               <Link
+                to={backLink}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
+              <Link
                 to="/blog"
                 className="text-sm text-gray-600 hover:text-emerald-600 transition-colors hidden sm:inline"
               >
                 View Blog
-              </Link>
-              <Link
-                to="/"
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
-              >
-                <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">Home</span>
               </Link>
               <button
                 onClick={signOut}

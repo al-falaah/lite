@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Shield, UserCog, Save, Home } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -54,10 +55,14 @@ const ROLES = [
 ];
 
 const AdminRoles = () => {
+  const { profile } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(null);
   const [roleFilter, setRoleFilter] = useState('admin_only'); // 'all', 'admin_only', or specific role
+
+  // Determine back link based on user role
+  const backLink = profile?.role === 'director' ? '/director' : '/admin';
 
   useEffect(() => {
     fetchUsers();
@@ -168,7 +173,7 @@ const AdminRoles = () => {
           {/* Header */}
           <div className="mb-8">
             <Link
-              to="/admin"
+              to={backLink}
               className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors mb-4"
             >
               <Home className="h-4 w-4" />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   Package,
@@ -19,10 +19,12 @@ import {
   Clock,
   ChevronDown,
   ChevronUp,
-  Send
+  Send,
+  Home
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '../services/supabase';
+import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -41,8 +43,12 @@ const statusConfig = {
 
 const StoreAdmin = () => {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'products';
+
+  // Determine back link based on user role
+  const backLink = profile?.role === 'director' ? '/director' : '/admin';
 
   // Products state
   const [products, setProducts] = useState([]);
@@ -407,9 +413,18 @@ const StoreAdmin = () => {
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <div className="flex items-center gap-3">
-                <ShoppingBag className="h-8 w-8 text-emerald-600" />
-                <h1 className="text-2xl font-bold text-gray-900">Store Admin</h1>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="h-8 w-8 text-emerald-600" />
+                  <h1 className="text-2xl font-bold text-gray-900">Store Admin</h1>
+                </div>
+                <Link
+                  to={backLink}
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                >
+                  <Home className="h-4 w-4" />
+                  Back to Dashboard
+                </Link>
               </div>
               <button
                 onClick={handleLogout}
