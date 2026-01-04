@@ -41,47 +41,54 @@ export default function Login() {
         return;
       }
 
-      // Check if user is admin
-      const { data: adminData } = await supabase
-        .from('admins')
-        .select('id')
-        .eq('email', data.user.email)
+      // Check user profile and role
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, role, is_admin, full_name')
+        .eq('id', data.user.id)
         .single();
 
-      if (adminData) {
-        toast.success('Welcome back, Admin!');
-        navigate('/admin');
+      if (profileError || !profile) {
+        console.error('Profile error:', profileError);
+        toast.error('Account not found. Please contact support.');
+        await supabase.auth.signOut();
+        setLoading(false);
         return;
       }
 
-      // Check if user is teacher
-      const { data: teacherData } = await supabase
-        .from('teachers')
-        .select('id')
-        .eq('email', data.user.email)
-        .single();
+      // Route based on role
+      if (profile.is_admin) {
+        // Admin users (director, madrasah_admin, blog_admin, store_admin)
+        toast.success(`Welcome back, ${profile.full_name || 'Admin'}!`);
 
-      if (teacherData) {
-        toast.success('Welcome back!');
+        // Route to appropriate admin dashboard based on role
+        if (profile.role === 'director' || profile.role === 'madrasah_admin') {
+          navigate('/admin');
+        } else if (profile.role === 'blog_admin') {
+          navigate('/blog/admin');
+        } else if (profile.role === 'store_admin') {
+          navigate('/store/admin');
+        } else {
+          navigate('/admin'); // Default to main admin
+        }
+        return;
+      }
+
+      // Non-admin users (teacher, student)
+      if (profile.role === 'teacher') {
+        toast.success(`Welcome back, ${profile.full_name || 'Teacher'}!`);
         navigate('/teacher');
         return;
       }
 
-      // Check if user is student
-      const { data: studentData } = await supabase
-        .from('students')
-        .select('id')
-        .eq('email', data.user.email)
-        .single();
-
-      if (studentData) {
-        toast.success('Welcome back!');
+      if (profile.role === 'student') {
+        toast.success(`Welcome back, ${profile.full_name || 'Student'}!`);
         navigate('/student');
         return;
       }
 
-      // User authenticated but no profile found
-      toast.error('Account not found. Please contact support.');
+      // User has no role assigned
+      toast.error('Your account is not configured yet. Please contact support.');
       await supabase.auth.signOut();
       setLoading(false);
 
