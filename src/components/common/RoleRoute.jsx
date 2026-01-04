@@ -4,13 +4,16 @@ import { useAuth } from '../../context/AuthContext';
 /**
  * Role-based route guard component
  *
- * Roles hierarchy:
+ * All user roles:
  * - director: Full access to everything (founder)
- * - madrasah_admin: Access to student/teacher/application management
- * - store_admin: Access only to store management
- * - blog_admin: Access only to blog management
+ * - teacher: Teacher portal access
+ * - student: Student portal access
+ * - madrasah_admin: Madrasah management (students/teachers/applications)
+ * - blog_admin: Blog management only
+ * - store_admin: Store management only
  *
- * Director role has access to all routes
+ * Director role has access to all admin routes
+ * This component is used for ADMIN routes only (not student/teacher portals)
  */
 
 const RoleRoute = ({ children, allowedRoles = [] }) => {
