@@ -344,6 +344,9 @@ const AdminStoreProducts = () => {
               </div>
             </Link>
             <div className="flex items-center gap-4">
+              <Link to="/admin/store" className="text-sm text-gray-600 hover:text-emerald-600 transition-colors hidden sm:inline">
+                Store Dashboard
+              </Link>
               <Link to="/admin/store-orders" className="text-sm text-gray-600 hover:text-emerald-600 transition-colors hidden sm:inline">
                 View Orders
               </Link>

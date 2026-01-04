@@ -24,6 +24,7 @@ import StoreOrderPage from './pages/StoreOrderPage';
 import StoreOrderConfirmation from './pages/StoreOrderConfirmation';
 import AdminStoreProducts from './pages/AdminStoreProducts';
 import AdminStoreOrders from './pages/AdminStoreOrders';
+import StoreAdminDashboard from './pages/StoreAdminDashboard';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -90,6 +91,14 @@ function App() {
             />
 
             {/* Admin Store Routes */}
+            <Route
+              path="/admin/store"
+              element={
+                <AdminRoute>
+                  <StoreAdminDashboard />
+                </AdminRoute>
+              }
+            />
             <Route
               path="/admin/store-products"
               element={

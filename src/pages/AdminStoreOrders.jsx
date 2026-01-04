@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   Package,
@@ -194,7 +195,15 @@ const AdminStoreOrders = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Store Orders</h1>
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-3xl font-bold text-gray-900">Store Orders</h1>
+              <Link
+                to="/admin/store"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors"
+              >
+                ← Store Dashboard
+              </Link>
+            </div>
             <p className="text-gray-600">View and manage customer orders</p>
           </div>
 
