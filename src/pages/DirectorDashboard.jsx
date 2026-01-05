@@ -70,7 +70,8 @@ const DirectorDashboard = () => {
     program: 'all'
   });
   const [trackComparisonFilter, setTrackComparisonFilter] = useState({
-    timeRange: '12' // months
+    timeRange: '12', // months
+    categories: ['received', 'approved', 'rejected', 'enrolled', 'dropouts', 'graduated'] // all categories by default
   });
   const [rawApplicationsData, setRawApplicationsData] = useState([]);
 
@@ -335,6 +336,7 @@ const DirectorDashboard = () => {
         track: programLabels[program] || program,
         received: programApps.length,
         approved: programApps.filter(app => app.status === 'approved').length,
+        rejected: programApps.filter(app => app.status === 'rejected').length,
         // Note: enrolled, dropped_out, graduated need to come from students/enrollments table
         // For now, using approximations based on application status
         enrolled: Math.floor(programApps.filter(app => app.status === 'approved').length * 0.8),
@@ -710,23 +712,56 @@ const DirectorDashboard = () => {
 
                   {/* Track Comparison */}
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Applications by Track</h3>
+                    <div className="flex flex-col gap-4 mb-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Applications by Track</h3>
 
-                      {/* Time Range Filter */}
-                      <div className="flex items-center gap-2">
-                        <label className="text-sm text-gray-600">Period:</label>
-                        <select
-                          value={trackComparisonFilter.timeRange}
-                          onChange={(e) => setTrackComparisonFilter({ ...trackComparisonFilter, timeRange: e.target.value })}
-                          className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                        >
-                          <option value="3">Last 3 months</option>
-                          <option value="6">Last 6 months</option>
-                          <option value="12">Last 12 months</option>
-                          <option value="24">Last 24 months</option>
-                          <option value="999">All time</option>
-                        </select>
+                        {/* Time Range Filter */}
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm text-gray-600">Period:</label>
+                          <select
+                            value={trackComparisonFilter.timeRange}
+                            onChange={(e) => setTrackComparisonFilter({ ...trackComparisonFilter, timeRange: e.target.value })}
+                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                          >
+                            <option value="3">Last 3 months</option>
+                            <option value="6">Last 6 months</option>
+                            <option value="12">Last 12 months</option>
+                            <option value="24">Last 24 months</option>
+                            <option value="999">All time</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Category Filter */}
+                      <div className="flex flex-wrap gap-2">
+                        <span className="text-sm text-gray-600 self-center">Show:</span>
+                        {[
+                          { key: 'received', label: 'Received', color: 'bg-blue-500' },
+                          { key: 'approved', label: 'Approved', color: 'bg-emerald-500' },
+                          { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
+                          { key: 'enrolled', label: 'Enrolled', color: 'bg-purple-500' },
+                          { key: 'dropouts', label: 'Drop-outs', color: 'bg-amber-500' },
+                          { key: 'graduated', label: 'Graduated', color: 'bg-pink-500' }
+                        ].map(({ key, label, color }) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              const newCategories = trackComparisonFilter.categories.includes(key)
+                                ? trackComparisonFilter.categories.filter(c => c !== key)
+                                : [...trackComparisonFilter.categories, key];
+                              setTrackComparisonFilter({ ...trackComparisonFilter, categories: newCategories });
+                            }}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                              trackComparisonFilter.categories.includes(key)
+                                ? 'bg-gray-100 text-gray-900 border-2 border-gray-300'
+                                : 'bg-gray-50 text-gray-400 border-2 border-gray-200'
+                            }`}
+                          >
+                            <span className={`w-3 h-3 rounded-sm ${color} ${!trackComparisonFilter.categories.includes(key) ? 'opacity-30' : ''}`}></span>
+                            {label}
+                          </button>
+                        ))}
                       </div>
                     </div>
 
@@ -737,11 +772,24 @@ const DirectorDashboard = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="received" fill="#3b82f6" name="Received" />
-                        <Bar dataKey="approved" fill="#10b981" name="Approved" />
-                        <Bar dataKey="enrolled" fill="#8b5cf6" name="Enrolled" />
-                        <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" />
-                        <Bar dataKey="graduated" fill="#ec4899" name="Graduated" />
+                        {trackComparisonFilter.categories.includes('received') && (
+                          <Bar dataKey="received" fill="#3b82f6" name="Received" />
+                        )}
+                        {trackComparisonFilter.categories.includes('approved') && (
+                          <Bar dataKey="approved" fill="#10b981" name="Approved" />
+                        )}
+                        {trackComparisonFilter.categories.includes('rejected') && (
+                          <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
+                        )}
+                        {trackComparisonFilter.categories.includes('enrolled') && (
+                          <Bar dataKey="enrolled" fill="#8b5cf6" name="Enrolled" />
+                        )}
+                        {trackComparisonFilter.categories.includes('dropouts') && (
+                          <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" />
+                        )}
+                        {trackComparisonFilter.categories.includes('graduated') && (
+                          <Bar dataKey="graduated" fill="#ec4899" name="Graduated" />
+                        )}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
