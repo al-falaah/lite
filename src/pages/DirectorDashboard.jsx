@@ -262,13 +262,14 @@ const DirectorDashboard = () => {
       monthlyData[monthKey]++;
     });
 
-    // Convert to array and sort by date
+    // Convert to array and sort by date properly
     return Object.entries(monthlyData)
+      .sort((a, b) => a[0].localeCompare(b[0])) // Sort by YYYY-MM string first
       .map(([month, count]) => ({
         month: new Date(month + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        monthKey: month, // Keep original for debugging
         applications: count
       }))
-      .sort((a, b) => new Date(a.month) - new Date(b.month))
       .slice(-12); // Last 12 months
   };
 
