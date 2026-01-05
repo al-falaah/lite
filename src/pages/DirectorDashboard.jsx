@@ -95,7 +95,7 @@ const DirectorDashboard = () => {
         postsRes,
         ordersRes,
         studentsRes,
-        studentsNoTeacherRes,
+        allStudentsData,
         studentsPendingPaymentRes,
         enrolledStudentsRes,
         graduatedStudentsRes,
@@ -106,7 +106,8 @@ const DirectorDashboard = () => {
         // For teachers with students, we need actual data
         teachersData,
         applicationsData,
-        trackData
+        trackData,
+        teacherAssignmentsData
       ] = await Promise.all([
         // General stats
         fetch(`${supabaseUrl}/rest/v1/profiles?select=id&limit=1`, {
@@ -127,10 +128,10 @@ const DirectorDashboard = () => {
           method: 'HEAD',
           headers
         }),
-        fetch(`${supabaseUrl}/rest/v1/students?teacher_id=is.null&select=id&limit=1`, {
-          method: 'HEAD',
+        // Students without teacher - need to check teacher_student_assignments
+        fetch(`${supabaseUrl}/rest/v1/students?select=id`, {
           headers
-        }),
+        }).then(res => res.json()),
         fetch(`${supabaseUrl}/rest/v1/students?payment_status=eq.pending&select=id&limit=1`, {
           method: 'HEAD',
           headers
@@ -171,6 +172,10 @@ const DirectorDashboard = () => {
 
         fetch(`${supabaseUrl}/rest/v1/applications?select=program,status`, {
           headers
+        }).then(res => res.json()),
+
+        fetch(`${supabaseUrl}/rest/v1/teacher_student_assignments?select=student_id,teacher_id,status&status=eq.assigned`, {
+          headers
         }).then(res => res.json())
       ]);
 
@@ -180,17 +185,19 @@ const DirectorDashboard = () => {
         return parseInt(range?.split('/')[1] || '0');
       };
 
-      // Calculate teachers with students by querying students
-      const studentsWithTeachers = await fetch(
-        `${supabaseUrl}/rest/v1/students?teacher_id=not.is.null&select=teacher_id`,
-        { headers }
-      ).then(res => res.json());
+      console.log('Teacher assignments data:', teacherAssignmentsData);
+      console.log('All students data:', allStudentsData);
 
-      console.log('Students with teachers:', studentsWithTeachers);
+      // Calculate students with/without teachers using teacher_student_assignments table
+      const assignedStudentIds = new Set(teacherAssignmentsData.map(a => a.student_id));
+      const studentsWithoutTeacher = allStudentsData.filter(s => !assignedStudentIds.has(s.id)).length;
 
-      const uniqueTeacherIds = [...new Set(studentsWithTeachers.map(s => s.teacher_id).filter(Boolean))];
+      // Calculate teachers with students
+      const uniqueTeacherIds = [...new Set(teacherAssignmentsData.map(a => a.teacher_id).filter(Boolean))];
       const teachersWithStudents = uniqueTeacherIds.length;
 
+      console.log('Assigned student IDs:', assignedStudentIds);
+      console.log('Students without teacher count:', studentsWithoutTeacher);
       console.log('Unique teacher IDs:', uniqueTeacherIds);
       console.log('Teachers with students count:', teachersWithStudents);
 
@@ -201,7 +208,7 @@ const DirectorDashboard = () => {
         totalStudents: parseCount(studentsRes),
         totalTeachers,
         teachersWithStudents,
-        studentsWithoutTeacher: parseCount(studentsNoTeacherRes),
+        studentsWithoutTeacher,
         pendingApplications: parseCount(pendingApplicationsRes)
       });
 
@@ -217,7 +224,7 @@ const DirectorDashboard = () => {
         pendingOrders: parseCount(ordersRes),
 
         totalStudents: parseCount(studentsRes),
-        studentsWithoutTeacher: parseCount(studentsNoTeacherRes),
+        studentsWithoutTeacher,
         studentsPendingPayment: parseCount(studentsPendingPaymentRes),
         enrolledStudents: parseCount(enrolledStudentsRes),
         graduatedStudents: parseCount(graduatedStudentsRes),
