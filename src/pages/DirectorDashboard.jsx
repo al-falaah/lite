@@ -18,7 +18,8 @@ import {
   Clock,
   TrendingUp,
   BarChart3,
-  FileText
+  FileText,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
@@ -531,14 +532,32 @@ const DirectorDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">
-              Welcome back, {profile?.full_name?.split(' ')[0] || 'Director'}
-            </h2>
-            <p className="text-gray-600">
-              {activeTab === 'overview'
-                ? 'Overview of all madrasah statistics and metrics'
-                : 'Quick access to all administrative areas'}
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                  Welcome back, {profile?.full_name?.split(' ')[0] || 'Director'}
+                </h2>
+                <p className="text-gray-600">
+                  {activeTab === 'overview'
+                    ? 'Overview of all madrasah statistics and metrics'
+                    : 'Quick access to all administrative areas'}
+                </p>
+              </div>
+              {activeTab === 'overview' && (
+                <button
+                  onClick={() => {
+                    setLoading(true);
+                    fetchStats();
+                    toast.success('Refreshing statistics...');
+                  }}
+                  disabled={loading}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                >
+                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                  <span className="hidden sm:inline">Refresh</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Overview Tab */}
