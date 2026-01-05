@@ -69,6 +69,9 @@ const DirectorDashboard = () => {
     timeRange: '12', // months
     program: 'all'
   });
+  const [trackComparisonFilter, setTrackComparisonFilter] = useState({
+    timeRange: '12' // months
+  });
   const [rawApplicationsData, setRawApplicationsData] = useState([]);
 
   useEffect(() => {
@@ -82,6 +85,14 @@ const DirectorDashboard = () => {
       setApplicationsTimeSeries(filteredData);
     }
   }, [timeSeriesFilter, rawApplicationsData]);
+
+  // Reprocess track comparison when filter changes
+  useEffect(() => {
+    if (rawApplicationsData.length > 0) {
+      const filteredData = processTrackComparison(rawApplicationsData, trackComparisonFilter);
+      setTrackComparison(filteredData);
+    }
+  }, [trackComparisonFilter, rawApplicationsData]);
 
   const fetchStats = async () => {
     try {
@@ -230,7 +241,7 @@ const DirectorDashboard = () => {
       const timeSeriesData = processTimeSeriesData(applicationsData, timeSeriesFilter);
 
       // Process track comparison data
-      const trackComparisonData = processTrackComparison(trackData);
+      const trackComparisonData = processTrackComparison(trackData, trackComparisonFilter);
 
       setStats({
         totalUsers: parseCount(usersRes),
@@ -295,7 +306,21 @@ const DirectorDashboard = () => {
       .slice(-timeRange); // Last N months based on filter
   };
 
-  const processTrackComparison = (applications) => {
+  const processTrackComparison = (applications, filters = { timeRange: '12' }) => {
+    // Filter by time range
+    let filteredApps = applications;
+    const timeRange = parseInt(filters.timeRange);
+
+    if (timeRange !== 999) { // 999 = all time
+      const cutoffDate = new Date();
+      cutoffDate.setMonth(cutoffDate.getMonth() - timeRange);
+
+      filteredApps = applications.filter(app => {
+        const appDate = new Date(app.created_at);
+        return appDate >= cutoffDate;
+      });
+    }
+
     // Count by program/track - only two tracks
     const programs = ['essentials', 'tajweed'];
     const programLabels = {
@@ -304,7 +329,7 @@ const DirectorDashboard = () => {
     };
 
     return programs.map(program => {
-      const programApps = applications.filter(app => app.program === program);
+      const programApps = filteredApps.filter(app => app.program === program);
 
       return {
         track: programLabels[program] || program,
@@ -685,7 +710,26 @@ const DirectorDashboard = () => {
 
                   {/* Track Comparison */}
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications by Track</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Applications by Track</h3>
+
+                      {/* Time Range Filter */}
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm text-gray-600">Period:</label>
+                        <select
+                          value={trackComparisonFilter.timeRange}
+                          onChange={(e) => setTrackComparisonFilter({ ...trackComparisonFilter, timeRange: e.target.value })}
+                          className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        >
+                          <option value="3">Last 3 months</option>
+                          <option value="6">Last 6 months</option>
+                          <option value="12">Last 12 months</option>
+                          <option value="24">Last 24 months</option>
+                          <option value="999">All time</option>
+                        </select>
+                      </div>
+                    </div>
+
                     <ResponsiveContainer width="100%" height={400}>
                       <BarChart data={trackComparison}>
                         <CartesianGrid strokeDasharray="3 3" />
