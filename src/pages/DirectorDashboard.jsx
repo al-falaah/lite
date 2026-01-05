@@ -20,7 +20,7 @@ const DirectorDashboard = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalPosts: 0,
-    totalOrders: 0
+    pendingOrders: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -61,7 +61,7 @@ const DirectorDashboard = () => {
             'Prefer': 'count=exact'
           }
         }),
-        fetch(`${supabaseUrl}/rest/v1/store_orders?select=id&limit=1`, {
+        fetch(`${supabaseUrl}/rest/v1/store_orders?status=eq.pending&select=id&limit=1`, {
           method: 'HEAD',
           headers: {
             'apikey': supabaseKey,
@@ -73,12 +73,12 @@ const DirectorDashboard = () => {
 
       const usersCount = parseInt(usersRes.headers.get('content-range')?.split('/')[1] || '0');
       const postsCount = parseInt(postsRes.headers.get('content-range')?.split('/')[1] || '0');
-      const ordersCount = parseInt(ordersRes.headers.get('content-range')?.split('/')[1] || '0');
+      const pendingOrdersCount = parseInt(ordersRes.headers.get('content-range')?.split('/')[1] || '0');
 
       setStats({
         totalUsers: usersCount,
         totalPosts: postsCount,
-        totalOrders: ordersCount
+        pendingOrders: pendingOrdersCount
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -156,10 +156,10 @@ const DirectorDashboard = () => {
       bgColor: 'bg-orange-50'
     },
     {
-      label: 'Store Orders',
-      value: stats.totalOrders,
+      label: 'Pending Orders',
+      value: stats.pendingOrders,
       icon: ShoppingBag,
-      href: '/store/admin?tab=orders',
+      href: '/store/admin?tab=orders&status=pending',
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50'
     }

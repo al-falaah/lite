@@ -84,9 +84,17 @@ const StoreAdmin = () => {
   // Orders state
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [editingOrder, setEditingOrder] = useState(null);
+
+  // Initialize status filter from URL on mount
+  useEffect(() => {
+    const urlStatus = searchParams.get('status');
+    if (urlStatus && urlStatus !== statusFilter) {
+      setStatusFilter(urlStatus);
+    }
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'products') {
