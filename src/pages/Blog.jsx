@@ -46,11 +46,19 @@ const Blog = () => {
 
   useEffect(() => {
     // Filter posts based on selected category
-    if (selectedCategory === 'All') {
-      setFilteredPosts(posts);
-    } else {
-      setFilteredPosts(posts.filter(post => post.category === selectedCategory));
-    }
+    let filtered = selectedCategory === 'All'
+      ? posts
+      : posts.filter(post => post.category === selectedCategory);
+
+    // Sort filtered posts: pinned first, then by published_at
+    filtered = filtered.sort((a, b) => {
+      if ((a.is_pinned && b.is_pinned) || (!a.is_pinned && !b.is_pinned)) {
+        return new Date(b.published_at) - new Date(a.published_at);
+      }
+      return a.is_pinned ? -1 : 1;
+    });
+
+    setFilteredPosts(filtered);
   }, [selectedCategory, posts]);
 
   useEffect(() => {
@@ -122,8 +130,19 @@ const Blog = () => {
       const data = await Promise.race([fetchPromise, timeoutPromise]);
 
       console.log('[Blog] Fetch result:', data);
-      setPosts(data || []);
-      setFilteredPosts(data || []);
+
+      // Sort posts: pinned posts first (max 2), then by published_at
+      const sortedData = (data || []).sort((a, b) => {
+        // If both are pinned or neither is pinned, sort by published_at
+        if ((a.is_pinned && b.is_pinned) || (!a.is_pinned && !b.is_pinned)) {
+          return new Date(b.published_at) - new Date(a.published_at);
+        }
+        // Pinned posts come first
+        return a.is_pinned ? -1 : 1;
+      });
+
+      setPosts(sortedData);
+      setFilteredPosts(sortedData);
       console.log('[Blog] Posts set:', data?.length || 0, 'posts');
     } catch (error) {
       console.error('[Blog] Error fetching blog posts:', error);

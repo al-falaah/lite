@@ -39,7 +39,8 @@ const BlogAdmin = () => {
     author_name: 'Dr Abdulquadri Alaka',
     author_bio: "Allah's servant who is most in need of His help.",
     category: 'General',
-    status: 'draft'
+    status: 'draft',
+    is_pinned: false
   });
 
   useEffect(() => {
@@ -168,7 +169,8 @@ const BlogAdmin = () => {
         category: formData.category || 'General',
         author_id: user.id, // CRITICAL: Set author_id to current user
         status: newStatus,
-        published_at: publishedAt
+        published_at: publishedAt,
+        is_pinned: formData.is_pinned || false
       };
 
       console.log('Attempting to save post:', postData);
@@ -412,7 +414,8 @@ const BlogAdmin = () => {
       author_bio: post.author_bio || '',
       category: post.category || 'General',
       status: post.status,
-      published_at: post.published_at
+      published_at: post.published_at,
+      is_pinned: post.is_pinned || false
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -499,7 +502,8 @@ const BlogAdmin = () => {
       author_name: 'Dr Abdulquadri Alaka',
       author_bio: "Allah's servant who is most in need of His help.",
       category: 'General',
-      status: 'draft'
+      status: 'draft',
+      is_pinned: false
     });
   };
 
@@ -771,6 +775,37 @@ const BlogAdmin = () => {
                 </p>
               </div>
 
+              {/* Pin Post Checkbox */}
+              <div className="mb-6">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.is_pinned || false}
+                    onChange={async (e) => {
+                      const willPin = e.target.checked;
+
+                      // Check if we already have 2 pinned posts
+                      if (willPin) {
+                        const pinnedCount = posts.filter(p => p.is_pinned && p.id !== editingPost?.id).length;
+                        if (pinnedCount >= 2) {
+                          toast.error('Maximum 2 posts can be pinned. Please unpin another post first.');
+                          return;
+                        }
+                      }
+
+                      setFormData({ ...formData, is_pinned: willPin });
+                    }}
+                    className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Pin this post at the top of the blog page
+                  </span>
+                </label>
+                <p className="text-xs text-gray-500 mt-1 ml-6">
+                  Pinned posts appear at the top of the blog page. Maximum 2 posts can be pinned.
+                </p>
+              </div>
+
               {/* Featured Image */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -894,6 +929,22 @@ const BlogAdmin = () => {
                     title="Link"
                   >
                     Link
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertFormatting('<sup>', '</sup>')}
+                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
+                    title="Superscript"
+                  >
+                    X<sup className="text-xs">2</sup>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertFormatting('<sub>', '</sub>')}
+                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
+                    title="Subscript"
+                  >
+                    X<sub className="text-xs">2</sub>
                   </button>
                 </div>
               </div>
