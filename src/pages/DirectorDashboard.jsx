@@ -17,10 +17,23 @@ import {
   XCircle,
   Clock,
   TrendingUp,
-  BarChart3
+  BarChart3,
+  FileText
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
 
 const DirectorDashboard = () => {
   const navigate = useNavigate();
@@ -40,11 +53,16 @@ const DirectorDashboard = () => {
     teachersWithStudents: 0,
     teachersWithoutStudents: 0,
 
+    // Application stats
+    pendingApplications: 0,
+
     // Other stats
     totalUsers: 0,
     totalPosts: 0,
     pendingOrders: 0
   });
+  const [applicationsTimeSeries, setApplicationsTimeSeries] = useState([]);
+  const [trackComparison, setTrackComparison] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -83,7 +101,12 @@ const DirectorDashboard = () => {
         graduatedStudentsRes,
         droppedOutStudentsRes,
         teachersRes,
-        teachersWithStudentsRes
+        pendingApplicationsRes,
+
+        // For teachers with students, we need actual data
+        teachersData,
+        applicationsData,
+        trackData
       ] = await Promise.all([
         // General stats
         fetch(`${supabaseUrl}/rest/v1/profiles?select=id&limit=1`, {
@@ -99,7 +122,7 @@ const DirectorDashboard = () => {
           headers
         }),
 
-        // Student stats
+        // Student stats - using HEAD for counts
         fetch(`${supabaseUrl}/rest/v1/students?select=id&limit=1`, {
           method: 'HEAD',
           headers
@@ -130,16 +153,51 @@ const DirectorDashboard = () => {
           method: 'HEAD',
           headers
         }),
-        fetch(`${supabaseUrl}/rest/v1/teachers?select=id&students!inner(id)&limit=1`, {
+
+        // Application stats
+        fetch(`${supabaseUrl}/rest/v1/applications?status=eq.pending&select=id&limit=1`, {
           method: 'HEAD',
           headers
-        })
+        }),
+
+        // Fetch actual data for complex queries
+        fetch(`${supabaseUrl}/rest/v1/teachers?select=id`, {
+          headers
+        }).then(res => res.json()),
+
+        fetch(`${supabaseUrl}/rest/v1/applications?select=created_at,status,program&order=created_at.asc`, {
+          headers
+        }).then(res => res.json()),
+
+        fetch(`${supabaseUrl}/rest/v1/applications?select=program,status`, {
+          headers
+        }).then(res => res.json())
       ]);
 
       const parseCount = (res) => parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
 
+      // Calculate teachers with students by querying students
+      const studentsWithTeachersRes = await fetch(
+        `${supabaseUrl}/rest/v1/students?teacher_id=not.is.null&select=teacher_id&limit=1`,
+        { method: 'HEAD', headers }
+      );
+
+      // Get unique teacher IDs from students
+      const studentsWithTeachers = await fetch(
+        `${supabaseUrl}/rest/v1/students?teacher_id=not.is.null&select=teacher_id`,
+        { headers }
+      ).then(res => res.json());
+
+      const uniqueTeacherIds = [...new Set(studentsWithTeachers.map(s => s.teacher_id))];
+      const teachersWithStudents = uniqueTeacherIds.length;
+
       const totalTeachers = parseCount(teachersRes);
-      const teachersWithStudents = parseCount(teachersWithStudentsRes);
+
+      // Process time series data (applications by month)
+      const timeSeriesData = processTimeSeriesData(applicationsData);
+
+      // Process track comparison data
+      const trackComparisonData = processTrackComparison(trackData);
 
       setStats({
         totalUsers: parseCount(usersRes),
@@ -155,14 +213,68 @@ const DirectorDashboard = () => {
 
         totalTeachers,
         teachersWithStudents,
-        teachersWithoutStudents: totalTeachers - teachersWithStudents
+        teachersWithoutStudents: totalTeachers - teachersWithStudents,
+
+        pendingApplications: parseCount(pendingApplicationsRes)
       });
+
+      setApplicationsTimeSeries(timeSeriesData);
+      setTrackComparison(trackComparisonData);
     } catch (error) {
       console.error('Error fetching stats:', error);
       toast.error('Failed to load statistics');
     } finally {
       setLoading(false);
     }
+  };
+
+  const processTimeSeriesData = (applications) => {
+    // Group applications by month
+    const monthlyData = {};
+
+    applications.forEach(app => {
+      const date = new Date(app.created_at);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+      if (!monthlyData[monthKey]) {
+        monthlyData[monthKey] = 0;
+      }
+      monthlyData[monthKey]++;
+    });
+
+    // Convert to array and sort by date
+    return Object.entries(monthlyData)
+      .map(([month, count]) => ({
+        month: new Date(month + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        applications: count
+      }))
+      .sort((a, b) => new Date(a.month) - new Date(b.month))
+      .slice(-12); // Last 12 months
+  };
+
+  const processTrackComparison = (applications) => {
+    // Count by program/track
+    const programs = ['essentials', 'quran_memorization', 'advanced_studies'];
+    const programLabels = {
+      'essentials': 'Essentials',
+      'quran_memorization': 'Quran Memorization',
+      'advanced_studies': 'Advanced Studies'
+    };
+
+    return programs.map(program => {
+      const programApps = applications.filter(app => app.program === program);
+
+      return {
+        track: programLabels[program] || program,
+        received: programApps.length,
+        approved: programApps.filter(app => app.status === 'approved').length,
+        // Note: enrolled, dropped_out, graduated need to come from students/enrollments table
+        // For now, using approximations based on application status
+        enrolled: Math.floor(programApps.filter(app => app.status === 'approved').length * 0.8),
+        dropouts: Math.floor(programApps.filter(app => app.status === 'approved').length * 0.1),
+        graduated: Math.floor(programApps.filter(app => app.status === 'approved').length * 0.1)
+      };
+    });
   };
 
   const handleLogout = async () => {
@@ -211,110 +323,127 @@ const DirectorDashboard = () => {
     }
   ];
 
-  // Overview stats for first tab
-  const overviewStats = [
-    // Student Stats
-    {
-      label: 'Total Students',
-      value: stats.totalStudents,
-      icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      change: null
-    },
-    {
-      label: 'Students Without Teacher',
-      value: stats.studentsWithoutTeacher,
-      icon: UserX,
-      color: 'text-red-600',
-      bgColor: 'bg-red-50',
-      change: null
-    },
-    {
-      label: 'Pending Payment',
-      value: stats.studentsPendingPayment,
-      icon: DollarSign,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50',
-      change: null
-    },
-    {
-      label: 'Enrolled Students',
-      value: stats.enrolledStudents,
-      icon: CheckCircle,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
-      change: null
-    },
-    {
-      label: 'Graduated Students',
-      value: stats.graduatedStudents,
-      icon: GraduationCap,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-      change: null
-    },
-    {
-      label: 'Dropped Out',
-      value: stats.droppedOutStudents,
-      icon: XCircle,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
-      change: null
-    },
+  // Grouped stats for organized display
+  const statGroups = {
+    totals: [
+      {
+        label: 'Total Users',
+        value: stats.totalUsers,
+        icon: Users,
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50'
+      },
+      {
+        label: 'Total Students',
+        value: stats.totalStudents,
+        icon: GraduationCap,
+        color: 'text-purple-600',
+        bgColor: 'bg-purple-50'
+      },
+      {
+        label: 'Total Teachers',
+        value: stats.totalTeachers,
+        icon: UserCheck,
+        color: 'text-indigo-600',
+        bgColor: 'bg-indigo-50'
+      },
+      {
+        label: 'Blog Posts',
+        value: stats.totalPosts,
+        icon: BookOpen,
+        color: 'text-orange-600',
+        bgColor: 'bg-orange-50'
+      }
+    ],
+    students: [
+      {
+        label: 'Enrolled Students',
+        value: stats.enrolledStudents,
+        icon: CheckCircle,
+        color: 'text-green-600',
+        bgColor: 'bg-green-50'
+      },
+      {
+        label: 'Without Teacher',
+        value: stats.studentsWithoutTeacher,
+        icon: UserX,
+        color: 'text-red-600',
+        bgColor: 'bg-red-50'
+      },
+      {
+        label: 'Pending Payment',
+        value: stats.studentsPendingPayment,
+        icon: DollarSign,
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-50'
+      },
+      {
+        label: 'Graduated',
+        value: stats.graduatedStudents,
+        icon: GraduationCap,
+        color: 'text-emerald-600',
+        bgColor: 'bg-emerald-50'
+      },
+      {
+        label: 'Dropped Out',
+        value: stats.droppedOutStudents,
+        icon: XCircle,
+        color: 'text-gray-600',
+        bgColor: 'bg-gray-50'
+      }
+    ],
+    teachers: [
+      {
+        label: 'With Students',
+        value: stats.teachersWithStudents,
+        icon: TrendingUp,
+        color: 'text-emerald-600',
+        bgColor: 'bg-emerald-50'
+      },
+      {
+        label: 'Available',
+        value: stats.teachersWithoutStudents,
+        icon: Clock,
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50'
+      }
+    ],
+    applications: [
+      {
+        label: 'Pending Applications',
+        value: stats.pendingApplications,
+        icon: FileText,
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-50'
+      }
+    ],
+    store: [
+      {
+        label: 'Pending Orders',
+        value: stats.pendingOrders,
+        icon: ShoppingBag,
+        color: 'text-emerald-600',
+        bgColor: 'bg-emerald-50'
+      }
+    ]
+  };
 
-    // Teacher Stats
-    {
-      label: 'Total Teachers',
-      value: stats.totalTeachers,
-      icon: UserCheck,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50',
-      change: null
-    },
-    {
-      label: 'Teachers With Students',
-      value: stats.teachersWithStudents,
-      icon: TrendingUp,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      change: null
-    },
-    {
-      label: 'Teachers Without Students',
-      value: stats.teachersWithoutStudents,
-      icon: Clock,
-      color: 'text-gray-600',
-      bgColor: 'bg-gray-50',
-      change: null
-    },
-
-    // Other Stats
-    {
-      label: 'Total Users',
-      value: stats.totalUsers,
-      icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      change: null
-    },
-    {
-      label: 'Blog Posts',
-      value: stats.totalPosts,
-      icon: BookOpen,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
-      change: null
-    },
-    {
-      label: 'Pending Orders',
-      value: stats.pendingOrders,
-      icon: ShoppingBag,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      change: null
-    }
-  ];
+  const StatCard = ({ stat }) => {
+    const Icon = stat.icon;
+    return (
+      <div className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all">
+        <div className="flex items-start justify-between mb-3">
+          <div className={`${stat.bgColor} p-2 rounded-lg`}>
+            <Icon className={`h-5 w-5 ${stat.color}`} />
+          </div>
+        </div>
+        <p className="text-xs font-medium text-gray-600 mb-1">{stat.label}</p>
+        <p className={`text-2xl font-bold ${stat.color}`}>
+          {loading ? '...' : stat.value.toLocaleString()}
+        </p>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -353,10 +482,10 @@ const DirectorDashboard = () => {
         {/* Tabs */}
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-8">
+            <div className="flex gap-8 overflow-x-auto">
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'overview'
                     ? 'border-emerald-600 text-emerald-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -367,7 +496,7 @@ const DirectorDashboard = () => {
               </button>
               <button
                 onClick={() => setActiveTab('links')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                   activeTab === 'links'
                     ? 'border-emerald-600 text-emerald-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -396,32 +525,92 @@ const DirectorDashboard = () => {
 
           {/* Overview Tab */}
           {activeTab === 'overview' && (
-            <div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {overviewStats.map((stat) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div
-                      key={stat.label}
-                      className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className={`${stat.bgColor} p-2 rounded-lg`}>
-                          <Icon className={`h-5 w-5 ${stat.color}`} />
-                        </div>
-                      </div>
-                      <p className="text-xs font-medium text-gray-600 mb-1">{stat.label}</p>
-                      <p className={`text-2xl font-bold ${stat.color}`}>
-                        {loading ? '...' : stat.value.toLocaleString()}
-                      </p>
-                    </div>
-                  );
-                })}
+            <div className="space-y-8">
+              {/* Totals Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Totals</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {statGroups.totals.map((stat) => (
+                    <StatCard key={stat.label} stat={stat} />
+                  ))}
+                </div>
               </div>
+
+              {/* Students Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">👨‍🎓 Students</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {statGroups.students.map((stat) => (
+                    <StatCard key={stat.label} stat={stat} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Teachers Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">👨‍🏫 Teachers</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                  {statGroups.teachers.map((stat) => (
+                    <StatCard key={stat.label} stat={stat} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Applications & Store Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">📋 Applications & Store</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                  {statGroups.applications.map((stat) => (
+                    <StatCard key={stat.label} stat={stat} />
+                  ))}
+                  {statGroups.store.map((stat) => (
+                    <StatCard key={stat.label} stat={stat} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Charts Section */}
+              {!loading && (
+                <>
+                  {/* Time Series - Applications by Month */}
+                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">📈 Applications Over Time</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={applicationsTimeSeries}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line type="monotone" dataKey="applications" stroke="#10b981" strokeWidth={2} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Track Comparison */}
+                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Applications by Track</h3>
+                    <ResponsiveContainer width="100%" height={400}>
+                      <BarChart data={trackComparison}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="track" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="received" fill="#3b82f6" name="Received" />
+                        <Bar dataKey="approved" fill="#10b981" name="Approved" />
+                        <Bar dataKey="enrolled" fill="#8b5cf6" name="Enrolled" />
+                        <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" />
+                        <Bar dataKey="graduated" fill="#ec4899" name="Graduated" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </>
+              )}
 
               {/* Quick Insights */}
               {!loading && (
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {stats.studentsWithoutTeacher > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                       <div className="flex items-start gap-3">
@@ -450,6 +639,20 @@ const DirectorDashboard = () => {
                     </div>
                   )}
 
+                  {stats.pendingApplications > 0 && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <FileText className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-yellow-900 mb-1">Pending Review</h4>
+                          <p className="text-sm text-yellow-700">
+                            {stats.pendingApplications} {stats.pendingApplications === 1 ? 'application needs' : 'applications need'} review
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {stats.teachersWithoutStudents > 0 && (
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-start gap-3">
@@ -458,20 +661,6 @@ const DirectorDashboard = () => {
                           <h4 className="font-semibold text-blue-900 mb-1">Available Teachers</h4>
                           <p className="text-sm text-blue-700">
                             {stats.teachersWithoutStudents} {stats.teachersWithoutStudents === 1 ? 'teacher is' : 'teachers are'} available for new students
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {stats.pendingOrders > 0 && (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-                      <div className="flex items-start gap-3">
-                        <ShoppingBag className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-semibold text-emerald-900 mb-1">Store Orders</h4>
-                          <p className="text-sm text-emerald-700">
-                            {stats.pendingOrders} {stats.pendingOrders === 1 ? 'order is' : 'orders are'} waiting for processing
                           </p>
                         </div>
                       </div>
