@@ -253,12 +253,11 @@ const DirectorDashboard = () => {
   };
 
   const processTrackComparison = (applications) => {
-    // Count by program/track
-    const programs = ['essentials', 'quran_memorization', 'advanced_studies'];
+    // Count by program/track - only two tracks
+    const programs = ['essentials', 'tajweed'];
     const programLabels = {
-      'essentials': 'Essentials',
-      'quran_memorization': 'Quran Memorization',
-      'advanced_studies': 'Advanced Studies'
+      'essentials': 'Essentials Arabic & Islamic Studies',
+      'tajweed': 'Tajweed Mastery'
     };
 
     return programs.map(program => {
