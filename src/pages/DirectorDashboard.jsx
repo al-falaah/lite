@@ -174,24 +174,36 @@ const DirectorDashboard = () => {
         }).then(res => res.json())
       ]);
 
-      const parseCount = (res) => parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+      const parseCount = (res) => {
+        const range = res.headers.get('content-range');
+        console.log('Content-Range header:', range);
+        return parseInt(range?.split('/')[1] || '0');
+      };
 
       // Calculate teachers with students by querying students
-      const studentsWithTeachersRes = await fetch(
-        `${supabaseUrl}/rest/v1/students?teacher_id=not.is.null&select=teacher_id&limit=1`,
-        { method: 'HEAD', headers }
-      );
-
-      // Get unique teacher IDs from students
       const studentsWithTeachers = await fetch(
         `${supabaseUrl}/rest/v1/students?teacher_id=not.is.null&select=teacher_id`,
         { headers }
       ).then(res => res.json());
 
-      const uniqueTeacherIds = [...new Set(studentsWithTeachers.map(s => s.teacher_id))];
+      console.log('Students with teachers:', studentsWithTeachers);
+
+      const uniqueTeacherIds = [...new Set(studentsWithTeachers.map(s => s.teacher_id).filter(Boolean))];
       const teachersWithStudents = uniqueTeacherIds.length;
 
+      console.log('Unique teacher IDs:', uniqueTeacherIds);
+      console.log('Teachers with students count:', teachersWithStudents);
+
       const totalTeachers = parseCount(teachersRes);
+
+      console.log('Total stats:', {
+        totalUsers: parseCount(usersRes),
+        totalStudents: parseCount(studentsRes),
+        totalTeachers,
+        teachersWithStudents,
+        studentsWithoutTeacher: parseCount(studentsNoTeacherRes),
+        pendingApplications: parseCount(pendingApplicationsRes)
+      });
 
       // Process time series data (applications by month)
       const timeSeriesData = processTimeSeriesData(applicationsData);
@@ -527,7 +539,7 @@ const DirectorDashboard = () => {
             <div className="space-y-8">
               {/* Totals Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Totals</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Totals</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {statGroups.totals.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -537,7 +549,7 @@ const DirectorDashboard = () => {
 
               {/* Students Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">👨‍🎓 Students</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Students</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   {statGroups.students.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -547,7 +559,7 @@ const DirectorDashboard = () => {
 
               {/* Teachers Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">👨‍🏫 Teachers</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Teachers</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                   {statGroups.teachers.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -557,7 +569,7 @@ const DirectorDashboard = () => {
 
               {/* Applications & Store Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">📋 Applications & Store</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications & Store</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                   {statGroups.applications.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -573,7 +585,7 @@ const DirectorDashboard = () => {
                 <>
                   {/* Time Series - Applications by Month */}
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">📈 Applications Over Time</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications Over Time</h3>
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart data={applicationsTimeSeries}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -588,7 +600,7 @@ const DirectorDashboard = () => {
 
                   {/* Track Comparison */}
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Applications by Track</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications by Track</h3>
                     <ResponsiveContainer width="100%" height={400}>
                       <BarChart data={trackComparison}>
                         <CartesianGrid strokeDasharray="3 3" />
