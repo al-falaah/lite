@@ -65,10 +65,23 @@ const DirectorDashboard = () => {
   const [applicationsTimeSeries, setApplicationsTimeSeries] = useState([]);
   const [trackComparison, setTrackComparison] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [timeSeriesFilter, setTimeSeriesFilter] = useState({
+    timeRange: '12', // months
+    program: 'all'
+  });
+  const [rawApplicationsData, setRawApplicationsData] = useState([]);
 
   useEffect(() => {
     fetchStats();
   }, []);
+
+  // Reprocess time series data when filters change
+  useEffect(() => {
+    if (rawApplicationsData.length > 0) {
+      const filteredData = processTimeSeriesData(rawApplicationsData, timeSeriesFilter);
+      setApplicationsTimeSeries(filteredData);
+    }
+  }, [timeSeriesFilter, rawApplicationsData]);
 
   const fetchStats = async () => {
     try {
@@ -214,7 +227,7 @@ const DirectorDashboard = () => {
       });
 
       // Process time series data (applications by month)
-      const timeSeriesData = processTimeSeriesData(applicationsData);
+      const timeSeriesData = processTimeSeriesData(applicationsData, timeSeriesFilter);
 
       // Process track comparison data
       const trackComparisonData = processTrackComparison(trackData);
@@ -238,6 +251,8 @@ const DirectorDashboard = () => {
         pendingApplications: parseCount(pendingApplicationsRes)
       });
 
+      // Store raw data for filtering
+      setRawApplicationsData(applicationsData);
       setApplicationsTimeSeries(timeSeriesData);
       setTrackComparison(trackComparisonData);
     } catch (error) {
@@ -248,11 +263,17 @@ const DirectorDashboard = () => {
     }
   };
 
-  const processTimeSeriesData = (applications) => {
+  const processTimeSeriesData = (applications, filters = { timeRange: '12', program: 'all' }) => {
+    // Filter by program if specified
+    let filteredApps = applications;
+    if (filters.program !== 'all') {
+      filteredApps = applications.filter(app => app.program === filters.program);
+    }
+
     // Group applications by month
     const monthlyData = {};
 
-    applications.forEach(app => {
+    filteredApps.forEach(app => {
       const date = new Date(app.created_at);
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
@@ -263,6 +284,7 @@ const DirectorDashboard = () => {
     });
 
     // Convert to array and sort by date properly
+    const timeRange = parseInt(filters.timeRange);
     return Object.entries(monthlyData)
       .sort((a, b) => a[0].localeCompare(b[0])) // Sort by YYYY-MM string first
       .map(([month, count]) => ({
@@ -270,7 +292,7 @@ const DirectorDashboard = () => {
         monthKey: month, // Keep original for debugging
         applications: count
       }))
-      .slice(-12); // Last 12 months
+      .slice(-timeRange); // Last N months based on filter
   };
 
   const processTrackComparison = (applications) => {
@@ -546,10 +568,10 @@ const DirectorDashboard = () => {
               </div>
               {activeTab === 'overview' && (
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setLoading(true);
-                    fetchStats();
-                    toast.success('Refreshing statistics...');
+                    await fetchStats();
+                    toast.success('Statistics refreshed');
                   }}
                   disabled={loading}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
@@ -612,7 +634,43 @@ const DirectorDashboard = () => {
                 <>
                   {/* Time Series - Applications by Month */}
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications Over Time</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Applications Over Time</h3>
+
+                      {/* Filters */}
+                      <div className="flex flex-wrap gap-3">
+                        {/* Time Range Filter */}
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm text-gray-600">Period:</label>
+                          <select
+                            value={timeSeriesFilter.timeRange}
+                            onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, timeRange: e.target.value })}
+                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                          >
+                            <option value="3">Last 3 months</option>
+                            <option value="6">Last 6 months</option>
+                            <option value="12">Last 12 months</option>
+                            <option value="24">Last 24 months</option>
+                            <option value="999">All time</option>
+                          </select>
+                        </div>
+
+                        {/* Program Filter */}
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm text-gray-600">Program:</label>
+                          <select
+                            value={timeSeriesFilter.program}
+                            onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, program: e.target.value })}
+                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                          >
+                            <option value="all">All Programs</option>
+                            <option value="essentials">Essentials Arabic & Islamic Studies</option>
+                            <option value="tajweed">Tajweed Mastery</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart data={applicationsTimeSeries}>
                         <CartesianGrid strokeDasharray="3 3" />
