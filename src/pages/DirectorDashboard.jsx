@@ -9,7 +9,15 @@ import {
   Shield,
   Users,
   LogOut,
-  ArrowRight
+  ArrowRight,
+  UserCheck,
+  UserX,
+  DollarSign,
+  CheckCircle,
+  XCircle,
+  Clock,
+  TrendingUp,
+  BarChart3
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
@@ -17,7 +25,22 @@ import { toast } from 'sonner';
 const DirectorDashboard = () => {
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
+  const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState({
+    // Student stats
+    totalStudents: 0,
+    studentsWithoutTeacher: 0,
+    studentsPendingPayment: 0,
+    enrolledStudents: 0,
+    graduatedStudents: 0,
+    droppedOutStudents: 0,
+
+    // Teacher stats
+    totalTeachers: 0,
+    teachersWithStudents: 0,
+    teachersWithoutStudents: 0,
+
+    // Other stats
     totalUsers: 0,
     totalPosts: 0,
     pendingOrders: 0
@@ -30,7 +53,6 @@ const DirectorDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      // Get session for auth token
       const { data: session } = await supabase.auth.getSession();
       const accessToken = session?.session?.access_token;
 
@@ -43,42 +65,97 @@ const DirectorDashboard = () => {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      // Fetch counts using REST API for reliability
-      const [usersRes, postsRes, ordersRes] = await Promise.all([
+      const headers = {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${accessToken}`,
+        'Prefer': 'count=exact'
+      };
+
+      // Fetch all stats in parallel
+      const [
+        usersRes,
+        postsRes,
+        ordersRes,
+        studentsRes,
+        studentsNoTeacherRes,
+        studentsPendingPaymentRes,
+        enrolledStudentsRes,
+        graduatedStudentsRes,
+        droppedOutStudentsRes,
+        teachersRes,
+        teachersWithStudentsRes
+      ] = await Promise.all([
+        // General stats
         fetch(`${supabaseUrl}/rest/v1/profiles?select=id&limit=1`, {
           method: 'HEAD',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${accessToken}`,
-            'Prefer': 'count=exact'
-          }
+          headers
         }),
         fetch(`${supabaseUrl}/rest/v1/blog_posts?select=id&limit=1`, {
           method: 'HEAD',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${accessToken}`,
-            'Prefer': 'count=exact'
-          }
+          headers
         }),
         fetch(`${supabaseUrl}/rest/v1/store_orders?status=eq.pending&select=id&limit=1`, {
           method: 'HEAD',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${accessToken}`,
-            'Prefer': 'count=exact'
-          }
+          headers
+        }),
+
+        // Student stats
+        fetch(`${supabaseUrl}/rest/v1/students?select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+        fetch(`${supabaseUrl}/rest/v1/students?teacher_id=is.null&select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+        fetch(`${supabaseUrl}/rest/v1/students?payment_status=eq.pending&select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+        fetch(`${supabaseUrl}/rest/v1/students?status=eq.enrolled&select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+        fetch(`${supabaseUrl}/rest/v1/students?status=eq.graduated&select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+        fetch(`${supabaseUrl}/rest/v1/students?status=eq.dropped_out&select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+
+        // Teacher stats
+        fetch(`${supabaseUrl}/rest/v1/teachers?select=id&limit=1`, {
+          method: 'HEAD',
+          headers
+        }),
+        fetch(`${supabaseUrl}/rest/v1/teachers?select=id&students!inner(id)&limit=1`, {
+          method: 'HEAD',
+          headers
         })
       ]);
 
-      const usersCount = parseInt(usersRes.headers.get('content-range')?.split('/')[1] || '0');
-      const postsCount = parseInt(postsRes.headers.get('content-range')?.split('/')[1] || '0');
-      const pendingOrdersCount = parseInt(ordersRes.headers.get('content-range')?.split('/')[1] || '0');
+      const parseCount = (res) => parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+
+      const totalTeachers = parseCount(teachersRes);
+      const teachersWithStudents = parseCount(teachersWithStudentsRes);
 
       setStats({
-        totalUsers: usersCount,
-        totalPosts: postsCount,
-        pendingOrders: pendingOrdersCount
+        totalUsers: parseCount(usersRes),
+        totalPosts: parseCount(postsRes),
+        pendingOrders: parseCount(ordersRes),
+
+        totalStudents: parseCount(studentsRes),
+        studentsWithoutTeacher: parseCount(studentsNoTeacherRes),
+        studentsPendingPayment: parseCount(studentsPendingPaymentRes),
+        enrolledStudents: parseCount(enrolledStudentsRes),
+        graduatedStudents: parseCount(graduatedStudentsRes),
+        droppedOutStudents: parseCount(droppedOutStudentsRes),
+
+        totalTeachers,
+        teachersWithStudents,
+        teachersWithoutStudents: totalTeachers - teachersWithStudents
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -105,7 +182,6 @@ const DirectorDashboard = () => {
       description: 'Manage students, teachers, and applications',
       icon: GraduationCap,
       href: '/admin',
-      color: 'from-blue-500 to-blue-600',
       iconBg: 'bg-blue-50',
       iconColor: 'text-blue-600'
     },
@@ -114,7 +190,6 @@ const DirectorDashboard = () => {
       description: 'Create and manage blog posts',
       icon: BookOpen,
       href: '/blog/admin',
-      color: 'from-orange-500 to-orange-600',
       iconBg: 'bg-orange-50',
       iconColor: 'text-orange-600'
     },
@@ -123,7 +198,6 @@ const DirectorDashboard = () => {
       description: 'Manage products and orders',
       icon: ShoppingBag,
       href: '/store/admin',
-      color: 'from-emerald-500 to-emerald-600',
       iconBg: 'bg-emerald-50',
       iconColor: 'text-emerald-600'
     },
@@ -132,36 +206,113 @@ const DirectorDashboard = () => {
       description: 'Manage user roles and permissions',
       icon: Shield,
       href: '/admin/roles',
-      color: 'from-purple-500 to-purple-600',
       iconBg: 'bg-purple-50',
       iconColor: 'text-purple-600'
     }
   ];
 
-  const quickStats = [
+  // Overview stats for first tab
+  const overviewStats = [
+    // Student Stats
+    {
+      label: 'Total Students',
+      value: stats.totalStudents,
+      icon: Users,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+      change: null
+    },
+    {
+      label: 'Students Without Teacher',
+      value: stats.studentsWithoutTeacher,
+      icon: UserX,
+      color: 'text-red-600',
+      bgColor: 'bg-red-50',
+      change: null
+    },
+    {
+      label: 'Pending Payment',
+      value: stats.studentsPendingPayment,
+      icon: DollarSign,
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-50',
+      change: null
+    },
+    {
+      label: 'Enrolled Students',
+      value: stats.enrolledStudents,
+      icon: CheckCircle,
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
+      change: null
+    },
+    {
+      label: 'Graduated Students',
+      value: stats.graduatedStudents,
+      icon: GraduationCap,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
+      change: null
+    },
+    {
+      label: 'Dropped Out',
+      value: stats.droppedOutStudents,
+      icon: XCircle,
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-50',
+      change: null
+    },
+
+    // Teacher Stats
+    {
+      label: 'Total Teachers',
+      value: stats.totalTeachers,
+      icon: UserCheck,
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50',
+      change: null
+    },
+    {
+      label: 'Teachers With Students',
+      value: stats.teachersWithStudents,
+      icon: TrendingUp,
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
+      change: null
+    },
+    {
+      label: 'Teachers Without Students',
+      value: stats.teachersWithoutStudents,
+      icon: Clock,
+      color: 'text-gray-600',
+      bgColor: 'bg-gray-50',
+      change: null
+    },
+
+    // Other Stats
     {
       label: 'Total Users',
       value: stats.totalUsers,
       icon: Users,
-      href: '/admin/roles',
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-50',
+      change: null
     },
     {
       label: 'Blog Posts',
       value: stats.totalPosts,
       icon: BookOpen,
-      href: '/blog/admin',
       color: 'text-orange-600',
-      bgColor: 'bg-orange-50'
+      bgColor: 'bg-orange-50',
+      change: null
     },
     {
       label: 'Pending Orders',
       value: stats.pendingOrders,
       icon: ShoppingBag,
-      href: '/store/admin?tab=orders&status=pending',
       color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50'
+      bgColor: 'bg-emerald-50',
+      change: null
     }
   ];
 
@@ -178,23 +329,53 @@ const DirectorDashboard = () => {
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-3">
                 <Shield className="h-6 w-6 text-emerald-600" />
-                <h1 className="text-lg font-semibold text-gray-900">Director Dashboard</h1>
+                <h1 className="text-lg sm:text-xl font-semibold text-gray-900">Director Dashboard</h1>
               </div>
               <div className="flex items-center gap-4">
                 <Link
                   to="/"
-                  className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  className="hidden sm:block text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Visit Website
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
-                  Logout
+                  <span className="hidden sm:inline">Logout</span>
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex gap-8">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === 'overview'
+                    ? 'border-emerald-600 text-emerald-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <BarChart3 className="h-5 w-5" />
+                Quick Overview
+              </button>
+              <button
+                onClick={() => setActiveTab('links')}
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === 'links'
+                    ? 'border-emerald-600 text-emerald-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <Shield className="h-5 w-5" />
+                Administrative Areas
+              </button>
             </div>
           </div>
         </div>
@@ -207,39 +388,102 @@ const DirectorDashboard = () => {
               Welcome back, {profile?.full_name?.split(' ')[0] || 'Director'}
             </h2>
             <p className="text-gray-600">
-              You have full access to all administrative areas
+              {activeTab === 'overview'
+                ? 'Overview of all madrasah statistics and metrics'
+                : 'Quick access to all administrative areas'}
             </p>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {quickStats.map((stat) => {
-              const Icon = stat.icon;
-              return (
-                <Link
-                  key={stat.label}
-                  to={stat.href}
-                  className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 hover:shadow-sm transition-all"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
-                      <p className={`text-3xl font-bold ${stat.color}`}>
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
+            <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {overviewStats.map((stat) => {
+                  const Icon = stat.icon;
+                  return (
+                    <div
+                      key={stat.label}
+                      className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className={`${stat.bgColor} p-2 rounded-lg`}>
+                          <Icon className={`h-5 w-5 ${stat.color}`} />
+                        </div>
+                      </div>
+                      <p className="text-xs font-medium text-gray-600 mb-1">{stat.label}</p>
+                      <p className={`text-2xl font-bold ${stat.color}`}>
                         {loading ? '...' : stat.value.toLocaleString()}
                       </p>
                     </div>
-                    <div className={`${stat.bgColor} p-3 rounded-lg`}>
-                      <Icon className={`h-6 w-6 ${stat.color}`} />
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
 
-          {/* Admin Areas */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Administrative Areas</h3>
+              {/* Quick Insights */}
+              {!loading && (
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {stats.studentsWithoutTeacher > 0 && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <UserX className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-red-900 mb-1">Action Required</h4>
+                          <p className="text-sm text-red-700">
+                            {stats.studentsWithoutTeacher} {stats.studentsWithoutTeacher === 1 ? 'student needs' : 'students need'} to be assigned a teacher
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {stats.studentsPendingPayment > 0 && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <DollarSign className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-yellow-900 mb-1">Payment Pending</h4>
+                          <p className="text-sm text-yellow-700">
+                            {stats.studentsPendingPayment} {stats.studentsPendingPayment === 1 ? 'student has' : 'students have'} pending payments
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {stats.teachersWithoutStudents > 0 && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <Clock className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-blue-900 mb-1">Available Teachers</h4>
+                          <p className="text-sm text-blue-700">
+                            {stats.teachersWithoutStudents} {stats.teachersWithoutStudents === 1 ? 'teacher is' : 'teachers are'} available for new students
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {stats.pendingOrders > 0 && (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <ShoppingBag className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h4 className="font-semibold text-emerald-900 mb-1">Store Orders</h4>
+                          <p className="text-sm text-emerald-700">
+                            {stats.pendingOrders} {stats.pendingOrders === 1 ? 'order is' : 'orders are'} waiting for processing
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Links Tab */}
+          {activeTab === 'links' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {adminAreas.map((area) => {
                 const Icon = area.icon;
@@ -269,7 +513,7 @@ const DirectorDashboard = () => {
                 );
               })}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>
