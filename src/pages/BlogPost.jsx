@@ -10,6 +10,7 @@ const BlogPost = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
     fetchPost();
@@ -91,6 +92,9 @@ const BlogPost = () => {
 
       setPost(data[0]); // PostgREST returns an array, get first item
       console.log('[BlogPost] Post loaded:', data[0].title);
+
+      // Fetch related posts (exclude current post)
+      fetchRelatedPosts(data[0].id, supabaseUrl, anonKey);
     } catch (error) {
       console.error('[BlogPost] Error fetching post:', error);
 
@@ -102,6 +106,43 @@ const BlogPost = () => {
     } finally {
       setLoading(false);
       console.log('[BlogPost] Loading complete');
+    }
+  };
+
+  const fetchRelatedPosts = async (currentPostId, supabaseUrl, anonKey) => {
+    try {
+      // Fetch all other published posts, ordered by published date (newest first)
+      const url = `${supabaseUrl}/rest/v1/blog_posts?status=eq.published&id=not.eq.${currentPostId}&select=id,title,slug,excerpt,featured_image,published_at,author_name,category&order=published_at.desc&limit=10`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'apikey': anonKey,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        console.error('[BlogPost] Failed to fetch related posts');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('[BlogPost] Related posts fetched:', data.length);
+
+      // Determine how many to show based on total count
+      let postsToShow = [];
+      if (data.length === 1) {
+        postsToShow = []; // Show none if only 1 other article
+      } else if (data.length === 2) {
+        postsToShow = [data[0]]; // Show 1 if 2 total articles
+      } else if (data.length >= 3) {
+        postsToShow = [data[0], data[1]]; // Show 2 if 3 or more articles
+      }
+
+      setRelatedPosts(postsToShow);
+    } catch (error) {
+      console.error('[BlogPost] Error fetching related posts:', error);
     }
   };
 
@@ -455,6 +496,62 @@ const BlogPost = () => {
             </div>
           </div>
         </div>
+
+        {/* Related Articles - Mobile Only */}
+        {relatedPosts.length > 0 && (
+          <div className="mt-16 pt-12 border-t border-gray-200 md:hidden">
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">
+              Related Articles
+            </h3>
+            <div className="space-y-6">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  to={`/blog/${relatedPost.slug}`}
+                  className="block group"
+                >
+                  <div className="flex gap-4">
+                    {relatedPost.featured_image && (
+                      <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-gray-100">
+                        <img
+                          src={relatedPost.featured_image}
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      {relatedPost.category && (
+                        <span className="inline-block px-2 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 rounded mb-2">
+                          {relatedPost.category}
+                        </span>
+                      )}
+                      <h4 className="text-base font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors line-clamp-2 mb-1">
+                        {relatedPost.title}
+                      </h4>
+                      {relatedPost.excerpt && (
+                        <p className="text-sm text-gray-600 line-clamp-2">
+                          {relatedPost.excerpt}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-8">
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-2 text-emerald-600 font-medium hover:text-emerald-700 transition-colors"
+              >
+                View All Articles →
+              </Link>
+            </div>
+          </div>
+        )}
       </article>
 
       {/* Blog Subscription Section */}
