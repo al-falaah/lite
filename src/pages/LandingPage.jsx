@@ -149,6 +149,11 @@ const LandingPage = () => {
                     Donate
                   </button>
                 </a>
+                <Link to="/admin">
+                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                    Admin
+                  </button>
+                </Link>
                 <Link to="/apply">
                   <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all hover:scale-105 shadow-lg shadow-emerald-600/30">
                     Apply Now
@@ -197,6 +202,11 @@ const LandingPage = () => {
                       Donate
                     </button>
                   </a>
+                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
+                      Admin
+                    </button>
+                  </Link>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 mt-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-lg shadow-emerald-600/30">
                       Apply Now
@@ -1361,9 +1371,6 @@ const LandingPage = () => {
                 </li>
                 <li>
                   <Link to="/teacher" className="text-gray-500 hover:text-gray-300 text-xs">Teacher Portal</Link>
-                </li>
-                                <li>
-                  <Link to="/admin" className="text-gray-500 hover:text-gray-300 text-xs">Admin</Link>
                 </li>
               </ul>
             </div>
