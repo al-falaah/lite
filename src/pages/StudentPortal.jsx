@@ -1021,56 +1021,37 @@ const StudentPortal = () => {
                   </div>
                 )}
 
-                {/* Journey Statistics */}
+                {/* Progress Tracker */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3">This Milestone</h4>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-900">
-                        {(() => {
-                          // Calculate total classes in current milestone
-                          const milestoneWeekStart = currentMilestone.weekStart;
-                          const milestoneWeekEnd = currentMilestone.weekEnd;
-                          const milestoneClasses = programSchedules.filter(s =>
-                            s.week_number >= milestoneWeekStart && s.week_number <= milestoneWeekEnd
-                          );
-                          return milestoneClasses.filter(s => s.status === 'completed').length;
-                        })()}
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1">Completed</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-blue-600">
-                        {(() => {
-                          // Calculate scheduled classes in current milestone
-                          const milestoneWeekStart = currentMilestone.weekStart;
-                          const milestoneWeekEnd = currentMilestone.weekEnd;
-                          const milestoneClasses = programSchedules.filter(s =>
-                            s.week_number >= milestoneWeekStart && s.week_number <= milestoneWeekEnd
-                          );
-                          return milestoneClasses.filter(s => s.status === 'scheduled').length;
-                        })()}
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1">Upcoming</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-gray-400">
-                        {(() => {
-                          // Calculate remaining classes in current milestone (not scheduled yet)
-                          const milestoneWeekStart = currentMilestone.weekStart;
-                          const milestoneWeekEnd = currentMilestone.weekEnd;
-                          const totalWeeksInMilestone = milestoneWeekEnd - milestoneWeekStart + 1;
-                          const classesPerWeek = 2; // main + short
-                          const totalPossibleClasses = totalWeeksInMilestone * classesPerWeek;
-                          const milestoneClasses = programSchedules.filter(s =>
-                            s.week_number >= milestoneWeekStart && s.week_number <= milestoneWeekEnd
-                          );
-                          return totalPossibleClasses - milestoneClasses.length;
-                        })()}
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1">Remaining</p>
-                    </div>
-                  </div>
+                  {(() => {
+                    const completedClasses = programSchedules.filter(s => s.status === 'completed').length;
+                    const totalClasses = totalWeeks * 2; // 2 classes per week (main + short)
+                    const completionPercent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
+
+                    return (
+                      <div>
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-gray-700">Overall Progress</h4>
+                          <span className="text-2xl font-bold text-emerald-600">{completionPercent}%</span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-3">
+                          <div
+                            className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all duration-500 ease-out"
+                            style={{ width: `${completionPercent}%` }}
+                          />
+                        </div>
+
+                        {/* Class Count */}
+                        <div className="flex items-center justify-between text-xs text-gray-600">
+                          <span>{completedClasses} of {totalClasses} classes completed</span>
+                          <span>{totalClasses - completedClasses} remaining</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </Card>
             );
