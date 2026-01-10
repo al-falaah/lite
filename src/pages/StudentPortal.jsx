@@ -12,12 +12,12 @@ import Card from '../components/common/Card';
 
 // Milestone configurations
 const TAJWEED_MILESTONES = [
-  { id: 1, name: 'Foundation', subtitle: 'Building Your Tajweed Foundation', weekStart: 1, weekEnd: 4 },
-  { id: 2, name: 'Articulation', subtitle: 'Mastering Letter Articulation', weekStart: 5, weekEnd: 8 },
-  { id: 3, name: 'Characteristics', subtitle: 'Discovering Letter Characteristics', weekStart: 9, weekEnd: 12 },
-  { id: 4, name: 'Rules', subtitle: 'Applying Tajweed Rules', weekStart: 13, weekEnd: 16 },
-  { id: 5, name: 'Refinement', subtitle: 'Refining Your Recitation', weekStart: 17, weekEnd: 20 },
-  { id: 6, name: 'Excellence', subtitle: 'Achieving Recitation Excellence', weekStart: 21, weekEnd: 24 }
+  { id: 1, name: 'Foundation', subtitle: 'Laying Your Foundation', weekStart: 1, weekEnd: 4 },
+  { id: 2, name: 'Discovery', subtitle: 'The Path of Discovery', weekStart: 5, weekEnd: 8 },
+  { id: 3, name: 'Clarity', subtitle: 'Achieving Clarity', weekStart: 9, weekEnd: 12 },
+  { id: 4, name: 'Precision', subtitle: 'Developing Precision', weekStart: 13, weekEnd: 16 },
+  { id: 5, name: 'Refinement', subtitle: 'The Refinement Stage', weekStart: 17, weekEnd: 20 },
+  { id: 6, name: 'Mastery', subtitle: 'Reaching Mastery', weekStart: 21, weekEnd: 24 }
 ];
 
 const EAIS_MILESTONES = [
