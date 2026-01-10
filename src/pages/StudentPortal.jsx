@@ -10,6 +10,61 @@ import {
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
+// Milestone configurations
+const TAJWEED_MILESTONES = [
+  { id: 1, name: 'Foundation', subtitle: 'Building Your Tajweed Foundation', weekStart: 1, weekEnd: 4 },
+  { id: 2, name: 'Articulation', subtitle: 'Mastering Letter Articulation', weekStart: 5, weekEnd: 8 },
+  { id: 3, name: 'Characteristics', subtitle: 'Discovering Letter Characteristics', weekStart: 9, weekEnd: 12 },
+  { id: 4, name: 'Rules', subtitle: 'Applying Tajweed Rules', weekStart: 13, weekEnd: 16 },
+  { id: 5, name: 'Refinement', subtitle: 'Refining Your Recitation', weekStart: 17, weekEnd: 20 },
+  { id: 6, name: 'Excellence', subtitle: 'Achieving Recitation Excellence', weekStart: 21, weekEnd: 24 }
+];
+
+const EAIS_MILESTONES = [
+  { id: 1, name: 'Awakening', subtitle: 'The Awakening - Beginning Your Journey', weekStart: 1, weekEnd: 13 },
+  { id: 2, name: 'Foundation', subtitle: 'Building Your Foundation', weekStart: 14, weekEnd: 26 },
+  { id: 3, name: 'Growth', subtitle: 'Experiencing Growth', weekStart: 27, weekEnd: 39 },
+  { id: 4, name: 'Transformation', subtitle: 'The First Transformation', weekStart: 40, weekEnd: 52 },
+  { id: 5, name: 'Insight', subtitle: 'Gaining Deep Insight', weekStart: 53, weekEnd: 65 },
+  { id: 6, name: 'Mastery', subtitle: 'Developing Mastery', weekStart: 66, weekEnd: 78 },
+  { id: 7, name: 'Wisdom', subtitle: 'Cultivating Wisdom', weekStart: 79, weekEnd: 91 },
+  { id: 8, name: 'Legacy', subtitle: 'Becoming a Legacy', weekStart: 92, weekEnd: 104 }
+];
+
+// Calculate current milestone based on week number
+const getCurrentMilestone = (currentWeek, isTajweed) => {
+  const milestones = isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES;
+
+  // Find milestone that contains the current week
+  const milestone = milestones.find(
+    m => currentWeek >= m.weekStart && currentWeek <= m.weekEnd
+  );
+
+  if (!milestone) {
+    // If week is beyond last milestone, return last milestone as "completed"
+    return {
+      ...milestones[milestones.length - 1],
+      isCompleted: true,
+      weeksInMilestone: 0,
+      weeksCompleted: 0,
+      milestoneProgress: 100
+    };
+  }
+
+  // Calculate progress within this milestone
+  const weeksInMilestone = milestone.weekEnd - milestone.weekStart + 1;
+  const weeksCompleted = currentWeek - milestone.weekStart;
+  const milestoneProgress = Math.round((weeksCompleted / weeksInMilestone) * 100);
+
+  return {
+    ...milestone,
+    weeksInMilestone,
+    weeksCompleted,
+    milestoneProgress,
+    isCompleted: false
+  };
+};
+
 const StudentPortal = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -763,27 +818,102 @@ const StudentPortal = () => {
             const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
             const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
 
+            // Calculate milestone progress
+            const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
+            const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
+            const totalMilestones = isTajweed ? 6 : 8;
+
             return (
               <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
-                {/* Week Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-gray-200 gap-3 sm:gap-0">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
-                      Week {currentActive.week} of {weeksPerYear}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                      <span className="inline-flex items-center px-2 py-1 rounded-md bg-emerald-100 text-emerald-800 font-medium">
-                        {programName} - Year {currentActive.year}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex sm:flex-col sm:text-right gap-4 sm:gap-0">
-                    <div className="flex-1 sm:flex-initial">
-                      <p className="text-xs sm:text-sm text-gray-600">Progress</p>
-                      <p className="text-xl sm:text-2xl font-bold text-emerald-600">
+                {/* Milestone Progress Header */}
+                <div className="mb-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm font-medium text-emerald-600">
+                          Milestone {currentMilestone.id} of {totalMilestones}
+                        </span>
+                        <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-medium rounded-full">
+                          {programName}
+                        </span>
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
+                        {currentMilestone.name}
+                      </h3>
+                      <p className="text-sm sm:text-base text-gray-600 italic">
+                        {currentMilestone.subtitle}
+                      </p>
+                    </div>
+                    <div className="text-right ml-4">
+                      <p className="text-xs text-gray-600 mb-1">Overall Progress</p>
+                      <p className="text-2xl font-bold text-emerald-600">
                         {progressPercent}%
                       </p>
                     </div>
+                  </div>
+
+                  {/* Milestone Progress Bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-xs text-gray-600 mb-2">
+                      <span>Week {currentActive.week}</span>
+                      <span>{currentMilestone.weeksCompleted} of {currentMilestone.weeksInMilestone} weeks completed</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div
+                        className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${currentMilestone.milestoneProgress}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Milestone Timeline (horizontal) */}
+                  <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2">
+                    {(isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES).map((milestone, index) => {
+                      const isCompleted = currentMilestone.id > milestone.id;
+                      const isCurrent = currentMilestone.id === milestone.id;
+
+                      return (
+                        <div key={milestone.id} className="flex items-center flex-shrink-0">
+                          {/* Milestone Circle */}
+                          <div
+                            className={`relative flex flex-col items-center group ${
+                              isCurrent ? 'scale-110' : ''
+                            } transition-transform`}
+                            title={milestone.subtitle}
+                          >
+                            <div
+                              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm transition-all ${
+                                isCompleted
+                                  ? 'bg-emerald-600 text-white'
+                                  : isCurrent
+                                  ? 'bg-emerald-500 text-white ring-4 ring-emerald-200'
+                                  : 'bg-gray-200 text-gray-500'
+                              }`}
+                            >
+                              {isCompleted ? '✓' : milestone.id}
+                            </div>
+                            <div className="mt-1 text-center hidden sm:block">
+                              <p
+                                className={`text-[10px] font-medium ${
+                                  isCurrent ? 'text-emerald-700' : 'text-gray-600'
+                                }`}
+                              >
+                                {milestone.name}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Connector Line */}
+                          {index < (isTajweed ? 5 : 7) && (
+                            <div
+                              className={`w-6 sm:w-8 h-0.5 ${
+                                isCompleted ? 'bg-emerald-600' : 'bg-gray-300'
+                              }`}
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -897,25 +1027,28 @@ const StudentPortal = () => {
                   </div>
                 )}
 
-                {/* Program Stats */}
-                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-gray-900">
-                      {programSchedules.filter(s => s.status === 'completed').length}
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">Completed</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-blue-600">
-                      {programSchedules.filter(s => s.status === 'scheduled').length}
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">Upcoming</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-gray-900">
-                      {programSchedules.length}
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">Total</p>
+                {/* Journey Statistics */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Journey Statistics</h4>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-emerald-600">
+                        {currentMilestone.id}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">Current Milestone</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-gray-900">
+                        {programSchedules.filter(s => s.status === 'completed').length}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">Classes Completed</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-blue-600">
+                        {programSchedules.filter(s => s.status === 'scheduled').length}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">Classes Upcoming</p>
+                    </div>
                   </div>
                 </div>
               </Card>
