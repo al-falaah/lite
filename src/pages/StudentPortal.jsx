@@ -915,51 +915,50 @@ const StudentPortal = () => {
 
                 {/* Current Week Classes */}
                 {currentWeekClasses.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="space-y-3">
                     {/* Main Class */}
                     {mainClass && (
-                      <div className="bg-blue-50 p-4 sm:p-5 rounded-lg border-2 border-blue-200">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                            <span className="text-sm sm:text-base font-semibold text-blue-900">
-                              Main Class (2 hrs)
-                            </span>
+                      <div className="bg-white border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <Video className="h-4 w-4 text-gray-600" />
+                              <span className="text-sm font-semibold text-gray-900">
+                                Main Class
+                              </span>
+                              <span className="text-xs text-gray-500">2 hrs</span>
+                            </div>
+                            {mainClass.scheduled_date && (
+                              <p className="text-sm text-gray-600">
+                                {new Date(mainClass.scheduled_date).toLocaleDateString('en-US', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric',
+                                })} • {new Date(mainClass.scheduled_date).toLocaleTimeString('en-US', {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            )}
                           </div>
-                          <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                            mainClass.status === 'completed' ? 'bg-green-100 text-green-800' :
-                            mainClass.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
+                          <span className={`text-xs px-2 py-1 rounded font-medium ${
+                            mainClass.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                            mainClass.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
+                            'bg-gray-100 text-gray-600'
                           }`}>
-                            {mainClass.status}
+                            {mainClass.status === 'completed' ? 'Completed' :
+                             mainClass.status === 'scheduled' ? 'Scheduled' : mainClass.status}
                           </span>
                         </div>
-
-                        {mainClass.scheduled_date && (
-                          <div className="mb-3">
-                            <p className="text-xs sm:text-sm text-blue-700 font-medium">
-                              {new Date(mainClass.scheduled_date).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </p>
-                            <p className="text-xs sm:text-sm text-blue-600">
-                              {new Date(mainClass.scheduled_date).toLocaleTimeString('en-US', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </p>
-                          </div>
-                        )}
 
                         {mainClass.meeting_link && mainClass.status === 'scheduled' && (
                           <a
                             href={mainClass.meeting_link.startsWith('http') ? mainClass.meeting_link : `https://${mainClass.meeting_link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                           >
+                            <Video className="h-4 w-4 mr-2" />
                             Join Class
                           </a>
                         )}
@@ -968,48 +967,47 @@ const StudentPortal = () => {
 
                     {/* Short Class */}
                     {shortClass && (
-                      <div className="bg-purple-50 p-4 sm:p-5 rounded-lg border-2 border-purple-200">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-                            <span className="text-sm sm:text-base font-semibold text-purple-900">
-                              Short Class (30 min)
-                            </span>
+                      <div className="bg-white border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <Video className="h-4 w-4 text-gray-600" />
+                              <span className="text-sm font-semibold text-gray-900">
+                                Short Class
+                              </span>
+                              <span className="text-xs text-gray-500">30 min</span>
+                            </div>
+                            {shortClass.scheduled_date && (
+                              <p className="text-sm text-gray-600">
+                                {new Date(shortClass.scheduled_date).toLocaleDateString('en-US', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric',
+                                })} • {new Date(shortClass.scheduled_date).toLocaleTimeString('en-US', {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            )}
                           </div>
-                          <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                            shortClass.status === 'completed' ? 'bg-green-100 text-green-800' :
-                            shortClass.status === 'scheduled' ? 'bg-purple-100 text-purple-800' :
-                            'bg-gray-100 text-gray-800'
+                          <span className={`text-xs px-2 py-1 rounded font-medium ${
+                            shortClass.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                            shortClass.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
+                            'bg-gray-100 text-gray-600'
                           }`}>
-                            {shortClass.status}
+                            {shortClass.status === 'completed' ? 'Completed' :
+                             shortClass.status === 'scheduled' ? 'Scheduled' : shortClass.status}
                           </span>
                         </div>
-
-                        {shortClass.scheduled_date && (
-                          <div className="mb-3">
-                            <p className="text-xs sm:text-sm text-purple-700 font-medium">
-                              {new Date(shortClass.scheduled_date).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </p>
-                            <p className="text-xs sm:text-sm text-purple-600">
-                              {new Date(shortClass.scheduled_date).toLocaleTimeString('en-US', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </p>
-                          </div>
-                        )}
 
                         {shortClass.meeting_link && shortClass.status === 'scheduled' && (
                           <a
                             href={shortClass.meeting_link.startsWith('http') ? shortClass.meeting_link : `https://${shortClass.meeting_link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                           >
+                            <Video className="h-4 w-4 mr-2" />
                             Join Class
                           </a>
                         )}
@@ -1025,25 +1023,52 @@ const StudentPortal = () => {
 
                 {/* Journey Statistics */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Journey Statistics</h4>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">This Milestone</h4>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-emerald-600">
-                        {currentMilestone.id}
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1">Current Milestone</p>
-                    </div>
-                    <div className="text-center">
                       <p className="text-2xl font-bold text-gray-900">
-                        {programSchedules.filter(s => s.status === 'completed').length}
+                        {(() => {
+                          // Calculate total classes in current milestone
+                          const milestoneWeekStart = currentMilestone.weekStart;
+                          const milestoneWeekEnd = currentMilestone.weekEnd;
+                          const milestoneClasses = programSchedules.filter(s =>
+                            s.week_number >= milestoneWeekStart && s.week_number <= milestoneWeekEnd
+                          );
+                          return milestoneClasses.filter(s => s.status === 'completed').length;
+                        })()}
                       </p>
-                      <p className="text-xs text-gray-600 mt-1">Classes Completed</p>
+                      <p className="text-xs text-gray-600 mt-1">Completed</p>
                     </div>
                     <div className="text-center">
                       <p className="text-2xl font-bold text-blue-600">
-                        {programSchedules.filter(s => s.status === 'scheduled').length}
+                        {(() => {
+                          // Calculate scheduled classes in current milestone
+                          const milestoneWeekStart = currentMilestone.weekStart;
+                          const milestoneWeekEnd = currentMilestone.weekEnd;
+                          const milestoneClasses = programSchedules.filter(s =>
+                            s.week_number >= milestoneWeekStart && s.week_number <= milestoneWeekEnd
+                          );
+                          return milestoneClasses.filter(s => s.status === 'scheduled').length;
+                        })()}
                       </p>
-                      <p className="text-xs text-gray-600 mt-1">Classes Upcoming</p>
+                      <p className="text-xs text-gray-600 mt-1">Upcoming</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-gray-400">
+                        {(() => {
+                          // Calculate remaining classes in current milestone (not scheduled yet)
+                          const milestoneWeekStart = currentMilestone.weekStart;
+                          const milestoneWeekEnd = currentMilestone.weekEnd;
+                          const totalWeeksInMilestone = milestoneWeekEnd - milestoneWeekStart + 1;
+                          const classesPerWeek = 2; // main + short
+                          const totalPossibleClasses = totalWeeksInMilestone * classesPerWeek;
+                          const milestoneClasses = programSchedules.filter(s =>
+                            s.week_number >= milestoneWeekStart && s.week_number <= milestoneWeekEnd
+                          );
+                          return totalPossibleClasses - milestoneClasses.length;
+                        })()}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">Remaining</p>
                     </div>
                   </div>
                 </div>
