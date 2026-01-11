@@ -4,6 +4,58 @@ import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X,
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 
+// Milestone configurations
+const TAJWEED_MILESTONES = [
+  { id: 1, name: 'Foundation', subtitle: 'Laying Your Foundation', weekStart: 1, weekEnd: 4 },
+  { id: 2, name: 'Discovery', subtitle: 'The Path of Discovery', weekStart: 5, weekEnd: 8 },
+  { id: 3, name: 'Clarity', subtitle: 'Achieving Clarity', weekStart: 9, weekEnd: 12 },
+  { id: 4, name: 'Precision', subtitle: 'Developing Precision', weekStart: 13, weekEnd: 16 },
+  { id: 5, name: 'Refinement', subtitle: 'The Refinement Stage', weekStart: 17, weekEnd: 20 },
+  { id: 6, name: 'Mastery', subtitle: 'Reaching Mastery', weekStart: 21, weekEnd: 24 }
+];
+
+const EAIS_MILESTONES = [
+  { id: 1, name: 'Awakening', subtitle: 'The Awakening - Beginning Your Journey', weekStart: 1, weekEnd: 13 },
+  { id: 2, name: 'Foundation', subtitle: 'Building Your Foundation', weekStart: 14, weekEnd: 26 },
+  { id: 3, name: 'Growth', subtitle: 'Experiencing Growth', weekStart: 27, weekEnd: 39 },
+  { id: 4, name: 'Transformation', subtitle: 'The First Transformation', weekStart: 40, weekEnd: 52 },
+  { id: 5, name: 'Insight', subtitle: 'Gaining Deep Insight', weekStart: 53, weekEnd: 65 },
+  { id: 6, name: 'Mastery', subtitle: 'Developing Mastery', weekStart: 66, weekEnd: 78 },
+  { id: 7, name: 'Wisdom', subtitle: 'Cultivating Wisdom', weekStart: 79, weekEnd: 91 },
+  { id: 8, name: 'Legacy', subtitle: 'Becoming a Legacy', weekStart: 92, weekEnd: 104 }
+];
+
+// Calculate current milestone based on week number
+const getCurrentMilestone = (currentWeek, isTajweed) => {
+  const milestones = isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES;
+
+  const milestone = milestones.find(
+    m => currentWeek >= m.weekStart && currentWeek <= m.weekEnd
+  );
+
+  if (!milestone) {
+    return {
+      ...milestones[milestones.length - 1],
+      isCompleted: true,
+      weeksInMilestone: 0,
+      weeksCompleted: 0,
+      milestoneProgress: 100
+    };
+  }
+
+  const weeksInMilestone = milestone.weekEnd - milestone.weekStart + 1;
+  const weeksCompleted = currentWeek - milestone.weekStart;
+  const milestoneProgress = Math.round((weeksCompleted / weeksInMilestone) * 100);
+
+  return {
+    ...milestone,
+    weeksInMilestone,
+    weeksCompleted,
+    milestoneProgress,
+    isCompleted: false
+  };
+};
+
 export default function TeacherPortal() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [teacher, setTeacher] = useState(null);
@@ -901,91 +953,143 @@ export default function TeacherPortal() {
                   const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
                   const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
 
+                  // Calculate milestone progress
+                  const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
+                  const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
+                  const totalMilestones = isTajweed ? 6 : 8;
+                  const programName = isTajweed ? 'Tajweed Mastery Program' : 'Essential Arabic & Islamic Studies';
+
                   return (
                     <div>
-                      {/* Week Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-gray-200 gap-3 sm:gap-0">
-                        <div>
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
-                            Week {currentActive.week} of {weeksPerYear}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                            {isTajweed ? (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                Tajweed Program (6 months)
-                              </span>
-                            ) : currentActive.year === 1 ? (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                Year 1 of 2 - Essentials
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                Year 2 of 2 - Essentials
-                              </span>
-                            )}
+                      {/* Program Header */}
+                      <div className="mb-6 pb-4 border-b border-gray-100">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{programName}</h3>
+                            <p className="text-sm text-gray-500 mt-0.5">Week {currentActive.week} • {progressPercent}% Complete</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Milestone Tracker */}
+                      <div className="mb-8">
+                        {/* Current Milestone Info */}
+                        <div className="mb-4">
+                          <div className="flex items-baseline gap-2 mb-1">
+                            <h4 className="text-lg font-semibold text-gray-900">
+                              {currentMilestone.name}
+                            </h4>
+                            <span className="text-xs text-gray-500">
+                              Milestone {currentMilestone.id} of {totalMilestones}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            {currentMilestone.subtitle}
                           </p>
                         </div>
-                        <div className="flex sm:flex-col sm:text-right gap-4 sm:gap-0">
-                          <div className="flex-1 sm:flex-initial">
-                            <p className="text-xs sm:text-sm text-gray-600">Progress</p>
-                            <p className="text-xl sm:text-2xl font-bold text-emerald-600">
-                              {progressPercent}%
-                            </p>
+
+                        {/* Milestone Timeline - Full Width */}
+                        <div className="space-y-3">
+                          {/* Progress Track */}
+                          <div className="relative">
+                            {/* Background Track */}
+                            <div className="absolute top-3 left-0 right-0 h-0.5 bg-gray-200" />
+
+                            {/* Progress Fill */}
+                            <div
+                              className="absolute top-3 left-0 h-0.5 bg-emerald-600 transition-all duration-500"
+                              style={{
+                                width: `${((currentMilestone.id - 1) / (totalMilestones - 1)) * 100}%`
+                              }}
+                            />
+
+                            {/* Milestone Nodes */}
+                            <div className="relative flex justify-between">
+                              {(isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES).map((milestone) => {
+                                const isCompleted = currentMilestone.id > milestone.id;
+                                const isCurrent = currentMilestone.id === milestone.id;
+
+                                return (
+                                  <div key={milestone.id} className="flex flex-col items-center">
+                                    {/* Node Circle */}
+                                    <div
+                                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all ${
+                                        isCompleted
+                                          ? 'bg-emerald-600 text-white'
+                                          : isCurrent
+                                          ? 'bg-emerald-600 text-white'
+                                          : 'bg-white border-2 border-gray-300 text-gray-400'
+                                      }`}
+                                      title={milestone.subtitle}
+                                    >
+                                      {isCompleted ? '✓' : milestone.id}
+                                    </div>
+
+                                    {/* Milestone Label - Hidden on small screens */}
+                                    <span className={`mt-2 text-[10px] font-medium text-center max-w-[60px] leading-tight hidden sm:block ${
+                                      isCurrent ? 'text-gray-900' : isCompleted ? 'text-gray-600' : 'text-gray-400'
+                                    }`}>
+                                      {milestone.name}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
-                          <div className="flex-1 sm:flex-initial">
-                            <p className="text-xs text-gray-500">
-                              {completedWeeks} of {totalWeeks} weeks
-                            </p>
+
+                          {/* Milestone Progress Info */}
+                          <div className="flex items-center justify-between text-xs text-gray-600 pt-2">
+                            <span>{currentMilestone.weeksCompleted} of {currentMilestone.weeksInMilestone} weeks completed</span>
+                            <span>{currentMilestone.milestoneProgress}%</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Current Week Classes */}
                       {currentWeekClasses.length === 0 ? (
-                        <div className="text-center py-6 sm:py-8 text-gray-500">
-                          <p className="text-sm">No classes scheduled for this week</p>
+                        <div className="text-center py-8 text-gray-500">
+                          <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                          <p>No classes scheduled for this week</p>
                         </div>
                       ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                        <div className="space-y-3">
                           {/* Main Class */}
                           {mainClass && (
-                            <div className="bg-blue-50 p-4 sm:p-5 rounded-lg border-2 border-blue-200">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                                  <span className="text-sm sm:text-base font-semibold text-blue-900">
-                                    Main Class (2 hrs)
-                                  </span>
+                            <div className="bg-white border border-gray-200 rounded-lg p-4">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <Calendar className="h-4 w-4 text-gray-600" />
+                                    <span className="text-sm font-semibold text-gray-900">
+                                      Main Class
+                                    </span>
+                                    <span className="text-xs text-gray-500">2 hrs</span>
+                                  </div>
+                                  <p className="text-sm text-gray-600">
+                                    {mainClass.day_of_week} • {formatTime(mainClass.class_time) || 'Not set'}
+                                  </p>
                                 </div>
-                                <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                                  mainClass.status === 'completed'
-                                    ? 'bg-green-100 text-green-800'
-                                    : mainClass.status === 'scheduled'
-                                    ? 'bg-yellow-100 text-yellow-800'
-                                    : 'bg-gray-100 text-gray-800'
+                                <span className={`text-xs px-2 py-1 rounded font-medium ${
+                                  mainClass.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                                  mainClass.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-gray-100 text-gray-600'
                                 }`}>
-                                  {mainClass.status}
+                                  {mainClass.status === 'completed' ? 'Completed' :
+                                   mainClass.status === 'scheduled' ? 'Scheduled' : mainClass.status}
                                 </span>
                               </div>
-                              <div className="space-y-2 mb-4">
-                                <div className="text-sm text-blue-800">
-                                  <span className="font-medium">Day:</span> {mainClass.day_of_week}
-                                </div>
-                                <div className="text-sm text-blue-800">
-                                  <span className="font-medium">Time:</span> {formatTime(mainClass.class_time) || 'Not set'}
-                                </div>
-                              </div>
-                              {mainClass.meeting_link && (
-                                <a
-                                  href={formatMeetingLink(mainClass.meeting_link)}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center text-sm text-blue-700 hover:text-blue-800 font-medium mb-3"
-                                >
-                                  Join Class
-                                </a>
-                              )}
-                              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-blue-200">
+
+                              <div className="flex items-center gap-2 flex-wrap">
+                                {mainClass.meeting_link && (
+                                  <a
+                                    href={formatMeetingLink(mainClass.meeting_link)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+                                  >
+                                    Join Class →
+                                  </a>
+                                )}
                                 {mainClass.status === 'scheduled' && (
                                   <button
                                     onClick={() => handleMarkAsComplete(mainClass.id)}
@@ -993,7 +1097,7 @@ export default function TeacherPortal() {
                                     className={`text-sm flex items-center font-medium ${
                                       studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active'
                                         ? 'text-gray-400 cursor-not-allowed'
-                                        : 'text-green-700 hover:text-green-800'
+                                        : 'text-emerald-700 hover:text-emerald-800'
                                     }`}
                                     title={studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? 'Cannot mark complete - student enrollment is not active' : ''}
                                   >
@@ -1007,43 +1111,41 @@ export default function TeacherPortal() {
 
                           {/* Short Class */}
                           {shortClass && (
-                            <div className="bg-purple-50 p-4 sm:p-5 rounded-lg border-2 border-purple-200">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-                                  <span className="text-sm sm:text-base font-semibold text-purple-900">
-                                    Short Class (30 min)
-                                  </span>
+                            <div className="bg-white border border-gray-200 rounded-lg p-4">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <Calendar className="h-4 w-4 text-gray-600" />
+                                    <span className="text-sm font-semibold text-gray-900">
+                                      Short Class
+                                    </span>
+                                    <span className="text-xs text-gray-500">30 min</span>
+                                  </div>
+                                  <p className="text-sm text-gray-600">
+                                    {shortClass.day_of_week} • {formatTime(shortClass.class_time) || 'Not set'}
+                                  </p>
                                 </div>
-                                <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                                  shortClass.status === 'completed'
-                                    ? 'bg-green-100 text-green-800'
-                                    : shortClass.status === 'scheduled'
-                                    ? 'bg-yellow-100 text-yellow-800'
-                                    : 'bg-gray-100 text-gray-800'
+                                <span className={`text-xs px-2 py-1 rounded font-medium ${
+                                  shortClass.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                                  shortClass.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-gray-100 text-gray-600'
                                 }`}>
-                                  {shortClass.status}
+                                  {shortClass.status === 'completed' ? 'Completed' :
+                                   shortClass.status === 'scheduled' ? 'Scheduled' : shortClass.status}
                                 </span>
                               </div>
-                              <div className="space-y-2 mb-4">
-                                <div className="text-sm text-purple-800">
-                                  <span className="font-medium">Day:</span> {shortClass.day_of_week}
-                                </div>
-                                <div className="text-sm text-purple-800">
-                                  <span className="font-medium">Time:</span> {formatTime(shortClass.class_time) || 'Not set'}
-                                </div>
-                              </div>
-                              {shortClass.meeting_link && (
-                                <a
-                                  href={formatMeetingLink(shortClass.meeting_link)}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center text-sm text-purple-700 hover:text-purple-800 font-medium mb-3"
-                                >
-                                  Join Class
-                                </a>
-                              )}
-                              <div className="flex items-center gap-2 mt-4 pt-3 border-t border-purple-200">
+
+                              <div className="flex items-center gap-2 flex-wrap">
+                                {shortClass.meeting_link && (
+                                  <a
+                                    href={formatMeetingLink(shortClass.meeting_link)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+                                  >
+                                    Join Class →
+                                  </a>
+                                )}
                                 {shortClass.status === 'scheduled' && (
                                   <button
                                     onClick={() => handleMarkAsComplete(shortClass.id)}
@@ -1051,7 +1153,7 @@ export default function TeacherPortal() {
                                     className={`text-sm flex items-center font-medium ${
                                       studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active'
                                         ? 'text-gray-400 cursor-not-allowed'
-                                        : 'text-green-700 hover:text-green-800'
+                                        : 'text-emerald-700 hover:text-emerald-800'
                                     }`}
                                     title={studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? 'Cannot mark complete - student enrollment is not active' : ''}
                                   >
@@ -1064,6 +1166,39 @@ export default function TeacherPortal() {
                           )}
                         </div>
                       )}
+
+                      {/* Overall Progress Tracker */}
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        {(() => {
+                          const completedClasses = studentSchedules.filter(s => s.status === 'completed').length;
+                          const totalClasses = totalWeeks * 2; // 2 classes per week (main + short)
+                          const completionPercent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
+
+                          return (
+                            <div>
+                              {/* Header */}
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="text-sm font-semibold text-gray-700">Overall Progress</h4>
+                                <span className="text-2xl font-bold text-emerald-600">{completionPercent}%</span>
+                              </div>
+
+                              {/* Progress Bar */}
+                              <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-3">
+                                <div
+                                  className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all duration-500 ease-out"
+                                  style={{ width: `${completionPercent}%` }}
+                                />
+                              </div>
+
+                              {/* Class Count */}
+                              <div className="flex items-center justify-between text-xs text-gray-600">
+                                <span>{completedClasses} of {totalClasses} classes completed</span>
+                                <span>{totalClasses - completedClasses} remaining</span>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
                     </div>
                   );
                 })()}
