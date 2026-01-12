@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 import { Calendar, ArrowRight, Home, Filter, Mail } from 'lucide-react';
 import BlogSubscribe from '../components/blog/BlogSubscribe';
@@ -182,8 +183,68 @@ const Blog = () => {
     return minutes;
   };
 
+  // JSON-LD structured data for blog listing
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "The FastTrack Madrasah Blog",
+    "description": "Insights on Islamic studies, Quran, Arabic language, and spiritual growth from The FastTrack Madrasah",
+    "url": "https://www.tftmadrasah.nz/blog",
+    "publisher": {
+      "@type": "Organization",
+      "name": "The FastTrack Madrasah",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.tftmadrasah.nz/favicon.svg"
+      }
+    },
+    "blogPost": posts.slice(0, 10).map(post => ({
+      "@type": "BlogPosting",
+      "headline": post.title,
+      "description": post.excerpt,
+      "image": post.featured_image,
+      "datePublished": post.published_at,
+      "author": {
+        "@type": "Person",
+        "name": post.author_name
+      },
+      "url": `https://www.tftmadrasah.nz/blog/${post.slug}`
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        {/* Basic meta tags */}
+        <title>Blog | The FastTrack Madrasah - Islamic Studies & Spiritual Growth</title>
+        <meta name="description" content="Explore articles on Islamic studies, Quran, Arabic language, and spiritual development. Learn from qualified teachers at The FastTrack Madrasah." />
+        <meta name="keywords" content="Islamic blog, Quran articles, Arabic learning, Islamic studies, spiritual growth, New Zealand" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Blog | The FastTrack Madrasah" />
+        <meta property="og:description" content="Explore articles on Islamic studies, Quran, Arabic language, and spiritual development." />
+        <meta property="og:url" content="https://www.tftmadrasah.nz/blog" />
+        <meta property="og:site_name" content="The FastTrack Madrasah" />
+        <meta property="og:locale" content="en_NZ" />
+        <meta property="og:image" content="https://www.tftmadrasah.nz/favicon.svg" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Blog | The FastTrack Madrasah" />
+        <meta name="twitter:description" content="Explore articles on Islamic studies, Quran, Arabic language, and spiritual development." />
+        <meta name="twitter:site" content="@tftmadrasah" />
+
+        {/* Canonical */}
+        <link rel="canonical" href="https://www.tftmadrasah.nz/blog" />
+
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      </Helmet>
+
       {/* Navigation Bar */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

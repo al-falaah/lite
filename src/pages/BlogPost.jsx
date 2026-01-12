@@ -275,32 +275,106 @@ const BlogPost = () => {
   const imageUrl = post.featured_image || 'https://www.tftmadrasah.nz/favicon.png';
   const description = post.excerpt || getExcerpt(post.content);
 
+  // JSON-LD structured data for Google
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": description,
+    "image": imageUrl,
+    "datePublished": post.published_at,
+    "dateModified": post.updated_at || post.published_at,
+    "author": {
+      "@type": "Person",
+      "name": post.author_name
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "The FastTrack Madrasah",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.tftmadrasah.nz/favicon.svg"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": postUrl
+    },
+    "articleSection": post.category || "Islamic Education",
+    "keywords": post.tags ? post.tags.join(", ") : "Islamic studies, Quran, Arabic, Online learning"
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.tftmadrasah.nz/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://www.tftmadrasah.nz/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": postUrl
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
         {/* Basic meta tags */}
         <title>{post.title} | The FastTrack Madrasah Blog</title>
         <meta name="description" content={description} />
+        <meta name="keywords" content={post.tags ? post.tags.join(", ") : "Islamic studies, Quran, Arabic, online learning, New Zealand"} />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
         {/* Open Graph meta tags for Facebook, WhatsApp, etc. */}
         <meta property="og:type" content="article" />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content={postUrl} />
         <meta property="og:site_name" content="The FastTrack Madrasah" />
+        <meta property="og:locale" content="en_NZ" />
         <meta property="article:published_time" content={post.published_at} />
+        <meta property="article:modified_time" content={post.updated_at || post.published_at} />
         <meta property="article:author" content={post.author_name} />
+        {post.category && <meta property="article:section" content={post.category} />}
+        {post.tags && post.tags.map((tag, index) => (
+          <meta key={index} property="article:tag" content={tag} />
+        ))}
 
         {/* Twitter Card meta tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:site" content="@tftmadrasah" />
 
         {/* Additional meta tags */}
         <meta name="author" content={post.author_name} />
         <link rel="canonical" href={postUrl} />
+
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(breadcrumbData)}
+        </script>
       </Helmet>
 
       {/* Navigation Bar */}
