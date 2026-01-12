@@ -29,44 +29,12 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Student Portal -->
-  <url>
-    <loc>https://tftmadrasah.nz/student</loc>
-    <lastmod>2026-01-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Teacher Portal -->
-  <url>
-    <loc>https://tftmadrasah.nz/teacher</loc>
-    <lastmod>2026-01-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
   <!-- Vacancies/Careers -->
   <url>
     <loc>https://tftmadrasah.nz/vacancies</loc>
     <lastmod>2026-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-  </url>
-
-  <!-- Admin Portal -->
-  <url>
-    <loc>https://tftmadrasah.nz/admin</loc>
-    <lastmod>2026-01-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Blog Admin -->
-  <url>
-    <loc>https://tftmadrasah.nz/blog/admin</loc>
-    <lastmod>2026-01-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.2</priority>
   </url>
 
   <!-- Blog Posts -->
