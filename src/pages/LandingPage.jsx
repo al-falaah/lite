@@ -14,6 +14,7 @@ const LandingPage = () => {
   const [latestArticles, setLatestArticles] = useState([]);
   const [missionExpanded, setMissionExpanded] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -91,13 +92,15 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, [quotes.length]);
 
-  // Back to top button visibility and scroll indicator hiding
+  // Back to top button visibility, scroll indicator hiding, and navbar transparency
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setShowBackToTop(scrollY > 500);
       // Hide scroll indicator after scrolling 200px (when they've started exploring)
       setShowScrollIndicator(scrollY < 200);
+      // Make navbar transparent after scrolling 100px
+      setIsScrolled(scrollY > 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -139,53 +142,85 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation - Fixed for sticky positioning */}
-      <nav className="sticky top-0 left-0 right-0 z-50 backdrop-blur-md bg-emerald-950/80 transition-all duration-300 pb-3 shadow-lg shadow-emerald-950/20">
+      {/* Navigation - Fixed for sticky positioning with dynamic transparency */}
+      <nav className={`sticky top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300 pb-3 ${
+        isScrolled
+          ? 'bg-white/95 shadow-sm'
+          : 'bg-emerald-950/80 shadow-lg shadow-emerald-950/20'
+      }`}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 md:h-16">
               <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
                 <img
-                  src="/favicon-white.svg"
+                  src={isScrolled ? "/favicon.svg" : "/favicon-white.svg"}
                   alt="The FastTrack Madrasah Logo"
-                  className="h-7 w-7 md:h-10 md:w-10"
+                  className="h-7 w-7 md:h-10 md:w-10 transition-all duration-300"
                 />
                 <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  <span className={`text-xs sm:text-sm md:text-base font-brand font-semibold transition-colors duration-300 ${
+                    isScrolled ? 'text-gray-900' : 'text-white'
+                  }`} style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                  <span className={`text-xs sm:text-sm md:text-base font-brand font-semibold transition-colors duration-300 ${
+                    isScrolled ? 'text-gray-900' : 'text-white'
+                  }`} style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
               </Link>
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center gap-1">
                 <a href="#mission">
-                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}>
                     Our Mission
                   </button>
                 </a>
                 <a href="#programs">
-                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}>
                     Programs
                   </button>
                 </a>
                 <Link to="/blog">
-                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}>
                     Blog
                   </button>
                 </Link>
                 <Link to="/store">
-                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg flex items-center gap-1.5 ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}>
                     <ShoppingBag className="h-4 w-4" />
                     Store
                   </button>
                 </Link>
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg flex items-center gap-1.5">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg flex items-center gap-1.5 ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}>
                     <Heart className="h-4 w-4" />
                     Donate
                   </button>
                 </a>
                 <Link to="/admin">
-                  <button className="px-3 lg:px-4 py-2 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all rounded-lg">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}>
                     Admin
                   </button>
                 </Link>
@@ -199,7 +234,11 @@ const LandingPage = () => {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
+                className={`md:hidden p-2 rounded-lg transition-colors ${
+                  isScrolled
+                    ? 'text-gray-900 hover:bg-gray-100'
+                    : 'text-white hover:bg-white/10'
+                }`}
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
