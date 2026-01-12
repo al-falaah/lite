@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -11,6 +11,7 @@ const LandingPage = () => {
   const [expandedProgram, setExpandedProgram] = useState(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openApproachCard, setOpenApproachCard] = useState(null);
+  const [latestArticles, setLatestArticles] = useState([]);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -96,6 +97,35 @@ const LandingPage = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Fetch latest blog articles
+  useEffect(() => {
+    const fetchLatestArticles = async () => {
+      try {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        const url = `${supabaseUrl}/rest/v1/blog_posts?status=eq.published&select=id,title,slug,excerpt,featured_image,published_at,author_name,category&order=published_at.desc&limit=3`;
+
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'apikey': anonKey,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setLatestArticles(data);
+        }
+      } catch (error) {
+        console.error('Error fetching latest articles:', error);
+      }
+    };
+
+    fetchLatestArticles();
   }, []);
 
   const scrollToTop = () => {
@@ -1296,6 +1326,109 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Latest Articles Section */}
+      {latestArticles.length > 0 && (
+        <section className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full mb-4">
+                <Newspaper className="h-4 w-4" />
+                <span className="text-sm font-semibold">Latest from Our Blog</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Insights & Reflections
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Explore our latest articles on Islamic knowledge, spiritual growth, and Quranic studies
+              </p>
+            </div>
+
+            {/* Articles Grid */}
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              {latestArticles.map((article, index) => (
+                <Link
+                  key={article.id}
+                  to={`/blog/${article.slug}`}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-emerald-200 hover:-translate-y-1"
+                >
+                  {/* Featured Image */}
+                  {article.featured_image && (
+                    <div className="relative h-48 overflow-hidden bg-gray-100">
+                      <img
+                        src={article.featured_image}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  )}
+
+                  {/* Article Content */}
+                  <div className="p-6">
+                    {/* Category Badge */}
+                    {article.category && (
+                      <span className="inline-block px-3 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-full mb-3">
+                        {article.category}
+                      </span>
+                    )}
+
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 leading-snug">
+                      {article.title}
+                    </h3>
+
+                    {/* Excerpt */}
+                    {article.excerpt && (
+                      <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
+                        {article.excerpt}
+                      </p>
+                    )}
+
+                    {/* Meta Info */}
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Calendar className="h-3.5 w-3.5" />
+                        <span>
+                          {new Date(article.published_at).toLocaleDateString('en-NZ', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                      <span className="text-emerald-600 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Read More
+                        <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* View All Button */}
+            <div className="text-center">
+              <Link to="/blog">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 font-semibold px-8 flex items-center gap-2 mx-auto"
+                >
+                  <BookOpen className="h-5 w-5" />
+                  Explore All Articles
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-emerald-600 text-white">
