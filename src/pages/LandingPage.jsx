@@ -13,6 +13,7 @@ const LandingPage = () => {
   const [openApproachCard, setOpenApproachCard] = useState(null);
   const [latestArticles, setLatestArticles] = useState([]);
   const [missionExpanded, setMissionExpanded] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -90,10 +91,13 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, [quotes.length]);
 
-  // Back to top button visibility
+  // Back to top button visibility and scroll indicator hiding
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500);
+      const scrollY = window.scrollY;
+      setShowBackToTop(scrollY > 500);
+      // Hide scroll indicator after scrolling 200px (when they've started exploring)
+      setShowScrollIndicator(scrollY < 200);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -362,25 +366,27 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Fixed Scroll Indicator - Always Visible on Side */}
-        <a
-          href="#mission"
-          className="fixed right-4 sm:right-8 bottom-8 z-40 flex flex-col items-center gap-2 group cursor-pointer animate-bounce-slow"
-          aria-label="Scroll down to learn more"
-        >
-          {/* Vertical Line */}
-          <div className="w-0.5 h-12 sm:h-16 bg-gradient-to-b from-transparent via-emerald-400/50 to-emerald-400"></div>
+        {/* Fixed Scroll Indicator - Visible only at top of page */}
+        {showScrollIndicator && (
+          <a
+            href="#mission"
+            className="fixed right-4 sm:right-8 bottom-8 z-40 flex flex-col items-center gap-2 group cursor-pointer animate-bounce-slow transition-opacity duration-300"
+            aria-label="Scroll down to learn more"
+          >
+            {/* Vertical Line */}
+            <div className="w-0.5 h-12 sm:h-16 bg-gradient-to-b from-transparent via-emerald-400/50 to-emerald-400"></div>
 
-          {/* Animated Chevron */}
-          <div className="bg-emerald-500 rounded-full p-2 shadow-lg shadow-emerald-500/50 group-hover:bg-emerald-400 transition-all">
-            <ChevronDown className="h-4 w-4 text-white" />
-          </div>
+            {/* Animated Chevron */}
+            <div className="bg-emerald-500 rounded-full p-2 shadow-lg shadow-emerald-500/50 group-hover:bg-emerald-400 transition-all">
+              <ChevronDown className="h-4 w-4 text-white" />
+            </div>
 
-          {/* Optional text hint - hidden on very small screens */}
-          <span className="hidden sm:block text-[10px] font-medium text-white/80 group-hover:text-white transition-colors tracking-widest uppercase rotate-90 origin-center mt-8">
-            Scroll
-          </span>
-        </a>
+            {/* Optional text hint - hidden on very small screens */}
+            <span className="hidden sm:block text-[10px] font-medium text-white/80 group-hover:text-white transition-colors tracking-widest uppercase rotate-90 origin-center mt-8">
+              Scroll
+            </span>
+          </a>
+        )}
       </section>
 
       {/* Seamless Gradient Transition */}
