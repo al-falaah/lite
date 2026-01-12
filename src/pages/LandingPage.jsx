@@ -92,15 +92,15 @@ const LandingPage = () => {
     return () => clearInterval(timer);
   }, [quotes.length]);
 
-  // Back to top button visibility, scroll indicator hiding, and navbar transparency
+  // Back to top button visibility, scroll indicator hiding, and navbar color change
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setShowBackToTop(scrollY > 500);
       // Hide scroll indicator after scrolling 200px (when they've started exploring)
       setShowScrollIndicator(scrollY < 200);
-      // Make navbar transparent after scrolling 100px
-      setIsScrolled(scrollY > 100);
+      // Change navbar to white after scrolling past hero (approximately 600px)
+      setIsScrolled(scrollY > 600);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -142,8 +142,8 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation - Fixed for sticky positioning with dynamic transparency */}
-      <nav className={`sticky top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300 pb-3 ${
+      {/* Navigation - Fixed for sticky positioning with color change after hero */}
+      <nav className={`sticky top-0 left-0 right-0 z-50 backdrop-blur-sm transition-all duration-300 pb-3 ${
         isScrolled
           ? 'bg-white/95 shadow-sm'
           : 'bg-emerald-950/80 shadow-lg shadow-emerald-950/20'
