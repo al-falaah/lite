@@ -359,15 +359,26 @@ const LandingPage = () => {
                 </div>
               )}
 
-              {/* Scroll Down Indicator */}
-              <div className="mt-8 md:mt-16 flex justify-center animate-bounce">
+              {/* Scroll Down Indicator - Modern Design */}
+              <div className="mt-12 md:mt-20 flex justify-center">
                 <a
                   href="#mission"
-                  className="flex flex-col items-center gap-2 text-white/80 hover:text-white transition-colors group"
+                  className="flex flex-col items-center gap-3 group cursor-pointer"
                   aria-label="Scroll down to learn more"
                 >
-                  <span className="text-sm font-medium hidden sm:block">Scroll Down</span>
-                  <ChevronDown className="h-8 w-8 group-hover:scale-110 transition-transform" />
+                  {/* Animated Mouse Icon */}
+                  <div className="relative w-7 h-11 border-2 border-white/50 rounded-full group-hover:border-white/80 transition-all duration-300">
+                    {/* Scroll Wheel - Animates down and fades */}
+                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-1.5 h-2.5 bg-emerald-400 rounded-full animate-[scroll-down_2s_ease-in-out_infinite]"></div>
+                  </div>
+
+                  {/* Text Label */}
+                  <span className="text-xs sm:text-sm font-medium text-white/70 group-hover:text-white transition-colors tracking-wider uppercase">
+                    Scroll to Explore
+                  </span>
+
+                  {/* Bouncing Chevron */}
+                  <ChevronDown className="h-5 w-5 text-emerald-400 animate-bounce" />
                 </a>
               </div>
             </div>
