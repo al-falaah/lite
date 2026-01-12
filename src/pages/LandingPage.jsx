@@ -376,7 +376,7 @@ const LandingPage = () => {
       </section>
 
       {/* Seamless Gradient Transition */}
-      <div className="relative h-32 sm:h-40 lg:h-48 bg-gradient-to-b from-black via-gray-900/50 to-white"></div>
+      <div className="relative h-20 sm:h-40 lg:h-48 bg-gradient-to-b from-black via-gray-900/50 to-white"></div>
 
       {/* Our Mission Section */}
       <section id="mission" className="bg-white py-10 sm:py-28">
@@ -410,29 +410,29 @@ const LandingPage = () => {
 
             {/* Founder Quote Box */}
             <div className="mt-10 sm:mt-16 relative">
-            <div className="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-8 sm:p-10 shadow-sm border border-emerald-100">
+            <div className="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-6 sm:p-10 shadow-sm border border-emerald-100">
               {/* Quote Mark */}
-              <div className="absolute top-6 left-6 text-6xl font-serif text-emerald-600 opacity-20 leading-none">
+              <div className="absolute top-4 sm:top-6 left-4 sm:left-6 text-5xl sm:text-6xl font-serif text-emerald-600 opacity-20 leading-none">
                 "
               </div>
 
               <div className="relative">
                 {/* Quote Text */}
-                <blockquote className="text-xl sm:text-2xl font-light text-gray-800 mb-8 sm:mb-10 leading-relaxed pl-6">
+                <blockquote className="text-base sm:text-2xl font-light text-gray-800 mb-6 sm:mb-10 leading-relaxed pl-4 sm:pl-6">
                   This is our purpose, and we ask Allah ('azza wa jalla) to grant us success in helping Muslims reconnect with their faith through authentic, accessible education.
                 </blockquote>
 
                 {/* Founder Info */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 sm:gap-12 pl-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-12 pl-4 sm:pl-6">
                   <div className="flex-shrink-0">
                     <img
                       src="/founder.jpeg"
                       alt="Dr Abdulquadri Alaka"
-                      className="w-24 h-24 rounded-full object-cover scale-150 bg-gray-200 ring-4 ring-white shadow-md"
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover scale-150 bg-gray-200 ring-4 ring-white shadow-md"
                     />
                   </div>
                   <div className="flex-1 sm:ml-4">
-                    <p className="text-xl">
+                    <p className="text-lg sm:text-xl">
                       <a
                       href=""
                       target="_blank"
@@ -442,7 +442,7 @@ const LandingPage = () => {
                       Dr Abdulquadri Alaka
                       </a>
                       </p>
-                    <p className="text-base text-gray-600 mb-3">
+                    <p className="text-sm sm:text-base text-gray-600 mb-2 sm:mb-3">
                       Founder, The FastTrack Madrasah
                       </p>
                     {/* <a
@@ -721,7 +721,7 @@ const LandingPage = () => {
       </section>
 
       {/* Enhanced Programs Section - Mobile-Friendly Accordion */}
-      <section id="programs" className="bg-white py-16 sm:py-24">
+      <section id="programs" className="bg-white py-10 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-12 sm:mb-16">
             Our Programs
@@ -1295,13 +1295,13 @@ const LandingPage = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-10 md:py-24 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-sm sm:text-lg text-gray-600">
               Find answers to common questions about our programs
             </p>
           </div>
@@ -1364,7 +1364,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-emerald-600 text-white">
+      <section className="py-12 md:py-24 bg-emerald-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Begin Your Learning Journey
