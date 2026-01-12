@@ -723,60 +723,60 @@ const LandingPage = () => {
       {/* Enhanced Programs Section - Mobile-Friendly Accordion */}
       <section id="programs" className="bg-white py-10 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             Our Programs
           </h2>
 
           {/* Quick Comparison - At a Glance */}
-          <div className="mb-10 max-w-4xl mx-auto">
+          <div className="mb-8 sm:mb-10 max-w-4xl mx-auto">
             <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
               <div className="grid grid-cols-3 text-center">
-                <div className="p-3 border-r border-gray-200 bg-gray-100">
-                  <p className="text-xs font-medium text-gray-600">Track</p>
+                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-100">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-600">Track</p>
                 </div>
-                <div className="p-3 border-r border-gray-200 bg-purple-50">
-                  <p className="text-xs font-semibold text-purple-900">TMP</p>
+                <div className="p-2 sm:p-3 border-r border-gray-200 bg-purple-50">
+                  <p className="text-[10px] sm:text-xs font-semibold text-purple-900">TMP</p>
                 </div>
-                <div className="p-3 bg-emerald-50">
-                  <p className="text-xs font-semibold text-emerald-900">EAIS</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 text-center border-t border-gray-200">
-                <div className="p-3 border-r border-gray-200 bg-gray-50">
-                  <p className="text-xs text-gray-600">Duration</p>
-                </div>
-                <div className="p-3 border-r border-gray-200">
-                  <p className="text-sm font-bold text-gray-900">6 months</p>
-                </div>
-                <div className="p-3">
-                  <p className="text-sm font-bold text-gray-900">2 years</p>
+                <div className="p-2 sm:p-3 bg-emerald-50">
+                  <p className="text-[10px] sm:text-xs font-semibold text-emerald-900">EAIS</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 text-center border-t border-gray-200">
-                <div className="p-3 border-r border-gray-200 bg-gray-50">
-                  <p className="text-xs text-gray-600">Cost</p>
+                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-50">
+                  <p className="text-[10px] sm:text-xs text-gray-600">Duration</p>
                 </div>
-                <div className="p-3 border-r border-gray-200">
-                  <p className="text-sm font-bold text-gray-900">$120</p>
-                  <p className="text-xs text-gray-500">one-time</p>
+                <div className="p-2 sm:p-3 border-r border-gray-200">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900">6 months</p>
                 </div>
-                <div className="p-3">
-                  <p className="text-sm font-bold text-gray-900">$35/mo</p>
-                  <p className="text-xs text-gray-500">or $375/yr</p>
+                <div className="p-2 sm:p-3">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900">2 years</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-3 text-center border-t border-gray-200">
-                <div className="p-3 border-r border-gray-200 bg-gray-50">
-                  <p className="text-xs text-gray-600">Focus</p>
+                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-50">
+                  <p className="text-[10px] sm:text-xs text-gray-600">Cost</p>
                 </div>
-                <div className="p-3 border-r border-gray-200">
-                  <p className="text-xs text-gray-700">Tajweed & Qur'an</p>
+                <div className="p-2 sm:p-3 border-r border-gray-200">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900">$120</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500">one-time</p>
                 </div>
-                <div className="p-3">
-                  <p className="text-xs text-gray-700">Arabic & Islamic Studies</p>
+                <div className="p-2 sm:p-3">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900">$35/mo</p>
+                  <p className="text-[10px] sm:text-xs text-gray-500">or $375/yr</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 text-center border-t border-gray-200">
+                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-50">
+                  <p className="text-[10px] sm:text-xs text-gray-600">Focus</p>
+                </div>
+                <div className="p-2 sm:p-3 border-r border-gray-200">
+                  <p className="text-[10px] sm:text-xs text-gray-700">Tajweed & Qur'an</p>
+                </div>
+                <div className="p-2 sm:p-3">
+                  <p className="text-[10px] sm:text-xs text-gray-700">Arabic & Islamic Studies</p>
                 </div>
               </div>
             </div>
@@ -1098,98 +1098,98 @@ const LandingPage = () => {
       </section>
 
       {/* How Admission Works Section */}
-      <section className="bg-gray-50 py-16 sm:py-24">
+      <section className="bg-gray-50 py-10 sm:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             The Path to Mastery
           </h2>
 
           {/* Mobile: Vertical Layout */}
-          <div className="md:hidden space-y-6">
+          <div className="md:hidden space-y-4">
             {/* Step 1 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 01 | Online Application
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Submit your details through our streamlined portal to begin the selection process for your chosen track.
               </p>
             </div>
 
             {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 2 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 02 | Evaluation & Interview
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Our academic team reviews your background to ensure alignment with the program's prerequisites. This stage typically includes a brief phone interview to discuss your goals.
               </p>
             </div>
 
             {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 3 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 03 | Selection & Enrollment
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Successful applicants will receive a formal offer. Secure your place in the upcoming cohort by processing your enrollment through our secure payment gateway.
               </p>
             </div>
 
             {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 4 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 04 | Onboarding & Mentorship
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Receive your Student ID and access to the learning platform. You will be matched with an expert mentor who will guide your transition into the slated curriculum.
               </p>
             </div>
 
             {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 5 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 05 | Guided Execution
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Engage in intensive instruction and regular assessments. Our methodology ensures you hit every academic milestone with precision through consistent follow-up.
               </p>
             </div>
 
             {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 6 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 06 | Final Validation
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Complete your final comprehensive evaluation to demonstrate mastery of the program's core competencies and slated objectives.
               </p>
             </div>
 
             {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-8"></div>
+            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 7 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <h3 className="text-base font-bold text-emerald-600 mb-2">
+            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
+              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
                 07 | Certification & Alumni Network
               </h3>
-              <p className="text-sm text-gray-700 text-justify">
+              <p className="text-xs text-gray-700">
                 Graduate with a formal Certificate of Completion and join an elite network of students committed to lifelong learning and traditional scholarship.
               </p>
             </div>
