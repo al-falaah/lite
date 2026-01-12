@@ -358,32 +358,29 @@ const LandingPage = () => {
                   </Link>
                 </div>
               )}
-
-              {/* Scroll Down Indicator - Modern Design */}
-              <div className="mt-12 md:mt-20 flex justify-center">
-                <a
-                  href="#mission"
-                  className="flex flex-col items-center gap-3 group cursor-pointer"
-                  aria-label="Scroll down to learn more"
-                >
-                  {/* Animated Mouse Icon */}
-                  <div className="relative w-7 h-11 border-2 border-white/50 rounded-full group-hover:border-white/80 transition-all duration-300">
-                    {/* Scroll Wheel - Animates down and fades */}
-                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-1.5 h-2.5 bg-emerald-400 rounded-full animate-[scroll-down_2s_ease-in-out_infinite]"></div>
-                  </div>
-
-                  {/* Text Label */}
-                  <span className="text-xs sm:text-sm font-medium text-white/70 group-hover:text-white transition-colors tracking-wider uppercase">
-                    Scroll to Explore
-                  </span>
-
-                  {/* Bouncing Chevron */}
-                  <ChevronDown className="h-5 w-5 text-emerald-400 animate-bounce" />
-                </a>
-              </div>
             </div>
           </div>
         </div>
+
+        {/* Fixed Scroll Indicator - Always Visible on Side */}
+        <a
+          href="#mission"
+          className="fixed right-4 sm:right-8 bottom-8 z-40 flex flex-col items-center gap-2 group cursor-pointer animate-bounce-slow"
+          aria-label="Scroll down to learn more"
+        >
+          {/* Vertical Line */}
+          <div className="w-0.5 h-12 sm:h-16 bg-gradient-to-b from-transparent via-emerald-400/50 to-emerald-400"></div>
+
+          {/* Animated Chevron */}
+          <div className="bg-emerald-500 rounded-full p-2 shadow-lg shadow-emerald-500/50 group-hover:bg-emerald-400 transition-all">
+            <ChevronDown className="h-4 w-4 text-white" />
+          </div>
+
+          {/* Optional text hint - hidden on very small screens */}
+          <span className="hidden sm:block text-[10px] font-medium text-white/80 group-hover:text-white transition-colors tracking-widest uppercase rotate-90 origin-center mt-8">
+            Scroll
+          </span>
+        </a>
       </section>
 
       {/* Seamless Gradient Transition */}
