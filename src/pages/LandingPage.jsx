@@ -12,6 +12,7 @@ const LandingPage = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openApproachCard, setOpenApproachCard] = useState(null);
   const [latestArticles, setLatestArticles] = useState([]);
+  const [missionExpanded, setMissionExpanded] = useState(false);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -378,24 +379,37 @@ const LandingPage = () => {
       <div className="relative h-32 sm:h-40 lg:h-48 bg-gradient-to-b from-black via-gray-900/50 to-white"></div>
 
       {/* Our Mission Section */}
-      <section id="mission" className="bg-white py-20 sm:py-28">
+      <section id="mission" className="bg-white py-10 sm:py-28">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
-            Our Mission
-          </h2>
+          <button
+            onClick={() => setMissionExpanded(!missionExpanded)}
+            className="w-full md:cursor-default flex items-center justify-between mb-6 md:mb-16"
+          >
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">
+              Our Mission
+            </h2>
+            <div className="md:hidden">
+              {missionExpanded ? (
+                <Minus className="h-6 w-6 text-emerald-600" />
+              ) : (
+                <Plus className="h-6 w-6 text-gray-400" />
+              )}
+            </div>
+          </button>
 
-          <div className="space-y-6 text-justify">
-            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              Today, while millions can recite the Qur’an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study—a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur’an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
-            </p>
+          <div className={`space-y-6 ${missionExpanded ? 'block' : 'hidden md:block'}`}>
+            <div className="space-y-6 text-justify">
+              <p className="text-sm sm:text-lg leading-relaxed text-gray-700">
+                Today, while millions can recite the Qur'an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study—a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur'an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
+              </p>
 
-            <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-              <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
-            </p>
-          </div>
+              <p className="text-sm sm:text-lg leading-relaxed text-gray-700">
+                <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
+              </p>
+            </div>
 
-          {/* Founder Quote Box */}
-          <div className="mt-16 relative">
+            {/* Founder Quote Box */}
+            <div className="mt-10 sm:mt-16 relative">
             <div className="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-8 sm:p-10 shadow-sm border border-emerald-100">
               {/* Quote Mark */}
               <div className="absolute top-6 left-6 text-6xl font-serif text-emerald-600 opacity-20 leading-none">
@@ -446,30 +460,31 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Support CTA */}
-          <div className="mt-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 sm:p-12 border border-blue-100 shadow-sm">
-            <div className="max-w-2xl mx-auto text-center">
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                Ready to Begin Your Journey?
-              </h3>
-              <p className="text-base sm:text-lg text-gray-700 mb-8 leading-relaxed">
-                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
-              </p>
+            {/* Support CTA */}
+            <div className="mt-10 sm:mt-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-12 border border-blue-100 shadow-sm">
+              <div className="max-w-2xl mx-auto text-center">
+                <h3 className="text-xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+                  Ready to Begin Your Journey?
+                </h3>
+                <p className="text-sm sm:text-lg text-gray-700 mb-6 sm:mb-8 leading-relaxed">
+                  Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
+                </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/apply">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl">
-                    <Rocket className="h-5 w-5" />
-                    Start Your Application
-                  </button>
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                  <Link to="/apply">
+                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
+                      <Rocket className="h-4 w-4 sm:h-5 sm:w-5" />
+                      Start Your Application
+                    </button>
+                  </Link>
 
-                <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl">
-                    <Heart className="h-5 w-5" />
-                    Support Our Mission
-                  </button>
-                </a>
+                  <a href={donationLink} target="_blank" rel="noopener noreferrer">
+                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
+                      <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+                      Support Our Mission
+                    </button>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -477,9 +492,9 @@ const LandingPage = () => {
       </section>
 
       {/* Our Approach Section */}
-      <section className="bg-gray-50 py-16 sm:py-24">
+      <section className="bg-gray-50 py-10 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 text-center mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             Our Approach
           </h2>
 
