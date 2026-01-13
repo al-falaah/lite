@@ -571,13 +571,15 @@ const BlogPost = () => {
           </div>
         </div>
 
-        {/* Related Articles - Mobile Only */}
+        {/* Related Articles */}
         {relatedPosts.length > 0 && (
-          <div className="mt-16 pt-12 border-t border-gray-200 md:hidden">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6">
+          <div className="mt-16 pt-12 border-t border-gray-200">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-8">
               Related Articles
             </h3>
-            <div className="space-y-6">
+
+            {/* Mobile Layout - Vertical Stack */}
+            <div className="md:hidden space-y-6">
               {relatedPosts.map((relatedPost) => (
                 <Link
                   key={relatedPost.id}
@@ -616,7 +618,49 @@ const BlogPost = () => {
                 </Link>
               ))}
             </div>
-            <div className="mt-8">
+
+            {/* Desktop/Tablet Layout - Grid */}
+            <div className="hidden md:grid md:grid-cols-2 gap-8">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  to={`/blog/${relatedPost.slug}`}
+                  className="group"
+                >
+                  <article className="h-full flex flex-col">
+                    {relatedPost.featured_image && (
+                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 mb-4">
+                        <img
+                          src={relatedPost.featured_image}
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      {relatedPost.category && (
+                        <span className="inline-block px-2.5 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 rounded mb-3">
+                          {relatedPost.category}
+                        </span>
+                      )}
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors line-clamp-2 mb-2">
+                        {relatedPost.title}
+                      </h4>
+                      {relatedPost.excerpt && (
+                        <p className="text-sm text-gray-600 line-clamp-3">
+                          {relatedPost.excerpt}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center md:text-left">
               <Link
                 to="/blog"
                 className="inline-flex items-center gap-2 text-emerald-600 font-medium hover:text-emerald-700 transition-colors"
