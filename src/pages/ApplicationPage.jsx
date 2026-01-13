@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, CheckCircle, BookOpen, Clock, Globe } from 'lucide-react';
+import TimezoneSelect from 'react-timezone-select';
+import { formatInTimeZone, toDate } from 'date-fns-tz';
 import { applications, supabase } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -35,30 +37,20 @@ const ApplicationPage = () => {
 
     // Step 3: Availability Preferences
     preferredDays: [], // Array of selected days
-    preferredTimes: [], // Array of selected time slots
-    timezone: 'Pacific/Auckland', // Default NZ timezone
+    preferredTimes: [], // Array of selected time slots with NZ time ranges
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Auto-detect user's timezone
     availabilityNotes: '' // Additional notes about availability
   });
 
   const [currentNZTime, setCurrentNZTime] = useState('');
   const [currentUserTime, setCurrentUserTime] = useState('');
 
-  // Update current times every minute
+  // Update current times every minute using date-fns-tz
   useEffect(() => {
     const updateTimes = () => {
       const now = new Date();
-      const nzTime = now.toLocaleTimeString('en-NZ', {
-        timeZone: 'Pacific/Auckland',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
-      const userTime = now.toLocaleTimeString('en-US', {
-        timeZone: formData.timezone,
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
+      const nzTime = formatInTimeZone(now, 'Pacific/Auckland', 'h:mm a');
+      const userTime = formatInTimeZone(now, formData.timezone, 'h:mm a');
       setCurrentNZTime(nzTime);
       setCurrentUserTime(userTime);
     };
@@ -68,66 +60,49 @@ const ApplicationPage = () => {
     return () => clearInterval(interval);
   }, [formData.timezone]);
 
-  // Get time range in user's timezone
+  // Get time range in user's timezone using date-fns-tz
   const getTimeRangeInUserTimezone = (nzStartHour, nzEndHour) => {
-    // Convert NZ hour to user's timezone
-    const convertHour = (hour) => {
-      // Handle hour 24 as midnight of next day
-      const actualHour = hour === 24 ? 0 : hour;
-      const dayOffset = hour === 24 ? 1 : 0;
+    // Use current date to properly account for DST
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
 
-      // Create a date in NZ timezone (using January 15, 2025 as reference for NZDT)
-      const nzDate = new Date(2025, 0, 15 + dayOffset, actualHour, 0, 0);
+    // Create dates in NZ timezone
+    const nzStartStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(nzStartHour).padStart(2, '0')}:00:00`;
+    const nzEndStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(nzEndHour === 24 ? 0 : nzEndHour).padStart(2, '0')}:00:00`;
 
-      // Get the time string in NZ timezone
-      const nzTimeString = nzDate.toLocaleString('en-US', {
-        timeZone: 'Pacific/Auckland',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      });
+    // Convert to user's timezone
+    const userStartTime = formatInTimeZone(
+      toDate(nzStartStr, { timeZone: 'Pacific/Auckland' }),
+      formData.timezone,
+      'h:mm a'
+    );
 
-      // Parse it back to get UTC time
-      const [datePart, timePart] = nzTimeString.split(', ');
-      const [month, day, year] = datePart.split('/');
-      const [hourStr, minute, second] = timePart.split(':');
-      const nzDateParsed = new Date(year, month - 1, day, parseInt(hourStr), parseInt(minute), parseInt(second));
+    const userEndTime = formatInTimeZone(
+      toDate(nzEndStr, { timeZone: 'Pacific/Auckland' }),
+      formData.timezone,
+      'h:mm a'
+    );
 
-      // Now convert to user's timezone
-      const userTimeString = nzDateParsed.toLocaleString('en-US', {
-        timeZone: formData.timezone,
-        hour: 'numeric',
-        hour12: false
-      });
+    // Check if date changes
+    const startDate = formatInTimeZone(
+      toDate(nzStartStr, { timeZone: 'Pacific/Auckland' }),
+      formData.timezone,
+      'yyyy-MM-dd'
+    );
 
-      const userHour = parseInt(userTimeString);
-      return userHour;
-    };
+    const endDate = formatInTimeZone(
+      toDate(nzEndStr, { timeZone: 'Pacific/Auckland' }),
+      formData.timezone,
+      'yyyy-MM-dd'
+    );
 
-    const userStartHour = convertHour(nzStartHour);
-    const userEndHour = convertHour(nzEndHour);
-
-    const formatHour = (hour) => {
-      // Normalize hour to 0-23 range
-      const normalizedHour = hour % 24;
-      const period = normalizedHour >= 12 ? 'PM' : 'AM';
-      const displayHour = normalizedHour === 0 ? 12 : normalizedHour > 12 ? normalizedHour - 12 : normalizedHour;
-      return `${displayHour}:00 ${period}`;
-    };
-
-    // Handle day boundary crossing
-    let timeRange = `${formatHour(userStartHour)} - ${formatHour(userEndHour)}`;
-
-    // Check if we cross midnight
-    if (userStartHour > userEndHour || (userStartHour === userEndHour && nzStartHour !== nzEndHour)) {
-      timeRange += ' (next day)';
+    if (startDate !== endDate) {
+      return `${userStartTime} - ${userEndTime} (next day)`;
     }
 
-    return timeRange;
+    return `${userStartTime} - ${userEndTime}`;
   };
 
   const handleChange = (e) => {
@@ -269,6 +244,29 @@ const ApplicationPage = () => {
     setLoading(true);
 
     try {
+      // Convert preferred times to include both NZ and user timezone info
+      const timeSlots = [
+        { value: 'Morning', nzStart: 6, nzEnd: 12 },
+        { value: 'Afternoon', nzStart: 12, nzEnd: 17 },
+        { value: 'Evening', nzStart: 17, nzEnd: 21 },
+        { value: 'Night', nzStart: 21, nzEnd: 24 }
+      ];
+
+      const preferredTimesWithConversion = formData.preferredTimes.map(timeValue => {
+        const slot = timeSlots.find(s => s.value === timeValue);
+        if (!slot) return timeValue;
+
+        const userTimeRange = getTimeRangeInUserTimezone(slot.nzStart, slot.nzEnd);
+        const nzTimeRange = `${slot.nzStart === 12 ? '12:00' : `${slot.nzStart > 12 ? slot.nzStart - 12 : slot.nzStart}:00`} ${slot.nzStart >= 12 ? 'PM' : 'AM'} - ${slot.nzEnd === 12 ? '12:00' : `${slot.nzEnd > 12 ? slot.nzEnd - 12 : slot.nzEnd}:00`} ${slot.nzEnd >= 12 ? 'PM' : 'AM'}`;
+
+        return {
+          slot: timeValue,
+          nz_time: nzTimeRange,
+          user_time: userTimeRange,
+          nz_hours: `${slot.nzStart}-${slot.nzEnd}`
+        };
+      });
+
       const applicationData = {
         program: formData.program,
         full_name: formData.fullName,
@@ -282,7 +280,7 @@ const ApplicationPage = () => {
         arabic_level: formData.hasStudiedArabic === 'true' ? formData.arabicLevel : null,
         motivation: formData.motivation + (formData.islamicBackground ? `\n\nIslamic Background: ${formData.islamicBackground}` : ''),
         preferred_days: formData.preferredDays,
-        preferred_times: formData.preferredTimes,
+        preferred_times: preferredTimesWithConversion,
         timezone: formData.timezone,
         availability_notes: formData.availabilityNotes || null,
         status: 'pending'
@@ -813,116 +811,36 @@ const ApplicationPage = () => {
                   Help us schedule your personalized classes by indicating your preferred days and times.
                 </p>
 
-                {/* Timezone Selection - Moved to top */}
+                {/* Timezone Selection - Professional Component */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Globe className="inline h-4 w-4 mr-1" />
                     Your Timezone <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    name="timezone"
+                  <TimezoneSelect
                     value={formData.timezone}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <optgroup label="🌏 Pacific / Oceania">
-                      <option value="Pacific/Auckland">New Zealand</option>
-                      <option value="Australia/Sydney">Australia - Sydney</option>
-                      <option value="Australia/Melbourne">Australia - Melbourne</option>
-                      <option value="Australia/Brisbane">Australia - Brisbane</option>
-                      <option value="Australia/Perth">Australia - Perth</option>
-                      <option value="Pacific/Fiji">Fiji</option>
-                      <option value="Pacific/Tongatapu">Tonga</option>
-                      <option value="Pacific/Samoa">Samoa</option>
-                    </optgroup>
-
-                    <optgroup label="🌏 Asia - East & Southeast">
-                      <option value="Asia/Tokyo">Japan</option>
-                      <option value="Asia/Seoul">South Korea</option>
-                      <option value="Asia/Shanghai">China</option>
-                      <option value="Asia/Hong_Kong">Hong Kong</option>
-                      <option value="Asia/Singapore">Singapore</option>
-                      <option value="Asia/Kuala_Lumpur">Malaysia</option>
-                      <option value="Asia/Jakarta">Indonesia - Jakarta</option>
-                      <option value="Asia/Manila">Philippines</option>
-                      <option value="Asia/Bangkok">Thailand</option>
-                      <option value="Asia/Ho_Chi_Minh">Vietnam</option>
-                    </optgroup>
-
-                    <optgroup label="🌏 Asia - South & Central">
-                      <option value="Asia/Karachi">Pakistan</option>
-                      <option value="Asia/Kolkata">India</option>
-                      <option value="Asia/Dhaka">Bangladesh</option>
-                      <option value="Asia/Colombo">Sri Lanka</option>
-                      <option value="Asia/Kathmandu">Nepal</option>
-                      <option value="Asia/Tashkent">Uzbekistan</option>
-                    </optgroup>
-
-                    <optgroup label="🕌 Middle East">
-                      <option value="Asia/Riyadh">Saudi Arabia</option>
-                      <option value="Asia/Dubai">UAE</option>
-                      <option value="Asia/Qatar">Qatar</option>
-                      <option value="Asia/Kuwait">Kuwait</option>
-                      <option value="Asia/Bahrain">Bahrain</option>
-                      <option value="Asia/Muscat">Oman</option>
-                      <option value="Asia/Tehran">Iran</option>
-                      <option value="Asia/Baghdad">Iraq</option>
-                      <option value="Asia/Damascus">Syria</option>
-                      <option value="Asia/Beirut">Lebanon</option>
-                      <option value="Asia/Jerusalem">Palestine/Israel</option>
-                      <option value="Asia/Amman">Jordan</option>
-                      <option value="Europe/Istanbul">Turkey</option>
-                    </optgroup>
-
-                    <optgroup label="🌍 Africa">
-                      <option value="Africa/Cairo">Egypt</option>
-                      <option value="Africa/Johannesburg">South Africa</option>
-                      <option value="Africa/Lagos">Nigeria</option>
-                      <option value="Africa/Nairobi">Kenya</option>
-                      <option value="Africa/Casablanca">Morocco</option>
-                      <option value="Africa/Tunis">Tunisia</option>
-                      <option value="Africa/Algiers">Algeria</option>
-                      <option value="Africa/Tripoli">Libya</option>
-                      <option value="Africa/Khartoum">Sudan</option>
-                    </optgroup>
-
-                    <optgroup label="🇪🇺 Europe">
-                      <option value="Europe/London">United Kingdom</option>
-                      <option value="Europe/Paris">France</option>
-                      <option value="Europe/Berlin">Germany</option>
-                      <option value="Europe/Rome">Italy</option>
-                      <option value="Europe/Madrid">Spain</option>
-                      <option value="Europe/Amsterdam">Netherlands</option>
-                      <option value="Europe/Brussels">Belgium</option>
-                      <option value="Europe/Vienna">Austria</option>
-                      <option value="Europe/Stockholm">Sweden</option>
-                      <option value="Europe/Oslo">Norway</option>
-                      <option value="Europe/Copenhagen">Denmark</option>
-                      <option value="Europe/Warsaw">Poland</option>
-                      <option value="Europe/Moscow">Russia - Moscow</option>
-                    </optgroup>
-
-                    <optgroup label="🌎 North America">
-                      <option value="America/New_York">USA - Eastern (New York)</option>
-                      <option value="America/Chicago">USA - Central (Chicago)</option>
-                      <option value="America/Denver">USA - Mountain (Denver)</option>
-                      <option value="America/Los_Angeles">USA - Pacific (Los Angeles)</option>
-                      <option value="America/Anchorage">USA - Alaska</option>
-                      <option value="Pacific/Honolulu">USA - Hawaii</option>
-                      <option value="America/Toronto">Canada - Eastern (Toronto)</option>
-                      <option value="America/Vancouver">Canada - Pacific (Vancouver)</option>
-                      <option value="America/Mexico_City">Mexico</option>
-                    </optgroup>
-
-                    <optgroup label="🌎 Central & South America">
-                      <option value="America/Sao_Paulo">Brazil - São Paulo</option>
-                      <option value="America/Buenos_Aires">Argentina</option>
-                      <option value="America/Santiago">Chile</option>
-                      <option value="America/Lima">Peru</option>
-                      <option value="America/Bogota">Colombia</option>
-                      <option value="America/Caracas">Venezuela</option>
-                    </optgroup>
-                  </select>
+                    onChange={(tz) => setFormData({ ...formData, timezone: tz.value })}
+                    className="timezone-select"
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        borderColor: '#d1d5db',
+                        borderRadius: '0.5rem',
+                        padding: '0.125rem',
+                        '&:hover': {
+                          borderColor: '#10b981'
+                        }
+                      }),
+                      option: (provided, state) => ({
+                        ...provided,
+                        backgroundColor: state.isSelected ? '#10b981' : state.isFocused ? '#d1fae5' : 'white',
+                        color: state.isSelected ? 'white' : '#1f2937',
+                        '&:active': {
+                          backgroundColor: '#059669'
+                        }
+                      })
+                    }}
+                  />
 
                   {/* Current Time Display */}
                   {formData.timezone !== 'Pacific/Auckland' && (
