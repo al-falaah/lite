@@ -442,97 +442,86 @@ const LandingPage = () => {
 
       {/* Our Mission Section */}
       <section id="mission" className="bg-white py-10 sm:py-28">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <button
-            onClick={() => setMissionExpanded(!missionExpanded)}
-            className="w-full md:cursor-default flex items-center justify-between mb-6 md:mb-16"
-          >
-            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900">
               Our Mission
             </h2>
-            <div className="md:hidden">
-              {missionExpanded ? (
-                <Minus className="h-6 w-6 text-emerald-600" />
-              ) : (
-                <Plus className="h-6 w-6 text-gray-400" />
-              )}
-            </div>
-          </button>
+          </div>
 
-          <div className={`space-y-6 ${missionExpanded ? 'block' : 'hidden md:block'}`}>
-            <div className="space-y-6 text-justify">
-              <p className="text-sm sm:text-lg leading-relaxed text-gray-700">
+          {/* Main Content Grid - Two Column Layout */}
+          <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 mb-12 sm:mb-16">
+            {/* Left Column - Mission Text */}
+            <div className="lg:col-span-2 space-y-6">
+              <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
                 Today, while millions can recite the Qur'an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study—a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur'an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
               </p>
 
-              <p className="text-sm sm:text-lg leading-relaxed text-gray-700">
-                <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
+              <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
+                <span className="font-brand font-bold text-gray-900 ">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
               </p>
             </div>
 
-            {/* Founder Quote Box */}
-            <div className="mt-10 sm:mt-16">
-            <div className="bg-gray-50 rounded-lg p-6 sm:p-10 border border-gray-200">
-              <div>
-                {/* Quote Text */}
-                <blockquote className="text-base sm:text-xl text-gray-700 mb-6 sm:mb-8 leading-relaxed border-l-2 border-gray-300 pl-4 sm:pl-6">
-                  This is our purpose, and we ask Allah ('azza wa jalla) to grant us success in helping Muslims reconnect with their faith through authentic, accessible education.
-                </blockquote>
-
-                {/* Founder Info */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pl-4 sm:pl-6">
-                  <div className="flex-shrink-0">
+            {/* Right Column - Founder Card (Emphasized) */}
+            <div className="lg:col-span-1 shadow-lg rounded-xl">
+              <div className="bg-white rounded-xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow sticky top-24">
+                {/* Founder Image - Large and Centered */}
+                <div className="flex justify-center mb-6">
+                  <div className="relative">
                     <img
                       src="/founder.jpeg"
                       alt="Dr Abdulquadri Alaka"
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover bg-gray-200"
+                      className="w-48 h-48 sm:w-48 sm:h-48 rounded-full object-cover border-4 border-white shadow-lg"
                     />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-base sm:text-lg">
-                      <a
-                      href=""
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-gray-700 transition-colors"
-                      >
-                      Dr Abdulquadri Alaka
-                      </a>
-                      </p>
-                    <p className="text-sm text-gray-600">
-                      Founder, The FastTrack Madrasah
-                      </p>
+                    {/* Decorative Ring */}
+                    <div className="absolute inset-0 rounded-full border-2 border-emerald-200 -z-10 scale-110"></div>
                   </div>
                 </div>
+
+                {/* Founder Info - Centered */}
+                <div className="text-center mb-6">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                    Dr Abdulquadri Alaka
+                  </h3>
+                  <p className="text-sm sm:text-base text-emerald-700 font-medium mb-4">
+                    Founder
+                  </p>
+                  <div className="w-16 h-1 bg-emerald-600 mx-auto"></div>
+                </div>
+
+                {/* Quote */}
+                <blockquote className="text-sm sm:text-base text-gray-700 leading-relaxed italic text-center px-4">
+                  "That's our purpose, and we ask Allah ('azza wa jalla) to grant us success in achieving such a great mission."
+                </blockquote>
               </div>
             </div>
           </div>
 
-            {/* Support CTA */}
-            <div className="mt-10 sm:mt-16 bg-gray-50 rounded-lg p-6 sm:p-12 border border-gray-200">
-              <div className="max-w-2xl mx-auto text-center">
-                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
-                  Ready to Begin Your Journey?
-                </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
-                  Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
-                </p>
+          {/* Support CTA */}
+          <div className="bg-gray-50 rounded-lg p-6 sm:p-12 border border-gray-200">
+            <div className="max-w-2xl mx-auto text-center">
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
+                Ready to Begin Your Journey?
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
+                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
+              </p>
 
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link to="/apply">
-                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
-                      <span>Start Your Application</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                  </Link>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link to="/apply">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
+                    <span>Start Your Application</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </Link>
 
-                  <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
-                      <Heart className="h-4 w-4" />
-                      <span>Support Our Mission</span>
-                    </button>
-                  </a>
-                </div>
+                <a href={donationLink} target="_blank" rel="noopener noreferrer">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
+                    <Heart className="h-4 w-4" />
+                    <span>Support Our Mission</span>
+                  </button>
+                </a>
               </div>
             </div>
           </div>
