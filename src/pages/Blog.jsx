@@ -492,7 +492,7 @@ const Blog = () => {
       {showSubscribeButton && !showSlideInBanner && (
         <button
           onClick={scrollToSubscribe}
-          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white px-4 py-2.5 rounded-lg shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+          className="fixed bottom-6 right-6 z-40 bg-emerald-950 text-white px-4 py-2.5 rounded-lg shadow-lg hover:bg-emerald-900 transition-colors flex items-center gap-2"
           aria-label="Subscribe to newsletter"
         >
           <Mail className="h-4 w-4" />

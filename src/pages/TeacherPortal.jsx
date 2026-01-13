@@ -540,13 +540,13 @@ export default function TeacherPortal() {
   // Login Screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16 sm:h-20">
               <a href="/" className="flex items-center gap-2 sm:gap-3 group">
-                <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 sm:h-12 sm:w-12 group-hover:scale-110 transition-transform" />
+                <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 sm:h-12 sm:w-12 transition-colors" />
                 <div className="flex flex-col leading-none -space-y-1">
                   <span className="text-sm sm:text-base font-brand font-bold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
                   <span className="text-sm sm:text-base font-brand font-bold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
@@ -569,21 +569,17 @@ export default function TeacherPortal() {
         <div className="flex items-center justify-center px-4 py-8 sm:py-12 md:py-20">
           <div className="max-w-md w-full">
             {/* Card */}
-            <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-              {/* Header Section */}
-              <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 sm:px-8 py-8 sm:py-10 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-sm mb-3 sm:mb-4">
-                  <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Teacher Portal</h1>
-                <p className="text-emerald-100 text-xs sm:text-sm">Access your teaching dashboard</p>
-              </div>
-
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
               {/* Form Section */}
               <div className="px-6 sm:px-8 py-8 sm:py-10">
-                <form onSubmit={handleLogin} className="space-y-6">
+                <div className="text-center mb-8">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Teacher Portal</h1>
+                  <p className="text-gray-600 text-sm sm:text-base">Sign in to access your dashboard</p>
+                </div>
+
+                <form onSubmit={handleLogin} className="space-y-5">
                   <div>
-                    <label htmlFor="staffId" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor="staffId" className="block text-sm font-medium text-gray-700 mb-2">
                       Staff ID
                     </label>
                     <input
@@ -591,7 +587,7 @@ export default function TeacherPortal() {
                       type="text"
                       value={staffId}
                       onChange={(e) => setStaffId(e.target.value)}
-                      className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter your staff ID"
                       required
                       autoComplete="username"
@@ -599,7 +595,7 @@ export default function TeacherPortal() {
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                       Password
                     </label>
                     <input
@@ -607,7 +603,7 @@ export default function TeacherPortal() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter your password"
                       required
                       autoComplete="current-password"
@@ -618,7 +614,7 @@ export default function TeacherPortal() {
                   <div className="text-right">
                     <a
                       href="/forgot-password"
-                      className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                      className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
                     >
                       Forgot password?
                     </a>
@@ -626,7 +622,7 @@ export default function TeacherPortal() {
 
                   <Button
                     type="submit"
-                    className="w-full py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    className="w-full py-2.5 rounded-lg transition-colors"
                     disabled={loading}
                   >
                     {loading ? (
@@ -635,15 +631,15 @@ export default function TeacherPortal() {
                         Signing in...
                       </>
                     ) : (
-                      'Sign In to Portal'
+                      'Sign In'
                     )}
                   </Button>
                 </form>
 
                 {/* Info Box */}
-                <div className="mt-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                  <p className="text-xs text-blue-900 text-center">
-                    <strong>Need help?</strong> Contact admin@tftmadrasah.nz for login assistance.
+                <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                  <p className="text-xs text-gray-700 text-center">
+                    Need help? Contact <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700">admin@tftmadrasah.nz</a>
                   </p>
                 </div>
               </div>
@@ -663,9 +659,9 @@ export default function TeacherPortal() {
   const displayedStudents = activeView === 'assigned' ? assignedStudents : removedStudents;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/20">
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
             <div className="flex items-center gap-1.5 sm:gap-3">
@@ -680,14 +676,14 @@ export default function TeacherPortal() {
             </div>
             <div className="flex items-center gap-1.5 sm:gap-4">
               <div className="text-right">
-                <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate max-w-[100px] sm:max-w-none">{teacher.full_name}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{teacher.full_name}</p>
                 <p className="text-[10px] sm:text-xs text-gray-600 hidden sm:block">Staff ID: {teacher.staff_id}</p>
               </div>
-              <Button variant="outline" onClick={handleOpenSettings} className="shadow-sm text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
+              <Button variant="outline" onClick={handleOpenSettings} className="text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
                 <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
                 <span className="hidden sm:inline">Settings</span>
               </Button>
-              <Button variant="secondary" onClick={handleLogout} className="shadow-sm text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
+              <Button variant="secondary" onClick={handleLogout} className="text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
                 <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
               </Button>
@@ -706,67 +702,69 @@ export default function TeacherPortal() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 mb-5 sm:mb-8">
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-emerald-400 text-white">
-            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
-              <div className="mb-2 sm:mb-0">
-                <p className="text-[10px] sm:text-sm text-emerald-100 font-medium mb-0.5 sm:mb-1">Assigned</p>
-                <p className="text-2xl sm:text-4xl font-bold">{assignedStudents.length}</p>
+          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm text-gray-600 mb-1">Assigned Students</p>
+                <p className="text-2xl sm:text-3xl font-semibold text-gray-900">{assignedStudents.length}</p>
               </div>
-              <div className="hidden sm:block p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <Users className="h-8 w-8" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-gray-500 to-gray-600 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-gray-400 text-white">
-            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
-              <div className="mb-2 sm:mb-0">
-                <p className="text-[10px] sm:text-sm text-gray-100 font-medium mb-0.5 sm:mb-1">Removed</p>
-                <p className="text-2xl sm:text-4xl font-bold">{removedStudents.length}</p>
-              </div>
-              <div className="hidden sm:block p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <UserX className="h-8 w-8" />
+              <div className="hidden sm:block">
+                <Users className="h-8 w-8 text-gray-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg border border-blue-400 text-white col-span-2 sm:col-span-1">
-            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:justify-between">
-              <div className="mb-2 sm:mb-0">
-                <p className="text-[10px] sm:text-sm text-blue-100 font-medium mb-0.5 sm:mb-1">Total</p>
-                <p className="text-2xl sm:text-4xl font-bold">{assignedStudents.length + removedStudents.length}</p>
+          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm text-gray-600 mb-1">Removed</p>
+                <p className="text-2xl sm:text-3xl font-semibold text-gray-900">{removedStudents.length}</p>
               </div>
-              <div className="hidden sm:block p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                <BarChart3 className="h-8 w-8" />
+              <div className="hidden sm:block">
+                <UserX className="h-8 w-8 text-gray-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 col-span-2 sm:col-span-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm text-gray-600 mb-1">Total Students</p>
+                <p className="text-2xl sm:text-3xl font-semibold text-gray-900">{assignedStudents.length + removedStudents.length}</p>
+              </div>
+              <div className="hidden sm:block">
+                <BarChart3 className="h-8 w-8 text-gray-400" />
               </div>
             </div>
           </div>
         </div>
 
         {/* View Toggle */}
-        <div className="flex gap-2 mb-5 sm:mb-8">
-          <button
-            onClick={() => setActiveView('assigned')}
-            className={`flex-1 px-3 sm:px-6 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl text-xs sm:text-base font-semibold transition-all ${
-              activeView === 'assigned'
-                ? 'bg-emerald-600 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
-          >
-            <Users className="h-3.5 w-3.5 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
-            <span>Assigned ({assignedStudents.length})</span>
-          </button>
-          <button
-            onClick={() => setActiveView('removed')}
-            className={`flex-1 px-3 sm:px-6 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl text-xs sm:text-base font-semibold transition-all ${
-              activeView === 'removed'
-                ? 'bg-gray-600 text-white shadow-md'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
-          >
-            <UserX className="h-3.5 w-3.5 sm:h-5 sm:w-5 inline mr-1 sm:mr-2" />
-            <span>Removed ({removedStudents.length})</span>
-          </button>
+        <div className="border-b border-gray-200 mb-6">
+          <div className="flex gap-6">
+            <button
+              onClick={() => setActiveView('assigned')}
+              className={`px-1 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeView === 'assigned'
+                  ? 'border-emerald-600 text-emerald-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+              }`}
+            >
+              <Users className="h-4 w-4 inline mr-2 -mt-0.5" />
+              Assigned ({assignedStudents.length})
+            </button>
+            <button
+              onClick={() => setActiveView('removed')}
+              className={`px-1 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeView === 'removed'
+                  ? 'border-emerald-600 text-emerald-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+              }`}
+            >
+              <UserX className="h-4 w-4 inline mr-2 -mt-0.5" />
+              Removed ({removedStudents.length})
+            </button>
+          </div>
         </div>
 
         {/* Students List */}
@@ -790,21 +788,21 @@ export default function TeacherPortal() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
             {displayedStudents.map((assignment) => (
               <div
                 key={assignment.id}
-                className="bg-white p-4 sm:p-6 rounded-lg sm:rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-emerald-200 transition-all"
+                className="bg-white p-4 sm:p-5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1 min-w-0 pr-2">
-                    <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-1.5 truncate">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1.5 truncate">
                       {assignment.student.full_name}
                     </h3>
-                    <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
                       assignment.program === 'essentials'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-purple-600 text-white'
+                        ? 'bg-gray-100 text-gray-700'
+                        : 'bg-gray-100 text-gray-700'
                     }`}>
                       {assignment.program === 'essentials' ? 'Essentials' : 'Tajweed'}
                     </span>
@@ -812,30 +810,30 @@ export default function TeacherPortal() {
                   <div className="flex gap-1 flex-shrink-0">
                     <button
                       onClick={() => handleOpenEmailModal(assignment.student, assignment.program)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors active:scale-95"
+                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                       title="Send email"
                     >
-                      <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <Mail className="h-4 w-4 sm:h-4 sm:w-4" />
                     </button>
                     <button
                       onClick={() => handleViewStudent(assignment)}
-                      className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors active:scale-95"
+                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                       title="View details"
                     >
-                      <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <Eye className="h-4 w-4 sm:h-4 sm:w-4" />
                     </button>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 text-[11px] sm:text-sm text-gray-600">
+                <div className="space-y-1.5 text-xs sm:text-sm text-gray-600">
                   <p className="truncate">
-                    <span className="font-medium text-gray-700">Email:</span> {assignment.student.email}
+                    <span className="text-gray-500">Email:</span> {assignment.student.email}
                   </p>
                   <p>
-                    <span className="font-medium text-gray-700">ID:</span> {assignment.student.student_id}
+                    <span className="text-gray-500">ID:</span> {assignment.student.student_id}
                   </p>
                   <p className="hidden sm:block">
-                    <span className="font-medium text-gray-700">Assigned:</span> {formatDate(assignment.assigned_at)}
+                    <span className="text-gray-500">Assigned:</span> {formatDate(assignment.assigned_at)}
                   </p>
                   {assignment.status === 'removed' && assignment.removed_at && (
                     <p className="text-red-600">
@@ -843,7 +841,7 @@ export default function TeacherPortal() {
                     </p>
                   )}
                   {assignment.notes && (
-                    <p className="text-[10px] sm:text-xs italic mt-2 p-2 bg-gray-50 rounded">
+                    <p className="text-xs italic mt-2 p-2 bg-gray-50 rounded border border-gray-100">
                       {assignment.notes}
                     </p>
                   )}
@@ -856,17 +854,17 @@ export default function TeacherPortal() {
 
       {/* Student Details Modal */}
       {showStudentModal && selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl">
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-lg sm:rounded-lg border border-gray-200 w-full sm:max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
               <div className="flex justify-between items-center">
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-base sm:text-2xl font-bold text-gray-900 truncate">{selectedStudent.full_name}</h2>
+                  <h2 className="text-base sm:text-xl font-semibold text-gray-900 truncate">{selectedStudent.full_name}</h2>
                   <p className="text-xs sm:text-sm text-gray-600">ID: {selectedStudent.student_id}</p>
                 </div>
                 <button
                   onClick={closeStudentModal}
-                  className="text-gray-500 hover:text-gray-700 ml-2 p-2 -mr-2 active:scale-95"
+                  className="text-gray-400 hover:text-gray-600 ml-2 p-2 -mr-2 transition-colors"
                 >
                   <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
@@ -876,43 +874,43 @@ export default function TeacherPortal() {
             <div className="p-4 sm:p-6">
 
               {/* Student Info */}
-              <div className="mb-4 sm:mb-6">
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3">Contact Information</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+              <div className="mb-4 sm:mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="text-sm font-medium text-gray-900 mb-3">Contact Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                   <div>
-                    <p className="text-gray-600">Email</p>
-                    <p className="font-medium">{selectedStudent.email}</p>
+                    <p className="text-gray-500 text-xs mb-1">Email</p>
+                    <p className="text-gray-900">{selectedStudent.email}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Phone</p>
-                    <p className="font-medium">{selectedStudent.phone}</p>
+                    <p className="text-gray-500 text-xs mb-1">Phone</p>
+                    <p className="text-gray-900">{selectedStudent.phone}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Gender</p>
-                    <p className="font-medium capitalize">{selectedStudent.gender}</p>
+                    <p className="text-gray-500 text-xs mb-1">Gender</p>
+                    <p className="text-gray-900 capitalize">{selectedStudent.gender}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Student Status</p>
-                    <p className="font-medium capitalize">{selectedStudent.status.replace('_', ' ')}</p>
+                    <p className="text-gray-500 text-xs mb-1">Student Status</p>
+                    <p className="text-gray-900 capitalize">{selectedStudent.status.replace('_', ' ')}</p>
                   </div>
                   {studentEnrollments.length > 0 && (
                     <div className="sm:col-span-2">
-                      <p className="text-gray-600">Enrollment Status</p>
+                      <p className="text-gray-500 text-xs mb-1">Enrollment Status</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          studentEnrollments[0].status === 'active' ? 'bg-green-100 text-green-800' :
-                          studentEnrollments[0].status === 'withdrawn' ? 'bg-red-100 text-red-800' :
-                          studentEnrollments[0].status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                          'bg-gray-100 text-gray-800'
+                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                          studentEnrollments[0].status === 'active' ? 'bg-green-100 text-green-700' :
+                          studentEnrollments[0].status === 'withdrawn' ? 'bg-red-100 text-red-700' :
+                          studentEnrollments[0].status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                          'bg-gray-100 text-gray-700'
                         }`}>
-                          {studentEnrollments[0].status === 'active' ? '✓ Active' :
-                           studentEnrollments[0].status === 'withdrawn' ? '⚠ Withdrawn' :
-                           studentEnrollments[0].status === 'completed' ? '✓ Graduated' :
+                          {studentEnrollments[0].status === 'active' ? 'Active' :
+                           studentEnrollments[0].status === 'withdrawn' ? 'Withdrawn' :
+                           studentEnrollments[0].status === 'completed' ? 'Graduated' :
                            studentEnrollments[0].status}
                         </span>
                         {studentEnrollments[0].status !== 'active' && (
-                          <span className="text-xs text-gray-500 italic">
-                            (Schedule updates disabled)
+                          <span className="text-xs text-gray-500">
+                            Schedule updates disabled
                           </span>
                         )}
                       </div>
@@ -925,7 +923,7 @@ export default function TeacherPortal() {
               <div className="mb-4 sm:mb-6">
                 {/* Check if enrollment is not active - hide schedule completely */}
                 {studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active' ? (
-                  <div className="text-center py-8 bg-red-50 rounded-lg border-2 border-red-200">
+                  <div className="text-center py-8 bg-red-50 rounded-lg border border-red-200">
                     <XCircle className="h-12 w-12 text-red-400 mx-auto mb-3" />
                     <p className="text-red-800 font-semibold mb-2">Schedule Access Disabled</p>
                     <p className="text-red-600 text-sm">
@@ -1013,12 +1011,12 @@ export default function TeacherPortal() {
                                   <div key={milestone.id} className="flex flex-col items-center">
                                     {/* Node Circle */}
                                     <div
-                                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all ${
+                                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
                                         isCompleted
                                           ? 'bg-emerald-600 text-white'
                                           : isCurrent
                                           ? 'bg-emerald-600 text-white'
-                                          : 'bg-white border-2 border-gray-300 text-gray-400'
+                                          : 'bg-white border border-gray-300 text-gray-400'
                                       }`}
                                       title={milestone.subtitle}
                                     >
@@ -1183,9 +1181,9 @@ export default function TeacherPortal() {
                               </div>
 
                               {/* Progress Bar */}
-                              <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-3">
+                              <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
                                 <div
-                                  className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all duration-500 ease-out"
+                                  className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all"
                                   style={{ width: `${completionPercent}%` }}
                                 />
                               </div>
@@ -1271,16 +1269,13 @@ export default function TeacherPortal() {
 
       {/* Email Modal */}
       {showEmailModal && emailRecipient && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl">
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-lg sm:rounded-lg border border-gray-200 w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                  <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg flex-shrink-0">
-                    <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                  </div>
                   <div className="min-w-0">
-                    <h2 className="text-sm sm:text-xl font-bold text-gray-900">Send Message</h2>
+                    <h2 className="text-sm sm:text-lg font-semibold text-gray-900">Send Message</h2>
                     <p className="text-xs sm:text-sm text-gray-600 truncate">To: {emailRecipient.name}</p>
                   </div>
                 </div>
@@ -1290,7 +1285,7 @@ export default function TeacherPortal() {
                     setEmailMessage('');
                     setEmailRecipient(null);
                   }}
-                  className="text-gray-500 hover:text-gray-700 p-2 -mr-2 active:scale-95"
+                  className="text-gray-400 hover:text-gray-600 p-2 -mr-2 transition-colors"
                 >
                   <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
@@ -1300,35 +1295,35 @@ export default function TeacherPortal() {
             <div className="p-4 sm:p-6">
 
               <div className="mb-4 sm:mb-6">
-                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200 mb-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                     <div>
-                      <p className="text-gray-600 mb-1">Student ID</p>
-                      <p className="font-medium">{emailRecipient.studentId}</p>
+                      <p className="text-gray-500 text-xs mb-1">Student ID</p>
+                      <p className="text-gray-900">{emailRecipient.studentId}</p>
                     </div>
                     <div>
-                      <p className="text-gray-600 mb-1">Program</p>
-                      <p className="font-medium capitalize">
+                      <p className="text-gray-500 text-xs mb-1">Program</p>
+                      <p className="text-gray-900 capitalize">
                         {emailRecipient.program === 'essentials' ? 'Essentials' : 'Tajweed'}
                       </p>
                     </div>
                     <div className="col-span-2">
-                      <p className="text-gray-600 mb-1">Email</p>
-                      <p className="font-medium">{emailRecipient.email}</p>
+                      <p className="text-gray-500 text-xs mb-1">Email</p>
+                      <p className="text-gray-900">{emailRecipient.email}</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
                   <label htmlFor="emailMessage" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
+                    Message
                   </label>
                   <textarea
                     id="emailMessage"
                     value={emailMessage}
                     onChange={(e) => setEmailMessage(e.target.value)}
                     rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
                     placeholder="Type your message here..."
                   />
                   <p className="text-xs text-gray-500 mt-2">
@@ -1375,12 +1370,12 @@ export default function TeacherPortal() {
       {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between rounded-t-2xl">
-              <h3 className="text-lg sm:text-2xl font-bold text-gray-900">Settings</h3>
+          <div className="bg-white rounded-t-lg sm:rounded-lg border border-gray-200 w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Settings</h3>
               <button
                 onClick={() => setShowSettingsModal(false)}
-                className="text-gray-400 hover:text-gray-600 p-2 -mr-2 active:scale-95"
+                className="text-gray-400 hover:text-gray-600 p-2 -mr-2 transition-colors"
               >
                 <X className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>

@@ -466,78 +466,77 @@ const StudentPortal = () => {
         {/* Login Form */}
         <div className="flex items-center justify-center px-4 py-12 sm:py-16">
           <div className="w-full max-w-md">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
-                <User className="h-8 w-8 text-emerald-600" />
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="px-6 sm:px-8 py-8 sm:py-10">
+                <div className="text-center mb-8">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Student Portal</h1>
+                  <p className="text-gray-600 text-sm sm:text-base">Sign in to access your dashboard</p>
+                </div>
+
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Student ID
+                    </label>
+                    <input
+                      type="text"
+                      value={studentId}
+                      onChange={(e) => setStudentId(e.target.value)}
+                      placeholder="123456"
+                      maxLength={6}
+                      pattern="\d{6}"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      required
+                      autoComplete="username"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      required
+                      autoComplete="current-password"
+                    />
+                  </div>
+
+                  {/* Forgot Password Link */}
+                  <div className="text-right">
+                    <a
+                      href="/forgot-password"
+                      className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
+                    >
+                      Forgot password?
+                    </a>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="w-full py-2.5 rounded-lg transition-colors"
+                    disabled={loading}
+                  >
+                    {loading ? 'Signing in...' : 'Sign In'}
+                  </Button>
+                </form>
+
+                <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                  <p className="text-xs text-gray-700 text-center">
+                    Need help? Contact <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700">admin@tftmadrasah.nz</a>
+                  </p>
+                </div>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Student Portal</h1>
-              <p className="text-gray-600">Access your enrollment and class schedule</p>
             </div>
 
-            <Card>
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Student ID
-                  </label>
-                  <input
-                    type="text"
-                    value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
-                    placeholder="123456"
-                    maxLength={6}
-                    pattern="\d{6}"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    required
-                    autoComplete="username"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    required
-                    autoComplete="current-password"
-                  />
-                </div>
-
-                {/* Forgot Password Link */}
-                <div className="text-right">
-                  <a
-                    href="/forgot-password"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700"
-                  disabled={loading}
-                >
-                  {loading ? 'Accessing...' : 'Access Portal'}
-                </Button>
-              </form>
-
-              <div className="mt-6 pt-6 border-t border-gray-200 text-center">
-                <p className="text-sm text-gray-600">
-                  Need help? Contact{' '}
-                  <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">
-                    admin@tftmadrasah.nz
-                  </a>
-                </p>
-              </div>
-            </Card>
+            <p className="text-center text-sm text-gray-600 mt-6">
+              Authentic Islamic Education Rooted in the Qur'an and Sunnah
+            </p>
           </div>
         </div>
       </div>
@@ -547,7 +546,7 @@ const StudentPortal = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
             <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity">
@@ -573,14 +572,14 @@ const StudentPortal = () => {
               </div>
               <button
                 onClick={handleOpenSettings}
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Settings</span>
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Logout</span>
@@ -623,11 +622,8 @@ const StudentPortal = () => {
                     {/* Enrollment Header */}
                     <div className="flex items-start justify-between mb-6">
                       <div className="flex items-start gap-3 md:gap-4 flex-1 min-w-0">
-                        <div className="p-2 md:p-3 rounded-lg flex-shrink-0 bg-emerald-100">
-                          <GraduationCap className="h-5 w-5 md:h-6 md:w-6 text-emerald-600" />
-                        </div>
                         <div className="flex-1 min-w-0">
-                          <h2 className="text-xl md:text-2xl font-bold text-gray-900 break-words">{programName}</h2>
+                          <h2 className="text-xl md:text-2xl font-semibold text-gray-900 break-words">{programName}</h2>
                           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs md:text-sm text-gray-600 mt-1">
                             <span className="whitespace-nowrap">Duration: {programDuration}</span>
                             <span className="hidden sm:inline">•</span>
@@ -642,17 +638,17 @@ const StudentPortal = () => {
 
                     {/* Payment Status */}
                     <div className="grid md:grid-cols-3 gap-4 mb-6">
-                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
                         <p className="text-sm text-gray-600 mb-1">Total Fees</p>
-                        <p className="text-2xl font-bold text-gray-900">${enrollment.total_fees?.toFixed(2)}</p>
+                        <p className="text-2xl font-semibold text-gray-900">${enrollment.total_fees?.toFixed(2)}</p>
                       </div>
-                      <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
                         <p className="text-sm text-gray-600 mb-1">Paid</p>
-                        <p className="text-2xl font-bold text-emerald-600">${enrollment.total_paid?.toFixed(2)}</p>
+                        <p className="text-2xl font-semibold text-emerald-600">${enrollment.total_paid?.toFixed(2)}</p>
                       </div>
-                      <div className={`p-4 rounded-lg border ${hasPendingPayment ? 'bg-amber-50 border-amber-200' : 'bg-emerald-50 border-emerald-200'}`}>
+                      <div className={`bg-white p-4 rounded-lg border ${hasPendingPayment ? 'border-amber-300' : 'border-gray-200'}`}>
                         <p className="text-sm text-gray-600 mb-1">Balance</p>
-                        <p className={`text-2xl font-bold ${hasPendingPayment ? 'text-amber-600' : 'text-emerald-600'}`}>
+                        <p className={`text-2xl font-semibold ${hasPendingPayment ? 'text-amber-600' : 'text-emerald-600'}`}>
                           ${enrollment.balance_remaining?.toFixed(2)}
                         </p>
                       </div>
@@ -661,17 +657,13 @@ const StudentPortal = () => {
                     {/* Assigned Teacher */}
                     {assignedTeachers[enrollment.program] && (
                       <div className="border-t border-gray-200 pt-6 mt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                          <UserCheck className="h-5 w-5 text-emerald-600" />
+                        <h3 className="text-sm font-medium text-gray-900 mb-3">
                           Your Teacher
                         </h3>
-                        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                           <div className="flex items-start gap-3">
-                            <div className="p-2 bg-emerald-100 rounded-lg">
-                              <User className="h-5 w-5 text-emerald-600" />
-                            </div>
                             <div className="flex-1">
-                              <p className="font-semibold text-gray-900">
+                              <p className="font-medium text-gray-900">
                                 {assignedTeachers[enrollment.program].full_name}
                               </p>
                               <p className="text-sm text-gray-600 mt-1">
@@ -679,10 +671,9 @@ const StudentPortal = () => {
                               </p>
                               {assignedTeachers[enrollment.program].email && (
                                 <div className="flex items-center gap-1 mt-2 text-sm text-gray-600">
-                                  <Mail className="h-4 w-4" />
                                   <a
                                     href={`mailto:${assignedTeachers[enrollment.program].email}`}
-                                    className="text-emerald-600 hover:text-emerald-700 hover:underline"
+                                    className="text-emerald-600 hover:text-emerald-700 transition-colors"
                                   >
                                     {assignedTeachers[enrollment.program].email}
                                   </a>
@@ -861,7 +852,7 @@ const StudentPortal = () => {
 
                       {/* Progress Fill */}
                       <div
-                        className="absolute top-3 left-0 h-0.5 bg-emerald-600 transition-all duration-500"
+                        className="absolute top-3 left-0 h-0.5 bg-emerald-600 transition-all"
                         style={{
                           width: `${((currentMilestone.id - 1) / (totalMilestones - 1)) * 100}%`
                         }}
@@ -877,12 +868,12 @@ const StudentPortal = () => {
                             <div key={milestone.id} className="flex flex-col items-center">
                               {/* Node Circle */}
                               <div
-                                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all ${
+                                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
                                   isCompleted
                                     ? 'bg-emerald-600 text-white'
                                     : isCurrent
                                     ? 'bg-emerald-600 text-white'
-                                    : 'bg-white border-2 border-gray-300 text-gray-400'
+                                    : 'bg-white border border-gray-300 text-gray-400'
                                 }`}
                                 title={milestone.subtitle}
                               >
@@ -952,7 +943,7 @@ const StudentPortal = () => {
                             href={mainClass.meeting_link.startsWith('http') ? mainClass.meeting_link : `https://${mainClass.meeting_link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-emerald-950 text-white rounded-lg hover:bg-emerald-900 transition-colors text-sm font-medium"
                           >
                             <Video className="h-4 w-4 mr-2" />
                             Join Class
@@ -1001,7 +992,7 @@ const StudentPortal = () => {
                             href={shortClass.meeting_link.startsWith('http') ? shortClass.meeting_link : `https://${shortClass.meeting_link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-emerald-950 text-white rounded-lg hover:bg-emerald-900 transition-colors text-sm font-medium"
                           >
                             <Video className="h-4 w-4 mr-2" />
                             Join Class
@@ -1033,9 +1024,9 @@ const StudentPortal = () => {
                         </div>
 
                         {/* Progress Bar */}
-                        <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-3">
+                        <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
                           <div
-                            className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all duration-500 ease-out"
+                            className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all"
                             style={{ width: `${completionPercent}%` }}
                           />
                         </div>
@@ -1055,15 +1046,10 @@ const StudentPortal = () => {
 
           {/* Apply for Another Program */}
           {!isEnrolledInAllPrograms() && (
-            <Card className="border-2 border-emerald-200 bg-emerald-50">
+            <Card className="border border-gray-200 bg-white">
               <div className="flex flex-col sm:flex-row items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
-                    <GraduationCap className="h-6 w-6 text-white" />
-                  </div>
-                </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Expand Your Learning</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Expand Your Learning</h3>
                   <p className="text-gray-600 mb-4">
                     Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
                   </p>
@@ -1072,8 +1058,7 @@ const StudentPortal = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="primary" className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
-                      <BookOpen className="h-4 w-4 mr-2" />
+                    <Button variant="primary" className="bg-emerald-950 hover:bg-emerald-900 w-full sm:w-auto">
                       Apply for Another Program
                     </Button>
                   </Link>
@@ -1087,7 +1072,7 @@ const StudentPortal = () => {
       {/* Email Modal */}
       {showEmailModal && emailRecipient && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full">
+          <div className="bg-white rounded-lg border border-gray-200 max-w-2xl w-full">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -1187,7 +1172,7 @@ const StudentPortal = () => {
       {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg border border-gray-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">

@@ -138,7 +138,7 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {loading ? 'Subscribing...' : 'Subscribe'}
             </button>
@@ -162,7 +162,7 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
+                className="bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2 px-5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
               >
                 {loading ? 'Subscribing...' : 'Subscribe'}
               </button>

@@ -311,13 +311,13 @@ const LandingPage = () => {
       <section className="relative min-h-screen flex flex-col overflow-hidden bg-black">
         {/* Background Image with Overlay */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
           style={{
             backgroundImage: `url("${bgImageUrl}")`,
           }}
         >
           {/* Simple dark overlay with alpha to show background */}
-          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="absolute inset-0 bg-black/85"></div>
         </div>
 
         {/* Centered Hero Content with Slider and CTA */}
