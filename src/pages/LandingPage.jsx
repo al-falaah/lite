@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 
@@ -142,11 +142,11 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation - Fixed for sticky positioning with color change after hero */}
-      <nav className={`sticky top-0 left-0 right-0 z-50 backdrop-blur-sm transition-all duration-300 pb-3 ${
+      {/* Navigation - Clean professional design */}
+      <nav className={`sticky top-0 left-0 right-0 z-50 transition-colors pb-3 ${
         isScrolled
-          ? 'bg-white/95 shadow-sm'
-          : 'bg-emerald-950/80 shadow-lg shadow-emerald-950/20'
+          ? 'bg-white border-b border-gray-200'
+          : 'bg-emerald-950'
       }`}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-14 md:h-16">
@@ -225,7 +225,7 @@ const LandingPage = () => {
                   </button>
                 </Link>
                 <Link to="/apply">
-                  <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all hover:scale-105 shadow-lg shadow-emerald-600/30">
+                  <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded transition-colors">
                     Apply Now
                   </button>
                 </Link>
@@ -247,7 +247,7 @@ const LandingPage = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-              <div className="md:hidden border-t border-white/10 bg-black/20 backdrop-blur-md rounded-b-lg mt-3">
+              <div className="md:hidden border-t border-white/10 bg-black/40 mt-3">
                 <div className="flex flex-col gap-1 py-3 px-3">
                   <a href="#mission" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
@@ -282,7 +282,7 @@ const LandingPage = () => {
                     </button>
                   </Link>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-2.5 mt-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-lg shadow-emerald-600/30">
+                    <button className="w-full px-4 py-2.5 mt-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded transition-colors">
                       Apply Now
                     </button>
                   </Link>
@@ -316,8 +316,8 @@ const LandingPage = () => {
             backgroundImage: `url("${bgImageUrl}")`,
           }}
         >
-          {/* Diagonal gradient: light top-left to dark bottom-right */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/95 to-black/100"></div>
+          {/* Simple dark overlay with alpha to show background */}
+          <div className="absolute inset-0 bg-black/70"></div>
         </div>
 
         {/* Centered Hero Content with Slider and CTA */}
@@ -375,7 +375,7 @@ const LandingPage = () => {
                   </Button>
                 </Link>
                 <a href="#programs">
-                  <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 w-full sm:w-auto backdrop-blur-sm">
+                  <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/20 w-full sm:w-auto">
                     View Programs
                   </Button>
                 </a>
@@ -386,7 +386,7 @@ const LandingPage = () => {
                 <div className="mt-8 md:mt-10">
                   <Link
                     to="/blog"
-                    className="group inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-400/20"
+                    className="group inline-flex items-center gap-3 px-6 py-3 bg-white/10 border border-white/20 rounded-full hover:bg-white/20 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       <div className="relative">
@@ -413,10 +413,10 @@ const LandingPage = () => {
             aria-label="Scroll down to learn more"
           >
             {/* Vertical Line */}
-            <div className="w-0.5 h-12 sm:h-16 bg-gradient-to-b from-transparent via-emerald-400/50 to-emerald-400"></div>
+            <div className="w-0.5 h-12 sm:h-16 bg-emerald-400/30"></div>
 
             {/* Animated Chevron */}
-            <div className="bg-emerald-500 rounded-full p-2 shadow-lg shadow-emerald-500/50 group-hover:bg-emerald-400 transition-all">
+            <div className="bg-emerald-500 rounded-full p-2 group-hover:bg-emerald-400 transition-colors">
               <ChevronDown className="h-4 w-4 text-white" />
             </div>
 
@@ -428,8 +428,8 @@ const LandingPage = () => {
         )}
       </section>
 
-      {/* Seamless Gradient Transition */}
-      <div className="relative h-20 sm:h-40 lg:h-48 bg-gradient-to-b from-black via-gray-900/50 to-white"></div>
+      {/* Simple Transition */}
+      <div className="relative h-20 sm:h-32 bg-emerald-950"></div>
 
       {/* Our Mission Section */}
       <section id="mission" className="bg-white py-10 sm:py-28">
@@ -462,51 +462,37 @@ const LandingPage = () => {
             </div>
 
             {/* Founder Quote Box */}
-            <div className="mt-10 sm:mt-16 relative">
-            <div className="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl p-6 sm:p-10 shadow-sm border border-emerald-100">
-              {/* Quote Mark */}
-              <div className="absolute top-4 sm:top-6 left-4 sm:left-6 text-5xl sm:text-6xl font-serif text-emerald-600 opacity-20 leading-none">
-                "
-              </div>
-
-              <div className="relative">
+            <div className="mt-10 sm:mt-16">
+            <div className="bg-gray-50 rounded-lg p-6 sm:p-10 border border-gray-200">
+              <div>
                 {/* Quote Text */}
-                <blockquote className="text-base sm:text-2xl font-light text-gray-800 mb-6 sm:mb-10 leading-relaxed pl-4 sm:pl-6">
+                <blockquote className="text-base sm:text-xl text-gray-700 mb-6 sm:mb-8 leading-relaxed border-l-2 border-gray-300 pl-4 sm:pl-6">
                   This is our purpose, and we ask Allah ('azza wa jalla) to grant us success in helping Muslims reconnect with their faith through authentic, accessible education.
                 </blockquote>
 
                 {/* Founder Info */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-12 pl-4 sm:pl-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pl-4 sm:pl-6">
                   <div className="flex-shrink-0">
                     <img
                       src="/founder.jpeg"
                       alt="Dr Abdulquadri Alaka"
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover scale-150 bg-gray-200 ring-4 ring-white shadow-md"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover bg-gray-200"
                     />
                   </div>
-                  <div className="flex-1 sm:ml-4">
-                    <p className="text-lg sm:text-xl">
+                  <div className="flex-1">
+                    <p className="text-base sm:text-lg">
                       <a
                       href=""
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-emerald-800 transition-colors group"
+                      className="inline-flex items-center font-semibold text-gray-900 mb-1 hover:text-gray-700 transition-colors"
                       >
                       Dr Abdulquadri Alaka
                       </a>
                       </p>
-                    <p className="text-sm sm:text-base text-gray-600 mb-2 sm:mb-3">
+                    <p className="text-sm text-gray-600">
                       Founder, The FastTrack Madrasah
                       </p>
-                    {/* <a
-                      href="https://www.linkedin.com/in/aalaka"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 hover:text-emerald-800 transition-colors group"
-                    >
-                      <span>View LinkedIn</span>
-                      <span className="group-hover:translate-x-1 transition-transform">→</span>
-                    </a> */}
                   </div>
                 </div>
               </div>
@@ -514,27 +500,27 @@ const LandingPage = () => {
           </div>
 
             {/* Support CTA */}
-            <div className="mt-10 sm:mt-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 sm:p-12 border border-blue-100 shadow-sm">
+            <div className="mt-10 sm:mt-16 bg-gray-50 rounded-lg p-6 sm:p-12 border border-gray-200">
               <div className="max-w-2xl mx-auto text-center">
-                <h3 className="text-xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
                   Ready to Begin Your Journey?
                 </h3>
-                <p className="text-sm sm:text-lg text-gray-700 mb-6 sm:mb-8 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
                   Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link to="/apply">
-                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
-                      <Rocket className="h-4 w-4 sm:h-5 sm:w-5" />
-                      Start Your Application
+                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-950 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
+                      <span>Start Your Application</span>
+                      <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
 
                   <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold rounded-lg transition-all hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base">
-                      <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
-                      Support Our Mission
+                    <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
+                      <Heart className="h-4 w-4" />
+                      <span>Support Our Mission</span>
                     </button>
                   </a>
                 </div>
@@ -553,16 +539,12 @@ const LandingPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Card 1 */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 0 ? null : 0)}
                 className="w-full p-6 text-left md:cursor-default"
               >
-                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                  01
-                </div>
-
-                <div className="relative z-10">
+                <div>
                   <div className="flex items-start justify-between gap-4">
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
                       Flexible & Personalized Learning
@@ -591,14 +573,11 @@ const LandingPage = () => {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 1 ? null : 1)}
                 className="w-full p-6 text-left md:cursor-default"
               >
-                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                  02
-                </div>
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
@@ -627,14 +606,11 @@ const LandingPage = () => {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 2 ? null : 2)}
                 className="w-full p-6 text-left md:cursor-default"
               >
-                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                  03
-                </div>
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
@@ -663,14 +639,11 @@ const LandingPage = () => {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 3 ? null : 3)}
                 className="w-full p-6 text-left md:cursor-default"
               >
-                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                  04
-                </div>
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
@@ -699,14 +672,11 @@ const LandingPage = () => {
             </div>
 
             {/* Card 5 */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 4 ? null : 4)}
                 className="w-full p-6 text-left md:cursor-default"
               >
-                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                  05
-                </div>
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
@@ -735,14 +705,11 @@ const LandingPage = () => {
             </div>
 
             {/* Card 6 */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all relative">
+            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 5 ? null : 5)}
                 className="w-full p-6 text-left md:cursor-default"
               >
-                <div className="absolute top-4 left-4 text-7xl font-bold text-emerald-600 opacity-10">
-                  06
-                </div>
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
@@ -773,120 +740,156 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Enhanced Programs Section - Mobile-Friendly Accordion */}
-      <section id="programs" className="bg-white py-10 sm:py-24">
+      {/* Enhanced Programs Section - Modern Design */}
+      <section id="programs" className="bg-gray-50 py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
-            Our Programs
-          </h2>
+          {/* Section Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+              Our Programs
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+              Choose the learning path that matches your goals
+            </p>
+          </div>
 
-          {/* Quick Comparison - At a Glance */}
-          <div className="mb-8 sm:mb-10 max-w-4xl mx-auto">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
-              <div className="grid grid-cols-3 text-center">
-                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-100">
-                  <p className="text-[10px] sm:text-xs font-medium text-gray-600">Track</p>
+          {/* Quick Comparison Table - Redesigned */}
+          <div className="mb-12 sm:mb-16 max-w-5xl mx-auto">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-3 bg-gray-50 border-b border-gray-200">
+                <div className="p-4 sm:p-5"></div>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-200">
+                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
+                    TMP
+                  </div>
                 </div>
-                <div className="p-2 sm:p-3 border-r border-gray-200 bg-purple-50">
-                  <p className="text-[10px] sm:text-xs font-semibold text-purple-900">TMP</p>
-                </div>
-                <div className="p-2 sm:p-3 bg-emerald-50">
-                  <p className="text-[10px] sm:text-xs font-semibold text-emerald-900">EAIS</p>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-200">
+                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
+                    EAIS
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 text-center border-t border-gray-200">
-                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-50">
-                  <p className="text-[10px] sm:text-xs text-gray-600">Duration</p>
+              {/* Duration Row */}
+              <div className="grid grid-cols-3 border-b border-gray-100">
+                <div className="p-4 sm:p-5 flex items-center">
+                  <div>
+                    <p className="text-sm sm:text-base font-semibold text-gray-900">Duration</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Time commitment</p>
+                  </div>
                 </div>
-                <div className="p-2 sm:p-3 border-r border-gray-200">
-                  <p className="text-xs sm:text-sm font-bold text-gray-900">6 months</p>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                  <div>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">6 months</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">24 weeks</p>
+                  </div>
                 </div>
-                <div className="p-2 sm:p-3">
-                  <p className="text-xs sm:text-sm font-bold text-gray-900">2 years</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 text-center border-t border-gray-200">
-                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-50">
-                  <p className="text-[10px] sm:text-xs text-gray-600">Cost</p>
-                </div>
-                <div className="p-2 sm:p-3 border-r border-gray-200">
-                  <p className="text-xs sm:text-sm font-bold text-gray-900">$120</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500">one-time</p>
-                </div>
-                <div className="p-2 sm:p-3">
-                  <p className="text-xs sm:text-sm font-bold text-gray-900">$35/mo</p>
-                  <p className="text-[10px] sm:text-xs text-gray-500">or $375/yr</p>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                  <div>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">2 years</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">104 weeks</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 text-center border-t border-gray-200">
-                <div className="p-2 sm:p-3 border-r border-gray-200 bg-gray-50">
-                  <p className="text-[10px] sm:text-xs text-gray-600">Focus</p>
+              {/* Investment Row */}
+              <div className="grid grid-cols-3 border-b border-gray-100">
+                <div className="p-4 sm:p-5 flex items-center">
+                  <div>
+                    <p className="text-sm sm:text-base font-semibold text-gray-900">Investment</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Program fee</p>
+                  </div>
                 </div>
-                <div className="p-2 sm:p-3 border-r border-gray-200">
-                  <p className="text-[10px] sm:text-xs text-gray-700">Tajweed & Qur'an</p>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                  <div>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">$120 NZD</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">One-time</p>
+                  </div>
                 </div>
-                <div className="p-2 sm:p-3">
-                  <p className="text-[10px] sm:text-xs text-gray-700">Arabic & Islamic Studies</p>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                  <div>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">$35/month</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">$375/year</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Focus Row */}
+              <div className="grid grid-cols-3">
+                <div className="p-4 sm:p-5 flex items-center">
+                  <div>
+                    <p className="text-sm sm:text-base font-semibold text-gray-900">Focus</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Core curriculum</p>
+                  </div>
+                </div>
+                <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-xs sm:text-sm text-gray-700 text-center">Tajweed & Quranic Sciences</p>
+                </div>
+                <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-xs sm:text-sm text-gray-700 text-center">Arabic Language & Islamic Studies</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-            {/* TMP Program Card */}
-            <div className="bg-white border-2 border-purple-200 rounded-xl overflow-hidden transition-all shadow-sm">
-              {/* Subtle gradient header */}
-              <div className="bg-gradient-to-r from-purple-50 to-white px-5 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                  Track 1: Tajweed Mastery Program (TMP)
+          {/* Program Cards Grid */}
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* TMP Program Card - Clean Professional Design */}
+            <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
+              {/* Card Header - Minimal */}
+              <div className="px-6 pt-6 pb-5 border-b border-gray-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 1</span>
+                  <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">6 months</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
+                  Tajweed Mastery Program
                 </h3>
-                <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   برنامج إتقان التجويد
                 </p>
-                <p className="text-xs sm:text-sm text-gray-600">
-                  <span className="italic font-serif tracking-wide">Barnāmij Itqān at-Tajwīd</span>
+                <p className="text-xs text-gray-500 italic">
+                  Barnāmij Itqān at-Tajwīd
                 </p>
               </div>
 
-              <div className="px-5 sm:px-6 pb-5 sm:pb-6">
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  An intensive 24-week sprint to transform basic reading into expert-level precision. Through a slated curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
+              {/* Card Body */}
+              <div className="px-6 py-5">
+                {/* Description */}
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  An intensive 24-week sprint to transform basic reading into expert-level precision. Through a structured curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
+                </p>
+                <div className="bg-gray-50 border border-gray-200 rounded p-3 mb-5">
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    <span className="font-medium text-gray-900">Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic">ʿUlūm al-Qurʾān</span>), grounding your recitation in authentic scholarly context.
+                  </p>
+                </div>
 
-                </p>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  <span className="font-semibold">Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>), grounding your recitation in authentic scholarly and historical context.
-                </p>
-                {/* Key Info - Always Visible */}
-                <div className="bg-purple-50 rounded-lg p-4 mb-4">
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                      <p className="text-xs text-purple-800 font-medium mb-1">Duration</p>
-                      <p className="text-base sm:text-lg font-bold text-purple-900">6 months</p>
-                      <p className="text-xs text-purple-700">24 weeks total</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-purple-800 font-medium mb-1">Investment</p>
-                      <p className="text-base sm:text-lg font-bold text-purple-900">$120 NZD</p>
-                      <p className="text-xs text-purple-700">One-time payment</p>
-                    </div>
+                {/* Key Stats - Inline */}
+                <div className="flex items-center justify-between py-3 border-t border-gray-100">
+                  <div>
+                    <p className="text-xs text-gray-500">Duration</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">6 months · 24 weeks</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Investment</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">$120 NZD</p>
                   </div>
                 </div>
 
-                {/* Expand Button */}
+                {/* Expand Button - Minimal */}
                 <button
                   onClick={() => setExpandedProgram(expandedProgram === 'tmp' ? null : 'tmp')}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-purple-600 text-purple-700 font-semibold rounded-lg hover:bg-purple-50 transition-colors mb-4"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-gray-600 hover:text-gray-900 transition-colors border-t border-gray-100"
                 >
-                  <span>{expandedProgram === 'tmp' ? 'Hide Details' : 'View Full Curriculum'}</span>
-                  <ChevronDown className={`h-5 w-5 transition-transform ${expandedProgram === 'tmp' ? 'rotate-180' : ''}`} />
+                  <span>{expandedProgram === 'tmp' ? 'Hide curriculum details' : 'View curriculum details'}</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${expandedProgram === 'tmp' ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Collapsible Details */}
+                {/* Collapsible Details - Enhanced */}
                 {expandedProgram === 'tmp' && (
-                  <div className="border-t border-gray-200 pt-6 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                  <div className="border-t border-gray-200 pt-6 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
@@ -935,70 +938,73 @@ const LandingPage = () => {
                   </div>
                 )}
 
-                {/* Enroll Button */}
-                <Link to="/apply">
-                  <Button variant="outline" size="md" className="w-full border-purple-600 text-purple-700 hover:bg-purple-50 mt-4">
-                    Apply for the 24-Week Sprint
-                  </Button>
-                </Link>
+                {/* CTA Button - Clean */}
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                  <Link to="/apply">
+                    <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                      <span>Apply for TMP</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
-            {/* EAIS Program Card */}
-            <div className="bg-white border-2 border-emerald-200 rounded-xl overflow-hidden transition-all shadow-sm">
-              {/* Subtle gradient header */}
-              <div className="bg-gradient-to-r from-emerald-50 to-white px-5 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-                 Track 2: Essential Arabic & Islamic Studies (EAIS)
+            {/* EAIS Program Card - Clean Professional Design */}
+            <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
+              {/* Card Header - Minimal */}
+              <div className="px-6 pt-6 pb-5 border-b border-gray-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 2</span>
+                  <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">2 years</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
+                  Essential Arabic & Islamic Studies
                 </h3>
-                 <p className="text-sm sm:text-base text-emerald-700 mb-1" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.8'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                 </p>
-                <p className="text-xs sm:text-sm text-gray-600">
-                  <span className="italic font-serif tracking-wide">Ad-Dirāsāt al-Asāsiyyah fīl-Lughah al-ʿArabiyyah wal-ʿUlūm al-Islāmiyyah</span>
+                <p className="text-xs text-gray-500 italic">
+                  Ad-Dirāsāt al-Asāsiyyah fīl-Lughah al-ʿArabiyyah wal-ʿUlūm al-Islāmiyyah
                 </p>
               </div>
 
-              <div className="px-5 sm:px-6 pb-5 sm:pb-6">
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our slated curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
-
+              {/* Card Body */}
+              <div className="px-6 py-5">
+                {/* Description */}
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our structured curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
                 </p>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6 text-justify">
-                  <span className="font-semibold">Our Edge:</span> We move beyond isolated language study by integrating Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>). Through expert mentoring and systematic textual study, we equip you with the linguistic and spiritual infrastructure to engage directly with the Qur'an and Sunnah.
-                </p>
-                {/* <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-6">
-                  Equip yourself with intermediate Arabic proficiency and foundational Islamic knowledge in creed, manners, and jurisprudence through comprehensive study of classical texts.
-                </p> */}
+                <div className="bg-gray-50 border border-gray-200 rounded p-3 mb-5">
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    <span className="font-medium text-gray-900">Our Edge:</span> We move beyond isolated language study by integrating Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Through expert mentoring and systematic textual study, we equip you with the linguistic and spiritual infrastructure to engage directly with the Qur'an and Sunnah.
+                  </p>
+                </div>
 
-                {/* Key Info - Always Visible */}
-                <div className="bg-emerald-50 rounded-lg p-4 mb-4">
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                      <p className="text-xs text-emerald-800 font-medium mb-1">Duration</p>
-                      <p className="text-base sm:text-lg font-bold text-emerald-900">2 years</p>
-                      <p className="text-xs text-emerald-700">104 weeks total</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-emerald-800 font-medium mb-1">Investment</p>
-                      <p className="text-base sm:text-lg font-bold text-emerald-900">$35 NZD/mo</p>
-                      <p className="text-xs text-emerald-700">or $375/year</p>
-                    </div>
+                {/* Key Stats - Inline */}
+                <div className="flex items-center justify-between py-3 border-t border-gray-100">
+                  <div>
+                    <p className="text-xs text-gray-500">Duration</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">2 years · 104 weeks</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Investment</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">$35/month</p>
                   </div>
                 </div>
 
-                {/* Expand Button */}
+                {/* Expand Button - Minimal */}
                 <button
                   onClick={() => setExpandedProgram(expandedProgram === 'eais' ? null : 'eais')}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-emerald-600 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors mb-4"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-gray-600 hover:text-gray-900 transition-colors border-t border-gray-100"
                 >
-                  <span>{expandedProgram === 'eais' ? 'Hide Details' : 'View Full Curriculum'}</span>
-                  <ChevronDown className={`h-5 w-5 transition-transform ${expandedProgram === 'eais' ? 'rotate-180' : ''}`} />
+                  <span>{expandedProgram === 'eais' ? 'Hide curriculum details' : 'View curriculum details'}</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${expandedProgram === 'eais' ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Collapsible Details */}
+                {/* Collapsible Details - Enhanced */}
                 {expandedProgram === 'eais' && (
-                  <div className="border-t border-gray-200 pt-6 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                  <div className="border-t border-gray-200 pt-6 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
@@ -1026,26 +1032,41 @@ const LandingPage = () => {
                   </div>
                 )}
 
-                {/* Enroll Button */}
-                <Link to="/apply">
-                  <Button variant="primary" size="md" className="w-full bg-emerald-600 hover:bg-emerald-700 mt-4">
-                    Begin Your 2-Year Mastery Path
-                  </Button>
-                </Link>
+                {/* CTA Button - Clean */}
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                  <Link to="/apply">
+                    <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                      <span>Apply for EAIS</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
+          </div>
 
+          {/* Bottom CTA Section - Minimal */}
+          <div className="mt-12 text-center">
+            <p className="text-sm text-gray-600 mb-4">
+              Not sure which program is right for you?
+            </p>
+            <Link to="/apply">
+              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
+                <span>Start Your Application</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </Link>
           </div>
 
           {/* Recommended Learning Path Visual */}
           <div className="mt-16 max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50 rounded-2xl p-8 sm:p-10 border-2 border-emerald-200 shadow-lg">
+            <div className="bg-white rounded-lg p-8 sm:p-10 border border-gray-200">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-full font-semibold text-sm mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium mb-4">
                   <CheckCircle className="h-4 w-4" />
-                  Recommended Learning Path
+                  Recommended Path
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">
                   The Strategic Success Path
                 </h3>
                 <p className="text-base text-gray-600">
@@ -1057,38 +1078,38 @@ const LandingPage = () => {
               <div className="hidden md:flex items-center justify-center gap-6 mb-8">
                 {/* Step 1: TMP */}
                 <div className="flex-1 max-w-xs">
-                  <div className="bg-white rounded-xl p-6 border-2 border-purple-300 shadow-md">
+                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-3xl font-bold text-purple-600">01</span>
-                      <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 1</span>
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
                         6 months
                       </span>
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-2">
+                    <h4 className="font-semibold text-gray-900 mb-2">
                       Tajweed Mastery Program
                     </h4>
-                    <p className="text-sm text-gray-600 text-justify">
+                    <p className="text-sm text-gray-600">
                       Build a strong foundation with the Qur'an through precision recitation
                     </p>
                   </div>
                 </div>
 
                 {/* Arrow */}
-                <ArrowRight className="h-8 w-8 text-emerald-600 flex-shrink-0" />
+                <ArrowRight className="h-6 w-6 text-gray-400 flex-shrink-0" />
 
                 {/* Step 2: EAIS */}
                 <div className="flex-1 max-w-xs">
-                  <div className="bg-white rounded-xl p-6 border-2 border-emerald-300 shadow-md">
+                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-3xl font-bold text-emerald-600">02</span>
-                      <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 2</span>
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
                         2 years
                       </span>
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-2">
+                    <h4 className="font-semibold text-gray-900 mb-2">
                       Essential Arabic & Islamic Studies
                     </h4>
-                    <p className="text-sm text-gray-600 text-justify">
+                    <p className="text-sm text-gray-600">
                       Master Arabic linguistics and Islamic sciences for direct comprehension
                     </p>
                   </div>
@@ -1098,14 +1119,14 @@ const LandingPage = () => {
               {/* Mobile: Vertical Flow */}
               <div className="md:hidden space-y-4 mb-8">
                 {/* Step 1: TMP */}
-                <div className="bg-white rounded-xl p-6 border-2 border-purple-300 shadow-md">
+                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-3xl font-bold text-purple-600">01</span>
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 1</span>
+                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
                       6 months
                     </span>
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-2">
+                  <h4 className="font-semibold text-gray-900 mb-2">
                     Tajweed Mastery Program
                   </h4>
                   <p className="text-sm text-gray-600">
@@ -1115,18 +1136,18 @@ const LandingPage = () => {
 
                 {/* Arrow Down */}
                 <div className="flex justify-center">
-                  <div className="h-8 w-0.5 bg-emerald-600"></div>
+                  <div className="h-8 w-0.5 bg-gray-300"></div>
                 </div>
 
                 {/* Step 2: EAIS */}
-                <div className="bg-white rounded-xl p-6 border-2 border-emerald-300 shadow-md">
+                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-3xl font-bold text-emerald-600">02</span>
-                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 2</span>
+                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
                       2 years
                     </span>
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-2">
+                  <h4 className="font-semibold text-gray-900 mb-2">
                     Essential Arabic & Islamic Studies
                   </h4>
                   <p className="text-sm text-gray-600">
@@ -1136,12 +1157,12 @@ const LandingPage = () => {
               </div>
 
               {/* Why This Path */}
-              <div className="bg-white/60 rounded-xl p-6 border border-emerald-200">
-                <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600" />
+              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-gray-600" />
                   Why This Progression Works
                 </h4>
-                <p className="text-sm text-gray-700 leading-relaxed text-justify">
+                <p className="text-sm text-gray-700 leading-relaxed">
                   Starting with TMP establishes your spiritual connection to the Qur'an through perfected recitation. This 6-month foundation primes your mind and heart for the intensive 2-year EAIS journey, where you'll gain the linguistic tools to engage directly with Revelation. This sequential approach maximizes retention and prevents cognitive overload.
                 </p>
               </div>
@@ -1160,8 +1181,8 @@ const LandingPage = () => {
           {/* Mobile: Vertical Layout */}
           <div className="md:hidden space-y-4">
             {/* Step 1 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 01 | Online Application
               </h3>
               <p className="text-xs text-gray-700">
@@ -1173,8 +1194,8 @@ const LandingPage = () => {
             <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 2 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 02 | Evaluation & Interview
               </h3>
               <p className="text-xs text-gray-700">
@@ -1186,8 +1207,8 @@ const LandingPage = () => {
             <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 3 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 03 | Selection & Enrollment
               </h3>
               <p className="text-xs text-gray-700">
@@ -1199,8 +1220,8 @@ const LandingPage = () => {
             <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 4 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 04 | Onboarding & Mentorship
               </h3>
               <p className="text-xs text-gray-700">
@@ -1212,8 +1233,8 @@ const LandingPage = () => {
             <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 5 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 05 | Guided Execution
               </h3>
               <p className="text-xs text-gray-700">
@@ -1225,8 +1246,8 @@ const LandingPage = () => {
             <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 6 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 06 | Final Validation
               </h3>
               <p className="text-xs text-gray-700">
@@ -1238,8 +1259,8 @@ const LandingPage = () => {
             <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
 
             {/* Step 7 */}
-            <div className="bg-white border-l-4 border-emerald-600 p-4 rounded-lg shadow-sm">
-              <h3 className="text-sm font-bold text-emerald-600 mb-1.5">
+            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
                 07 | Certification & Alumni Network
               </h3>
               <p className="text-xs text-gray-700">
@@ -1252,11 +1273,11 @@ const LandingPage = () => {
           <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
             {/* Row 1: Steps 1-3 */}
             {/* Step 1 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 01
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Online Application
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1265,11 +1286,11 @@ const LandingPage = () => {
             </div>
 
             {/* Step 2 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 02
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Evaluation & Interview
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1278,11 +1299,11 @@ const LandingPage = () => {
             </div>
 
             {/* Step 3 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 03
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Selection & Enrollment
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1292,11 +1313,11 @@ const LandingPage = () => {
 
             {/* Row 2: Steps 4-6 */}
             {/* Step 4 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 04
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Onboarding & Mentorship
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1305,11 +1326,11 @@ const LandingPage = () => {
             </div>
 
             {/* Step 5 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 05
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Guided Execution
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1318,11 +1339,11 @@ const LandingPage = () => {
             </div>
 
             {/* Step 6 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 06
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Final Validation
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1332,11 +1353,11 @@ const LandingPage = () => {
 
             {/* Row 3: Step 7 (centered) */}
             {/* Step 7 */}
-            <div className="bg-white border-t-4 border-emerald-600 p-6 rounded-lg shadow-sm md:col-start-2">
-              <div className="flex items-center justify-center w-12 h-12 bg-emerald-600 text-white font-bold rounded-full mb-4 text-lg">
+            <div className="bg-white border border-gray-200 p-6 rounded-lg md:col-start-2">
+              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
                 07
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
+              <h3 className="text-base font-semibold text-gray-900 mb-3">
                 Certification & Alumni Network
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed text-justify">
@@ -1361,24 +1382,24 @@ const LandingPage = () => {
 
           <div className="space-y-4">
             {faqs.map((faq, idx) => (
-              <div key={idx} className={`bg-white rounded-lg border-2 ${faq.isRecommended ? 'border-emerald-500 shadow-md' : 'border-gray-200'}`}>
+              <div key={idx} className="bg-white rounded-lg border border-gray-200">
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                   className="w-full px-6 py-4 text-left flex items-start justify-between hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex-1 pr-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-gray-900">{faq.question}</span>
+                      <span className="font-semibold text-gray-900">{faq.question}</span>
                       {faq.isRecommended && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800">
-                          Recommended Path
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                          Recommended
                         </span>
                       )}
                     </div>
                     <span className="text-sm text-gray-600">{faq.subQuestion}</span>
                   </div>
                   {openFaq === idx ? (
-                    <Minus className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-1" />
+                    <Minus className="h-5 w-5 text-gray-600 flex-shrink-0 mt-1" />
                   ) : (
                     <Plus className="h-5 w-5 text-gray-400 flex-shrink-0 mt-1" />
                   )}
@@ -1391,23 +1412,23 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-          <div className="mt-12 text-center p-8 bg-emerald-50 rounded-2xl border border-emerald-100">
+          <div className="mt-12 text-center p-8 bg-gray-50 rounded-lg border border-gray-200">
             <h3 className="text-xl font-bold text-gray-900 mb-2">Still have questions?</h3>
             <p className="text-gray-600 mb-6">
               If you're unsure which track is right for you, we're here to help.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-              <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
+              <a href="mailto:salam@tftmadrasah.nz" className="text-gray-700 font-medium hover:text-gray-900 underline flex items-center gap-2">
                 <Mail className="h-4 w-4" />
                 salam@tftmadrasah.nz
               </a>
               <span className="hidden sm:inline text-gray-400">|</span>
-              <a href="tel:+64272131486" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
+              <a href="tel:+64272131486" className="text-gray-700 font-medium hover:text-gray-900 underline flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 +6427 213 1486
               </a>
               <span className="hidden sm:inline text-gray-400">|</span>
-              <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-700 font-bold hover:text-emerald-800 underline flex items-center gap-2">
+              <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-700 font-medium hover:text-gray-900 underline flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
                 +6422 465 3509
               </a>
@@ -1417,28 +1438,28 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-24 bg-emerald-600 text-white">
+      <section className="py-12 md:py-24 bg-emerald-950 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-semibold mb-4">
             Begin Your Learning Journey
           </h2>
-          <p className="text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-emerald-100 mb-8 max-w-2xl mx-auto">
             Join students worldwide in authentic Islamic education
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/apply">
-              <Button variant="secondary" size="lg" className="bg-white text-emerald-700 hover:bg-gray-50 w-full sm:w-auto">
+              <Button variant="secondary" size="lg" className="bg-white text-emerald-950 hover:bg-gray-100 w-full sm:w-auto">
                 Apply Now
               </Button>
             </Link>
             <a href={donationLink} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 w-full sm:w-auto flex items-center justify-center gap-2">
+              <Button variant="outline" size="lg" className="border-white/30 text-white hover:border-white/50 hover:bg-white/10 w-full sm:w-auto flex items-center justify-center gap-2">
                 <Heart className="h-5 w-5" />
                 Support Us
               </Button>
             </a>
             <Link to="/student">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="border-white/30 text-white hover:border-white/50 hover:bg-white/10 w-full sm:w-auto">
                 Student Portal
               </Button>
             </Link>
@@ -1447,7 +1468,7 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-emerald-950 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             {/* Brand */}
@@ -1485,7 +1506,7 @@ const LandingPage = () => {
                   </a>
                 </li>
                 <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
-                <li className="pt-2 border-t border-gray-800">
+                <li className="pt-2 border-t border-emerald-900">
                   <Link to="/student" className="text-gray-500 hover:text-gray-300 text-xs">Student Portal</Link>
                 </li>
                 <li>
@@ -1501,15 +1522,15 @@ const LandingPage = () => {
                 Questions about our programs?
               </p>
               <div className="space-y-2">
-                <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-2">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
                   <Mail className="h-4 w-4" />
                   salam@tftmadrasah.nz
                 </a>
-                <a href="tel:+64272131486" className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-2">
+                <a href="tel:+64272131486" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
                   <Phone className="h-4 w-4" />
                   +6427 213 1486
                 </a>
-                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-2">
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
                   <MessageCircle className="h-4 w-4" />
                   +6422 465 3509
                 </a>
@@ -1517,7 +1538,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+          <div className="border-t border-emerald-900 pt-8 text-center text-sm text-emerald-200/60">
             <p>© {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.</p>
           </div>
         </div>
@@ -1527,10 +1548,10 @@ const LandingPage = () => {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 group"
+          className="fixed bottom-8 right-8 z-50 p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full border border-emerald-700 transition-colors"
           aria-label="Back to top"
         >
-          <ArrowUp className="h-5 w-5 group-hover:-translate-y-1 transition-transform" />
+          <ArrowUp className="h-5 w-5" />
         </button>
       )}
     </div>
