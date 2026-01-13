@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react';
 
 // Pages
 import LandingPage from './pages/LandingPage';
+import Programs from './pages/Programs';
 import ApplicationPage from './pages/ApplicationPage';
 import PaymentUploadPage from './pages/PaymentUploadPage';
 import StripePaymentPage from './pages/StripePaymentPage';
@@ -47,6 +48,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
+            <Route path="/programs" element={<Programs />} />
             <Route path="/apply" element={<ApplicationPage />} />
             <Route path="/payment" element={<StripePaymentPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
