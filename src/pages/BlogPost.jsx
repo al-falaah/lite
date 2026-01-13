@@ -37,7 +37,11 @@ const BlogPost = () => {
   useEffect(() => {
     // Show slide-in banner based on scroll position
     const handleScroll = () => {
-      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      // More reliable scroll calculation for mobile
+      const scrollY = window.scrollY || window.pageYOffset;
+      const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight || window.innerHeight;
+      const scrollPercent = (scrollY / (scrollHeight - clientHeight)) * 100;
 
       if (subscribeRef.current) {
         const subscribePosition = subscribeRef.current.getBoundingClientRect().top;
@@ -53,9 +57,13 @@ const BlogPost = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll); // Handle mobile address bar changes
     handleScroll(); // Initial check
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [bannerDismissed]);
 
   const incrementViewCount = async (postId) => {
@@ -720,9 +728,15 @@ const BlogPost = () => {
 
       {/* Slide-in Subscribe Banner - Bottom */}
       {showSlideInBanner && !bannerDismissed && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom duration-300">
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom duration-300"
+          style={{
+            animation: 'slideInFromBottom 0.3s ease-out',
+            willChange: 'transform'
+          }}
+        >
           <div className="bg-white border-t border-gray-200 shadow-lg">
-            <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
               <BlogSubscribe inline={false} onClose={handleDismissBanner} />
             </div>
           </div>

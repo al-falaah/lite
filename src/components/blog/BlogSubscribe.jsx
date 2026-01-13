@@ -90,23 +90,23 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
   }
 
   return (
-    <div className={`${inline ? 'bg-gray-50 rounded-xl p-8' : 'bg-white p-6'} border ${inline ? 'border-gray-200' : 'border-t border-gray-100'} relative`}>
+    <div className={`${inline ? 'bg-gray-50 rounded-xl p-8' : 'bg-white p-4 sm:p-6'} border ${inline ? 'border-gray-200' : 'border-t border-gray-100'} relative`}>
       {/* Close button for slide-in version */}
       {!inline && onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-700 transition-colors"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1 text-gray-400 hover:text-gray-700 transition-colors z-10"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
         </button>
       )}
 
-      <div className={`${inline ? 'max-w-xl mx-auto' : ''} ${inline ? 'text-center' : ''} mb-6`}>
-        <h3 className={`${inline ? 'text-2xl' : 'text-lg'} font-semibold text-gray-900 mb-2`}>
+      <div className={`${inline ? 'max-w-xl mx-auto' : 'pr-8'} ${inline ? 'text-center' : ''} mb-4 sm:mb-6`}>
+        <h3 className={`${inline ? 'text-2xl' : 'text-base sm:text-lg'} font-semibold text-gray-900 mb-1 sm:mb-2`}>
           Get new articles via email
         </h3>
-        <p className={`text-gray-600 ${inline ? 'text-base' : 'text-sm'}`}>
+        <p className={`text-gray-600 ${inline ? 'text-base' : 'text-xs sm:text-sm'}`}>
           {inline
             ? 'Subscribe to receive our latest articles on Islamic studies and Arabic learning.'
             : 'New articles delivered to your inbox.'
