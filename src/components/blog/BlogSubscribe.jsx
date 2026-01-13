@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Mail, CheckCircle } from 'lucide-react';
+import { Mail, CheckCircle, X } from 'lucide-react';
 import { toast } from 'sonner';
 
-const BlogSubscribe = () => {
+const BlogSubscribe = ({ inline = true, onClose }) => {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -69,77 +69,109 @@ const BlogSubscribe = () => {
 
   if (subscribed) {
     return (
-      <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-8 text-center border border-emerald-200">
-        <CheckCircle className="w-16 h-16 text-emerald-600 mx-auto mb-4" />
-        <h3 className="text-2xl font-brand font-bold text-gray-900 mb-2">
-          You're All Set!
+      <div className={`${inline ? 'bg-gray-50 rounded-xl p-8' : 'bg-white p-6'} text-center border ${inline ? 'border-gray-200' : 'border-t border-gray-100'}`}>
+        <CheckCircle className={`${inline ? 'w-12 h-12' : 'w-10 h-10'} text-emerald-600 mx-auto mb-3`} />
+        <h3 className={`${inline ? 'text-xl' : 'text-lg'} font-semibold text-gray-900 mb-2`}>
+          Subscribed
         </h3>
-        <p className="text-gray-600 max-w-md mx-auto">
-          Thank you for subscribing! You'll receive an email whenever we publish new articles.
+        <p className="text-sm text-gray-600 max-w-sm mx-auto">
+          You'll receive an email when we publish new articles.
         </p>
+        {!inline && onClose && (
+          <button
+            onClick={onClose}
+            className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            Close
+          </button>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-8 border border-emerald-200">
-      <div className="max-w-2xl mx-auto text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600 rounded-full mb-4">
-          <Mail className="w-8 h-8 text-white" />
-        </div>
-        <h3 className="text-2xl sm:text-3xl font-brand font-bold text-gray-900 mb-3">
-          Subscribe to Our Blog
+    <div className={`${inline ? 'bg-gray-50 rounded-xl p-8' : 'bg-white p-6'} border ${inline ? 'border-gray-200' : 'border-t border-gray-100'} relative`}>
+      {/* Close button for slide-in version */}
+      {!inline && onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-700 transition-colors"
+          aria-label="Close"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
+
+      <div className={`${inline ? 'max-w-xl mx-auto' : ''} ${inline ? 'text-center' : ''} mb-6`}>
+        <h3 className={`${inline ? 'text-2xl' : 'text-lg'} font-semibold text-gray-900 mb-2`}>
+          Get new articles via email
         </h3>
-        <p className="text-gray-600 text-base sm:text-lg">
-          Get notified when we publish new articles about Islamic studies, Arabic learning, and spiritual development
+        <p className={`text-gray-600 ${inline ? 'text-base' : 'text-sm'}`}>
+          {inline
+            ? 'Subscribe to receive our latest articles on Islamic studies and Arabic learning.'
+            : 'New articles delivered to your inbox.'
+          }
         </p>
       </div>
 
-      <form onSubmit={handleSubscribe} className="max-w-lg mx-auto">
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="subscribe-email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address *
-            </label>
+      <form onSubmit={handleSubscribe} className={`${inline ? 'max-w-md mx-auto' : ''}`}>
+        {inline ? (
+          // Inline version - traditional stacked form
+          <div className="space-y-3">
             <input
-              id="subscribe-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="your.email@example.com"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Email address"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
               required
               disabled={loading}
             />
-          </div>
-
-          <div>
-            <label htmlFor="subscribe-name" className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name (Optional)
-            </label>
             <input
-              id="subscribe-name"
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="Your name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              placeholder="Name (optional)"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
               disabled={loading}
             />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            >
+              {loading ? 'Subscribing...' : 'Subscribe'}
+            </button>
+            <p className="text-xs text-gray-500 text-center">
+              Unsubscribe anytime.
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Subscribing...' : 'Subscribe to Updates'}
-          </button>
-        </div>
-
-        <p className="text-xs text-gray-500 text-center mt-4">
-          We respect your privacy. Unsubscribe anytime.
-        </p>
+        ) : (
+          // Slide-in version - compact horizontal form
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                required
+                disabled={loading}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
+              >
+                {loading ? 'Subscribing...' : 'Subscribe'}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500">
+              Unsubscribe anytime. No spam.
+            </p>
+          </div>
+        )}
       </form>
     </div>
   );

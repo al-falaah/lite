@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Home, Share2, Facebook, Twitter, Linkedin, Link2, Mail } from 'lucide-react';
@@ -11,6 +11,9 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
   const [copySuccess, setCopySuccess] = useState(false);
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [showSlideInBanner, setShowSlideInBanner] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const subscribeRef = useRef(null);
 
   useEffect(() => {
     fetchPost();
@@ -22,6 +25,38 @@ const BlogPost = () => {
       incrementViewCount(post.id);
     }
   }, [post?.id]);
+
+  useEffect(() => {
+    // Check if user has dismissed the banner in this session
+    const dismissed = sessionStorage.getItem('subscribeSlideInDismissedPost');
+    if (dismissed) {
+      setBannerDismissed(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Show slide-in banner based on scroll position
+    const handleScroll = () => {
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+
+      if (subscribeRef.current) {
+        const subscribePosition = subscribeRef.current.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        // Show slide-in banner after 50% scroll, hide when reaching subscribe section
+        if (!bannerDismissed && scrollPercent > 50 && subscribePosition > windowHeight + 200) {
+          setShowSlideInBanner(true);
+        } else {
+          setShowSlideInBanner(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [bannerDismissed]);
 
   const incrementViewCount = async (postId) => {
     try {
@@ -200,6 +235,12 @@ const BlogPost = () => {
     } else if (shareUrls[platform]) {
       window.open(shareUrls[platform], '_blank', 'width=600,height=400');
     }
+  };
+
+  const handleDismissBanner = () => {
+    setShowSlideInBanner(false);
+    setBannerDismissed(true);
+    sessionStorage.setItem('subscribeSlideInDismissedPost', 'true');
   };
 
   // Detect if text contains Arabic characters
@@ -673,9 +714,20 @@ const BlogPost = () => {
       </article>
 
       {/* Blog Subscription Section */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      <div ref={subscribeRef} className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <BlogSubscribe />
       </div>
+
+      {/* Slide-in Subscribe Banner - Bottom */}
+      {showSlideInBanner && !bannerDismissed && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom duration-300">
+          <div className="bg-white border-t border-gray-200 shadow-lg">
+            <div className="max-w-4xl mx-auto px-4 py-4">
+              <BlogSubscribe inline={false} onClose={handleDismissBanner} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

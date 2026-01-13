@@ -39,6 +39,8 @@ const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [categoryCounts, setCategoryCounts] = useState({});
   const [showSubscribeButton, setShowSubscribeButton] = useState(false);
+  const [showSlideInBanner, setShowSlideInBanner] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const subscribeRef = useRef(null);
 
   useEffect(() => {
@@ -73,13 +75,31 @@ const Blog = () => {
   }, [posts]);
 
   useEffect(() => {
-    // Show/hide floating subscribe button based on scroll position
+    // Check if user has dismissed the banner in this session
+    const dismissed = sessionStorage.getItem('subscribeSlideInDismissed');
+    if (dismissed) {
+      setBannerDismissed(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Show/hide floating subscribe button and slide-in banner based on scroll position
     const handleScroll = () => {
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+
       if (subscribeRef.current) {
         const subscribePosition = subscribeRef.current.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
         // Show button when subscribe section is below viewport
         setShowSubscribeButton(subscribePosition > windowHeight);
+
+        // Show slide-in banner after 40% scroll, hide when reaching subscribe section
+        // Only show if not dismissed and not at subscribe section
+        if (!bannerDismissed && scrollPercent > 40 && subscribePosition > windowHeight + 200) {
+          setShowSlideInBanner(true);
+        } else {
+          setShowSlideInBanner(false);
+        }
       }
     };
 
@@ -87,10 +107,16 @@ const Blog = () => {
     handleScroll(); // Initial check
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [bannerDismissed]);
 
   const scrollToSubscribe = () => {
     subscribeRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleDismissBanner = () => {
+    setShowSlideInBanner(false);
+    setBannerDismissed(true);
+    sessionStorage.setItem('subscribeSlideInDismissed', 'true');
   };
 
   const fetchPosts = async () => {
@@ -436,15 +462,26 @@ const Blog = () => {
         </div>
       </div>
 
+      {/* Slide-in Subscribe Banner - Bottom */}
+      {showSlideInBanner && !bannerDismissed && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 animate-in slide-in-from-bottom duration-300">
+          <div className="bg-white border-t border-gray-200 shadow-lg">
+            <div className="max-w-4xl mx-auto px-4 py-4">
+              <BlogSubscribe inline={false} onClose={handleDismissBanner} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Floating Subscribe Button - Shows when subscribe section is off-screen */}
-      {showSubscribeButton && (
+      {showSubscribeButton && !showSlideInBanner && (
         <button
           onClick={scrollToSubscribe}
-          className="fixed bottom-6 right-6 z-40 bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition-all hover:scale-105 flex items-center gap-2 group"
+          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white px-4 py-2.5 rounded-lg shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
           aria-label="Subscribe to newsletter"
         >
-          <Mail className="h-5 w-5" />
-          <span className="font-medium hidden sm:inline">Subscribe</span>
+          <Mail className="h-4 w-4" />
+          <span className="text-sm font-medium hidden sm:inline">Subscribe</span>
         </button>
       )}
     </div>
