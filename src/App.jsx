@@ -3,6 +3,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -129,6 +130,7 @@ function App() {
 
           <Toaster position="top-right" duration={3000} />
           <Analytics />
+          <SpeedInsights />
           </div>
         </Router>
       </AuthProvider>
