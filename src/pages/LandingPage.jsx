@@ -319,7 +319,7 @@ const LandingPage = () => {
           {/* Simple dark overlay with alpha to show background */}
           <div className="absolute inset-0"></div>
           {/* Diagonal gradient: light top-left to dark bottom-right */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/85 to-black/100"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/90 to-black/100"></div>
         </div>
 
         {/* Centered Hero Content with Slider and CTA */}
