@@ -99,8 +99,8 @@ const LandingPage = () => {
       setShowBackToTop(scrollY > 500);
       // Hide scroll indicator after scrolling 200px (when they've started exploring)
       setShowScrollIndicator(scrollY < 200);
-      // Change navbar to white after scrolling past hero (approximately 600px)
-      setIsScrolled(scrollY > 600);
+      // Change navbar to white after scrolling just a bit (50px)
+      setIsScrolled(scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -141,22 +141,24 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {/* Navigation - Clean professional design */}
-      <nav className={`sticky top-0 left-0 right-0 z-50 transition-colors pb-3 ${
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${
         isScrolled
           ? 'bg-white border-b border-gray-200'
-          : 'bg-emerald-950'
+          : 'bg-transparent'
       }`}>
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-14 md:h-16">
-              <Link to="/" className="flex items-center gap-1.5 sm:gap-2">
+        <div className={`px-3 sm:px-6 lg:px-8 ${!isScrolled ? 'bg-transparent' : ''}`}>
+            <div className={`flex justify-between items-center h-14 md:h-16 ${!isScrolled ? 'bg-transparent' : ''}`}>
+              {/* Logo only on mobile, Logo + Brand name on desktop */}
+              <Link to="/" className="flex items-center gap-2">
                 <img
                   src={isScrolled ? "/favicon.svg" : "/favicon-white.svg"}
                   alt="The FastTrack Madrasah Logo"
                   className="h-7 w-7 md:h-10 md:w-10 transition-all duration-300"
                 />
-                <div className="flex flex-col leading-none -space-y-1">
+                {/* Brand name - hidden on mobile, shown on desktop */}
+                <div className="hidden md:flex flex-col leading-none -space-y-1">
                   <span className={`text-xs sm:text-sm md:text-base font-brand font-semibold transition-colors duration-300 ${
                     isScrolled ? 'text-gray-900' : 'text-white'
                   }`} style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
@@ -166,60 +168,59 @@ const LandingPage = () => {
                 </div>
               </Link>
 
-              {/* Desktop Navigation */}
+              {/* Desktop Navigation - all links on the right */}
               <div className="hidden md:flex items-center gap-1">
+                {/* Navigation links - hover changes text color to emerald-600 */}
                 <a href="#mission">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Our Mission
                   </button>
                 </a>
-                <a href="/programs">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                <Link to="/programs">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Programs
                   </button>
-                </a>
+                </Link>
                 <Link to="/blog">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Blog
                   </button>
                 </Link>
                 <Link to="/store">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg flex items-center gap-1.5 ${
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
                   }`}>
-                    <ShoppingBag className="h-4 w-4" />
                     Store
                   </button>
                 </Link>
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg flex items-center gap-1.5 ${
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
                   }`}>
-                    <Heart className="h-4 w-4" />
                     Donate
                   </button>
                 </a>
-                <Link to="/admin">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-all rounded-lg ${
+                <Link to="/login">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Admin
                   </button>
@@ -247,36 +248,42 @@ const LandingPage = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-              <div className="md:hidden border-t border-white/10 bg-black/40 mt-3">
+              <div className="md:hidden border-t border-emerald-800/50 bg-emerald-950 mt-3">
                 <div className="flex flex-col gap-1 py-3 px-3">
+                  {/* Brand name - shown in mobile menu with larger font */}
+                  <Link to="/" onClick={() => setMobileMenuOpen(false)} className="mb-2 pb-3 border-b border-white/10">
+                    <div className="flex flex-col leading-none -space-y-1 px-4">
+                      <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                      <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                    </div>
+                  </Link>
+
                   <a href="#mission" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Our Mission
                     </button>
                   </a>
-                  <a href="/programs" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to="/programs" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Programs
                     </button>
-                  </a>
+                  </Link>
                   <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Blog
                     </button>
                   </Link>
                   <Link to="/store" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
-                      <ShoppingBag className="h-4 w-4" />
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Store
                     </button>
                   </Link>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
-                      <Heart className="h-4 w-4" />
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Donate
                     </button>
                   </a>
-                  <Link to="/admin" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Admin
                     </button>
@@ -319,7 +326,7 @@ const LandingPage = () => {
           {/* Simple dark overlay with alpha to show background */}
           <div className="absolute inset-0"></div>
           {/* Diagonal gradient: light top-left to dark bottom-right */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/90 to-black/100"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-black/100 via-black/95 to-black/0"></div>
         </div>
 
         {/* Centered Hero Content with Slider and CTA */}
