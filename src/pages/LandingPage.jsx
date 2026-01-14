@@ -326,7 +326,7 @@ const LandingPage = () => {
           {/* Simple dark overlay with alpha to show background */}
           <div className="absolute inset-0"></div>
           {/* Diagonal gradient: light top-left to dark bottom-right */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/100 via-black/95 to-black/0"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-black/100 via-black/95 to-black/40"></div>
         </div>
 
         {/* Centered Hero Content with Slider and CTA */}
@@ -492,7 +492,7 @@ const LandingPage = () => {
 
                 {/* Quote */}
                 <blockquote className="text-sm sm:text-base text-gray-700 leading-relaxed italic text-center px-4">
-                  "That's our purpose, and we ask Allah ('azza wa jalla) to grant us success in achieving such a great mission."
+                  "That's our goal, and we ask Allah ('azza wa jalla) to grant us success in achieving such a great mission."
                 </blockquote>
               </div>
             </div>
