@@ -33,6 +33,7 @@ import NotFoundPage from './pages/NotFoundPage';
 
 // Components
 import CountdownBanner from './components/CountdownBanner';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 // Layout
 import AdminRoute from './components/common/AdminRoute';
@@ -129,6 +130,7 @@ function App() {
 
           <Toaster position="top-right" duration={3000} />
           <Analytics />
+          <FloatingWhatsApp />
           </div>
         </Router>
       </AuthProvider>
