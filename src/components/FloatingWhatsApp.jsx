@@ -28,7 +28,7 @@ const FloatingWhatsApp = () => {
       </span>
 
       {/* Pulse animation */}
-      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-75"></span>
+      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping-slow opacity-75"></span>
     </a>
   );
 };
