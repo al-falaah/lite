@@ -1006,28 +1006,28 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-24 bg-gray-900 text-white">
+      <section className="py-12 md:py-24 bg-emerald-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">
             Begin Your Learning Journey
           </h2>
-          <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-emerald-200 mb-8 max-w-2xl mx-auto">
             Join students worldwide in authentic Islamic education
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/apply">
-              <Button variant="secondary" size="lg" className="bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto">
+              <Button variant="secondary" size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50 w-full sm:w-auto">
                 Apply Now
               </Button>
             </Link>
             <a href={donationLink} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="border-white/30 text-white hover:border-white/50 hover:bg-white/10 w-full sm:w-auto flex items-center justify-center gap-2">
+              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 w-full sm:w-auto flex items-center justify-center gap-2">
                 <Heart className="h-5 w-5" />
                 Support Us
               </Button>
             </a>
             <Link to="/student">
-              <Button variant="outline" size="lg" className="border-white/30 text-white hover:border-white/50 hover:bg-white/10 w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 w-full sm:w-auto">
                 Student Portal
               </Button>
             </Link>
