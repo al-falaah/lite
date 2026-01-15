@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
-import { Loader2, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, Home } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -140,6 +140,10 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 text-sm font-medium mb-4">
+            <Home className="h-4 w-4" />
+            Back to Homepage
+          </Link>
           <h1 className="text-4xl font-bold text-emerald-900 mb-2">The FastTrack Madrasah</h1>
           <p className="text-gray-600">Admin Login</p>
           <p className="text-sm text-gray-500 mt-2">
