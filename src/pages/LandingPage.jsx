@@ -746,191 +746,160 @@ const LandingPage = () => {
             The Path to Mastery
           </h2>
 
-          {/* Mobile: Vertical Layout */}
-          <div className="md:hidden space-y-4">
-            {/* Step 1 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                01 | Online Application
-              </h3>
-              <p className="text-xs text-gray-700">
-                Submit your details through our streamlined portal to begin the selection process for your chosen track.
-              </p>
-            </div>
+          {/* Mobile: Timeline Layout */}
+          <div className="md:hidden relative">
+            {/* Vertical line */}
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-emerald-200"></div>
 
-            {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
+            <div className="space-y-6">
+              {/* Step 1 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">1</div>
+                <div className="flex-1 pb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Online Application</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Submit your details through our streamlined portal to begin the selection process.</p>
+                </div>
+              </div>
 
-            {/* Step 2 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                02 | Evaluation & Interview
-              </h3>
-              <p className="text-xs text-gray-700">
-                Our academic team reviews your background to ensure alignment with the program's prerequisites. This stage typically includes a brief phone interview to discuss your goals.
-              </p>
-            </div>
+              {/* Step 2 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">2</div>
+                <div className="flex-1 pb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Evaluation & Interview</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Our team reviews your background and conducts a brief interview to discuss your goals.</p>
+                </div>
+              </div>
 
-            {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
+              {/* Step 3 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">3</div>
+                <div className="flex-1 pb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Selection & Enrollment</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Receive your offer and secure your place through our secure payment gateway.</p>
+                </div>
+              </div>
 
-            {/* Step 3 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                03 | Selection & Enrollment
-              </h3>
-              <p className="text-xs text-gray-700">
-                Successful applicants will receive a formal offer. Secure your place in the upcoming cohort by processing your enrollment through our secure payment gateway.
-              </p>
-            </div>
+              {/* Step 4 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">4</div>
+                <div className="flex-1 pb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Onboarding & Mentorship</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Get your Student ID and be matched with an expert mentor for guidance.</p>
+                </div>
+              </div>
 
-            {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
+              {/* Step 5 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">5</div>
+                <div className="flex-1 pb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Guided Execution</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Engage in intensive instruction and regular assessments with consistent follow-up.</p>
+                </div>
+              </div>
 
-            {/* Step 4 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                04 | Onboarding & Mentorship
-              </h3>
-              <p className="text-xs text-gray-700">
-                Receive your Student ID and access to the learning platform. You will be matched with an expert mentor who will guide your transition into the slated curriculum.
-              </p>
-            </div>
+              {/* Step 6 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">6</div>
+                <div className="flex-1 pb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Final Validation</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Complete your final evaluation to demonstrate mastery of the program objectives.</p>
+                </div>
+              </div>
 
-            {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
-
-            {/* Step 5 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                05 | Guided Execution
-              </h3>
-              <p className="text-xs text-gray-700">
-                Engage in intensive instruction and regular assessments. Our methodology ensures you hit every academic milestone with precision through consistent follow-up.
-              </p>
-            </div>
-
-            {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
-
-            {/* Step 6 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                06 | Final Validation
-              </h3>
-              <p className="text-xs text-gray-700">
-                Complete your final comprehensive evaluation to demonstrate mastery of the program's core competencies and slated objectives.
-              </p>
-            </div>
-
-            {/* Connector */}
-            <div className="ml-3 border-l-2 border-dotted border-gray-300 h-4"></div>
-
-            {/* Step 7 */}
-            <div className="bg-white border-l-2 border-gray-300 p-4 rounded-lg">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1.5">
-                07 | Certification & Alumni Network
-              </h3>
-              <p className="text-xs text-gray-700">
-                Graduate with a formal Certificate of Completion and join an elite network of students committed to lifelong learning and traditional scholarship.
-              </p>
+              {/* Step 7 */}
+              <div className="relative flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">7</div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Certification & Alumni</h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">Graduate with a Certificate of Completion and join our alumni network.</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Tablet/Desktop: 3-Row Grid Layout */}
-          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
-            {/* Row 1: Steps 1-3 */}
-            {/* Step 1 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                01
+          {/* Desktop: Clean Grid Layout */}
+          <div className="hidden md:block">
+            {/* Row 1: Steps 1-4 */}
+            <div className="grid grid-cols-4 gap-6 lg:gap-8 mb-8">
+              {/* Step 1 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Online Application</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Submit your details through our streamlined portal.</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Online Application
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Submit your details through our streamlined portal to begin the selection process for your chosen track.
-              </p>
+
+              {/* Step 2 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Evaluation & Interview</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Our team reviews your background and discusses your goals.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Selection & Enrollment</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Receive your offer and secure your place.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Onboarding & Mentorship</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Get your Student ID and be matched with an expert mentor.</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Step 2 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                02
+            {/* Row 2: Steps 5-7 */}
+            <div className="grid grid-cols-4 gap-6 lg:gap-8">
+              {/* Step 5 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Guided Execution</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Engage in intensive instruction and regular assessments.</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Evaluation & Interview
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Our academic team reviews your background to ensure alignment with the program's prerequisites. This stage typically includes a brief phone interview to discuss your goals.
-              </p>
-            </div>
 
-            {/* Step 3 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                03
+              {/* Step 6 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Final Validation</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Complete your final evaluation to demonstrate mastery.</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Selection & Enrollment
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Successful applicants will receive a formal offer. Secure your place in the upcoming cohort by processing your enrollment through our secure payment gateway.
-              </p>
-            </div>
 
-            {/* Row 2: Steps 4-6 */}
-            {/* Step 4 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                04
+              {/* Step 7 */}
+              <div className="relative group">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">7</div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Certification & Alumni</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">Graduate with a Certificate and join our alumni network.</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Onboarding & Mentorship
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Receive your Student ID and access to the learning platform. You will be matched with an expert mentor who will guide your transition into the slated curriculum.
-              </p>
-            </div>
-
-            {/* Step 5 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                05
-              </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Guided Execution
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Engage in intensive instruction and regular assessments. Our methodology ensures you hit every academic milestone with precision through consistent follow-up.
-              </p>
-            </div>
-
-            {/* Step 6 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                06
-              </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Final Validation
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Complete your final comprehensive evaluation to demonstrate mastery of the program's core competencies and slated objectives.
-              </p>
-            </div>
-
-            {/* Row 3: Step 7 (centered) */}
-            {/* Step 7 */}
-            <div className="bg-white border border-gray-200 p-6 rounded-lg md:col-start-2">
-              <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-4">
-                07
-              </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Certification & Alumni Network
-              </h3>
-              <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                Graduate with a formal Certificate of Completion and join an elite network of students committed to lifelong learning and traditional scholarship.
-              </p>
             </div>
           </div>
         </div>
