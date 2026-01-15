@@ -529,7 +529,7 @@ const LandingPage = () => {
       </section>
 
       {/* Our Approach Section */}
-      <section className="bg-gray-50 py-10 sm:py-24">
+      <section className="bg-emerald-50 py-10 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             Our Approach
@@ -740,7 +740,7 @@ const LandingPage = () => {
 
 
       {/* How Admission Works Section */}
-      <section className="bg-gray-50 py-10 sm:py-24">
+      <section className="bg-white py-10 sm:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             The Path to Mastery
@@ -937,7 +937,7 @@ const LandingPage = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-10 md:py-24 bg-gray-50">
+      <section className="py-10 md:py-24 bg-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
