@@ -279,8 +279,9 @@ const LandingPage = () => {
                     </button>
                   </Link>
                   <a href={donationLink} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
-                      Donate
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left flex items-center gap-2">
+                      <Heart className="h-4 w-4" />
+                      Support Our Mission
                     </button>
                   </a>
                   <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
