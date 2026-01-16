@@ -13,6 +13,7 @@ const LandingPage = () => {
   const [openApproachCard, setOpenApproachCard] = useState(null);
   const [latestArticles, setLatestArticles] = useState([]);
   const [missionExpanded, setMissionExpanded] = useState(false);
+  const [founderBioExpanded, setFounderBioExpanded] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -456,47 +457,125 @@ const LandingPage = () => {
             {/* Left Column - Mission Text */}
             <div className="lg:col-span-2 space-y-6">
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                Today, while millions can recite the Qur'an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study—a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur'an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
+                Today, while millions can recite the Qur'an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study - a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur'an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
               </p>
 
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                <span className="font-brand font-bold text-gray-900 ">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue—with little to no reliance on translation.
+                <span className="font-brand font-bold text-gray-900 ">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue - with little to no reliance on translation.
+              </p>
+
+              <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
+                This is our mission: to nurture a generation of believers - especially those balancing the demands of busy careers and modern lifestyles - who not only recite but truly understand and embody the teachings of Islam. May Allah grant us success in this noble endeavor and make it a source of benefit for the Ummah at large. Ameen.
               </p>
             </div>
 
             {/* Right Column - Founder Card (Emphasized) */}
-            <div className="lg:col-span-1 shadow-lg rounded-xl">
-              <div className="bg-white rounded-xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow sticky top-24">
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl p-6 sm:p-8 shadow-lg sticky top-24">
                 {/* Founder Image - Large and Centered */}
                 <div className="flex justify-center mb-6">
-                  <div className="relative">
-                    <img
-                      src="/founder.jpeg"
-                      alt="Dr Abdulquadri Alaka"
-                      className="w-48 h-48 sm:w-48 sm:h-48 rounded-full object-cover border-4 border-white shadow-lg"
-                    />
-                    {/* Decorative Ring */}
-                    <div className="absolute inset-0 rounded-full border-2 border-emerald-200 -z-10 scale-110"></div>
-                  </div>
+                  <img
+                    src="/founder.jpeg"
+                    alt="Dr Abdulquadri Alaka"
+                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-gray-100 shadow-md"
+                  />
                 </div>
 
                 {/* Founder Info - Centered */}
-                <div className="text-center mb-6">
-                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                <div className="text-center mb-4">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
                     Dr Abdulquadri Alaka
                   </h3>
-                  <p className="text-sm sm:text-base text-emerald-700 font-medium mb-4">
-                    Founder
+                  <p className="text-sm text-emerald-700 font-medium">
+                    Founder & Director
                   </p>
-                  <div className="w-16 h-1 bg-emerald-600 mx-auto"></div>
                 </div>
 
                 {/* Quote */}
-                <blockquote className="text-sm sm:text-base text-gray-700 leading-relaxed italic text-center px-4">
-                  "That's our goal, and we ask Allah ('azza wa jalla) to grant us success in achieving such a great mission."
+                <blockquote className="text-sm text-gray-600 leading-relaxed italic text-center mb-4">
+                  "It's not about choosing between professional success and spiritual commitment. It's about showing they can work together."
                 </blockquote>
+
+                {/* Bio Preview & Modal Trigger */}
+                <div className="border-t border-gray-100 pt-4">
+                  <p className="text-sm text-gray-600 leading-relaxed text-center">
+                    Bringing together busy life and Islamic learning.
+                  </p>
+
+                  <button
+                    onClick={() => setFounderBioExpanded(true)}
+                    className="mt-3 text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 mx-auto"
+                  >
+                    <span>Read full bio</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
+
+            {/* Founder Bio Modal */}
+            {founderBioExpanded && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setFounderBioExpanded(false)}>
+                {/* Backdrop */}
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+                {/* Modal Content */}
+                <div
+                  className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setFounderBioExpanded(false)}
+                    className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+
+                  {/* Modal Header */}
+                  <div className="p-6 sm:p-8 pb-0">
+                    <div className="flex flex-col sm:flex-row items-center gap-6">
+                      <img
+                        src="/founder.jpeg"
+                        alt="Dr Abdulquadri Alaka"
+                        className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100 shadow-md"
+                      />
+                      <div className="text-center sm:text-left">
+                        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
+                          Dr Abdulquadri Alaka
+                        </h3>
+                        <p className="text-emerald-700 font-medium">
+                          Founder & Director
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Modal Body */}
+                  <div className="p-6 sm:p-8 space-y-4 text-gray-600 leading-relaxed">
+                    <p>
+                      Dr. Abdulquadri Alaka's path reflects what FastTrack Madrasah is all about: bringing together professional life and Islamic learning in a way that actually works.
+                    </p>
+
+                    <p>
+                      His Islamic education started young, learning from prominent local scholars of Ahlus Sunnah wal Jama'ah in South West, Nigeria. He earned his Higher School Certificate in Arabic and Islamic Sciences and is currently pursuing Advanced Studies to further deepen his knowledge.
+                    </p>
+
+                    <p>
+                      During his doctoral studies at Massey University, New Zealand, Dr. Abdulquadri served as both General Secretary (2022) and President (2023) of the Massey Muslim Society in Palmerston North. During this tenure, he became a pillar of the community - leading weekly Jumu'ah khutbahs on campus and in the city, while teaching Qur'an and Islamic Studies to the next generation.
+                    </p>
+
+                    <p>
+                      Today, Dr. Abdulquadri is based in Tauranga, where he navigates both worlds daily - managing a corporate career while staying active in local da'wah and Islamic education. For him, it's not about choosing between professional success and spiritual commitment. It's about showing they can work together.
+                    </p>
+
+                    <blockquote className="border-l-4 border-emerald-600 pl-4 italic text-gray-700 my-6">
+                      "I founded FastTrack Madrasah because I saw too many talented professionals and students sacrificing their Qur'an and Islamic learnings for careers.' My goal is to show you that with the right method, you can carry the Book of Allah in your heart while you excel in your career."
+                    </blockquote>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Support CTA */}
