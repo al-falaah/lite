@@ -552,7 +552,7 @@ const LandingPage = () => {
                   </div>
 
                   {/* Modal Body */}
-                  <div className="p-6 sm:p-8 space-y-4 text-gray-600 leading-relaxed">
+                  <div className="p-6 sm:p-8 space-y-4 text-gray-600 leading-relaxed text-justify">
                     <p>
                       Dr. Abdulquadri Alaka's path reflects what FastTrack Madrasah is all about: bringing together professional life and Islamic learning in a way that actually works.
                     </p>
@@ -570,7 +570,7 @@ const LandingPage = () => {
                     </p>
 
                     <blockquote className="border-l-4 border-emerald-600 pl-4 italic text-gray-700 my-6">
-                      "I founded FastTrack Madrasah because I saw too many talented professionals and students sacrificing their Qur'an and Islamic learnings for careers.' My goal is to show you that with the right method, you can carry the Book of Allah in your heart while you excel in your career."
+                      "I founded FastTrack Madrasah because I saw too many talented professionals and students sacrificing their Qur'an and Islamic learnings for careers. My goal is to show you that with the right methodology after Allah's help, you can carry the Book of Allah in your heart while you excel in your career."
                     </blockquote>
                   </div>
                 </div>
