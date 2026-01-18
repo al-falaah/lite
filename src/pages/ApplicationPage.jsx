@@ -26,6 +26,8 @@ const ApplicationPage = () => {
     phone: '',
     dateOfBirth: '',
     gender: '',
+    referralSource: '',
+    referralSourceOther: '',
 
     // Step 2: Islamic Background & Motivation
     islamicBackground: '',
@@ -146,8 +148,12 @@ const ApplicationPage = () => {
           toast.error('Please select a program');
           return false;
         }
-        if (!formData.fullName || !formData.email || !formData.phone || !formData.dateOfBirth || !formData.gender) {
+        if (!formData.fullName || !formData.email || !formData.phone || !formData.dateOfBirth || !formData.gender || !formData.referralSource) {
           toast.error('Please fill in all required personal information');
+          return false;
+        }
+        if (formData.referralSource === 'other' && !formData.referralSourceOther?.trim()) {
+          toast.error('Please specify how you heard about us');
           return false;
         }
         // Validate name is not just spaces
@@ -274,6 +280,9 @@ const ApplicationPage = () => {
         phone: formData.phone,
         date_of_birth: formData.dateOfBirth,
         gender: formData.gender,
+        referral_source: formData.referralSource === 'other'
+          ? `Other: ${formData.referralSourceOther}`
+          : formData.referralSource,
         can_read_quran: formData.canReadQuran === 'true',
         tajweed_level: formData.canReadQuran === 'true' ? formData.tajweedLevel : null,
         has_studied_arabic: formData.hasStudiedArabic === 'true',
@@ -675,6 +684,47 @@ const ApplicationPage = () => {
                       Female
                     </label>
                   </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    How did you hear about us? <span className="text-red-500">*</span>
+                  </label>
+                  <div className="space-y-2">
+                    {[
+                      { value: 'whatsapp', label: 'WhatsApp Group' },
+                      { value: 'facebook', label: 'Facebook' },
+                      { value: 'instagram', label: 'Instagram' },
+                      { value: 'friends', label: 'Friends / Family' },
+                      { value: 'masjid', label: 'Masjid / Islamic Center' },
+                      { value: 'search', label: 'Google Search' },
+                      { value: 'other', label: 'Other' }
+                    ].map((option) => (
+                      <label key={option.value} className="flex items-center">
+                        <input
+                          type="radio"
+                          name="referralSource"
+                          value={option.value}
+                          checked={formData.referralSource === option.value}
+                          onChange={handleChange}
+                          className="mr-2"
+                        />
+                        {option.label}
+                      </label>
+                    ))}
+                  </div>
+                  {formData.referralSource === 'other' && (
+                    <div className="mt-3">
+                      <Input
+                        label="Please specify"
+                        name="referralSourceOther"
+                        value={formData.referralSourceOther}
+                        onChange={handleChange}
+                        placeholder="How did you hear about us?"
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
