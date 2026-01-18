@@ -202,7 +202,7 @@ const Programs = () => {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Precision Schedule (Weekly)</h4>
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-                        <li> <span className="font-semibold">Session 1 (2 Hours): </span> Primary Instruction & Intensive Drill.</li>
+                        <li> <span className="font-semibold">Session 1 (1 Hour): </span> Primary Instruction & Intensive Drill.</li>
                         <li> <span className="font-semibold">Session 2 (30 mins): </span> Dedicated Follow-up, Oral Assessment, and Mentoring.</li>
                       </ul>
                     </div>
