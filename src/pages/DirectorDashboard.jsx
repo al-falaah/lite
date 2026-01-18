@@ -74,6 +74,7 @@ const DirectorDashboard = () => {
     categories: ['received', 'approved', 'rejected', 'enrolled', 'dropouts', 'graduated'] // all categories by default
   });
   const [rawApplicationsData, setRawApplicationsData] = useState([]);
+  const [referralSourceData, setReferralSourceData] = useState([]);
 
   useEffect(() => {
     fetchStats();
@@ -133,6 +134,7 @@ const DirectorDashboard = () => {
         teachersData,
         applicationsData,
         trackData,
+        referralData,
         teacherAssignmentsData
       ] = await Promise.all([
         // General stats
@@ -200,6 +202,10 @@ const DirectorDashboard = () => {
           headers
         }).then(res => res.json()),
 
+        fetch(`${supabaseUrl}/rest/v1/applications?select=referral_source`, {
+          headers
+        }).then(res => res.json()),
+
         fetch(`${supabaseUrl}/rest/v1/teacher_student_assignments?select=student_id,teacher_id,status&status=eq.assigned`, {
           headers
         }).then(res => res.json())
@@ -244,6 +250,9 @@ const DirectorDashboard = () => {
       // Process track comparison data
       const trackComparisonData = processTrackComparison(trackData, trackComparisonFilter);
 
+      // Process referral source data
+      const referralSourceStats = processReferralSourceData(referralData);
+
       setStats({
         totalUsers: parseCount(usersRes),
         totalPosts: parseCount(postsRes),
@@ -267,6 +276,7 @@ const DirectorDashboard = () => {
       setRawApplicationsData(applicationsData);
       setApplicationsTimeSeries(timeSeriesData);
       setTrackComparison(trackComparisonData);
+      setReferralSourceData(referralSourceStats);
     } catch (error) {
       console.error('Error fetching stats:', error);
       toast.error('Failed to load statistics');
@@ -344,6 +354,37 @@ const DirectorDashboard = () => {
         graduated: Math.floor(programApps.filter(app => app.status === 'approved').length * 0.1)
       };
     });
+  };
+
+  const processReferralSourceData = (applications) => {
+    // Count referral sources
+    const sourceCounts = {};
+    const sourceLabels = {
+      'whatsapp': 'WhatsApp Group',
+      'facebook': 'Facebook',
+      'instagram': 'Instagram',
+      'friends': 'Friends / Family',
+      'masjid': 'Masjid',
+      'search': 'Google Search'
+    };
+
+    applications.forEach(app => {
+      if (app.referral_source) {
+        // Handle "Other: ..." format
+        let source = app.referral_source;
+        if (source.startsWith('Other:')) {
+          source = 'other';
+        }
+
+        const label = sourceLabels[source] || (source === 'other' ? 'Other' : source);
+        sourceCounts[label] = (sourceCounts[label] || 0) + 1;
+      }
+    });
+
+    // Convert to array and sort by count descending
+    return Object.entries(sourceCounts)
+      .map(([source, count]) => ({ source, count }))
+      .sort((a, b) => b.count - a.count);
   };
 
   const handleLogout = async () => {
@@ -792,6 +833,26 @@ const DirectorDashboard = () => {
                         )}
                       </BarChart>
                     </ResponsiveContainer>
+                  </div>
+
+                  {/* Referral Sources Chart */}
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">How Students Found Us</h3>
+                    {referralSourceData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={referralSourceData} layout="vertical">
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis type="number" />
+                          <YAxis dataKey="source" type="category" width={120} tick={{ fontSize: 12 }} />
+                          <Tooltip />
+                          <Bar dataKey="count" fill="#10b981" name="Applications" radius={[0, 4, 4, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="flex items-center justify-center h-[300px] text-gray-500">
+                        <p>No referral data available yet</p>
+                      </div>
+                    )}
                   </div>
                 </>
               )}
