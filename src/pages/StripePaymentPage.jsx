@@ -5,19 +5,21 @@ import { toast } from 'sonner';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const StripePaymentPage = () => {
   const [searchParams] = useSearchParams();
   const emailFromUrl = searchParams.get('email');
-  const programFromUrl = searchParams.get('program') || 'essentials'; // Default to essentials
+  const programFromUrl = searchParams.get('program') || PROGRAM_IDS.ESSENTIALS; // Default to essentials
 
   const [email, setEmail] = useState(emailFromUrl || '');
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
 
-  const isTajweed = programFromUrl === 'tajweed';
-  const programName = isTajweed ? 'Tajweed Program' : 'Essential Islamic Studies Course';
-  const programDuration = isTajweed ? '6 months' : '2 years';
+  const programConfig = PROGRAMS[programFromUrl];
+  const isTajweed = programFromUrl === PROGRAM_IDS.TAJWEED;
+  const programName = programConfig?.name || (isTajweed ? 'Tajweed Program' : 'Essential Islamic Studies Course');
+  const programDuration = programConfig?.duration.display || (isTajweed ? '6 months' : '2 years');
 
   const handlePayment = async (planType) => {
     if (!email) {
@@ -133,20 +135,20 @@ const StripePaymentPage = () => {
 
         {/* Payment Plans */}
         {isTajweed ? (
-          /* Tajweed: Single $120 payment */
+          /* Tajweed: Single one-time payment */
           <div className="max-w-md mx-auto mb-8">
             <Card className="hover:shadow-xl transition-shadow border-2 border-purple-500">
               <div className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 mb-4">
                   <DollarSign className="h-6 w-6 text-purple-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Tajweed Program</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{programConfig?.shortName || 'Tajweed'} Program</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-purple-600">$120</span>
+                  <span className="text-4xl font-bold text-purple-600">${programConfig?.pricing.oneTime || 120}</span>
                   <span className="text-gray-600"> one-time</span>
                 </div>
                 <p className="text-gray-600 mb-6">
-                  Complete 6-month Tajweed Mastery Course
+                  Complete {programConfig?.duration.display || '6-month'} {programConfig?.name || 'Tajweed Mastery'} Course
                 </p>
                 <ul className="text-left space-y-2 mb-6">
                   <li className="flex items-start gap-2">
@@ -155,7 +157,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">6 months of intensive Tajweed training</span>
+                    <span className="text-sm text-gray-700">{programConfig?.duration.display || '6 months'} of intensive Tajweed training</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
@@ -176,7 +178,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Pay $120
+                      Pay ${programConfig?.pricing.oneTime || 120}
                     </>
                   )}
                 </Button>
@@ -194,11 +196,11 @@ const StripePaymentPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Monthly Plan</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">$35</span>
+                  <span className="text-4xl font-bold text-emerald-600">${programConfig?.pricing.monthly || 35}</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <p className="text-gray-600 mb-6">
-                  Pay monthly and spread the cost over 2 years
+                  Pay monthly and spread the cost over {programConfig?.duration.display || '2 years'}
                 </p>
                 <ul className="text-left space-y-2 mb-6">
                   <li className="flex items-start gap-2">
@@ -211,7 +213,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Total: $840 over 24 months</span>
+                    <span className="text-sm text-gray-700">Total: ${(programConfig?.pricing.monthly || 35) * (programConfig?.duration.months || 24)} over {programConfig?.duration.months || 24} months</span>
                   </li>
                 </ul>
                 <Button
@@ -228,7 +230,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Pay $35/month
+                      Pay ${programConfig?.pricing.monthly || 35}/month
                     </>
                   )}
                 </Button>
@@ -238,7 +240,7 @@ const StripePaymentPage = () => {
             {/* Annual Plan */}
             <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500 relative">
               <div className="absolute -top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                Save $90!
+                Save ${((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)}!
               </div>
               <div className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
@@ -246,7 +248,7 @@ const StripePaymentPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Annual Plan</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">$375</span>
+                  <span className="text-4xl font-bold text-emerald-600">${programConfig?.pricing.annual || 375}</span>
                   <span className="text-gray-600">/year</span>
                 </div>
                 <p className="text-gray-600 mb-6">
@@ -263,7 +265,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Total: $750 over 2 years (save $90!)</span>
+                    <span className="text-sm text-gray-700">Total: ${(programConfig?.pricing.annual || 375) * (programConfig?.duration.years || 2)} over {programConfig?.duration.display || '2 years'} (save ${(((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)) * (programConfig?.duration.years || 2)}!)</span>
                   </li>
                 </ul>
                 <Button
@@ -279,7 +281,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <DollarSign className="h-5 w-5 mr-2" />
-                      Pay $375/year
+                      Pay ${programConfig?.pricing.annual || 375}/year
                     </>
                   )}
                 </Button>

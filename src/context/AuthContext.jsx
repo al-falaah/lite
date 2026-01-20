@@ -77,9 +77,9 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('[checkUser] Starting session check...');
 
-      // Increased timeout to 10 seconds for better session persistence
+      // Increased timeout to 15 seconds for better session persistence on slow connections
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Auth check timeout')), 10000)
+        setTimeout(() => reject(new Error('Auth check timeout')), 15000)
       );
 
       const authCheck = supabase.auth.getSession();
@@ -107,9 +107,15 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('[checkUser] Error checking user:', error);
-      // On timeout or error, clear user state to prevent stuck state
-      setUser(null);
-      setProfile(null);
+      // On timeout, DON'T clear user state - let onAuthStateChange handle it
+      // The onAuthStateChange listener may have already set the user
+      // Only clear if it's not a timeout (actual error)
+      if (!error.message?.includes('timeout')) {
+        setUser(null);
+        setProfile(null);
+      } else {
+        console.log('[checkUser] Timeout occurred, deferring to onAuthStateChange');
+      }
     } finally {
       console.log('[checkUser] Auth check complete, setting loading to false');
       setLoading(false);

@@ -23,6 +23,7 @@ import {
 import { students, teachers, teacherAssignments, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { PROGRAMS, PROGRAM_IDS, getProgramName as getConfigProgramName } from '../config/programs';
 
 const AdminStudentsList = () => {
   const [loading, setLoading] = useState(true);
@@ -171,7 +172,7 @@ const AdminStudentsList = () => {
         .limit(1)
         .single();
 
-      const program = application?.program || 'essentials';
+      const program = application?.program || PROGRAM_IDS.ESSENTIALS;
 
       const response = await fetch(
         `${supabaseUrl}/functions/v1/send-payment-instructions`,
@@ -252,7 +253,7 @@ const AdminStudentsList = () => {
         .limit(1)
         .single();
 
-      const program = enrollment?.program || 'essentials';
+      const program = enrollment?.program || PROGRAM_IDS.ESSENTIALS;
 
       // Send the welcome email with the new invite link
       const response = await fetch(
@@ -566,7 +567,7 @@ const AdminStudentsList = () => {
   };
 
   const getProgramName = (program) => {
-    return program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+    return getConfigProgramName(program);
   };
 
   const getEnrollmentStatusColor = (status) => {
@@ -621,8 +622,8 @@ const AdminStudentsList = () => {
     enrolled: studentsData.filter(s => s.status === 'enrolled').length,
     graduated: studentsData.filter(s => s.status === 'graduated').length,
     dropout: studentsData.filter(s => s.status === 'dropout').length,
-    essentialsEnrollments: enrollmentsData.filter(e => e.program === 'essentials' && e.status === 'active').length,
-    tajweedEnrollments: enrollmentsData.filter(e => e.program === 'tajweed' && e.status === 'active').length
+    essentialsEnrollments: enrollmentsData.filter(e => e.program === PROGRAM_IDS.ESSENTIALS && e.status === 'active').length,
+    tajweedEnrollments: enrollmentsData.filter(e => e.program === PROGRAM_IDS.TAJWEED && e.status === 'active').length
   };
 
   if (loading) {
@@ -783,8 +784,8 @@ const AdminStudentsList = () => {
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
             {[
               { value: 'all', label: 'All Programs' },
-              { value: 'essentials', label: 'Essential Arabic & Islamic Studies' },
-              { value: 'tajweed', label: 'Tajweed Program' }
+              { value: PROGRAM_IDS.ESSENTIALS, label: PROGRAMS[PROGRAM_IDS.ESSENTIALS].name },
+              { value: PROGRAM_IDS.TAJWEED, label: PROGRAMS[PROGRAM_IDS.TAJWEED].name }
             ].map((filter) => (
               <button
                 key={filter.value}
@@ -880,12 +881,12 @@ const AdminStudentsList = () => {
                             <span
                               key={enrollment.id}
                               className={`px-2 py-1 rounded text-xs font-medium ${
-                                enrollment.program === 'tajweed'
+                                enrollment.program === PROGRAM_IDS.TAJWEED
                                   ? 'bg-purple-100 text-purple-800'
                                   : 'bg-blue-100 text-blue-800'
                               }`}
                             >
-                              {enrollment.program === 'tajweed' ? 'Tajweed' : 'Essentials'}
+                              {PROGRAMS[enrollment.program]?.shortName || enrollment.program}
                             </span>
                           ))}
                         </div>
@@ -1076,7 +1077,7 @@ const AdminStudentsList = () => {
                       <div
                         key={enrollment.id}
                         className={`rounded-lg p-3 sm:p-4 border-2 ${
-                          enrollment.program === 'tajweed'
+                          enrollment.program === PROGRAM_IDS.TAJWEED
                             ? 'bg-purple-50 border-purple-200'
                             : 'bg-blue-50 border-blue-200'
                         }`}

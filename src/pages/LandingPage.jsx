@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
+import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,7 +58,7 @@ const LandingPage = () => {
     {
       question: "The \"Accelerator\" Methodology",
       subQuestion: "What makes the \"FastTrack\" methodology different from traditional classes?",
-      answer: "Unlike open-ended classes, we utilize a slated curriculum with defined timelines (24 weeks for TMP and 104 weeks for EAIS). By combining effective teaching with mandatory 30-minute assessment blocks and expert mentoring, we ensure consistent progress and high accountability that traditional self-paced learning often lacks."
+      answer: `Unlike open-ended classes, we utilize a slated curriculum with defined timelines (${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.TAJWEED].shortName} and ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}). By combining effective teaching with mandatory 30-minute assessment blocks and expert mentoring, we ensure consistent progress and high accountability that traditional self-paced learning often lacks.`
     },
     {
       question: "Time Commitment",

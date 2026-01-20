@@ -9,27 +9,16 @@ import {
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import {
+  PROGRAMS,
+  PROGRAM_IDS,
+  getProgramName as getConfigProgramName,
+  getProgramDuration as getConfigProgramDuration
+} from '../config/programs';
 
-// Milestone configurations
-const TAJWEED_MILESTONES = [
-  { id: 1, name: 'Foundation', subtitle: 'Laying Your Foundation', weekStart: 1, weekEnd: 4 },
-  { id: 2, name: 'Discovery', subtitle: 'The Path of Discovery', weekStart: 5, weekEnd: 8 },
-  { id: 3, name: 'Clarity', subtitle: 'Achieving Clarity', weekStart: 9, weekEnd: 12 },
-  { id: 4, name: 'Precision', subtitle: 'Developing Precision', weekStart: 13, weekEnd: 16 },
-  { id: 5, name: 'Refinement', subtitle: 'The Refinement Stage', weekStart: 17, weekEnd: 20 },
-  { id: 6, name: 'Mastery', subtitle: 'Reaching Mastery', weekStart: 21, weekEnd: 24 }
-];
-
-const EAIS_MILESTONES = [
-  { id: 1, name: 'Awakening', subtitle: 'The Awakening - Beginning Your Journey', weekStart: 1, weekEnd: 13 },
-  { id: 2, name: 'Foundation', subtitle: 'Building Your Foundation', weekStart: 14, weekEnd: 26 },
-  { id: 3, name: 'Growth', subtitle: 'Experiencing Growth', weekStart: 27, weekEnd: 39 },
-  { id: 4, name: 'Transformation', subtitle: 'The First Transformation', weekStart: 40, weekEnd: 52 },
-  { id: 5, name: 'Insight', subtitle: 'Gaining Deep Insight', weekStart: 53, weekEnd: 65 },
-  { id: 6, name: 'Mastery', subtitle: 'Developing Mastery', weekStart: 66, weekEnd: 78 },
-  { id: 7, name: 'Wisdom', subtitle: 'Cultivating Wisdom', weekStart: 79, weekEnd: 91 },
-  { id: 8, name: 'Legacy', subtitle: 'Becoming a Legacy', weekStart: 92, weekEnd: 104 }
-];
+// Get milestones from centralized config
+const TAJWEED_MILESTONES = PROGRAMS[PROGRAM_IDS.TAJWEED].milestones;
+const EAIS_MILESTONES = PROGRAMS[PROGRAM_IDS.ESSENTIALS].milestones;
 
 // Calculate current milestone based on week number
 const getCurrentMilestone = (currentWeek, isTajweed) => {
@@ -270,7 +259,7 @@ const StudentPortal = () => {
   };
 
   const isEnrolledInAllPrograms = () => {
-    const availablePrograms = ['essentials', 'tajweed'];
+    const availablePrograms = Object.values(PROGRAM_IDS);
     const enrolledPrograms = enrollments.map(e => e.program);
     return availablePrograms.every(program => enrolledPrograms.includes(program));
   };
@@ -339,17 +328,25 @@ const StudentPortal = () => {
   };
 
   const handleLogout = async () => {
-    // Sign out from Supabase Auth
-    await supabase.auth.signOut();
+    try {
+      // Clear local state first for immediate UI feedback
+      setAuthenticated(false);
+      setStudent(null);
+      setEnrollments([]);
+      setSchedules([]);
+      setProgress(null);
+      setStudentId('');
+      setPassword('');
 
-    setAuthenticated(false);
-    setStudent(null);
-    setEnrollments([]);
-    setSchedules([]);
-    setProgress(null);
-    setStudentId('');
-    setPassword('');
-    toast.info('Logged out successfully');
+      // Then sign out from Supabase Auth (use local scope for reliability)
+      await supabase.auth.signOut({ scope: 'local' });
+
+      toast.info('Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // State is already cleared, so logout is effectively complete
+      toast.info('Logged out successfully');
+    }
   };
 
   const handleOpenEmailModal = (teacher, program) => {
@@ -411,13 +408,9 @@ const StudentPortal = () => {
     }
   };
 
-  const getProgramName = (program) => {
-    return program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
-  };
-
-  const getProgramDuration = (program) => {
-    return program === 'tajweed' ? '6 months' : '2 years';
-  };
+  // Use centralized config functions
+  const getProgramName = (program) => getConfigProgramName(program);
+  const getProgramDuration = (program) => getConfigProgramDuration(program);
 
   const getStatusBadge = (status) => {
     const badges = {
@@ -615,7 +608,7 @@ const StudentPortal = () => {
                 const programName = getProgramName(enrollment.program);
                 const programDuration = getProgramDuration(enrollment.program);
                 const hasPendingPayment = enrollment.balance_remaining > 0;
-                const isTajweed = enrollment.program === 'tajweed';
+                const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
 
                 return (
                   <Card key={enrollment.id}>
@@ -728,7 +721,7 @@ const StudentPortal = () => {
           {enrollments.map((enrollment) => {
             const programSchedules = schedules.filter(s => s.program === enrollment.program);
             const programName = getProgramName(enrollment.program);
-            const isTajweed = enrollment.program === 'tajweed';
+            const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
 
             // If enrollment is not active, show disabled message
             if (enrollment.status !== 'active') {
@@ -761,6 +754,12 @@ const StudentPortal = () => {
               );
             }
 
+            // Get program config from centralized configuration
+            const programConfig = PROGRAMS[enrollment.program];
+            const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+            const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+            const weeksPerYear = Math.ceil(totalWeeks / totalYears);
+
             // Get current active week based on actual schedule data (same logic as TeacherPortal)
             const getCurrentActiveWeekAndYear = () => {
               if (programSchedules.length === 0) return { year: 1, week: 1 };
@@ -774,9 +773,6 @@ const StudentPortal = () => {
                 }
                 weekMap[key].push(schedule);
               });
-
-              const totalYears = isTajweed ? 1 : 2;
-              const weeksPerYear = isTajweed ? 24 : 52;
 
               // Check each year for the first incomplete week
               for (let year = 1; year <= totalYears; year++) {
@@ -797,8 +793,6 @@ const StudentPortal = () => {
             };
 
             const currentActive = getCurrentActiveWeekAndYear();
-            const weeksPerYear = isTajweed ? 24 : 52;
-            const totalWeeks = isTajweed ? 24 : 104;
             const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
             const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
 
@@ -812,7 +806,8 @@ const StudentPortal = () => {
             // Calculate milestone progress
             const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
             const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
-            const totalMilestones = isTajweed ? 6 : 8;
+            const milestones = programConfig?.milestones || (isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES);
+            const totalMilestones = milestones.length;
 
             return (
               <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
@@ -1106,7 +1101,7 @@ const StudentPortal = () => {
                     <div>
                       <p className="text-gray-600 mb-1">Program</p>
                       <p className="font-medium capitalize">
-                        {emailRecipient.program === 'essentials' ? 'Essentials' : 'Tajweed'}
+                        {PROGRAMS[emailRecipient.program]?.shortName || emailRecipient.program}
                       </p>
                     </div>
                     <div className="col-span-2">

@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { GraduationCap, User, Mail, Phone, MapPin, Calendar, DollarSign } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { PROGRAMS, PROGRAM_IDS, getAllPrograms } from '../config/programs';
 
 const EnrollAdditionalProgram = () => {
   const [searchParams] = useSearchParams();
@@ -18,10 +19,8 @@ const EnrollAdditionalProgram = () => {
   const [paymentType, setPaymentType] = useState('monthly');
   const [processingPayment, setProcessingPayment] = useState(false);
 
-  const availablePrograms = [
-    { id: 'essentials', name: 'Islamic Essentials', duration: '24 months', price: { monthly: 35, annual: 375 } },
-    { id: 'tajweed', name: 'Tajweed Mastery', duration: '6 months', price: { oneTime: 120 } },
-  ];
+  // Get available programs from centralized config
+  const availablePrograms = getAllPrograms();
 
   useEffect(() => {
     if (!email) {
@@ -36,12 +35,24 @@ const EnrollAdditionalProgram = () => {
     try {
       setLoading(true);
 
-      // Get student by email
-      const { data: studentData, error: studentError } = await supabase
-        .from('students')
-        .select('*')
-        .eq('email', email.toLowerCase().trim())
-        .single();
+      // Helper to add timeout to promises
+      const withTimeout = (promise, ms, errorMessage) => {
+        const timeout = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error(errorMessage)), ms)
+        );
+        return Promise.race([promise, timeout]);
+      };
+
+      // Get student by email (with 15s timeout)
+      const { data: studentData, error: studentError } = await withTimeout(
+        supabase
+          .from('students')
+          .select('*')
+          .eq('email', email.toLowerCase().trim())
+          .single(),
+        15000,
+        'Student lookup timed out. Please check your connection and try again.'
+      );
 
       if (studentError || !studentData) {
         toast.error('Student not found. Please use the regular application form.');
@@ -51,11 +62,15 @@ const EnrollAdditionalProgram = () => {
 
       setStudent(studentData);
 
-      // Get existing enrollments
-      const { data: enrollmentsData, error: enrollmentsError } = await supabase
-        .from('enrollments')
-        .select('program, status')
-        .eq('student_id', studentData.id);
+      // Get existing enrollments (with 15s timeout)
+      const { data: enrollmentsData, error: enrollmentsError } = await withTimeout(
+        supabase
+          .from('enrollments')
+          .select('program, status')
+          .eq('student_id', studentData.id),
+        15000,
+        'Enrollment lookup timed out. Please check your connection and try again.'
+      );
 
       if (enrollmentsError) throw enrollmentsError;
       setEnrollments(enrollmentsData || []);
@@ -72,13 +87,18 @@ const EnrollAdditionalProgram = () => {
 
       // Auto-select first available program
       setSelectedProgram(unenrolledPrograms[0].id);
-      if (unenrolledPrograms[0].id === 'tajweed') {
+      if (unenrolledPrograms[0].id === PROGRAM_IDS.TAJWEED) {
         setPaymentType('oneTime');
       }
 
     } catch (error) {
       console.error('Error loading student data:', error);
-      toast.error('Failed to load student data');
+      // Show specific error message if it's a timeout
+      if (error.message?.includes('timed out')) {
+        toast.error(error.message);
+      } else {
+        toast.error('Failed to load student data. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -86,7 +106,8 @@ const EnrollAdditionalProgram = () => {
 
   const handleProgramChange = (programId) => {
     setSelectedProgram(programId);
-    if (programId === 'tajweed') {
+    const program = PROGRAMS[programId];
+    if (program?.pricing.type === 'one-time') {
       setPaymentType('oneTime');
     } else {
       setPaymentType('monthly');
@@ -102,15 +123,15 @@ const EnrollAdditionalProgram = () => {
     setProcessingPayment(true);
 
     try {
-      const program = availablePrograms.find(p => p.id === selectedProgram);
+      const program = PROGRAMS[selectedProgram];
       let amount;
 
-      if (selectedProgram === 'tajweed') {
-        amount = program.price.oneTime * 100; // $120 in cents
+      if (program?.pricing.type === 'one-time') {
+        amount = program.pricing.oneTimeCents;
       } else if (paymentType === 'monthly') {
-        amount = program.price.monthly * 100; // $35 in cents
+        amount = program.pricing.monthlyCents;
       } else {
-        amount = program.price.annual * 100; // $375 in cents
+        amount = program.pricing.annualCents;
       }
 
       // Create Stripe checkout session
@@ -282,9 +303,9 @@ const EnrollAdditionalProgram = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg text-gray-900">{program.name}</h3>
-                      <p className="text-sm text-gray-600 mt-1">Duration: {program.duration}</p>
+                      <p className="text-sm text-gray-600 mt-1">Duration: {program.duration.display}</p>
 
-                      {program.id === 'essentials' && (
+                      {program.pricing.type === 'subscription' && (
                         <div className="mt-3 space-y-2">
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -295,7 +316,7 @@ const EnrollAdditionalProgram = () => {
                               onChange={() => setPaymentType('monthly')}
                               className="text-emerald-600"
                             />
-                            <span className="text-sm">Monthly: ${program.price.monthly}/month</span>
+                            <span className="text-sm">Monthly: ${program.pricing.monthly}/month</span>
                           </label>
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -306,14 +327,14 @@ const EnrollAdditionalProgram = () => {
                               onChange={() => setPaymentType('annual')}
                               className="text-emerald-600"
                             />
-                            <span className="text-sm">Annual: ${program.price.annual}/year</span>
+                            <span className="text-sm">Annual: ${program.pricing.annual}/year</span>
                           </label>
                         </div>
                       )}
 
-                      {program.id === 'tajweed' && (
+                      {program.pricing.type === 'one-time' && (
                         <p className="text-sm text-gray-600 mt-2">
-                          One-time payment: ${program.price.oneTime}
+                          One-time payment: ${program.pricing.oneTime}
                         </p>
                       )}
                     </div>
@@ -357,11 +378,11 @@ const EnrollAdditionalProgram = () => {
                 <div className="flex justify-between text-lg font-semibold border-t pt-3">
                   <span>Amount Due Today:</span>
                   <span className="text-emerald-600">
-                    ${selectedProgram === 'tajweed'
-                      ? selectedProgramDetails.price.oneTime
+                    ${selectedProgramDetails?.pricing.type === 'one-time'
+                      ? selectedProgramDetails.pricing.oneTime
                       : paymentType === 'monthly'
-                        ? selectedProgramDetails.price.monthly
-                        : selectedProgramDetails.price.annual
+                        ? selectedProgramDetails?.pricing.monthly
+                        : selectedProgramDetails?.pricing.annual
                     }
                   </span>
                 </div>

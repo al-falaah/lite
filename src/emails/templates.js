@@ -1,4 +1,5 @@
 // Modern Email templates for The FastTrack Madrasah with logo and branding
+import { PROGRAMS, PROGRAM_IDS, getProgramName as getConfigProgramName, getProgramDuration as getConfigProgramDuration } from '../config/programs';
 
 const EMAIL_STYLES = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -231,13 +232,11 @@ const getEmailFooter = () => `
 `;
 
 const getProgramName = (program) => {
-  return program === 'tajweed'
-    ? 'Tajweed Program'
-    : 'Essential Arabic & Islamic Studies Program';
+  return getConfigProgramName(program);
 };
 
 const getProgramDuration = (program) => {
-  return program === 'tajweed' ? '6 months' : '2 years';
+  return getConfigProgramDuration(program);
 };
 
 // Generic email template for admin dashboard custom emails

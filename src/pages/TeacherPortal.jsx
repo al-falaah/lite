@@ -3,27 +3,11 @@ import { toast } from 'sonner';
 import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
+import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
-// Milestone configurations
-const TAJWEED_MILESTONES = [
-  { id: 1, name: 'Foundation', subtitle: 'Laying Your Foundation', weekStart: 1, weekEnd: 4 },
-  { id: 2, name: 'Discovery', subtitle: 'The Path of Discovery', weekStart: 5, weekEnd: 8 },
-  { id: 3, name: 'Clarity', subtitle: 'Achieving Clarity', weekStart: 9, weekEnd: 12 },
-  { id: 4, name: 'Precision', subtitle: 'Developing Precision', weekStart: 13, weekEnd: 16 },
-  { id: 5, name: 'Refinement', subtitle: 'The Refinement Stage', weekStart: 17, weekEnd: 20 },
-  { id: 6, name: 'Mastery', subtitle: 'Reaching Mastery', weekStart: 21, weekEnd: 24 }
-];
-
-const EAIS_MILESTONES = [
-  { id: 1, name: 'Awakening', subtitle: 'The Awakening - Beginning Your Journey', weekStart: 1, weekEnd: 13 },
-  { id: 2, name: 'Foundation', subtitle: 'Building Your Foundation', weekStart: 14, weekEnd: 26 },
-  { id: 3, name: 'Growth', subtitle: 'Experiencing Growth', weekStart: 27, weekEnd: 39 },
-  { id: 4, name: 'Transformation', subtitle: 'The First Transformation', weekStart: 40, weekEnd: 52 },
-  { id: 5, name: 'Insight', subtitle: 'Gaining Deep Insight', weekStart: 53, weekEnd: 65 },
-  { id: 6, name: 'Mastery', subtitle: 'Developing Mastery', weekStart: 66, weekEnd: 78 },
-  { id: 7, name: 'Wisdom', subtitle: 'Cultivating Wisdom', weekStart: 79, weekEnd: 91 },
-  { id: 8, name: 'Legacy', subtitle: 'Becoming a Legacy', weekStart: 92, weekEnd: 104 }
-];
+// Get milestones from centralized config
+const TAJWEED_MILESTONES = PROGRAMS[PROGRAM_IDS.TAJWEED].milestones;
+const EAIS_MILESTONES = PROGRAMS[PROGRAM_IDS.ESSENTIALS].milestones;
 
 // Calculate current milestone based on week number
 const getCurrentMilestone = (currentWeek, isTajweed) => {
@@ -274,10 +258,12 @@ export default function TeacherPortal() {
       weekMap[key].push(schedule);
     });
 
-    // Determine total weeks based on program
-    const isTajweed = currentAssignmentProgram === 'tajweed';
-    const totalYears = isTajweed ? 1 : 2;
-    const weeksPerYear = isTajweed ? 24 : 52;
+    // Get program config from centralized configuration
+    const programConfig = PROGRAMS[currentAssignmentProgram];
+    const isTajweed = currentAssignmentProgram === PROGRAM_IDS.TAJWEED;
+    const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+    const totalProgramWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+    const weeksPerYear = Math.ceil(totalProgramWeeks / totalYears);
 
     // Check each year
     for (let year = 1; year <= totalYears; year++) {
@@ -799,12 +785,8 @@ export default function TeacherPortal() {
                     <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1.5 truncate">
                       {assignment.student.full_name}
                     </h3>
-                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                      assignment.program === 'essentials'
-                        ? 'bg-gray-100 text-gray-700'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
-                      {assignment.program === 'essentials' ? 'Essentials' : 'Tajweed'}
+                    <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                      {PROGRAMS[assignment.program]?.shortName || assignment.program}
                     </span>
                   </div>
                   <div className="flex gap-1 flex-shrink-0">
@@ -937,9 +919,11 @@ export default function TeacherPortal() {
                   </div>
                 ) : (() => {
                   const currentActive = getCurrentActiveWeekAndYear();
-                  const isTajweed = currentAssignmentProgram === 'tajweed';
-                  const weeksPerYear = isTajweed ? 24 : 52;
-                  const totalWeeks = isTajweed ? 24 : 104;
+                  const programConfig = PROGRAMS[currentAssignmentProgram];
+                  const isTajweed = currentAssignmentProgram === PROGRAM_IDS.TAJWEED;
+                  const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+                  const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+                  const weeksPerYear = Math.ceil(totalWeeks / totalYears);
                   const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
                   const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
 
@@ -954,8 +938,9 @@ export default function TeacherPortal() {
                   // Calculate milestone progress
                   const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
                   const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
-                  const totalMilestones = isTajweed ? 6 : 8;
-                  const programName = isTajweed ? 'Tajweed Mastery Program' : 'Essential Arabic & Islamic Studies';
+                  const milestones = programConfig?.milestones || (isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES);
+                  const totalMilestones = milestones.length;
+                  const programName = programConfig?.name || (isTajweed ? 'Tajweed Mastery Program' : 'Essential Arabic & Islamic Studies');
 
                   return (
                     <div>
@@ -1220,11 +1205,11 @@ export default function TeacherPortal() {
                       >
                         <div className="flex justify-between items-start mb-2">
                           <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            enrollment.program === 'essentials'
+                            enrollment.program === PROGRAM_IDS.ESSENTIALS
                               ? 'bg-blue-100 text-blue-700'
                               : 'bg-purple-100 text-purple-700'
                           }`}>
-                            {enrollment.program === 'essentials' ? 'Essentials' : 'Tajweed'}
+                            {PROGRAMS[enrollment.program]?.shortName || enrollment.program}
                           </span>
                           <span className="text-sm font-medium text-gray-700">
                             {enrollment.current_level || 'Level 1'}
@@ -1304,7 +1289,7 @@ export default function TeacherPortal() {
                     <div>
                       <p className="text-gray-500 text-xs mb-1">Program</p>
                       <p className="text-gray-900 capitalize">
-                        {emailRecipient.program === 'essentials' ? 'Essentials' : 'Tajweed'}
+                        {PROGRAMS[emailRecipient.program]?.shortName || emailRecipient.program}
                       </p>
                     </div>
                     <div className="col-span-2">

@@ -9,6 +9,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import Input from '../components/common/Input';
 import Textarea from '../components/common/Textarea';
+import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const ApplicationPage = () => {
   const navigate = useNavigate();
@@ -372,10 +373,11 @@ const ApplicationPage = () => {
   ];
 
   if (submitted) {
-    const programName = formData.program === 'tajweed' ? 'Tajweed Track' : 'Essential Arabic & Islamic Studies Track';
-    const paymentInfo = formData.program === 'tajweed'
-      ? 'One-time payment of $120 NZD'
-      : 'Monthly ($35/month) or Annual ($375/year) payment options';
+    const program = PROGRAMS[formData.program];
+    const programName = program?.name || formData.program;
+    const paymentInfo = program?.pricing.type === 'one-time'
+      ? `One-time payment of ${program.pricing.displayPrice}`
+      : `Monthly (${program.pricing.displayPriceMonthly}) or Annual (${program.pricing.displayPriceAnnual}) payment options`;
 
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -437,18 +439,18 @@ const ApplicationPage = () => {
           <div className="text-center px-4">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Student Application</h1>
             <p className="text-sm sm:text-base text-gray-600 mt-2">The FastTrack Madrasah Programs</p>
-            {formData.program && (
+            {formData.program && PROGRAMS[formData.program] && (
               <div className="mt-4 inline-flex items-center px-3 sm:px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg max-w-full">
                 <div className="text-xs sm:text-sm text-emerald-900 text-center">
-                  {formData.program === 'tajweed' ? (
+                  {formData.program === PROGRAM_IDS.TAJWEED ? (
                     <>
-                      <span className="font-semibold">Tajweed Track</span> • 6 months • $120 NZD
+                      <span className="font-semibold">{PROGRAMS[formData.program].name}</span> • {PROGRAMS[formData.program].duration.display} • {PROGRAMS[formData.program].pricing.displayPrice}
                     </>
                   ) : (
                     <>
-                      <span className="font-semibold block sm:inline">Essential Arabic & Islamic Studies Track</span>
+                      <span className="font-semibold block sm:inline">{PROGRAMS[formData.program].name}</span>
                       <span className="hidden sm:inline"> • </span>
-                      <span className="block sm:inline">2 years • $35-$375/payment</span>
+                      <span className="block sm:inline">{PROGRAMS[formData.program].duration.display} • {PROGRAMS[formData.program].pricing.displayPriceMonthly}-{PROGRAMS[formData.program].pricing.displayPriceAnnual}</span>
                     </>
                   )}
                 </div>
@@ -506,7 +508,7 @@ const ApplicationPage = () => {
                     {/* Tajweed Track */}
                     <label
                       className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
-                        formData.program === 'tajweed'
+                        formData.program === PROGRAM_IDS.TAJWEED
                           ? 'border-emerald-600 bg-emerald-50 shadow-md'
                           : 'border-gray-300 hover:border-emerald-300 bg-white'
                       }`}
@@ -514,16 +516,16 @@ const ApplicationPage = () => {
                       <input
                         type="radio"
                         name="program"
-                        value="tajweed"
-                        checked={formData.program === 'tajweed'}
+                        value={PROGRAM_IDS.TAJWEED}
+                        checked={formData.program === PROGRAM_IDS.TAJWEED}
                         onChange={handleChange}
                         className="sr-only"
                       />
                       <div className="flex items-start mb-3">
-                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === 'tajweed' ? 'text-emerald-600' : 'text-gray-500'}`} />
+                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === PROGRAM_IDS.TAJWEED ? 'text-emerald-600' : 'text-gray-500'}`} />
                         <div className="flex-1 min-w-0">
-                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === 'tajweed' ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            Tajweed Mastery Program
+                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === PROGRAM_IDS.TAJWEED ? 'text-emerald-900' : 'text-gray-900'}`}>
+                            {PROGRAMS[PROGRAM_IDS.TAJWEED].name}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-600 mb-3">Build a strong foundation with the Qur'an through precision recitation</p>
                         </div>
@@ -531,11 +533,11 @@ const ApplicationPage = () => {
                       <div className="space-y-2 text-xs sm:text-sm">
                         <div className="flex items-center text-gray-700">
                           <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span>Duration: 6 months (24 weeks)</span>
+                          <span>Duration: {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} ({PROGRAMS[PROGRAM_IDS.TAJWEED].duration.displayWeeks})</span>
                         </div>
                         <div className="flex items-start text-gray-700">
                           <span className="mr-2 flex-shrink-0">💰</span>
-                          <span className="break-words">One-time payment: $120 NZD</span>
+                          <span className="break-words">One-time payment: {PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.displayPrice}</span>
                         </div>
                         <div className="flex items-center text-gray-700">
                           <span className="mr-2 flex-shrink-0">📚</span>
@@ -543,14 +545,14 @@ const ApplicationPage = () => {
                         </div>
                         <div className="flex items-start text-gray-700">
                           <span className="mr-2 flex-shrink-0">⏱️</span>
-                          <span className="break-words">2 sessions/week (1 hour + 30 min)</span>
+                          <span className="break-words">2 sessions/week ({PROGRAMS[PROGRAM_IDS.TAJWEED].schedule.session1.duration.toLowerCase()} + {PROGRAMS[PROGRAM_IDS.TAJWEED].schedule.session2.duration})</span>
                         </div>
                         <div className="mt-3 pt-3 border-t border-gray-200">
                           <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
-                          <p className="text-xs sm:text-sm font-bold text-emerald-700">$120 NZD (one-time)</p>
+                          <p className="text-xs sm:text-sm font-bold text-emerald-700">{PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.displayPrice} (one-time)</p>
                         </div>
                       </div>
-                      {formData.program === 'tajweed' && (
+                      {formData.program === PROGRAM_IDS.TAJWEED && (
                         <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
                           <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                         </div>
@@ -559,7 +561,7 @@ const ApplicationPage = () => {
                      {/* Essential Arabic & Islamic Studies Track */}
                     <label
                       className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
-                        formData.program === 'essentials'
+                        formData.program === PROGRAM_IDS.ESSENTIALS
                           ? 'border-emerald-600 bg-emerald-50 shadow-md'
                           : 'border-gray-300 hover:border-emerald-300 bg-white'
                       }`}
@@ -567,16 +569,16 @@ const ApplicationPage = () => {
                       <input
                         type="radio"
                         name="program"
-                        value="essentials"
-                        checked={formData.program === 'essentials'}
+                        value={PROGRAM_IDS.ESSENTIALS}
+                        checked={formData.program === PROGRAM_IDS.ESSENTIALS}
                         onChange={handleChange}
                         className="sr-only"
                       />
                       <div className="flex items-start mb-3">
-                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === 'essentials' ? 'text-emerald-600' : 'text-gray-500'}`} />
+                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === PROGRAM_IDS.ESSENTIALS ? 'text-emerald-600' : 'text-gray-500'}`} />
                         <div className="flex-1 min-w-0">
-                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === 'essentials' ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            Essential Arabic & Islamic Studies Track
+                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === PROGRAM_IDS.ESSENTIALS ? 'text-emerald-900' : 'text-gray-900'}`}>
+                            {PROGRAMS[PROGRAM_IDS.ESSENTIALS].name}
                           </h3>
                           <p className="text-xs sm:text-sm text-gray-600 mb-3">Master Arabic linguistics and Islamic sciences for direct comprehension</p>
                         </div>
@@ -584,11 +586,11 @@ const ApplicationPage = () => {
                       <div className="space-y-2 text-xs sm:text-sm">
                         <div className="flex items-center text-gray-700">
                           <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span>Duration: 2 years (24 months)</span>
+                          <span>Duration: {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} ({PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.months} months)</span>
                         </div>
                         <div className="flex items-start text-gray-700">
                           <span className="mr-2 flex-shrink-0">💰</span>
-                          <span className="break-words">Monthly: $35 NZD/month or Annual: $375 NZD/year</span>
+                          <span className="break-words">Monthly: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly} NZD/month or Annual: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual} NZD/year</span>
                         </div>
                         <div className="flex items-center text-gray-700">
                           <span className="mr-2 flex-shrink-0">📚</span>
@@ -596,14 +598,14 @@ const ApplicationPage = () => {
                         </div>
                         <div className="flex items-start text-gray-700">
                           <span className="mr-2 flex-shrink-0">⏱️</span>
-                          <span className="break-words">2 sessions/week (2 hours + 30 min)</span>
+                          <span className="break-words">2 sessions/week ({PROGRAMS[PROGRAM_IDS.ESSENTIALS].schedule.session1.duration.toLowerCase()} + {PROGRAMS[PROGRAM_IDS.ESSENTIALS].schedule.session2.duration})</span>
                         </div>
                         <div className="mt-3 pt-3 border-t border-gray-200">
                           <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
-                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: $840 | Annual: $750</p>
+                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly * PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.months} | Annual: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual * PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.years}</p>
                         </div>
                       </div>
-                      {formData.program === 'essentials' && (
+                      {formData.program === PROGRAM_IDS.ESSENTIALS && (
                         <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
                           <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                         </div>
