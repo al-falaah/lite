@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.21.0'
+import { PROGRAMS, PROGRAM_IDS, getProgram, isValidProgram, getPriceCents } from '../_shared/programs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -83,7 +84,19 @@ serve(async (req) => {
     }
 
     const appUrl = Deno.env.get('APP_URL') || 'https://tftmadrasah.nz'
-    const currentProgram = program || 'essentials'
+    const currentProgram = program || PROGRAM_IDS.ESSENTIALS
+
+    // Validate program
+    if (!isValidProgram(currentProgram)) {
+      return new Response(
+        JSON.stringify({ error: `Invalid program: ${currentProgram}` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Get program config
+    const programConfig = getProgram(currentProgram)!
+    const priceCents = getPriceCents(currentProgram, planType)
 
     // Create checkout session based on plan type and program
     const sessionConfig: any = {
@@ -99,32 +112,32 @@ serve(async (req) => {
       },
     }
 
-    // Program-specific pricing
-    if (currentProgram === 'tajweed') {
-      // Tajweed Program: $120 one-time payment only (6 months program)
+    // Program-specific pricing using centralized config
+    if (programConfig.pricing.type === 'one-time') {
+      // One-time payment program (e.g., Tajweed)
       sessionConfig.line_items.push({
         price_data: {
-          currency: 'nzd',
+          currency: programConfig.pricing.currency.toLowerCase(),
           product_data: {
-            name: 'The FastTrack Madrasah - Tajweed Program',
-            description: '6-Month Tajweed Mastery Course',
+            name: `The FastTrack Madrasah - ${programConfig.name}`,
+            description: programConfig.description,
           },
-          unit_amount: 12000, // $120 in cents
+          unit_amount: priceCents,
         },
         quantity: 1,
       })
     } else {
-      // Essentials Program pricing
+      // Subscription program (e.g., Essentials)
       if (planType === 'monthly') {
-        // Monthly subscription: $35/month
+        // Monthly subscription
         sessionConfig.line_items.push({
           price_data: {
-            currency: 'nzd',
+            currency: programConfig.pricing.currency.toLowerCase(),
             product_data: {
-              name: 'The FastTrack Madrasah - Monthly Subscription',
-              description: '2-Year Essential Islamic Studies Course',
+              name: `The FastTrack Madrasah - ${programConfig.shortName} Monthly`,
+              description: programConfig.description,
             },
-            unit_amount: 3500, // $35 in cents
+            unit_amount: priceCents,
             recurring: {
               interval: 'month',
             },
@@ -132,15 +145,15 @@ serve(async (req) => {
           quantity: 1,
         })
       } else {
-        // Annual one-time payment: $375
+        // Annual one-time payment
         sessionConfig.line_items.push({
           price_data: {
-            currency: 'nzd',
+            currency: programConfig.pricing.currency.toLowerCase(),
             product_data: {
-              name: 'The FastTrack Madrasah - Annual Payment',
-              description: '2-Year Essential Islamic Studies Course (Year 1)',
+              name: `The FastTrack Madrasah - ${programConfig.shortName} Annual`,
+              description: `${programConfig.description} (Year 1)`,
             },
-            unit_amount: 37500, // $375 in cents
+            unit_amount: priceCents,
           },
           quantity: 1,
         })

@@ -28,6 +28,7 @@ import {
 import { supabase } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -238,10 +239,11 @@ const AdminClassScheduling = () => {
         return;
       }
 
-      // Determine number of weeks based on program
-      const isTajweed = generateForm.program === 'tajweed';
-      const totalWeeks = isTajweed ? 24 : 52; // Tajweed: 24 weeks (6 months), Essentials: 52 weeks/year
-      const totalYears = isTajweed ? 1 : 2; // Tajweed: 1 year, Essentials: 2 years
+      // Determine number of weeks based on program from centralized config
+      const isTajweed = generateForm.program === PROGRAM_IDS.TAJWEED;
+      const programConfig = PROGRAMS[generateForm.program];
+      const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+      const totalWeeks = Math.ceil((programConfig?.duration.weeks || (isTajweed ? 24 : 104)) / totalYears);
 
       // Generate schedules
       const schedulesToCreate = [];
@@ -1232,9 +1234,9 @@ const AdminClassScheduling = () => {
                 <p className="text-sm text-gray-600 mt-1">
                   {!generateForm.program
                     ? 'Select a program to see details'
-                    : generateForm.program === 'tajweed'
-                    ? 'Create 48 classes (24 weeks × 2 classes per week)'
-                    : 'Create 208 classes (2 years × 52 weeks × 2 classes per week)'}
+                    : generateForm.program === PROGRAM_IDS.TAJWEED
+                    ? `Create ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks * 2} classes (${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks × 2 classes per week)`
+                    : `Create ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks * 2} classes (${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.years} years × ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks / PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.years} weeks × 2 classes per week)`}
                 </p>
               </div>
               <button
@@ -1260,14 +1262,14 @@ const AdminClassScheduling = () => {
                   <option value="">Select program</option>
                   {selectedStudent?.enrollments?.filter(e => e.status === 'active').map(enrollment => (
                     <option key={enrollment.program} value={enrollment.program}>
-                      {enrollment.program === 'tajweed' ? 'Tajweed Program (6 months)' : 'Essential Arabic & Islamic Studies (2 years)'}
+                      {PROGRAMS[enrollment.program]?.name || enrollment.program} ({PROGRAMS[enrollment.program]?.duration.display || ''})
                     </option>
                   ))}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  {generateForm.program === 'tajweed'
-                    ? 'Will create 48 classes (24 weeks × 2 classes)'
-                    : 'Will create 208 classes (2 years × 52 weeks × 2 classes)'}
+                  {generateForm.program && PROGRAMS[generateForm.program]
+                    ? `Will create ${PROGRAMS[generateForm.program].duration.weeks * 2} classes (${PROGRAMS[generateForm.program].duration.weeks} weeks × 2 classes)`
+                    : 'Select a program to see class count'}
                 </p>
               </div>
 
@@ -1352,23 +1354,14 @@ const AdminClassScheduling = () => {
               </div>
 
               <div className="bg-blue-50 p-4 rounded-lg">
-                {generateForm.program ? (
+                {generateForm.program && PROGRAMS[generateForm.program] ? (
                   <>
                     <p className="text-sm text-blue-900">
-                      This will create <strong>{generateForm.program === 'tajweed' ? '48 classes' : '208 classes'}</strong> for {selectedStudent?.full_name}:
+                      This will create <strong>{PROGRAMS[generateForm.program].duration.weeks * 2} classes</strong> for {selectedStudent?.full_name}:
                     </p>
                     <ul className="text-sm text-blue-800 mt-2 space-y-1 ml-4 list-disc">
-                      {generateForm.program === 'tajweed' ? (
-                        <>
-                          <li>24 weeks × 2 classes = 48 classes total</li>
-                          <li>Program duration: 6 months</li>
-                        </>
-                      ) : (
-                        <>
-                          <li>Year 1: 52 weeks × 2 classes = 104 classes</li>
-                          <li>Year 2: 52 weeks × 2 classes = 104 classes</li>
-                        </>
-                      )}
+                      <li>{PROGRAMS[generateForm.program].duration.weeks} weeks × 2 classes = {PROGRAMS[generateForm.program].duration.weeks * 2} classes total</li>
+                      <li>Program duration: {PROGRAMS[generateForm.program].duration.display}</li>
                       <li>Main classes on {generateForm.main_day_of_week || '[Day]'}</li>
                       <li>Short classes on {generateForm.short_day_of_week || '[Day]'}</li>
                     </ul>

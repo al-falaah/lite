@@ -2,9 +2,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, CheckCircle, ChevronDown, Mail, Phone, MessageCircle, Heart } from 'lucide-react';
+import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const Programs = () => {
   const [expandedProgram, setExpandedProgram] = useState(null);
+
+  // Get program configs
+  const tajweed = PROGRAMS[PROGRAM_IDS.TAJWEED];
+  const essentials = PROGRAMS[PROGRAM_IDS.ESSENTIALS];
 
   // Stripe donation link from environment variable
   const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/dRm28t3WQ4Jacmj6gocAo00.com';
@@ -81,14 +86,14 @@ const Programs = () => {
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">6 months</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">24 weeks</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{tajweed.duration.display}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{tajweed.duration.displayWeeks}</p>
                   </div>
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">2 years</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">104 weeks</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{essentials.duration.display}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{essentials.duration.displayWeeks}</p>
                   </div>
                 </div>
               </div>
@@ -103,14 +108,14 @@ const Programs = () => {
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">$120 NZD</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">One-time</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{tajweed.pricing.displayPrice}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{tajweed.pricing.displayNote}</p>
                   </div>
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">$35/month</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">$375/year</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{essentials.pricing.displayPriceMonthly}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{essentials.pricing.displayPriceAnnual}</p>
                   </div>
                 </div>
               </div>
@@ -170,11 +175,11 @@ const Programs = () => {
                 <div className="flex items-center justify-between py-3 border-t border-gray-100">
                   <div>
                     <p className="text-xs text-gray-500">Duration</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">6 months · 24 weeks</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{tajweed.duration.display} · {tajweed.duration.displayWeeks}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Investment</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">$120 NZD</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{tajweed.pricing.displayPrice}</p>
                   </div>
                 </div>
 
@@ -264,11 +269,11 @@ const Programs = () => {
                 <div className="flex items-center justify-between py-3 border-t border-gray-100">
                   <div>
                     <p className="text-xs text-gray-500">Duration</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">2 years · 104 weeks</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{essentials.duration.display} · {essentials.duration.displayWeeks}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Investment</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">$35/month</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{essentials.pricing.displayPriceMonthly}</p>
                   </div>
                 </div>
 

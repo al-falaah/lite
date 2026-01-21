@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.21.0'
+import { getProgram, getTotalFees, getPaymentAmount, PROGRAM_IDS } from '../_shared/programs.ts'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
   apiVersion: '2023-10-16',
@@ -35,9 +36,16 @@ serve(async (req) => {
 
       const studentId = session.metadata.student_id
       const planType = session.metadata.plan_type
-      const program = session.metadata.program || 'essentials' // Get program from metadata
+      const program = session.metadata.program || PROGRAM_IDS.ESSENTIALS // Get program from metadata
 
       console.log(`Payment successful for student ${studentId}, plan: ${planType}, program: ${program}`)
+
+      // Get program config from centralized configuration
+      const programConfig = getProgram(program)
+      if (!programConfig) {
+        console.error('Invalid program:', program)
+        return new Response(`Invalid program: ${program}`, { status: 400 })
+      }
 
       // Get student details
       const { data: student, error: studentError } = await supabaseClient
@@ -133,9 +141,9 @@ serve(async (req) => {
 
       const applicationId = application?.id || null
 
-      // Create enrollment for this program - using direct INSERT
-      const totalFees = program === 'tajweed' ? 120 : (planType === 'monthly' ? 35 * 24 : 375 * 2)
-      const duration = program === 'tajweed' ? 6 : 24
+      // Create enrollment for this program - using centralized config
+      const totalFees = getTotalFees(program, planType)
+      const duration = programConfig.duration.months
 
       const { data: enrollmentData, error: enrollmentError } = await supabaseClient
         .from('enrollments')
@@ -174,8 +182,8 @@ serve(async (req) => {
         }
       }
 
-      // Determine payment amount
-      const amount = planType === 'monthly' ? 35 : (planType === 'annual' ? 375 : 120)
+      // Determine payment amount using centralized config
+      const amount = getPaymentAmount(program, planType)
 
       // Create payment record linked to enrollment
       const { error: paymentError } = await supabaseClient
