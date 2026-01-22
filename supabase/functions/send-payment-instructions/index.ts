@@ -4,14 +4,15 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
+import { getProgram } from '../_shared/programs.ts';
 
 function generateEmailHTML(applicantData: any, appUrl: string): string {
   const { full_name, email, program } = applicantData;
 
-  // Determine program-specific details
-  const isTajweed = program === 'tajweed';
-  const programName = isTajweed ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
-  const programDuration = isTajweed ? '6 months' : '2 years';
+  // Get program details from centralized config
+  const programConfig = getProgram(program);
+  const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program;
+  const isOneTimePayment = programConfig?.pricing.type === 'one-time';
 
   return `
     <!DOCTYPE html>
@@ -44,7 +45,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
 
             <center>
               <a href="${appUrl}/payment?email=${encodeURIComponent(email)}&program=${program}" class="cta-button">
-                ${isTajweed ? 'Pay $120 Now' : 'Choose Payment Plan & Pay Now'}
+                ${isOneTimePayment ? `Pay $${programConfig?.pricing.oneTime || 0} Now` : 'Choose Payment Plan & Pay Now'}
               </a>
             </center>
 
@@ -55,7 +56,7 @@ function generateEmailHTML(applicantData: any, appUrl: string): string {
             <p class="paragraph"><strong>Complete Your Enrollment:</strong></p>
             <ol style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
               <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">Click the button above to access the payment page</li>
-              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">${isTajweed ? 'Complete your $120 payment' : 'Choose your preferred payment plan (monthly or annual)'}</li>
+              <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">${isOneTimePayment ? `Complete your $${programConfig?.pricing.oneTime || 0} payment` : 'Choose your preferred payment plan (monthly or annual)'}</li>
               <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">Complete secure payment via Stripe</li>
               <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">You'll receive a welcome email with your student details</li>
               <li style="margin-bottom: 12px; line-height: 1.7; padding-left: 8px;">Your personalized classes will be scheduled</li>

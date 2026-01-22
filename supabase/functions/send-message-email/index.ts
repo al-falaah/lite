@@ -2,11 +2,14 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
+import { getProgram } from '../_shared/programs.ts';
 
 function generateEmailHTML(messageData: any, recipientType: string): string {
   const { senderName, senderEmail, recipientName, recipientEmail, message, program } = messageData;
 
-  const programName = program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
+  // Get program details from centralized config
+  const programConfig = getProgram(program);
+  const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program;
   const senderRole = recipientType === 'teacher' ? 'Student' : 'Teacher';
 
   return `

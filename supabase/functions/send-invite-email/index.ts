@@ -3,6 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
+import { getProgram } from '../_shared/programs.ts';
 
 const EMAIL_STYLES = `
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; }
@@ -18,9 +19,9 @@ const EMAIL_STYLES = `
 function generateEmailHTML(applicantData: any, signupUrl: string): string {
   const { full_name, program } = applicantData;
 
-  const programName = program === 'tajweed'
-    ? 'Tajweed Program'
-    : 'Essential Arabic & Islamic Studies Program';
+  // Get program details from centralized config
+  const programConfig = getProgram(program);
+  const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program;
 
   return `
     <!DOCTYPE html>

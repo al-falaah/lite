@@ -4,16 +4,19 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
+import { getProgram } from '../_shared/programs.ts';
 
 function generateEmailHTML(studentData: any, baseUrl: string, inviteLink: string): string {
   const { full_name, email, student_id, program } = studentData;
 
-  // Determine program name based on program field
-  const programName = program === 'tajweed'
-    ? 'Tajweed Program'
-    : 'Essential Arabic & Islamic Studies Program';
-
-  const programDuration = program === 'tajweed' ? '6 months' : '2 years';
+  // Get program details from centralized config
+  const programConfig = getProgram(program);
+  const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program;
+  const programDuration = programConfig
+    ? (programConfig.duration.years >= 1
+        ? `${programConfig.duration.years} year${programConfig.duration.years > 1 ? 's' : ''}`
+        : `${programConfig.duration.months} months`)
+    : 'TBD';
 
   return `
     <!DOCTYPE html>

@@ -59,101 +59,177 @@ const Programs = () => {
             </p>
           </div>
 
-          {/* Quick Comparison Table */}
+          {/* Quick Comparison - Mobile Cards / Desktop Table */}
           <div className="mb-12 sm:mb-16 max-w-6xl mx-auto">
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden overflow-x-auto">
+            {/* Mobile View: Stacked Cards */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              {/* QARI Card */}
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">QARI</span>
+                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">Beginner</span>
+                  </div>
+                  <span className="text-xs text-gray-500">Track 1</span>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Duration</span>
+                    <span className="text-sm font-semibold text-gray-900">{qari.duration.display}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Investment</span>
+                    <span className="text-sm font-semibold text-gray-900">{qari.pricing.displayPrice}</span>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-sm text-gray-600">Focus</span>
+                    <span className="text-sm text-gray-700 text-right max-w-[60%]">{qari.focus}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* TMP Card */}
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">TMP</span>
+                  <span className="text-xs text-gray-500">Track 2</span>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Duration</span>
+                    <span className="text-sm font-semibold text-gray-900">{tajweed.duration.display}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Investment</span>
+                    <span className="text-sm font-semibold text-gray-900">{tajweed.pricing.displayPrice}</span>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-sm text-gray-600">Focus</span>
+                    <span className="text-sm text-gray-700 text-right max-w-[60%]">Tajweed & Qur'anic Sciences</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* EASI Card */}
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">EASI</span>
+                  <span className="text-xs text-gray-500">Track 3</span>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Duration</span>
+                    <span className="text-sm font-semibold text-gray-900">{essentials.duration.display}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Investment</span>
+                    <div className="text-right">
+                      <span className="text-sm font-semibold text-gray-900">{essentials.pricing.displayPriceMonthly}</span>
+                      <span className="text-xs text-gray-500 block">{essentials.pricing.displayPriceAnnual}</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-sm text-gray-600">Focus</span>
+                    <span className="text-sm text-gray-700 text-right max-w-[60%]">Arabic Language & Islamic Studies</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop View: Table */}
+            <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden">
               {/* Table Header - Order: QARI, TMP, EASI */}
-              <div className="grid grid-cols-4 bg-gray-50 border-b border-gray-200 min-w-[600px]">
-                <div className="p-4 sm:p-5"></div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-200">
-                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
+              <div className="grid grid-cols-4 bg-gray-50 border-b border-gray-200">
+                <div className="p-5"></div>
+                <div className="p-5 text-center border-l border-gray-200">
+                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                     QARI
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-200">
-                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
+                <div className="p-5 text-center border-l border-gray-200">
+                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                     TMP
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-200">
-                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
+                <div className="p-5 text-center border-l border-gray-200">
+                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                     EASI
                   </div>
                 </div>
               </div>
 
               {/* Duration Row */}
-              <div className="grid grid-cols-4 border-b border-gray-100 min-w-[600px]">
-                <div className="p-4 sm:p-5 flex items-center">
+              <div className="grid grid-cols-4 border-b border-gray-100">
+                <div className="p-5 flex items-center">
                   <div>
-                    <p className="text-sm sm:text-base font-semibold text-gray-900">Duration</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Time commitment</p>
+                    <p className="text-base font-semibold text-gray-900">Duration</p>
+                    <p className="text-sm text-gray-500 mt-0.5">Time commitment</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">{qari.duration.display}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{qari.duration.displayWeeks}</p>
+                    <p className="text-xl font-bold text-gray-900">{qari.duration.display}</p>
+                    <p className="text-sm text-gray-500 mt-1">{qari.duration.displayWeeks}</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">{tajweed.duration.display}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{tajweed.duration.displayWeeks}</p>
+                    <p className="text-xl font-bold text-gray-900">{tajweed.duration.display}</p>
+                    <p className="text-sm text-gray-500 mt-1">{tajweed.duration.displayWeeks}</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">{essentials.duration.display}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{essentials.duration.displayWeeks}</p>
+                    <p className="text-xl font-bold text-gray-900">{essentials.duration.display}</p>
+                    <p className="text-sm text-gray-500 mt-1">{essentials.duration.displayWeeks}</p>
                   </div>
                 </div>
               </div>
 
               {/* Investment Row */}
-              <div className="grid grid-cols-4 border-b border-gray-100 min-w-[600px]">
-                <div className="p-4 sm:p-5 flex items-center">
+              <div className="grid grid-cols-4 border-b border-gray-100">
+                <div className="p-5 flex items-center">
                   <div>
-                    <p className="text-sm sm:text-base font-semibold text-gray-900">Investment</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Program fee</p>
+                    <p className="text-base font-semibold text-gray-900">Investment</p>
+                    <p className="text-sm text-gray-500 mt-0.5">Program fee</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">{qari.pricing.displayPrice}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{qari.pricing.displayNote}</p>
+                    <p className="text-xl font-bold text-gray-900">{qari.pricing.displayPrice}</p>
+                    <p className="text-sm text-gray-500 mt-1">{qari.pricing.displayNote}</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">{tajweed.pricing.displayPrice}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{tajweed.pricing.displayNote}</p>
+                    <p className="text-xl font-bold text-gray-900">{tajweed.pricing.displayPrice}</p>
+                    <p className="text-sm text-gray-500 mt-1">{tajweed.pricing.displayNote}</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">{essentials.pricing.displayPriceMonthly}</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{essentials.pricing.displayPriceAnnual}</p>
+                    <p className="text-xl font-bold text-gray-900">{essentials.pricing.displayPriceMonthly}</p>
+                    <p className="text-sm text-gray-500 mt-1">{essentials.pricing.displayPriceAnnual}</p>
                   </div>
                 </div>
               </div>
 
               {/* Focus Row */}
-              <div className="grid grid-cols-4 min-w-[600px]">
-                <div className="p-4 sm:p-5 flex items-center">
+              <div className="grid grid-cols-4">
+                <div className="p-5 flex items-center">
                   <div>
-                    <p className="text-sm sm:text-base font-semibold text-gray-900">Focus</p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Core curriculum</p>
+                    <p className="text-base font-semibold text-gray-900">Focus</p>
+                    <p className="text-sm text-gray-500 mt-0.5">Core curriculum</p>
                   </div>
                 </div>
-                <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
-                  <p className="text-xs sm:text-sm text-gray-700 text-center">{qari.focus}</p>
+                <div className="p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-sm text-gray-700 text-center">{qari.focus}</p>
                 </div>
-                <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
-                  <p className="text-xs sm:text-sm text-gray-700 text-center">Tajweed & Qur'anic Sciences</p>
+                <div className="p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-sm text-gray-700 text-center">Tajweed & Qur'anic Sciences</p>
                 </div>
-                <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
-                  <p className="text-xs sm:text-sm text-gray-700 text-center">Arabic Language & Islamic Studies</p>
+                <div className="p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-sm text-gray-700 text-center">Arabic Language & Islamic Studies</p>
                 </div>
               </div>
             </div>
@@ -168,6 +244,7 @@ const Programs = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 1</span>
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{qari.duration.display}</span>
+                  <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-950 rounded">Beginner Course</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   {qari.name} ({qari.shortName})
@@ -175,9 +252,9 @@ const Programs = () => {
                 <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   {qari.arabicName}
                 </p>
-                <p className="text-xs text-gray-500 italic">
+                {/* <p className="text-xs text-gray-500 italic">
                   {qari.transliteration}
-                </p>
+                </p> */}
               </div>
 
               {/* Card Body */}
@@ -245,7 +322,7 @@ const Programs = () => {
                 )}
 
                 {/* CTA Button */}
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
                     <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for QARI</span>
@@ -270,9 +347,9 @@ const Programs = () => {
                 <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   برنامج إتقان التجويد
                 </p>
-                <p className="text-xs text-gray-500 italic">
+                {/* <p className="text-xs text-gray-500 italic">
                   Barnāmij Itqān at-Tajwīd
-                </p>
+                </p> */}
               </div>
 
               {/* Card Body */}
@@ -339,7 +416,7 @@ const Programs = () => {
                 )}
 
                 {/* CTA Button */}
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
                     <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for TMP</span>
@@ -364,20 +441,20 @@ const Programs = () => {
                 <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                 </p>
-                <p className="text-xs text-gray-500 italic">
+                {/* <p className="text-xs text-gray-500 italic">
                   Ad-Dirāsāt al-Asāsiyyah fīl-Lughah al-ʿArabiyyah wal-ʿUlūm al-Islāmiyyah
-                </p>
+                </p> */}
               </div>
 
               {/* Card Body */}
               <div className="px-6 py-5">
                 {/* Description */}
                 <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                  A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. Our structured curriculum delivers a rigorous foundation in Arabic linguistics—Grammar, Morphology, and Spelling—paired with essential Islamic sciences to build lasting scholarly depth.
+                  A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension.  We structured our curriculum  to deliver a rigorous foundation in Arabic linguistics and essential Islamic sciences.
                 </p>
                 <div className="bg-gray-50 border border-gray-200 rounded p-3 mb-5">
                   <p className="text-xs text-gray-700 leading-relaxed">
-                    <span className="font-medium text-gray-900">Our Edge:</span> We move beyond isolated language study by integrating Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Through expert mentoring and systematic textual study, we equip you with the linguistic and spiritual infrastructure to engage directly with the Qur'an and Sunnah.
+                    <span className="font-medium text-gray-900">Our Edge:</span> Beyond isolated language study, we integrate Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Expert mentoring for direct engagement with the Qur'an and Sunnah.
                   </p>
                 </div>
 
@@ -433,7 +510,7 @@ const Programs = () => {
                 )}
 
                 {/* CTA Button */}
-                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
                     <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for EASI</span>

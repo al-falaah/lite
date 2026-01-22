@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { getProgram } from '../_shared/programs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -68,10 +69,12 @@ serve(async (req) => {
         .single()
 
       if (existingEnrollment) {
+        const programConfig = getProgram(program)
+        const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program
         return new Response(
           JSON.stringify({
             success: false,
-            error: `Student is already enrolled in ${program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program'}`,
+            error: `Student is already enrolled in ${programName}`,
             student: student,
             enrollment: existingEnrollment
           }),
@@ -151,10 +154,11 @@ serve(async (req) => {
       // Don't throw - student is created, email is non-critical
     }
 
-    const programName = program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program'
+    const programConfig = getProgram(program)
+    const programDisplayName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program
     const message = isNewStudent
-      ? `Student created for ${programName}. Payment instructions sent.`
-      : `Existing student will be enrolled in ${programName} after payment.`
+      ? `Student created for ${programDisplayName}. Payment instructions sent.`
+      : `Existing student will be enrolled in ${programDisplayName} after payment.`
 
     return new Response(
       JSON.stringify({
