@@ -162,17 +162,24 @@ const AdminStudentsList = () => {
     try {
       setSendingEmail(true);
 
-      // Get the student's application to find the program
-      const { data: application } = await supabase
-        .from('applications')
-        .select('program')
-        .eq('email', student.email)
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      // Use the program from the student record (already set when student was created)
+      // Fall back to application table if not present
+      let program = student.program;
+      
+      if (!program) {
+        const { data: application } = await supabase
+          .from('applications')
+          .select('program')
+          .eq('email', student.email)
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+        
+        program = application?.program || PROGRAM_IDS.ESSENTIALS;
+      }
 
-      const program = application?.program || PROGRAM_IDS.ESSENTIALS;
+      console.log(`Resending approval email for ${student.email} with program: ${program}`);
 
       const response = await fetch(
         `${supabaseUrl}/functions/v1/send-payment-instructions`,

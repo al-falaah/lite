@@ -115,7 +115,16 @@ serve(async (req) => {
 
       if (studentError) {
         console.error('Error creating student:', studentError)
-        throw new Error('Failed to create student record')
+        // Return detailed error for debugging
+        return new Response(
+          JSON.stringify({ 
+            error: 'Failed to create student record',
+            details: studentError.message,
+            code: studentError.code,
+            hint: studentError.hint
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
       }
 
       student = newStudent

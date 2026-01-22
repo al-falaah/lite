@@ -95,6 +95,12 @@ serve(async (req) => {
   try {
     const { applicantData, appUrl } = await req.json();
 
+    console.log('Received payment instructions request:', {
+      email: applicantData?.email,
+      program: applicantData?.program,
+      full_name: applicantData?.full_name
+    });
+
     if (!applicantData || !applicantData.email || !applicantData.full_name) {
       return new Response(
         JSON.stringify({ error: 'Missing required applicant data' }),
@@ -103,6 +109,8 @@ serve(async (req) => {
     }
 
     const baseUrl = appUrl || Deno.env.get('APP_URL') || 'https://tftmadrasah.nz';
+    console.log(`Generating payment link: ${baseUrl}/payment?email=${encodeURIComponent(applicantData.email)}&program=${applicantData.program}`);
+    
     const emailHTML = generateEmailHTML(applicantData, baseUrl);
 
     const result = await sendEmail({

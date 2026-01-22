@@ -12,6 +12,13 @@ const StripePaymentPage = () => {
   const emailFromUrl = searchParams.get('email');
   const programFromUrl = searchParams.get('program') || PROGRAM_IDS.ESSENTIALS; // Default to essentials
 
+  console.log('StripePaymentPage loaded with params:', {
+    email: emailFromUrl,
+    program: searchParams.get('program'),
+    programFromUrl: programFromUrl,
+    allParams: Object.fromEntries(searchParams.entries())
+  });
+
   const [email, setEmail] = useState(emailFromUrl || '');
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
