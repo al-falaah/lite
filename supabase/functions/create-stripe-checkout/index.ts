@@ -104,7 +104,7 @@ serve(async (req) => {
       line_items: [],
       mode: planType === 'monthly' ? 'subscription' : 'payment',
       success_url: `${appUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}&program=${currentProgram}`,
-      cancel_url: `${appUrl}/student`, // Redirect to student portal on cancel
+      cancel_url: `${appUrl}/payment-cancel?program=${currentProgram}&email=${encodeURIComponent(email)}`,
       metadata: {
         student_id: student.id,
         plan_type: planType,
