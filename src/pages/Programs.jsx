@@ -21,7 +21,7 @@ const Programs = () => {
         <title>Programs - The FastTrack Madrasah</title>
         <meta
           name="description"
-          content="Discover our Tajweed Mastery Program and Essential Arabic & Islamic Studies. Expert-led Islamic education programs designed to transform your understanding of the Qur'an and Arabic language."
+          content="Discover our Beginner friendly Qur'an & Arabic Reading Literacy, Tajweed Mastery Program and Essential Arabic & Islamic Studies. Expert-led Islamic education programs designed to transform your understanding of the Qur'an and Arabic language."
         />
       </Helmet>
 
@@ -150,7 +150,7 @@ const Programs = () => {
                   <p className="text-xs sm:text-sm text-gray-700 text-center">{qari.focus}</p>
                 </div>
                 <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
-                  <p className="text-xs sm:text-sm text-gray-700 text-center">Tajweed & Quranic Sciences</p>
+                  <p className="text-xs sm:text-sm text-gray-700 text-center">Tajweed & Qur'anic Sciences</p>
                 </div>
                 <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
                   <p className="text-xs sm:text-sm text-gray-700 text-center">Arabic Language & Islamic Studies</p>
@@ -170,7 +170,7 @@ const Programs = () => {
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{qari.duration.display}</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
-                  {qari.name}
+                  {qari.name} ({qari.shortName})
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   {qari.arabicName}
@@ -247,7 +247,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for QARI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -265,7 +265,7 @@ const Programs = () => {
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">6 months</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
-                  Tajweed Mastery Program
+                  Tajweed Mastery Program (TMP)
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   برنامج إتقان التجويد
@@ -341,7 +341,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for TMP</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -359,7 +359,7 @@ const Programs = () => {
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">2 years</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
-                  Essential Arabic & Islamic Studies
+                  Essential Arabic & Islamic Studies (EASI)
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
                   الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
@@ -435,7 +435,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for EASI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -447,17 +447,17 @@ const Programs = () => {
           </div>
 
           {/* Bottom CTA Section */}
-          <div className="mt-12 text-center">
+          {/* <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 mb-4">
               Not sure which program is right for you?
             </p>
             <Link to="/apply">
-              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
+              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
                 <span>Start Your Application</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
             </Link>
-          </div>
+          </div> */}
 
           {/* Find Your Path - Clean Selection Guide */}
           <div className="mt-16 max-w-4xl mx-auto">
@@ -504,7 +504,7 @@ const Programs = () => {
                       <h4 className="font-semibold text-gray-900">I can read but lack Tajweed knowledge</h4>
                     </div>
                     <p className="text-sm text-gray-600 ml-11">
-                      You can read the Quran but want to perfect your recitation with proper rules.
+                      You can read the Qur'an but want to perfect your recitation with proper rules.
                     </p>
                   </div>
                   <div className="ml-11 sm:ml-0">

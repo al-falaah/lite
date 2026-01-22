@@ -8,7 +8,6 @@ import { Analytics } from '@vercel/analytics/react';
 import LandingPage from './pages/LandingPage';
 import Programs from './pages/Programs';
 import ApplicationPage from './pages/ApplicationPage';
-import PaymentUploadPage from './pages/PaymentUploadPage';
 import StripePaymentPage from './pages/StripePaymentPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import StudentPortal from './pages/StudentPortal';
@@ -53,7 +52,6 @@ function App() {
             <Route path="/apply" element={<ApplicationPage />} />
             <Route path="/payment" element={<StripePaymentPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
-            <Route path="/payment-upload" element={<PaymentUploadPage />} />
             <Route path="/student" element={<StudentPortal />} />
             <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
             <Route path="/vacancies" element={<VacanciesPage />} />
