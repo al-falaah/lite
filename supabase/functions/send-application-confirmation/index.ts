@@ -4,19 +4,19 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';
 import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-template.ts';
+import { getProgram } from '../_shared/programs.ts';
 
 function generateEmailHTML(applicantData: any): string {
   const { full_name, email, program } = applicantData;
 
-  // Determine program-specific details
-  const programDetails: Record<string, { name: string; duration: string }> = {
-    tajweed: { name: 'Tajweed Mastery Program (TMP)', duration: '6 months' },
-    essentials: { name: 'Essential Arabic & Islamic Studies (EASI)', duration: '2 years' },
-    qari: { name: 'Quranic Arabic & Recitation Intensive (QARI)', duration: '1 year' },
-  };
-  const details = programDetails[program] || { name: program, duration: 'TBD' };
-  const programName = details.name;
-  const programDuration = details.duration;
+  // Get program details from centralized config
+  const programConfig = getProgram(program);
+  const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program;
+  const programDuration = programConfig
+    ? (programConfig.duration.years >= 1
+        ? `${programConfig.duration.years} year${programConfig.duration.years > 1 ? 's' : ''}`
+        : `${programConfig.duration.months} months`)
+    : 'TBD';
 
   return `
     <!DOCTYPE html>

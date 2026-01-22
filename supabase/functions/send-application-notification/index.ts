@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { getProgram } from '../_shared/programs.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 const ADMIN_EMAIL = 'admin@tftmadrasah.nz'
@@ -40,13 +41,11 @@ serve(async (req) => {
       throw new Error('Application not found')
     }
 
-    // Determine program name
-    const programNames: Record<string, string> = {
-      tajweed: 'Tajweed Mastery Program (TMP)',
-      essentials: 'Essential Arabic & Islamic Studies (EASI)',
-      qari: 'Quranic Arabic & Recitation Intensive (QARI)',
-    };
-    const programName = programNames[application.program] || application.program;
+    // Get program name from centralized config
+    const programConfig = getProgram(application.program);
+    const programName = programConfig
+      ? `${programConfig.name} (${programConfig.shortName})`
+      : application.program;
 
     // Send email to admin
     const emailRes = await fetch('https://api.resend.com/emails', {
