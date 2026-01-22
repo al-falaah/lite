@@ -244,7 +244,7 @@ const Programs = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 1</span>
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{qari.duration.display}</span>
-                  <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-950 rounded">Beginner Course</span>
+                  <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">Beginner</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   {qari.name} ({qari.shortName})
