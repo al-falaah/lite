@@ -94,11 +94,13 @@ serve(async (req) => {
         .insert({
           student_id: null, // Will be assigned after payment (6-digit random number)
           password: null, // Will be generated after payment
+          auth_user_id: null, // Will be assigned after payment
           full_name: application.full_name,
           email: application.email,
           phone: application.phone,
           date_of_birth: application.date_of_birth,
           gender: application.gender,
+          program: program, // IMPORTANT: Set the program from application
           application_id: application.id,
           status: 'pending_payment', // Will be changed to 'enrolled' after Stripe payment
           enrolled_date: new Date().toISOString().split('T')[0],
