@@ -541,7 +541,7 @@ const Programs = () => {
           </div>
 
           {/* Program Cards Grid - Order: QARI (Track 1), TMP (Track 2), EASI (Track 3) */}
-          <div className="hidden grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* QARI Program Card - Track 1 */}
             <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
               {/* Card Header */}
