@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X } from 'lucide-react';
+import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
+import { useAuth } from '../context/AuthContext';
 
 // Helper function to generate URL-friendly slugs
 const generateSlug = (text) => {
@@ -17,6 +18,7 @@ const generateSlug = (text) => {
 
 const ResearchAdmin = () => {
   const navigate = useNavigate();
+  const { profile, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -55,7 +57,7 @@ const ResearchAdmin = () => {
       .eq('id', user.id)
       .single();
 
-    const hasAccess = profile?.role && ['director', 'madrasah_admin'].includes(profile.role);
+    const hasAccess = profile?.role && ['director', 'research_admin'].includes(profile.role);
     if (!hasAccess) {
       toast.error('Access denied');
       navigate('/');
@@ -238,6 +240,16 @@ const ResearchAdmin = () => {
     return program ? program.shortName : programId.toUpperCase();
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to logout');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -259,12 +271,23 @@ const ResearchAdmin = () => {
                 <p className="text-sm text-gray-600">Manage lesson notes and course materials</p>
               </div>
             </div>
-            <button
-              onClick={() => navigate('/director')}
-              className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900"
-            >
-              Back to Dashboard
-            </button>
+            <div className="flex items-center gap-3">
+              {profile?.role === 'director' && (
+                <button
+                  onClick={() => navigate('/director')}
+                  className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 font-medium"
+                >
+                  Dashboard
+                </button>
+              )}
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-gray-900 font-medium"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
