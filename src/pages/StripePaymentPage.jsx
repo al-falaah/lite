@@ -24,9 +24,9 @@ const StripePaymentPage = () => {
   const [selectedPlan, setSelectedPlan] = useState('');
 
   const programConfig = PROGRAMS[programFromUrl];
-  const isTajweed = programFromUrl === PROGRAM_IDS.TAJWEED;
-  const programName = programConfig?.name || (isTajweed ? 'Tajweed Program' : 'Essential Islamic Studies Course');
-  const programDuration = programConfig?.duration.display || (isTajweed ? '6 months' : '2 years');
+  const isOneTimePayment = programConfig?.pricing.type === 'one-time';
+  const programName = programConfig?.name || 'Program';
+  const programDuration = programConfig?.duration.display || '1 year';
 
   const handlePayment = async (planType) => {
     if (!email) {
@@ -112,10 +112,10 @@ const StripePaymentPage = () => {
             <CreditCard className="h-8 w-8 text-emerald-600" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            {isTajweed ? 'Complete Your Payment' : 'Choose Your Payment Plan'}
+            {isOneTimePayment ? 'Complete Your Payment' : 'Choose Your Payment Plan'}
           </h1>
           <p className="text-lg text-gray-600">
-            {isTajweed ? `${programName} - ${programDuration}` : 'Select the payment option that works best for you'}
+            {isOneTimePayment ? `${programName} - ${programDuration}` : 'Select the payment option that works best for you'}
           </p>
         </div>
 
@@ -141,33 +141,33 @@ const StripePaymentPage = () => {
         )}
 
         {/* Payment Plans */}
-        {isTajweed ? (
-          /* Tajweed: Single one-time payment */
+        {isOneTimePayment ? (
+          /* One-time payment (QARI, Tajweed) */
           <div className="max-w-md mx-auto mb-8">
-            <Card className="hover:shadow-xl transition-shadow border-2 border-purple-500">
+            <Card className="hover:shadow-xl transition-shadow border-2 border-emerald-500">
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-100 mb-4">
-                  <DollarSign className="h-6 w-6 text-purple-600" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
+                  <DollarSign className="h-6 w-6 text-emerald-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{programConfig?.shortName || 'Tajweed'} Program</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{programConfig?.shortName || programConfig?.name} Program</h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-purple-600">${programConfig?.pricing.oneTime || 120}</span>
+                  <span className="text-4xl font-bold text-emerald-600">${programConfig?.pricing.oneTime || 300}</span>
                   <span className="text-gray-600"> one-time</span>
                 </div>
                 <p className="text-gray-600 mb-6">
-                  Complete {programConfig?.duration.display || '6-month'} {programConfig?.name || 'Tajweed Mastery'} Course
+                  Complete {programConfig?.duration.display || '1-year'} {programConfig?.name || 'Program'}
                 </p>
                 <ul className="text-left space-y-2 mb-6">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700">One-time payment for full course</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{programConfig?.duration.display || '6 months'} of intensive Tajweed training</span>
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700">{programConfig?.duration.display || '1 year'} of comprehensive training</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700">Certificate upon completion</span>
                   </li>
                 </ul>
@@ -175,7 +175,7 @@ const StripePaymentPage = () => {
                   onClick={() => handlePayment('oneTime')}
                   disabled={loading}
                   fullWidth
-                  className="bg-purple-600 hover:bg-purple-700"
+                  className="bg-emerald-600 hover:bg-emerald-700"
                 >
                   {loading ? (
                     <>
@@ -185,7 +185,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Pay ${programConfig?.pricing.oneTime || 120}
+                      Pay ${programConfig?.pricing.oneTime || 300} Now
                     </>
                   )}
                 </Button>
