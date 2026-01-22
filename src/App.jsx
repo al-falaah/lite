@@ -26,6 +26,9 @@ import StoreOrderConfirmation from './pages/StoreOrderConfirmation';
 import StoreAdmin from './pages/StoreAdmin';
 import AdminRoles from './pages/AdminRoles';
 import DirectorDashboard from './pages/DirectorDashboard';
+import ResearchAdmin from './pages/ResearchAdmin';
+import Resources from './pages/Resources';
+import LessonNotes from './pages/LessonNotes';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -60,6 +63,8 @@ function App() {
             <Route path="/teacher" element={<TeacherPortal />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/resources/:courseSlug" element={<LessonNotes />} />
             <Route path="/store" element={<StorePage />} />
             <Route path="/store/order" element={<StoreOrderPage />} />
             <Route path="/store/order-confirmation" element={<StoreOrderConfirmation />} />
@@ -120,6 +125,16 @@ function App() {
               element={
                 <RoleRoute allowedRoles={['director']}>
                   <AdminRoles />
+                </RoleRoute>
+              }
+            />
+
+            {/* Research Admin Route - director only */}
+            <Route
+              path="/research/admin"
+              element={
+                <RoleRoute allowedRoles={['director']}>
+                  <ResearchAdmin />
                 </RoleRoute>
               }
             />

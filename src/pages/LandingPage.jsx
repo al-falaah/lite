@@ -206,6 +206,15 @@ const LandingPage = () => {
                     Blog
                   </button>
                 </Link>
+                <Link to="/resources">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
+                  }`}>
+                    Resources
+                  </button>
+                </Link>
                 <Link to="/store">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled

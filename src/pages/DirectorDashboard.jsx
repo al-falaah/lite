@@ -416,6 +416,14 @@ const DirectorDashboard = () => {
       iconColor: 'text-orange-600'
     },
     {
+      title: 'Research Administration',
+      description: 'Manage lesson notes and study materials',
+      icon: FileText,
+      href: '/research/admin',
+      iconBg: 'bg-teal-50',
+      iconColor: 'text-teal-600'
+    },
+    {
       title: 'Store Administration',
       description: 'Manage products and orders',
       icon: ShoppingBag,
