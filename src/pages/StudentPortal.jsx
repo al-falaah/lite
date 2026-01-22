@@ -436,7 +436,7 @@ const StudentPortal = () => {
               <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <img
                   src="/favicon.svg"
-                  alt="Al-Falaah Logo"
+                  alt="The FastTrack Madrasah"
                   className="h-8 w-8"
                 />
                 <div className="flex flex-col leading-none -space-y-1">
@@ -545,7 +545,7 @@ const StudentPortal = () => {
             <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity">
               <img
                 src="/favicon.svg"
-                alt="Al-Falaah Logo"
+                alt="The FastTrack Madrasah"
                 className="h-6 w-6 sm:h-8 sm:w-8"
               />
               <div className="flex flex-col leading-none -space-y-1">

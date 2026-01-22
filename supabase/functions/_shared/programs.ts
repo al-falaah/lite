@@ -6,6 +6,7 @@
  */
 
 export const PROGRAM_IDS = {
+  QARI: 'qari',
   TAJWEED: 'tajweed',
   ESSENTIALS: 'essentials',
 } as const;
@@ -39,6 +40,24 @@ interface ProgramConfig {
 }
 
 export const PROGRAMS: Record<ProgramId, ProgramConfig> = {
+  [PROGRAM_IDS.QARI]: {
+    id: 'qari',
+    name: "Qur'an & Arabic Reading Literacy",
+    shortName: 'QARI',
+    description: "1-Year Qur'an & Arabic Reading Literacy Course",
+    duration: {
+      months: 12,
+      weeks: 52,
+      years: 1,
+    },
+    pricing: {
+      type: 'one-time',
+      oneTime: 300,
+      oneTimeCents: 30000,
+      currency: 'NZD',
+    },
+  },
+
   [PROGRAM_IDS.TAJWEED]: {
     id: 'tajweed',
     name: 'Tajweed Mastery Program',
@@ -51,8 +70,8 @@ export const PROGRAMS: Record<ProgramId, ProgramConfig> = {
     },
     pricing: {
       type: 'one-time',
-      oneTime: 120,
-      oneTimeCents: 12000,
+      oneTime: 150,
+      oneTimeCents: 15000,
       currency: 'NZD',
     },
   },
@@ -60,7 +79,7 @@ export const PROGRAMS: Record<ProgramId, ProgramConfig> = {
   [PROGRAM_IDS.ESSENTIALS]: {
     id: 'essentials',
     name: 'Essential Arabic & Islamic Studies',
-    shortName: 'EAIS',
+    shortName: 'EASI',
     description: '2-Year Essential Islamic Studies Course',
     duration: {
       months: 24,

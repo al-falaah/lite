@@ -240,7 +240,7 @@ const PaymentUploadPage = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2">
               <BookOpen className="h-7 w-7 text-emerald-600" />
-              <span className="text-xl font-bold text-emerald-600">Al-Falaah</span>
+              <span className="text-xl font-bold text-emerald-600">The FastTrack Madrasah</span>
             </Link>
             <Link to="/">
               <Button variant="secondary" size="sm">Back to Home</Button>

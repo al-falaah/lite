@@ -536,7 +536,7 @@ const BlogAdmin = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
         <div className="text-center">
-          <img src="/favicon.svg" alt="Al-Falaah Logo" className="h-12 w-12 mx-auto mb-4" />
+          <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-12 w-12 mx-auto mb-4" />
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="text-sm text-gray-500 mt-4">Loading...</p>
         </div>
@@ -561,7 +561,7 @@ const BlogAdmin = () => {
         <Card className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity mb-4">
-              <img src="/favicon.svg" alt="Al-Falaah Logo" className="h-10 w-10" />
+              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10" />
               <div className="flex flex-col leading-none -space-y-1">
                 <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
                 <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
@@ -659,7 +659,7 @@ const BlogAdmin = () => {
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
                 src="/favicon.svg"
-                alt="Al-Falaah Logo"
+                alt="The FastTrack Madrasah"
                 className="h-8 w-8"
               />
               <div className="flex flex-col leading-none -space-y-1">

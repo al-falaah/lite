@@ -24,7 +24,7 @@ const RoleRoute = ({ children, allowedRoles = [] }) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
         <div className="text-center">
-          <img src="/favicon.svg" alt="Al-Falaah Logo" className="h-12 w-12 mx-auto mb-4" />
+          <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-12 w-12 mx-auto mb-4" />
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Checking authentication...</p>
         </div>

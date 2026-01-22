@@ -15,7 +15,7 @@ const NotFoundPage = () => {
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="/favicon.svg"
-                alt="Al-Falaah Logo"
+                alt="The FastTrack Madrasah"
                 className="h-8 w-8 md:h-10 md:w-10"
               />
               <div className="flex flex-col">

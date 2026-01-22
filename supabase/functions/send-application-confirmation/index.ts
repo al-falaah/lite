@@ -9,9 +9,14 @@ function generateEmailHTML(applicantData: any): string {
   const { full_name, email, program } = applicantData;
 
   // Determine program-specific details
-  const isTajweed = program === 'tajweed';
-  const programName = isTajweed ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies Program';
-  const programDuration = isTajweed ? '6 months' : '2 years';
+  const programDetails: Record<string, { name: string; duration: string }> = {
+    tajweed: { name: 'Tajweed Mastery Program (TMP)', duration: '6 months' },
+    essentials: { name: 'Essential Arabic & Islamic Studies (EASI)', duration: '2 years' },
+    qari: { name: 'Quranic Arabic & Recitation Intensive (QARI)', duration: '1 year' },
+  };
+  const details = programDetails[program] || { name: program, duration: 'TBD' };
+  const programName = details.name;
+  const programDuration = details.duration;
 
   return `
     <!DOCTYPE html>

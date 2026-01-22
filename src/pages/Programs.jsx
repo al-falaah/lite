@@ -7,7 +7,8 @@ import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 const Programs = () => {
   const [expandedProgram, setExpandedProgram] = useState(null);
 
-  // Get program configs
+  // Get program configs (ordered: QARI Track 1, TMP Track 2, EASI Track 3)
+  const qari = PROGRAMS[PROGRAM_IDS.QARI];
   const tajweed = PROGRAMS[PROGRAM_IDS.TAJWEED];
   const essentials = PROGRAMS[PROGRAM_IDS.ESSENTIALS];
 
@@ -17,7 +18,7 @@ const Programs = () => {
   return (
     <>
       <Helmet>
-        <title>Programs - Al-Falāḥ Institute</title>
+        <title>Programs - The FastTrack Madrasah</title>
         <meta
           name="description"
           content="Discover our Tajweed Mastery Program and Essential Arabic & Islamic Studies. Expert-led Islamic education programs designed to transform your understanding of the Qur'an and Arabic language."
@@ -59,11 +60,16 @@ const Programs = () => {
           </div>
 
           {/* Quick Comparison Table */}
-          <div className="mb-12 sm:mb-16 max-w-5xl mx-auto">
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-              {/* Table Header */}
-              <div className="grid grid-cols-3 bg-gray-50 border-b border-gray-200">
+          <div className="mb-12 sm:mb-16 max-w-6xl mx-auto">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden overflow-x-auto">
+              {/* Table Header - Order: QARI, TMP, EASI */}
+              <div className="grid grid-cols-4 bg-gray-50 border-b border-gray-200 min-w-[600px]">
                 <div className="p-4 sm:p-5"></div>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-200">
+                  <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
+                    QARI
+                  </div>
+                </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-200">
                   <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
                     TMP
@@ -71,17 +77,23 @@ const Programs = () => {
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-200">
                   <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs sm:text-sm font-medium">
-                    EAIS
+                    EASI
                   </div>
                 </div>
               </div>
 
               {/* Duration Row */}
-              <div className="grid grid-cols-3 border-b border-gray-100">
+              <div className="grid grid-cols-4 border-b border-gray-100 min-w-[600px]">
                 <div className="p-4 sm:p-5 flex items-center">
                   <div>
                     <p className="text-sm sm:text-base font-semibold text-gray-900">Duration</p>
                     <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Time commitment</p>
+                  </div>
+                </div>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                  <div>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{qari.duration.display}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{qari.duration.displayWeeks}</p>
                   </div>
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
@@ -99,11 +111,17 @@ const Programs = () => {
               </div>
 
               {/* Investment Row */}
-              <div className="grid grid-cols-3 border-b border-gray-100">
+              <div className="grid grid-cols-4 border-b border-gray-100 min-w-[600px]">
                 <div className="p-4 sm:p-5 flex items-center">
                   <div>
                     <p className="text-sm sm:text-base font-semibold text-gray-900">Investment</p>
                     <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Program fee</p>
+                  </div>
+                </div>
+                <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
+                  <div>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{qari.pricing.displayPrice}</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">{qari.pricing.displayNote}</p>
                   </div>
                 </div>
                 <div className="p-4 sm:p-5 text-center border-l border-gray-100 flex items-center justify-center">
@@ -121,12 +139,15 @@ const Programs = () => {
               </div>
 
               {/* Focus Row */}
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-4 min-w-[600px]">
                 <div className="p-4 sm:p-5 flex items-center">
                   <div>
                     <p className="text-sm sm:text-base font-semibold text-gray-900">Focus</p>
                     <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Core curriculum</p>
                   </div>
+                </div>
+                <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-xs sm:text-sm text-gray-700 text-center">{qari.focus}</p>
                 </div>
                 <div className="p-4 sm:p-5 border-l border-gray-100 flex items-center justify-center">
                   <p className="text-xs sm:text-sm text-gray-700 text-center">Tajweed & Quranic Sciences</p>
@@ -138,14 +159,109 @@ const Programs = () => {
             </div>
           </div>
 
-          {/* Program Cards Grid */}
-          <div className="grid lg:grid-cols-2 gap-6">
-            {/* TMP Program Card */}
+          {/* Program Cards Grid - Order: QARI (Track 1), TMP (Track 2), EASI (Track 3) */}
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {/* QARI Program Card - Track 1 */}
             <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
               {/* Card Header */}
               <div className="px-6 pt-6 pb-5 border-b border-gray-100">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 1</span>
+                  <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{qari.duration.display}</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
+                  {qari.name}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                  {qari.arabicName}
+                </p>
+                <p className="text-xs text-gray-500 italic">
+                  {qari.transliteration}
+                </p>
+              </div>
+
+              {/* Card Body */}
+              <div className="px-6 py-5">
+                {/* Description */}
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  {qari.description}
+                </p>
+                <div className="bg-gray-50 border border-gray-200 rounded p-3 mb-5">
+                  <p className="text-xs text-gray-700 leading-relaxed">
+                    <span className="font-medium text-gray-900">Our Edge:</span> {qari.ourEdge}
+                  </p>
+                </div>
+
+                {/* Key Stats */}
+                <div className="flex items-center justify-between py-3 border-t border-gray-100">
+                  <div>
+                    <p className="text-xs text-gray-500">Duration</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{qari.duration.display} · {qari.duration.displayWeeks}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Investment</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{qari.pricing.displayPrice}</p>
+                  </div>
+                </div>
+
+                {/* Expand Button */}
+                <button
+                  onClick={() => setExpandedProgram(expandedProgram === 'qari' ? null : 'qari')}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-gray-600 hover:text-gray-900 transition-colors border-t border-gray-100"
+                >
+                  <span>{expandedProgram === 'qari' ? 'Hide curriculum details' : 'View curriculum details'}</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${expandedProgram === 'qari' ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Collapsible Details */}
+                {expandedProgram === 'qari' && (
+                  <div className="border-t border-gray-200 pt-6 space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Program Objectives</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        {qari.objectives.map((obj, idx) => (
+                          <li key={idx}><span className="font-semibold">{obj.title}:</span> {obj.description}</li>
+                        ))}
+                        <li><span className="font-semibold">Primary Text:</span> <span style={{fontFamily: 'Traditional Arabic, serif'}}>{qari.primaryText.arabic}</span> | <span className="italic font-serif tracking-wide">{qari.primaryText.transliteration}</span></li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Schedule (Weekly)</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li><span className="font-semibold">Session 1 ({qari.schedule.session1.duration}):</span> {qari.schedule.session1.description}</li>
+                        <li><span className="font-semibold">Session 2 ({qari.schedule.session2.duration}):</span> {qari.schedule.session2.description}</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Prerequisites</h4>
+                      <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
+                        <li><span className="font-semibold">Age:</span> {qari.prerequisites.age}</li>
+                        <li><span className="font-semibold">Proficiency:</span> {qari.prerequisites.proficiency}</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* CTA Button */}
+                <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                  <Link to="/apply">
+                    <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                      <span>Apply for QARI</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* TMP Program Card - Track 2 */}
+            <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
+              {/* Card Header */}
+              <div className="px-6 pt-6 pb-5 border-b border-gray-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 2</span>
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">6 months</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
@@ -234,12 +350,12 @@ const Programs = () => {
               </div>
             </div>
 
-            {/* EAIS Program Card */}
+            {/* EASI Program Card - Track 3 */}
             <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
               {/* Card Header */}
               <div className="px-6 pt-6 pb-5 border-b border-gray-100">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 2</span>
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 3</span>
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">2 years</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
@@ -320,13 +436,14 @@ const Programs = () => {
                 <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                   <Link to="/apply">
                     <button className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
-                      <span>Apply for EAIS</span>
+                      <span>Apply for EASI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* Bottom CTA Section */}
@@ -342,113 +459,129 @@ const Programs = () => {
             </Link>
           </div>
 
-          {/* Recommended Learning Path Visual */}
+          {/* Find Your Path - Clean Selection Guide */}
           <div className="mt-16 max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg p-8 sm:p-10 border border-gray-200">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium mb-4">
-                  <CheckCircle className="h-4 w-4" />
-                  Recommended Path
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">
-                  The Strategic Success Path
-                </h3>
-                <p className="text-base text-gray-600">
-                  For optimal results, we recommend this proven progression
-                </p>
-              </div>
+            <div className="text-center mb-10">
+              <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-3">
+                Find Your Starting Point
+              </h3>
+              <p className="text-base text-gray-600 max-w-xl mx-auto">
+                Select the option that best describes your current level
+              </p>
+            </div>
 
-              {/* Desktop: Horizontal Flow */}
-              <div className="hidden md:flex items-center justify-center gap-6 mb-8">
-                {/* Step 1: TMP */}
-                <div className="flex-1 max-w-xs">
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 1</span>
-                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
-                        6 months
-                      </span>
+            {/* Selection Cards */}
+            <div className="space-y-4">
+              {/* Option 1: Absolute Beginner */}
+              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-emerald-300 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="w-8 h-8 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center text-sm font-semibold">1</span>
+                      <h4 className="font-semibold text-gray-900">I cannot read Arabic script</h4>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">
-                      Tajweed Mastery Program
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Build a strong foundation with the Qur'an through precision recitation
+                    <p className="text-sm text-gray-600 ml-11">
+                      New to Arabic? Start here to learn the alphabet and develop fluent reading skills.
                     </p>
                   </div>
+                  <div className="ml-11 sm:ml-0">
+                    <Link to="/apply">
+                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white text-sm font-medium rounded transition-colors">
+                        Start with {qari.shortName}
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </Link>
+                  </div>
                 </div>
+              </div>
 
-                {/* Arrow */}
-                <ArrowRight className="h-6 w-6 text-gray-400 flex-shrink-0" />
-
-                {/* Step 2: EAIS */}
-                <div className="flex-1 max-w-xs">
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 2</span>
-                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
-                        2 years
-                      </span>
+              {/* Option 2: Can Read, No Tajweed */}
+              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-emerald-300 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="w-8 h-8 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center text-sm font-semibold">2</span>
+                      <h4 className="font-semibold text-gray-900">I can read but lack Tajweed knowledge</h4>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">
-                      Essential Arabic & Islamic Studies
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Master Arabic linguistics and Islamic sciences for direct comprehension
+                    <p className="text-sm text-gray-600 ml-11">
+                      You can read the Quran but want to perfect your recitation with proper rules.
                     </p>
                   </div>
+                  <div className="ml-11 sm:ml-0">
+                    <Link to="/apply">
+                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white text-sm font-medium rounded transition-colors">
+                        Start with {tajweed.shortName}
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
-              {/* Mobile: Vertical Flow */}
-              <div className="md:hidden space-y-4 mb-8">
-                {/* Step 1: TMP */}
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 1</span>
-                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
-                      6 months
-                    </span>
+              {/* Option 3: Has Tajweed */}
+              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-emerald-300 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="w-8 h-8 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center text-sm font-semibold">3</span>
+                      <h4 className="font-semibold text-gray-900">I have Tajweed and want to study Arabic & Islamic sciences</h4>
+                    </div>
+                    <p className="text-sm text-gray-600 ml-11">
+                      Ready to master Arabic grammar, morphology, and foundational Islamic knowledge.
+                    </p>
                   </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">
-                    Tajweed Mastery Program
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    Build a strong foundation with the Qur'an through precision recitation
-                  </p>
-                </div>
-
-                {/* Arrow Down */}
-                <div className="flex justify-center">
-                  <div className="h-8 w-0.5 bg-gray-300"></div>
-                </div>
-
-                {/* Step 2: EAIS */}
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Step 2</span>
-                    <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
-                      2 years
-                    </span>
+                  <div className="ml-11 sm:ml-0">
+                    <Link to="/apply">
+                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white text-sm font-medium rounded transition-colors">
+                        Start with {essentials.shortName}
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </Link>
                   </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">
-                    Essential Arabic & Islamic Studies
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    Master Arabic linguistics and Islamic sciences for direct comprehension
-                  </p>
                 </div>
               </div>
+            </div>
 
-              {/* Why This Path */}
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-gray-600" />
-                  Why This Progression Works
-                </h4>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Starting with TMP establishes your spiritual connection to the Qur'an through perfected recitation. This 6-month foundation primes your mind and heart for the intensive 2-year EAIS journey, where you'll gain the linguistic tools to engage directly with Revelation. This sequential approach maximizes retention and prevents cognitive overload.
-                </p>
+            {/* Learning Path */}
+            <div className="mt-10 bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <h4 className="font-semibold text-gray-900 mb-4 text-center">The Complete Learning Path</h4>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-0">
+                <div className="text-center px-4">
+                  <div className="text-lg font-bold text-gray-900">{qari.shortName}</div>
+                  <div className="text-xs text-gray-500">{qari.duration.display}</div>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400 rotate-90 sm:rotate-0" />
+                <div className="text-center px-4">
+                  <div className="text-lg font-bold text-gray-900">{tajweed.shortName}</div>
+                  <div className="text-xs text-gray-500">{tajweed.duration.display}</div>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400 rotate-90 sm:rotate-0" />
+                <div className="text-center px-4">
+                  <div className="text-lg font-bold text-gray-900">{essentials.shortName}</div>
+                  <div className="text-xs text-gray-500">{essentials.duration.display}</div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 text-center mt-4">
+                Join at any point based on your level. Our admissions process will confirm the right track for you.
+              </p>
+            </div>
+
+            {/* Contact */}
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600 mb-3">Need help deciding?</p>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5">
+                  <Mail className="h-4 w-4" />
+                  salam@tftmadrasah.nz
+                </a>
+                <a href="tel:+64272131486" className="text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5">
+                  <Phone className="h-4 w-4" />
+                  +64 27 213 1486
+                </a>
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5">
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp
+                </a>
               </div>
             </div>
           </div>
@@ -464,7 +597,7 @@ const Programs = () => {
               <div className="flex items-center gap-2 mb-4">
                 <img
                   src="/favicon-white.svg"
-                  alt="Al-Falaah Logo"
+                  alt="The FastTrack Madrasah"
                   className="h-8 w-8"
                 />
                 <div>

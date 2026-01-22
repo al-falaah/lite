@@ -41,9 +41,12 @@ serve(async (req) => {
     }
 
     // Determine program name
-    const programName = application.program === 'tajweed'
-      ? 'Tajweed Program'
-      : 'Essential Arabic & Islamic Studies Program';
+    const programNames: Record<string, string> = {
+      tajweed: 'Tajweed Mastery Program (TMP)',
+      essentials: 'Essential Arabic & Islamic Studies (EASI)',
+      qari: 'Quranic Arabic & Recitation Intensive (QARI)',
+    };
+    const programName = programNames[application.program] || application.program;
 
     // Send email to admin
     const emailRes = await fetch('https://api.resend.com/emails', {

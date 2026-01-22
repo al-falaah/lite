@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ChevronLeft, ChevronRight, CheckCircle, BookOpen, Clock, Globe } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle, Clock, Globe } from 'lucide-react';
 import TimezoneSelect from 'react-timezone-select';
 import { formatInTimeZone, toDate } from 'date-fns-tz';
 import { applications, supabase } from '../services/supabase';
@@ -296,11 +296,26 @@ const ApplicationPage = () => {
         status: 'pending'
       };
 
-      console.log('[ApplicationPage] Submitting application data:', applicationData);
+      // Add timeout to prevent infinite hang on slow/blocked connections
+      const timeoutMs = 30000;
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out. Please check your connection and try again.')), timeoutMs)
+      );
 
-      const { data: newApplication, error: applicationError } = await applications.create(applicationData);
+      let result;
+      try {
+        result = await Promise.race([
+          applications.create(applicationData),
+          timeoutPromise
+        ]);
+      } catch (timeoutError) {
+        console.error('[ApplicationPage] Request timed out:', timeoutError);
+        toast.error('Request timed out. Please check your connection and try again.');
+        setLoading(false);
+        return;
+      }
 
-      console.log('[ApplicationPage] Response received:', { data: newApplication, error: applicationError });
+      const { data: newApplication, error: applicationError } = result;
 
       if (applicationError) {
         const errorMessage = applicationError.message || applicationError.error_description || 'Unknown error';
@@ -412,105 +427,90 @@ const ApplicationPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <Link to="/">
-              <button className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 rounded-lg hover:bg-gray-50 transition-colors">
-                <ChevronLeft className="h-4 w-4" />
-                <span>Back to Home</span>
-              </button>
-            </Link>
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img
-                src="/favicon.svg"
-                alt="Al-Falaah Logo"
-                className="h-8 w-8"
-              />
-              <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-sm sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-sm sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
-                {/* <span className="text-xs text-gray-500 font-arabic">الفلاح</span> */}
-              </div>
-            </Link>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <Link to="/" className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1">
+            <ChevronLeft className="h-4 w-4" />
+            Back
+          </Link>
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
+            <span className="text-sm font-semibold text-gray-900 hidden sm:inline">The FastTrack Madrasah</span>
+          </Link>
+          <div className="text-sm text-gray-500">
+            Step {currentStep} of {steps.length}
           </div>
-          <div className="text-center px-4">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Student Application</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">The FastTrack Madrasah Programs</p>
-            {formData.program && PROGRAMS[formData.program] && (
-              <div className="mt-4 inline-flex items-center px-3 sm:px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-lg max-w-full">
-                <div className="text-xs sm:text-sm text-emerald-900 text-center">
-                  {formData.program === PROGRAM_IDS.TAJWEED ? (
-                    <>
-                      <span className="font-semibold">{PROGRAMS[formData.program].name}</span> • {PROGRAMS[formData.program].duration.display} • {PROGRAMS[formData.program].pricing.displayPrice}
-                    </>
-                  ) : (
-                    <>
-                      <span className="font-semibold block sm:inline">{PROGRAMS[formData.program].name}</span>
-                      <span className="hidden sm:inline"> • </span>
-                      <span className="block sm:inline">{PROGRAMS[formData.program].duration.display} • {PROGRAMS[formData.program].pricing.displayPriceMonthly}-{PROGRAMS[formData.program].pricing.displayPriceAnnual}</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
+        </div>
+      </header>
+
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-emerald-600 transition-all duration-300"
+              style={{ width: `${(currentStep / steps.length) * 100}%` }}
+            />
           </div>
         </div>
 
-        {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step.number} className="flex items-center flex-1">
-                <div className="flex flex-col items-center flex-1">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-                      currentStep >= step.number
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-gray-200 text-gray-600'
-                    }`}
-                  >
-                    {currentStep > step.number ? (
-                      <CheckCircle className="h-6 w-6" />
-                    ) : (
-                      step.number
-                    )}
-                  </div>
-                  <span className="text-xs mt-2 text-center hidden sm:block">{step.title}</span>
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`h-1 flex-1 ${
-                      currentStep > step.number ? 'bg-emerald-600' : 'bg-gray-200'
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        <form onSubmit={handleSubmit}>
+          {/* Step 1: Personal Information */}
+          {currentStep === 1 && (
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1">Select your program</h1>
+              <p className="text-sm text-gray-500 mb-6">Choose the track that matches your current level.</p>
 
-        <Card>
-          <form onSubmit={handleSubmit}>
-            {/* Step 1: Personal Information */}
-            {currentStep === 1 && (
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Program Selection & Personal Information</h2>
-
-                {/* Program Selection */}
+              {/* Program Selection - Order: QARI (Track 1), TMP (Track 2), EASI (Track 3) */}
                 <div className="mb-8">
                   <label className="block text-sm font-medium text-gray-700 mb-4">
                     Select Your Track <span className="text-red-500">*</span>
                   </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {/* Tajweed Track */}
+                  <div className="space-y-3">
+                    {/* QARI Track - Track 1 */}
                     <label
-                      className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                      className={`relative flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
+                        formData.program === PROGRAM_IDS.QARI
+                          ? 'border-emerald-600 bg-emerald-50'
+                          : 'border-gray-200 hover:border-emerald-300 bg-white'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="program"
+                        value={PROGRAM_IDS.QARI}
+                        checked={formData.program === PROGRAM_IDS.QARI}
+                        onChange={handleChange}
+                        className="sr-only"
+                      />
+                      <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                        formData.program === PROGRAM_IDS.QARI
+                          ? 'border-emerald-600 bg-emerald-600'
+                          : 'border-gray-300'
+                      }`}>
+                        {formData.program === PROGRAM_IDS.QARI && (
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        )}
+                      </div>
+                      <div className="ml-4 flex-1 min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-x-2">
+                          <h3 className="font-semibold text-gray-900">{PROGRAMS[PROGRAM_IDS.QARI].shortName}</h3>
+                          <span className="text-sm text-gray-500">{PROGRAMS[PROGRAM_IDS.QARI].name}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-0.5">
+                          {PROGRAMS[PROGRAM_IDS.QARI].duration.display} · {PROGRAMS[PROGRAM_IDS.QARI].pricing.displayPrice}
+                        </p>
+                      </div>
+                    </label>
+
+                    {/* Tajweed Track - Track 2 */}
+                    <label
+                      className={`relative flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
                         formData.program === PROGRAM_IDS.TAJWEED
-                          ? 'border-emerald-600 bg-emerald-50 shadow-md'
-                          : 'border-gray-300 hover:border-emerald-300 bg-white'
+                          ? 'border-emerald-600 bg-emerald-50'
+                          : 'border-gray-200 hover:border-emerald-300 bg-white'
                       }`}
                     >
                       <input
@@ -521,49 +521,32 @@ const ApplicationPage = () => {
                         onChange={handleChange}
                         className="sr-only"
                       />
-                      <div className="flex items-start mb-3">
-                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === PROGRAM_IDS.TAJWEED ? 'text-emerald-600' : 'text-gray-500'}`} />
-                        <div className="flex-1 min-w-0">
-                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === PROGRAM_IDS.TAJWEED ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            {PROGRAMS[PROGRAM_IDS.TAJWEED].name}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mb-3">Build a strong foundation with the Qur'an through precision recitation</p>
-                        </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                        formData.program === PROGRAM_IDS.TAJWEED
+                          ? 'border-emerald-600 bg-emerald-600'
+                          : 'border-gray-300'
+                      }`}>
+                        {formData.program === PROGRAM_IDS.TAJWEED && (
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        )}
                       </div>
-                      <div className="space-y-2 text-xs sm:text-sm">
-                        <div className="flex items-center text-gray-700">
-                          <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span>Duration: {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} ({PROGRAMS[PROGRAM_IDS.TAJWEED].duration.displayWeeks})</span>
+                      <div className="ml-4 flex-1 min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-x-2">
+                          <h3 className="font-semibold text-gray-900">{PROGRAMS[PROGRAM_IDS.TAJWEED].shortName}</h3>
+                          <span className="text-sm text-gray-500">{PROGRAMS[PROGRAM_IDS.TAJWEED].name}</span>
                         </div>
-                        <div className="flex items-start text-gray-700">
-                          <span className="mr-2 flex-shrink-0">💰</span>
-                          <span className="break-words">One-time payment: {PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.displayPrice}</span>
-                        </div>
-                        <div className="flex items-center text-gray-700">
-                          <span className="mr-2 flex-shrink-0">📚</span>
-                          <span>Personalized one-on-one learning</span>
-                        </div>
-                        <div className="flex items-start text-gray-700">
-                          <span className="mr-2 flex-shrink-0">⏱️</span>
-                          <span className="break-words">2 sessions/week ({PROGRAMS[PROGRAM_IDS.TAJWEED].schedule.session1.duration.toLowerCase()} + {PROGRAMS[PROGRAM_IDS.TAJWEED].schedule.session2.duration})</span>
-                        </div>
-                        <div className="mt-3 pt-3 border-t border-gray-200">
-                          <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
-                          <p className="text-xs sm:text-sm font-bold text-emerald-700">{PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.displayPrice} (one-time)</p>
-                        </div>
+                        <p className="text-sm text-gray-600 mt-0.5">
+                          {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} · {PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.displayPrice}
+                        </p>
                       </div>
-                      {formData.program === PROGRAM_IDS.TAJWEED && (
-                        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
-                          <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
-                        </div>
-                      )}
                     </label>
-                     {/* Essential Arabic & Islamic Studies Track */}
+
+                    {/* Essential Arabic & Islamic Studies Track - Track 3 */}
                     <label
-                      className={`relative flex flex-col p-4 sm:p-6 border-2 rounded-lg cursor-pointer transition-all ${
+                      className={`relative flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
                         formData.program === PROGRAM_IDS.ESSENTIALS
-                          ? 'border-emerald-600 bg-emerald-50 shadow-md'
-                          : 'border-gray-300 hover:border-emerald-300 bg-white'
+                          ? 'border-emerald-600 bg-emerald-50'
+                          : 'border-gray-200 hover:border-emerald-300 bg-white'
                       }`}
                     >
                       <input
@@ -574,48 +557,34 @@ const ApplicationPage = () => {
                         onChange={handleChange}
                         className="sr-only"
                       />
-                      <div className="flex items-start mb-3">
-                        <BookOpen className={`h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 mt-1 flex-shrink-0 ${formData.program === PROGRAM_IDS.ESSENTIALS ? 'text-emerald-600' : 'text-gray-500'}`} />
-                        <div className="flex-1 min-w-0">
-                          <h3 className={`text-base sm:text-lg font-bold mb-1 break-words ${formData.program === PROGRAM_IDS.ESSENTIALS ? 'text-emerald-900' : 'text-gray-900'}`}>
-                            {PROGRAMS[PROGRAM_IDS.ESSENTIALS].name}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mb-3">Master Arabic linguistics and Islamic sciences for direct comprehension</p>
-                        </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
+                        formData.program === PROGRAM_IDS.ESSENTIALS
+                          ? 'border-emerald-600 bg-emerald-600'
+                          : 'border-gray-300'
+                      }`}>
+                        {formData.program === PROGRAM_IDS.ESSENTIALS && (
+                          <div className="w-2 h-2 rounded-full bg-white" />
+                        )}
                       </div>
-                      <div className="space-y-2 text-xs sm:text-sm">
-                        <div className="flex items-center text-gray-700">
-                          <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
-                          <span>Duration: {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} ({PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.months} months)</span>
+                      <div className="ml-4 flex-1 min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-x-2">
+                          <h3 className="font-semibold text-gray-900">{PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}</h3>
+                          <span className="text-sm text-gray-500">{PROGRAMS[PROGRAM_IDS.ESSENTIALS].name}</span>
                         </div>
-                        <div className="flex items-start text-gray-700">
-                          <span className="mr-2 flex-shrink-0">💰</span>
-                          <span className="break-words">Monthly: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly} NZD/month or Annual: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual} NZD/year</span>
-                        </div>
-                        <div className="flex items-center text-gray-700">
-                          <span className="mr-2 flex-shrink-0">📚</span>
-                          <span>Personalized one-on-one learning</span>
-                        </div>
-                        <div className="flex items-start text-gray-700">
-                          <span className="mr-2 flex-shrink-0">⏱️</span>
-                          <span className="break-words">2 sessions/week ({PROGRAMS[PROGRAM_IDS.ESSENTIALS].schedule.session1.duration.toLowerCase()} + {PROGRAMS[PROGRAM_IDS.ESSENTIALS].schedule.session2.duration})</span>
-                        </div>
-                        <div className="mt-3 pt-3 border-t border-gray-200">
-                          <p className="text-xs text-gray-600 font-medium">Total Cost:</p>
-                          <p className="text-xs sm:text-sm font-bold text-emerald-700">Monthly: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly * PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.months} | Annual: ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual * PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.years}</p>
-                        </div>
+                        <p className="text-sm text-gray-600 mt-0.5">
+                          {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} · ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly}/month or ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual}/year
+                        </p>
                       </div>
-                      {formData.program === PROGRAM_IDS.ESSENTIALS && (
-                        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
-                          <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
-                        </div>
-                      )}
                     </label>
                   </div>
+                  <p className="text-xs text-gray-500 mt-3">
+                    <a href="/programs" target="_blank" className="text-emerald-600 hover:text-emerald-700 underline">View program details</a> to learn more about each track.
+                  </p>
                 </div>
 
-                <div className="border-t pt-6 mt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Information</h3>
+                <div className="mt-8">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-1">Your details</h2>
+                  <p className="text-sm text-gray-500 mb-4">We'll use this to contact you about your application.</p>
                 </div>
 
                 <Input
@@ -731,10 +700,11 @@ const ApplicationPage = () => {
               </div>
             )}
 
-            {/* Step 2: Background & Motivation */}
-            {currentStep === 2 && (
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Background & Motivation</h2>
+          {/* Step 2: Background & Motivation */}
+          {currentStep === 2 && (
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1">Your background</h1>
+              <p className="text-sm text-gray-500 mb-6">Tell us about your learning journey so far.</p>
 
                 <Textarea
                   label="Tell us about your Islamic background (optional)"
@@ -747,7 +717,7 @@ const ApplicationPage = () => {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Can you read the Quran? <span className="text-red-500">*</span>
+                    Can you read the Qur'an? <span className="text-red-500">*</span>
                   </label>
                   <div className="space-y-2">
                     <label className="flex items-center">
@@ -855,13 +825,11 @@ const ApplicationPage = () => {
               </div>
             )}
 
-            {/* Step 3: Class Availability */}
-            {currentStep === 3 && (
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Preferred Class Timings</h2>
-                <p className="text-gray-600 mb-6">
-                  Help us schedule your personalized classes by indicating your preferred days and times.
-                </p>
+          {/* Step 3: Class Availability */}
+          {currentStep === 3 && (
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1">Class schedule</h1>
+              <p className="text-sm text-gray-500 mb-6">When are you available for classes?</p>
 
                 {/* Timezone Selection - Professional Component */}
                 <div className="mb-6">
@@ -945,61 +913,58 @@ const ApplicationPage = () => {
 
                 {/* Preferred Times */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Preferred Time Slots <span className="text-red-500">*</span>
                   </label>
-                  <p className="text-sm text-gray-500 mb-3">
-                    Select all time slots that work for you
-                    {formData.timezone !== 'Pacific/Auckland' && ' (times shown in your timezone and NZ time)'}
+                  <p className="text-xs text-gray-500 mb-3">
+                    Select all that apply{formData.timezone !== 'Pacific/Auckland' && '. Times shown in your timezone.'}
                   </p>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="space-y-2">
                     {[
-                      { value: 'Morning', nzStart: 6, nzEnd: 12, label: 'Morning', emoji: '🌅' },
-                      { value: 'Afternoon', nzStart: 12, nzEnd: 17, label: 'Afternoon', emoji: '☀️' },
-                      { value: 'Evening', nzStart: 17, nzEnd: 21, label: 'Evening', emoji: '🌆' },
-                      { value: 'Night', nzStart: 21, nzEnd: 24, label: 'Night', emoji: '🌙' }
+                      { value: 'Morning', nzStart: 6, nzEnd: 12, label: 'Morning' },
+                      { value: 'Afternoon', nzStart: 12, nzEnd: 17, label: 'Afternoon' },
+                      { value: 'Evening', nzStart: 17, nzEnd: 21, label: 'Evening' },
+                      { value: 'Night', nzStart: 21, nzEnd: 24, label: 'Night' }
                     ].map(time => {
                       const userTimeRange = formData.timezone !== 'Pacific/Auckland'
                         ? getTimeRangeInUserTimezone(time.nzStart, time.nzEnd)
                         : null;
+                      const nzTimeDisplay = `${time.nzStart === 12 ? '12:00' : `${time.nzStart > 12 ? time.nzStart - 12 : time.nzStart}:00`} ${time.nzStart >= 12 ? 'PM' : 'AM'} - ${time.nzEnd === 12 ? '12:00' : `${time.nzEnd > 12 ? time.nzEnd - 12 : time.nzEnd}:00`} ${time.nzEnd >= 12 ? 'PM' : 'AM'}`;
+                      const isSelected = formData.preferredTimes.includes(time.value);
 
                       return (
                         <label
                           key={time.value}
-                          className={`flex items-start px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
-                            formData.preferredTimes.includes(time.value)
+                          className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
+                            isSelected
                               ? 'border-emerald-600 bg-emerald-50'
-                              : 'border-gray-300 hover:border-emerald-300'
+                              : 'border-gray-200 hover:border-emerald-300 bg-white'
                           }`}
                         >
                           <input
                             type="checkbox"
-                            checked={formData.preferredTimes.includes(time.value)}
+                            checked={isSelected}
                             onChange={() => handleCheckboxChange('preferredTimes', time.value)}
                             className="sr-only"
                           />
-                          <span className="text-xl mr-3 mt-0.5">{time.emoji}</span>
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-900">{time.label}</div>
-                            {formData.timezone !== 'Pacific/Auckland' ? (
-                              <div className="mt-1 space-y-1 text-sm">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-emerald-700 font-medium">Your time:</span>
-                                  <span className="text-emerald-900">{userTimeRange}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-gray-600">NZ time:</span>
-                                  <span className="text-gray-700">
-                                    {time.nzStart === 12 ? '12:00' : `${time.nzStart > 12 ? time.nzStart - 12 : time.nzStart}:00`} {time.nzStart >= 12 ? 'PM' : 'AM'} -
-                                    {time.nzEnd === 12 ? ' 12:00' : ` ${time.nzEnd > 12 ? time.nzEnd - 12 : time.nzEnd}:00`} {time.nzEnd >= 12 ? 'PM' : 'AM'}
-                                  </span>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="text-sm text-gray-600 mt-1">
-                                {time.nzStart === 12 ? '12:00' : `${time.nzStart > 12 ? time.nzStart - 12 : time.nzStart}:00`} {time.nzStart >= 12 ? 'PM' : 'AM'} -
-                                {time.nzEnd === 12 ? ' 12:00' : ` ${time.nzEnd > 12 ? time.nzEnd - 12 : time.nzEnd}:00`} {time.nzEnd >= 12 ? 'PM' : 'AM'}
-                              </div>
+                          <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center ${
+                            isSelected
+                              ? 'border-emerald-600 bg-emerald-600'
+                              : 'border-gray-300'
+                          }`}>
+                            {isSelected && (
+                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="ml-3 flex-1">
+                            <span className="font-medium text-gray-900">{time.label}</span>
+                            <span className="text-gray-500 ml-2 text-sm">
+                              {formData.timezone !== 'Pacific/Auckland' ? userTimeRange : nzTimeDisplay}
+                            </span>
+                            {formData.timezone !== 'Pacific/Auckland' && (
+                              <span className="text-gray-400 text-xs ml-2">(NZ: {nzTimeDisplay})</span>
                             )}
                           </div>
                         </label>
@@ -1020,30 +985,25 @@ const ApplicationPage = () => {
               </div>
             )}
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8 pt-6 border-t">
+          {/* Navigation */}
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <div className="flex gap-3">
               {currentStep > 1 && (
-                <Button type="button" variant="outline" onClick={prevStep}>
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Previous
+                <Button type="button" variant="outline" onClick={prevStep} className="flex-1 sm:flex-none">
+                  Back
                 </Button>
               )}
-
-              <div className="ml-auto">
-                {currentStep < 3 ? (
-                  <Button type="button" onClick={nextStep}>
-                    Next
-                    <ChevronRight className="h-4 w-4 ml-1" />
-                  </Button>
-                ) : (
-                  <Button type="submit" disabled={loading}>
-                    {loading ? 'Submitting...' : 'Submit Application'}
-                  </Button>
-                )}
-              </div>
+              <Button
+                type={currentStep === 3 ? 'submit' : 'button'}
+                onClick={currentStep < 3 ? nextStep : undefined}
+                disabled={loading}
+                className={currentStep === 1 ? 'w-full' : 'flex-1 sm:flex-none sm:ml-auto'}
+              >
+                {currentStep < 3 ? 'Continue' : (loading ? 'Submitting...' : 'Submit')}
+              </Button>
             </div>
-          </form>
-        </Card>
+          </div>
+        </form>
       </div>
     </div>
   );

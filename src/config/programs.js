@@ -13,6 +13,7 @@
 
 // Program IDs - use these constants instead of string literals
 export const PROGRAM_IDS = {
+  QARI: 'qari',
   TAJWEED: 'tajweed',
   ESSENTIALS: 'essentials',
 };
@@ -41,10 +42,10 @@ export const PROGRAMS = {
     // Pricing (from Programs page comparison table)
     pricing: {
       type: 'one-time',
-      oneTime: 120,
-      oneTimeCents: 12000, // For Stripe
+      oneTime: 150,
+      oneTimeCents: 15000, // For Stripe
       currency: 'NZD',
-      displayPrice: '$120 NZD',
+      displayPrice: '$150 NZD',
       displayNote: 'One-time',
     },
 
@@ -99,7 +100,7 @@ export const PROGRAMS = {
 
     // Display Names (from Programs page header)
     name: 'Essential Arabic & Islamic Studies',
-    shortName: 'EAIS',
+    shortName: 'EASI',
     arabicName: 'الدراسات الأساسية في اللغة العربية والعلوم الإسلامية',
     transliteration: 'Ad-Dirāsāt al-Asāsiyyah fīl-Lughah al-ʿArabiyyah wal-ʿUlūm al-Islāmiyyah',
 
@@ -173,6 +174,70 @@ export const PROGRAMS = {
       { id: 8, name: 'Legacy', subtitle: 'Becoming a Legacy', weekStart: 92, weekEnd: 104 },
     ],
   },
+
+};
+
+// QARI Program - added separately to maintain order (Track 1)
+PROGRAMS[PROGRAM_IDS.QARI] = {
+  id: 'qari',
+  name: "Qur'an & Arabic Reading Literacy",
+  shortName: 'QARI',
+  arabicName: 'محو أمية قراءة القرآن والعربية',
+  transliteration: "Maḥw Ummiyyat Qirāʾat al-Qurʾān wal-ʿArabiyyah",
+
+  duration: {
+    months: 12,
+    weeks: 52,
+    years: 1,
+    display: '1 year',
+    displayWeeks: '52 weeks',
+  },
+
+  pricing: {
+    type: 'one-time',
+    oneTime: 300,
+    oneTimeCents: 30000,
+    currency: 'NZD',
+    displayPrice: '$300 NZD',
+    displayNote: 'One-time',
+  },
+
+  focus: 'Learn to Read the Quran from Scratch',
+
+  description: 'A comprehensive 1-year course designed for absolute beginners. Learn the Arabic alphabet, master letter pronunciation, and develop fluent Quranic reading skills through systematic drills and practice.',
+
+  ourEdge: 'Suitable for adult learners and new Muslims. Several drills to gain mastery in reading basic Arabic. Patient, step-by-step instruction with no prior knowledge required.',
+
+  objectives: [
+    { title: 'Arabic Alphabet Mastery', description: 'Learn all Arabic letters and their different forms.' },
+    { title: 'Fluent Reading', description: 'Read Quranic text with proper pronunciation and confidence.' },
+  ],
+
+  primaryText: {
+    arabic: 'القاعدة القرآنية',
+    transliteration: "Al-Qāʿidah al-Qurʾāniyyah",
+    author: 'Various',
+  },
+
+  schedule: {
+    session1: { duration: '1 Hour', description: 'Primary Instruction & Practice' },
+    session2: { duration: '30 mins', description: 'Review & Assessment' },
+  },
+
+  prerequisites: {
+    age: '14+ years old',
+    proficiency: 'No prior knowledge required except the ability to read English. This course is for absolute beginners.',
+  },
+
+  // Milestones for Student Portal progress tracking
+  milestones: [
+    { id: 1, name: 'Recognition', subtitle: 'Recognizing the Letters', weekStart: 1, weekEnd: 9 },
+    { id: 2, name: 'Pronunciation', subtitle: 'Mastering Vowel Sounds', weekStart: 10, weekEnd: 22 },
+    { id: 3, name: 'Connection', subtitle: 'Connecting Letters & Words', weekStart: 23, weekEnd: 30 },
+    { id: 4, name: 'Flow', subtitle: 'Developing Reading Flow', weekStart: 31, weekEnd: 39 },
+    { id: 5, name: 'Confidence', subtitle: 'Building Reading Confidence', weekStart: 40, weekEnd: 48 },
+    { id: 6, name: 'Fluency', subtitle: 'Achieving Fluent Recitation', weekStart: 49, weekEnd: 52 },
+  ],
 };
 
 // Helper Functions

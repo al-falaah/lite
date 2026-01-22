@@ -334,7 +334,7 @@ export const applicationConfirmationEmail = (applicantData) => {
 
             <p class="paragraph" style="margin-top: 32px;">
               Best regards,<br>
-              <strong>Al-Falaah Admissions Team</strong>
+              <strong>The FastTrack Madrasah Admissions Team</strong>
             </p>
           </div>
 
@@ -404,7 +404,7 @@ export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://tftma
 
             <p class="paragraph" style="margin-top: 32px;">
               Best regards,<br>
-              <strong>Al-Falaah Admissions Team</strong>
+              <strong>The FastTrack Madrasah Admissions Team</strong>
             </p>
           </div>
 
@@ -433,7 +433,7 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
     <body>
       <div class="email-wrapper">
         <div class="container">
-          ${getEmailHeader('Welcome to Al-Falaah! 🌟', 'Your journey of knowledge begins now')}
+          ${getEmailHeader('Welcome to The FastTrack Madrasah! 🌟', 'Your journey of knowledge begins now')}
 
           <div class="content">
             <h2 class="greeting">As-salāmu ʿalaykum ${full_name},</h2>

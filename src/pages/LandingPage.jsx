@@ -45,25 +45,31 @@ const LandingPage = () => {
 
   const faqs = [
     {
-      question: "Who is this program designed for?",
-      subQuestion: "Is this program suitable for absolute beginners?",
-      answer: "Our tracks are designed for students who can already read the Arabic script fluently with ḥarakāt (vowel markings). If you can read the Qur'an but lack understanding of the grammar or Tajweed rules, our slated curriculum is specifically engineered to accelerate you toward intermediate mastery."
+      question: "I can't read Arabic at all. Is there a program for me?",
+      subQuestion: "What if I'm an absolute beginner?",
+      answer: `Yes! Our QARI (Qur'an & Arabic Reading Literacy) program is specifically designed for absolute beginners with no prior knowledge of Arabic. Over ${PROGRAMS[PROGRAM_IDS.QARI].duration.display}, you'll learn the Arabic alphabet, master letter pronunciation, and develop fluent Quranic reading skills through systematic drills and patient, step-by-step instruction. This program is ideal for adult learners, new Muslims, or anyone starting from scratch.`,
+      isRecommended: true
     },
-        {
+    {
+      question: "Who are the other programs designed for?",
+      subQuestion: "What if I can already read Arabic?",
+      answer: `If you can already read the Arabic script fluently with ḥarakāt (vowel markings), you have two pathways: The Tajweed Mastery Program (TMP) is for those who can read but lack proper Tajweed rules—this ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} program will transform your recitation to expert-level precision. The Essential Arabic & Islamic Studies (EASI) program is our comprehensive ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} track for those who already have Tajweed and want to master Arabic grammar, morphology, and Islamic sciences.`
+    },
+    {
       question: "Program Enrollment Strategy",
-      subQuestion: "Can I enroll in both tracks simultaneously?",
-      answer: "To ensure the highest level of mastery and retention, we strongly encourage students to focus on one track at a time. Our methodology is intensive and slated for deep progress; attempting both simultaneously can dilute your focus. For most students, we recommend starting with the Tajweed Mastery Program (TMP). Laying this strong foundational connection with the Qur'anic text provides the ideal spiritual and linguistic springboard for the 2-year Essential Arabic & Islamic Studies (EAIS) track.",
+      subQuestion: "Can I enroll in multiple tracks simultaneously?",
+      answer: "To ensure the highest level of mastery and retention, we strongly encourage students to focus on one track at a time. Our methodology is intensive and slated for deep progress; attempting multiple tracks simultaneously can dilute your focus. Choose the track that matches your current level: QARI for absolute beginners, TMP if you can read but need Tajweed, or EASI if you already have Tajweed mastery.",
       isRecommended: true
     },
     {
       question: "The \"Accelerator\" Methodology",
       subQuestion: "What makes the \"FastTrack\" methodology different from traditional classes?",
-      answer: `Unlike open-ended classes, we utilize a slated curriculum with defined timelines (${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.TAJWEED].shortName} and ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}). By combining effective teaching with mandatory 30-minute assessment blocks and expert mentoring, we ensure consistent progress and high accountability that traditional self-paced learning often lacks.`
+      answer: `Unlike open-ended classes, we utilize a slated curriculum with defined timelines (${PROGRAMS[PROGRAM_IDS.QARI].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.QARI].shortName}, ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.TAJWEED].shortName}, and ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}). By combining effective teaching with mandatory 30-minute assessment blocks and expert mentoring, we ensure consistent progress and high accountability that traditional self-paced learning often lacks.`
     },
     {
       question: "Time Commitment",
       subQuestion: "How much time do I need to commit each week?",
-      answer: "Students should attend two live sessions per week: one 2-hour primary instruction session and one 30-minute mentoring/assessment session. Additionally, we recommend 2–3 hours of independent study to master the slated objectives for that week."
+      answer: "Students should attend two live sessions per week: a primary instruction session (duration varies by program) and one 30-minute mentoring/assessment session. Additionally, we recommend 2–3 hours of independent study to master the slated objectives for that week."
     },
     {
       question: "Commitment & Accountability",
@@ -78,7 +84,7 @@ const LandingPage = () => {
     {
       question: "Learning Materials & Methodology",
       subQuestion: "Do I need to purchase my own classical texts and materials?",
-      answer: "For Islamic Studies, we provide comprehensive digital learning materials. However, for Arabic and Tajweed, we utilize a traditional \"Live Board\" method. Your teacher will write directly on the board during sessions, and you will be required to take physical notes. This deliberate practice is designed to develop your Arabic handwriting and spelling skills. During onboarding, your mentor will provide a list of the specific notebooks and pens recommended for this high-engagement learning style."
+      answer: "Material requirements vary by program: For QARI, students are required to purchase the primary text (Al-Qāʿidah al-Qurʾāniyyah) either from our store or elsewhere. For TMP and EASI, we utilize a traditional \"Live Board\" method where your teacher writes directly on the board during sessions, and you will be required to take physical notes—we also provide online study materials to supplement your learning. This deliberate note-taking practice is designed to develop your Arabic handwriting and spelling skills."
     },
     {
       question: "Mentoring & Support",
@@ -382,7 +388,7 @@ const LandingPage = () => {
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
                 <Link to="/apply">
-                  <Button variant="primary" size="lg" className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto text-white">
+                  <Button variant="emerald" size="lg" className="w-full sm:w-auto">
                     Apply Now
                   </Button>
                 </Link>
@@ -1094,7 +1100,7 @@ const LandingPage = () => {
               <div className="flex items-center gap-2 mb-4">
                 <img
                   src="/favicon-white.svg"
-                  alt="Al-Falaah Logo"
+                  alt="The FastTrack Madrasah"
                   className="h-8 w-8"
                 />
                 <div>
