@@ -98,46 +98,81 @@ const Programs = () => {
 
                 {/* Collapsible Details */}
                 {expandedProgram === 'qari-mobile' && (
-                  <div className="border-t border-gray-200 pt-4 space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">{qari.name}</h4>
-                      <p className="text-xs text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                  <div className="border-t border-gray-200 pt-5 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                    {/* Program Header */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
+                      <h4 className="font-bold text-gray-900 mb-2 text-sm">{qari.name}</h4>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl'}}>
                         {qari.arabicName}
                       </p>
-                      <p className="text-xs text-gray-600 leading-relaxed mb-3">
+                      <p className="text-xs text-gray-700 leading-relaxed mb-3">
                         {qari.description}
                       </p>
-                      <div className="bg-gray-50 border border-gray-200 rounded p-2 mb-3">
+                      <div className="bg-white rounded-md p-3 border border-emerald-200">
                         <p className="text-xs text-gray-700 leading-relaxed">
-                          <span className="font-medium text-gray-900">Our Edge:</span> {qari.ourEdge}
+                          <span className="font-semibold text-emerald-700">💡 Our Edge:</span> {qari.ourEdge}
                         </p>
                       </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Program Objectives</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                    {/* Program Objectives */}
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-emerald-600">🎯</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Program Objectives</h4>
+                      </div>
+                      <div className="space-y-2.5">
                         {qari.objectives.map((obj, idx) => (
-                          <li key={idx}><span className="font-semibold">{obj.title}:</span> {obj.description}</li>
+                          <div key={idx} className="flex gap-2">
+                            <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                            <p className="text-xs text-gray-700 flex-1">
+                              <span className="font-semibold text-gray-900">{obj.title}:</span> {obj.description}
+                            </p>
+                          </div>
                         ))}
-                        <li><span className="font-semibold">Primary Text:</span> <span style={{fontFamily: 'Traditional Arabic, serif'}}>{qari.primaryText.arabic}</span> | <span className="italic font-serif tracking-wide">{qari.primaryText.transliteration}</span></li>
-                      </ul>
+                        <div className="flex gap-2 pt-1">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>{qari.primaryText.arabic}</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">{qari.primaryText.transliteration}</span>
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Schedule (Weekly)</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Session 1 ({qari.schedule.session1.duration}):</span> {qari.schedule.session1.description}</li>
-                        <li><span className="font-semibold">Session 2 ({qari.schedule.session2.duration}):</span> {qari.schedule.session2.description}</li>
-                      </ul>
+                    {/* Schedule */}
+                    <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-blue-600">📅</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Weekly Schedule</h4>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="bg-white rounded-md p-3 border border-blue-100">
+                          <p className="text-xs font-semibold text-gray-900 mb-1">Session 1 <span className="text-blue-600">({qari.schedule.session1.duration})</span></p>
+                          <p className="text-xs text-gray-700 leading-relaxed">{qari.schedule.session1.description}</p>
+                        </div>
+                        <div className="bg-white rounded-md p-3 border border-blue-100">
+                          <p className="text-xs font-semibold text-gray-900 mb-1">Session 2 <span className="text-blue-600">({qari.schedule.session2.duration})</span></p>
+                          <p className="text-xs text-gray-700 leading-relaxed">{qari.schedule.session2.description}</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Prerequisites</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Age:</span> {qari.prerequisites.age}</li>
-                        <li><span className="font-semibold">Proficiency:</span> {qari.prerequisites.proficiency}</li>
-                      </ul>
+                    {/* Prerequisites */}
+                    <div className="bg-amber-50/50 rounded-lg p-4 border border-amber-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-amber-600">✓</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Prerequisites</h4>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 text-xs mt-0.5">•</span>
+                          <p className="text-xs text-gray-700 flex-1"><span className="font-semibold text-gray-900">Age:</span> {qari.prerequisites.age}</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 text-xs mt-0.5">•</span>
+                          <p className="text-xs text-gray-700 flex-1"><span className="font-semibold text-gray-900">Proficiency:</span> {qari.prerequisites.proficiency}</p>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-gray-100">
@@ -184,45 +219,85 @@ const Programs = () => {
 
                 {/* Collapsible Details */}
                 {expandedProgram === 'tmp-mobile' && (
-                  <div className="border-t border-gray-200 pt-4 space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Tajweed Mastery Program (TMP)</h4>
-                      <p className="text-xs text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                  <div className="border-t border-gray-200 pt-5 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                    {/* Program Header */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
+                      <h4 className="font-bold text-gray-900 mb-2 text-sm">Tajweed Mastery Program (TMP)</h4>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl'}}>
                         برنامج إتقان التجويد
                       </p>
-                      <p className="text-xs text-gray-600 leading-relaxed mb-3">
+                      <p className="text-xs text-gray-700 leading-relaxed mb-3">
                         An intensive 24-week sprint to transform basic reading into expert-level precision. Through a structured curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
                       </p>
-                      <div className="bg-gray-50 border border-gray-200 rounded p-2 mb-3">
+                      <div className="bg-white rounded-md p-3 border border-emerald-200">
                         <p className="text-xs text-gray-700 leading-relaxed">
-                          <span className="font-medium text-gray-900">Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic">ʿUlūm al-Qurʾān</span>), grounding your recitation in authentic scholarly context.
+                          <span className="font-semibold text-emerald-700">💡 Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic">ʿUlūm al-Qurʾān</span>), grounding your recitation in authentic scholarly context.
                         </p>
                       </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Program Objectives</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Mastery from A to Z:</span> Complete command over Tajweed rules through effective, focused instruction.</li>
-                        <li><span className="font-semibold">Scholarly Foundation:</span> Attain essential knowledge of <span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>.</li>
-                        <li><span className="font-semibold">Primary Text:</span> <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | <span className="italic font-serif tracking-wide">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> (Su'ād 'Abdul-Ḥamīd).</li>
-                      </ul>
+                    {/* Program Objectives */}
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-emerald-600">🎯</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Program Objectives</h4>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="flex gap-2">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Mastery from A to Z:</span> Complete command over Tajweed rules through effective, focused instruction.
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Scholarly Foundation:</span> Attain essential knowledge of <span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>.
+                          </p>
+                        </div>
+                        <div className="flex gap-2 pt-1">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> <span className="text-gray-600">(Su'ād 'Abdul-Ḥamīd)</span>
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Precision Schedule (Weekly)</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Session 1 (1 Hour):</span> Primary Instruction & Intensive Drill.</li>
-                        <li><span className="font-semibold">Session 2 (30 mins):</span> Dedicated Follow-up, Oral Assessment, and Mentoring.</li>
-                      </ul>
+                    {/* Schedule */}
+                    <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-blue-600">📅</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Precision Schedule (Weekly)</h4>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="bg-white rounded-md p-3 border border-blue-100">
+                          <p className="text-xs font-semibold text-gray-900 mb-1">Session 1 <span className="text-blue-600">(1 Hour)</span></p>
+                          <p className="text-xs text-gray-700 leading-relaxed">Primary Instruction & Intensive Drill.</p>
+                        </div>
+                        <div className="bg-white rounded-md p-3 border border-blue-100">
+                          <p className="text-xs font-semibold text-gray-900 mb-1">Session 2 <span className="text-blue-600">(30 mins)</span></p>
+                          <p className="text-xs text-gray-700 leading-relaxed">Dedicated Follow-up, Oral Assessment, and Mentoring.</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Prerequisites</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Age:</span> 14+ years old</li>
-                        <li><span className="font-semibold">Proficiency:</span> Must be able to read the Qur'anic script fluently but currently lacks the technical knowledge or practical application of Tajweed rules.</li>
-                      </ul>
+                    {/* Prerequisites */}
+                    <div className="bg-amber-50/50 rounded-lg p-4 border border-amber-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-amber-600">✓</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Prerequisites</h4>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 text-xs mt-0.5">•</span>
+                          <p className="text-xs text-gray-700 flex-1"><span className="font-semibold text-gray-900">Age:</span> 14+ years old</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 text-xs mt-0.5">•</span>
+                          <p className="text-xs text-gray-700 flex-1"><span className="font-semibold text-gray-900">Proficiency:</span> Must be able to read the Qur'anic script fluently but currently lacks the technical knowledge or practical application of Tajweed rules.</p>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-gray-100">
@@ -272,45 +347,85 @@ const Programs = () => {
 
                 {/* Collapsible Details */}
                 {expandedProgram === 'easi-mobile' && (
-                  <div className="border-t border-gray-200 pt-4 space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-sm">Essential Arabic & Islamic Studies (EASI)</h4>
-                      <p className="text-xs text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                  <div className="border-t border-gray-200 pt-5 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
+                    {/* Program Header */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
+                      <h4 className="font-bold text-gray-900 mb-2 text-sm">Essential Arabic & Islamic Studies (EASI)</h4>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl'}}>
                         الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                       </p>
-                      <p className="text-xs text-gray-600 leading-relaxed mb-3">
+                      <p className="text-xs text-gray-700 leading-relaxed mb-3">
                         A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. We structured our curriculum to deliver a rigorous foundation in Arabic linguistics and essential Islamic sciences.
                       </p>
-                      <div className="bg-gray-50 border border-gray-200 rounded p-2 mb-3">
+                      <div className="bg-white rounded-md p-3 border border-emerald-200">
                         <p className="text-xs text-gray-700 leading-relaxed">
-                          <span className="font-medium text-gray-900">Our Edge:</span> Beyond isolated language study, we integrate Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Expert mentoring for direct engagement with the Qur'an and Sunnah.
+                          <span className="font-semibold text-emerald-700">💡 Our Edge:</span> Beyond isolated language study, we integrate Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Expert mentoring for direct engagement with the Qur'an and Sunnah.
                         </p>
                       </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Program Objectives</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Linguistic Mastery:</span> Achieve intermediate Arabic proficiency through structured study of Grammar (<span className="italic font-serif tracking-wide">An-Naḥw</span>), Morphology (<span className="italic font-serif tracking-wide">Aṣ-Ṣarf</span>), and Spelling (<span className="italic font-serif tracking-wide">Al-Imlā&rsquo;</span>).</li>
-                        <li><span className="font-semibold">Scholarly Foundation:</span> Build sound Islamic knowledge in Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>).</li>
-                        <li><span className="font-semibold">Primary Texts:</span> Engage with classical works including <span style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide">Alfiyyat Ibn Mālik</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> (<span className="italic font-serif tracking-wide">An-Naḥw al-Wāḍiḥ</span>), and more.</li>
-                      </ul>
+                    {/* Program Objectives */}
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-emerald-600">🎯</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Program Objectives</h4>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="flex gap-2">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Linguistic Mastery:</span> Achieve intermediate Arabic proficiency through structured study of Grammar (<span className="italic font-serif tracking-wide">An-Naḥw</span>), Morphology (<span className="italic font-serif tracking-wide">Aṣ-Ṣarf</span>), and Spelling (<span className="italic font-serif tracking-wide">Al-Imlā&rsquo;</span>).
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Scholarly Foundation:</span> Build sound Islamic knowledge in Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>).
+                          </p>
+                        </div>
+                        <div className="flex gap-2 pt-1">
+                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <p className="text-xs text-gray-700 flex-1">
+                            <span className="font-semibold text-gray-900">Primary Texts:</span> Engage with classical works including <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide text-gray-600">Alfiyyat Ibn Mālik</span>), <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> (<span className="italic font-serif tracking-wide text-gray-600">An-Naḥw al-Wāḍiḥ</span>), and more.
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Precision Schedule (Weekly)</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Session 1 (2 Hours):</span> Primary Instruction & Comprehensive Study.</li>
-                        <li><span className="font-semibold">Session 2 (30 mins):</span> Dedicated Follow-up, Assessment, and Mentoring.</li>
-                      </ul>
+                    {/* Schedule */}
+                    <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-blue-600">📅</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Precision Schedule (Weekly)</h4>
+                      </div>
+                      <div className="space-y-2.5">
+                        <div className="bg-white rounded-md p-3 border border-blue-100">
+                          <p className="text-xs font-semibold text-gray-900 mb-1">Session 1 <span className="text-blue-600">(2 Hours)</span></p>
+                          <p className="text-xs text-gray-700 leading-relaxed">Primary Instruction & Comprehensive Study.</p>
+                        </div>
+                        <div className="bg-white rounded-md p-3 border border-blue-100">
+                          <p className="text-xs font-semibold text-gray-900 mb-1">Session 2 <span className="text-blue-600">(30 mins)</span></p>
+                          <p className="text-xs text-gray-700 leading-relaxed">Dedicated Follow-up, Assessment, and Mentoring.</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 text-xs">Prerequisites</h4>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
-                        <li><span className="font-semibold">Age:</span> 14+ years old</li>
-                        <li><span className="font-semibold">Proficiency:</span> Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently.</li>
-                      </ul>
+                    {/* Prerequisites */}
+                    <div className="bg-amber-50/50 rounded-lg p-4 border border-amber-100">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-amber-600">✓</span>
+                        <h4 className="font-semibold text-gray-900 text-xs">Prerequisites</h4>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 text-xs mt-0.5">•</span>
+                          <p className="text-xs text-gray-700 flex-1"><span className="font-semibold text-gray-900">Age:</span> 14+ years old</p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-amber-500 text-xs mt-0.5">•</span>
+                          <p className="text-xs text-gray-700 flex-1"><span className="font-semibold text-gray-900">Proficiency:</span> Must be able to read the Qur'an or Arabic text with ḥarakāt (vowel markings) fluently.</p>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-gray-100">
