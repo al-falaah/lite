@@ -381,8 +381,8 @@ const LandingPage = () => {
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
                 From reading the Qur'an accurately to understanding Arabic and Islamic sciences—
-                <span className="text-emerald-400 font-semibold"> structured programs</span> built for 
-                <span className="text-emerald-400 font-semibold"> busy Muslims</span> with clear timelines and dedicated mentoring.
+                <span className="text-emerald-400 font-semibold"> structured programs</span> built especially for 
+                <span className="text-emerald-400 font-semibold">  busy Muslims</span> with clear timelines and dedicated mentoring.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
