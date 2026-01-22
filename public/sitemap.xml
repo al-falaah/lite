@@ -8,15 +8,23 @@
   <!-- Homepage -->
   <url>
     <loc>https://tftmadrasah.nz/</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- Programs Page -->
+  <url>
+    <loc>https://tftmadrasah.nz/programs</loc>
+    <lastmod>2026-01-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- Application Page -->
   <url>
     <loc>https://tftmadrasah.nz/apply</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -24,7 +32,7 @@
   <!-- Blog Main Page -->
   <url>
     <loc>https://tftmadrasah.nz/blog</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-01-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>

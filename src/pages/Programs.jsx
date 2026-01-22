@@ -18,11 +18,13 @@ const Programs = () => {
   return (
     <>
       <Helmet>
-        <title>Programs - The FastTrack Madrasah</title>
+        <title>QARI, Tajweed & Arabic Programs | For Busy Muslims | The FastTrack Madrasah</title>
         <meta
           name="description"
-          content="Discover our Beginner friendly Qur'an & Arabic Reading Literacy, Tajweed Mastery Program and Essential Arabic & Islamic Studies. Expert-led Islamic education programs designed to transform your understanding of the Qur'an and Arabic language."
+          content="QARI: Learn to read Arabic from zero (1 year). Tajweed: Perfect your recitation (6 months). EASI: Master Arabic grammar & Islamic sciences (2 years). Structured programs for busy working adults in New Zealand."
         />
+        <meta property="og:title" content="QARI, Tajweed & Arabic Programs | For Busy Muslims" />
+        <meta property="og:description" content="From complete beginners to Arabic mastery. QARI for those who can't read. EASI for comprehensive Islamic studies. Built for busy Muslims." />
       </Helmet>
 
       {/* Navigation */}
