@@ -47,49 +47,49 @@ const LandingPage = () => {
     {
       question: "I can't read Arabic at all. Is there a program for me?",
       subQuestion: "What if I'm an absolute beginner?",
-      answer: `Yes! Our QARI (Qur'an & Arabic Reading Literacy) program is specifically designed for absolute beginners with no prior knowledge of Arabic. Over ${PROGRAMS[PROGRAM_IDS.QARI].duration.display}, you'll learn the Arabic alphabet, master letter pronunciation, and develop fluent Quranic reading skills through systematic drills and patient, step-by-step instruction. This program is ideal for adult learners, new Muslims, or anyone starting from scratch.`,
+      answer: `Yes! Our QARI program is made for absolute beginners. Over ${PROGRAMS[PROGRAM_IDS.QARI].duration.display}, you'll learn the Arabic alphabet, pronunciation, and develop fluent reading skills. Perfect for adult learners, new Muslims, or anyone starting from zero.`,
       isRecommended: true
     },
     {
       question: "Who are the other programs designed for?",
       subQuestion: "What if I can already read Arabic?",
-      answer: `If you can already read the Arabic script fluently with ḥarakāt (vowel markings), you have two pathways: The Tajweed Mastery Program (TMP) is for those who can read but lack proper Tajweed rules—this ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} program will transform your recitation to expert-level precision. The Essential Arabic & Islamic Studies (EASI) program is our comprehensive ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} track for those who already have Tajweed and want to master Arabic grammar, morphology, and Islamic sciences.`
+      answer: `If you can read Arabic with vowel markings, you have two options: TMP (${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}) is for those who can read but need proper Tajweed rules. EASI (${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}) is for those who already have Tajweed and want to master Arabic grammar and Islamic sciences.`
     },
     {
-      question: "Program Enrollment Strategy",
-      subQuestion: "Can I enroll in multiple tracks simultaneously?",
-      answer: "To ensure the highest level of mastery and retention, we strongly encourage students to focus on one track at a time. Our methodology is intensive and slated for deep progress; attempting multiple tracks simultaneously can dilute your focus. Choose the track that matches your current level: QARI for absolute beginners, TMP if you can read but need Tajweed, or EASI if you already have Tajweed mastery.",
+      question: "Can I enroll in multiple programs at once?",
+      subQuestion: "Should I take more than one track?",
+      answer: "We strongly recommend focusing on one program at a time. Our methodology is intensive and designed for deep learning. Splitting your attention dilutes your progress. Start with the track that matches your current level and build from there.",
       isRecommended: true
     },
     {
-      question: "The \"Accelerator\" Methodology",
-      subQuestion: "What makes the \"FastTrack\" methodology different from traditional classes?",
-      answer: `Unlike open-ended classes, we utilize a slated curriculum with defined timelines (${PROGRAMS[PROGRAM_IDS.QARI].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.QARI].shortName}, ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.TAJWEED].shortName}, and ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}). By combining effective teaching with mandatory 30-minute assessment blocks and expert mentoring, we ensure consistent progress and high accountability that traditional self-paced learning often lacks.`
+      question: "What makes FastTrack different from traditional classes?",
+      subQuestion: "Why is this approach better?",
+      answer: `We have fixed timelines (${PROGRAMS[PROGRAM_IDS.QARI].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.QARI].shortName}, ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.TAJWEED].shortName}, ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}) with clear goals each week. Combined with regular assessments and dedicated mentoring, you stay accountable and make consistent progress—unlike open-ended classes where you can drift.`
     },
     {
-      question: "Time Commitment",
-      subQuestion: "How much time do I need to commit each week?",
-      answer: "Students should attend two live sessions per week: a primary instruction session (duration varies by program) and one 30-minute mentoring/assessment session. Additionally, we recommend 2–3 hours of independent study to master the slated objectives for that week."
+      question: "How much time do I need each week?",
+      subQuestion: "What's the weekly commitment?",
+      answer: "Two live sessions per week: one main class (length varies by program) and one 30-minute mentoring session. Plus 2-3 hours of independent study to practice what you learned that week."
     },
     {
-      question: "Commitment & Accountability",
-      subQuestion: "What happens if I struggle to maintain my commitment to the program?",
-      answer: "We understand that life can be unpredictable. However, due to the slated nature of our curriculum, consistent attendance and engagement are crucial. If you find yourself falling behind, we encourage open communication with your tutor (mentor) to explore options for support or adjustments."
+      question: "What if I fall behind?",
+      subQuestion: "Can I catch up if life gets busy?",
+      answer: "Life happens—we get it. But because we move through the curriculum at a set pace, staying on track is important. If you're struggling, talk to your mentor early. We'll work with you to find solutions, but consistent engagement is key."
     },
     {
-      question: "Selective Admission",
-      subQuestion: "Why do you require a phone interview for admission?",
-      answer: "Because our programs move at a structured pace, we use the interview to verify prerequisites and ensure that every student is placed in the track that best serves their goals. This helps us maintain a high-performance environment for all participants."
+      question: "Why do you require a phone interview?",
+      subQuestion: "What's the admission process?",
+      answer: "The interview helps us place you in the right program based on your current level and goals. Since we move at a structured pace, we want to make sure everyone starts where they'll succeed and stay challenged."
     },
     {
-      question: "Learning Materials & Methodology",
-      subQuestion: "Do I need to purchase my own classical texts and materials?",
-      answer: "Material requirements vary by program: For QARI, students are required to purchase the primary text (Al-Qāʿidah al-Qurʾāniyyah) either from our store or elsewhere. For TMP and EASI, we utilize a traditional \"Live Board\" method where your teacher writes directly on the board during sessions, and you will be required to take physical notes—we also provide online study materials to supplement your learning. This deliberate note-taking practice is designed to develop your Arabic handwriting and spelling skills."
+      question: "Do I need to buy textbooks?",
+      subQuestion: "What materials do I need?",
+      answer: "For QARI, you'll need to buy the primary text (Al-Qāʿidah al-Qurʾāniyyah) from our store or elsewhere. For TMP and EASI, teachers write on the board live and you take physical notes—this builds your Arabic handwriting. We also provide online materials to supplement your learning."
     },
     {
-      question: "Mentoring & Support",
-      subQuestion: "What does \"Dedicated Follow-up\" actually look like?",
-      answer: "You aren't just a face in a Zoom gallery. Our team monitors your assessment results weekly. If you struggle with a concept, your mentor provides dedicated follow-up during the short sessions to address gaps in understanding before we move to the next slated module."
+      question: "What does mentoring actually include?",
+      subQuestion: "Am I just another student in a Zoom room?",
+      answer: "No. We track your progress weekly. If you're struggling with something, your mentor gives you one-on-one attention in your follow-up sessions to fix the gaps before moving forward. You're not invisible here."
     }
   ];
 
@@ -377,13 +377,12 @@ const LandingPage = () => {
             {/* Hero Content */}
             <div>
               <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
-                Accelerate Your Mastery of Islamic Knowledge
+                Learn What Truly Matters in the Time You Have
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                Master the foundations of our Deen through 
-                <span className="text-emerald-400 font-semibold"> effective teaching</span> of a 
-                <span className="text-emerald-400 font-semibold"> slated curriculum</span>, 
-                reinforced by expert mentoring, regular assessment, and dedicated follow-up.
+                From reading the Qur'an accurately to understanding Arabic and Islamic sciences—
+                <span className="text-emerald-400 font-semibold"> structured programs</span> built for 
+                <span className="text-emerald-400 font-semibold"> busy Muslims</span> with clear timelines and dedicated mentoring.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
@@ -464,20 +463,20 @@ const LandingPage = () => {
             {/* Left Column - Mission Text */}
             <div className="lg:col-span-2 space-y-6">
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                Today, while millions can recite the Qur'an, a profound gap remains between recitation and true comprehension. Traditionally, bridging this divide required years of academic study - a commitment often incompatible with the pace of modern life in the West. As this gap widens, our direct connection to the divine guidance of the Qur'an and Sunnah is frequently filtered through translations. We believe that understanding the Word of Allah should not be a distant luxury, but an accessible reality for every believer.
+                Today, many Muslims can't read the Qur'an accurately. Many who can read don't understand what they're reciting. This gap has become generational - passed down from parents to children - and it shouldn't continue. For those who genuinely want to learn, life gets in the way. Professional commitments, family responsibilities, and demanding schedules make traditional Islamic education feel impossible. But this shouldn't be a barrier. That's why we founded <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> - to help you learn what truly matters in a focused timeframe, building a solid foundation you can carry for life.
               </p>
 
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                <span className="font-brand font-bold text-gray-900 ">The FastTrack Madrasah</span> was established to provide a sophisticated solution to this challenge through a streamlined and highly effective curriculum. By fusing traditional scholarship with modern instructional design, we've created an accelerator that optimizes the way the Qur'an is studied. Our mission is to empower students to move beyond the surface of the text, facilitating a focused transition to intermediate Arabic proficiency so they can engage with Revelation in its original tongue - with little to no reliance on translation.
+                We created programs for busy people. <span className="font-semibold text-gray-900">Our QARI program takes complete beginners from zero to fluent reading</span> - whether you've never touched Arabic or can't read accurately. Our Tajweed Mastery Program refines your recitation with proper rules. And <span className="font-semibold text-gray-900">our EASI program opens the door to Arabic grammar, morphology, and Islamic sciences</span> - enabling direct engagement with the Qur'an and Sunnah. With flexible scheduling designed for working adults and parents, we meet you where you are.
               </p>
 
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                This is our mission: to nurture a generation of believers - especially those balancing the demands of busy careers and modern lifestyles - who not only recite but truly understand and embody the teachings of Islam. May Allah grant us success in this noble endeavor and make it a source of benefit for the Ummah at large. Ameen.
+                Our mission is simple: help every Muslim develop a genuine connection with the Qur'an. We're especially passionate about serving those who thought this opportunity had passed them by. Through patient instruction and supportive community, we guide you from wherever you are to wherever you want to be. May Allah accept this effort and make it a means of bringing His servants closer to His Book. Ameen.
               </p>
             </div>
 
             {/* Right Column - Founder Card (Emphasized) */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 flex justify-center lg:justify-start">
               <div className="bg-white rounded-xl p-6 sm:p-8 shadow-lg sticky top-24">
                 {/* Founder Image - Large and Centered */}
                 <div className="flex justify-center mb-6">
@@ -646,11 +645,8 @@ const LandingPage = () => {
 
                   {/* Content - hidden on mobile unless expanded, always visible on desktop */}
                   <div className={`${openApproachCard === 0 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
-                      Every student progresses at their own pace within our slated curriculum framework. We recognize that each learner brings unique strengths and challenges to their educational journey.
-                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      When beneficial, we strategically group family members or students with similar backgrounds into cohort learning, fostering peer support and collaborative growth while maintaining individual accountability.
+                      Everyone learns at their own pace. We adapt to your schedule and pace, whether you're studying solo or with family members. When it makes sense, we group students with similar backgrounds to build peer support while keeping you accountable.
                     </p>
                   </div>
                 </div>
@@ -679,11 +675,8 @@ const LandingPage = () => {
                   </div>
 
                   <div className={`${openApproachCard === 1 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
-                      Beyond teaching Arabic language and grammar, we cultivate Islamic character rooted in the Qur'an and Sunnah. Our curriculum seamlessly integrates spiritual development with linguistic mastery.
-                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      Students learn not just how to read and understand revelation, but how to embody its timeless principles in their daily lives through proper manners and devotion.
+                      We don't just teach Arabic - we cultivate Islamic character rooted in the Qur'an and Sunnah. You'll learn to read, understand, and embody what you're learning through proper Islamic manners and devotion.
                     </p>
                   </div>
                 </div>
@@ -712,11 +705,8 @@ const LandingPage = () => {
                   </div>
 
                   <div className={`${openApproachCard === 2 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
-                      Our curriculum is grounded in authentic, time-tested texts of Islamic scholarship that have educated generations of students for centuries.
-                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      We prioritize traditional knowledge transmission through live board-writing during Arabic and Tajweed sessions, requiring students to take physical notes. This active engagement develops Arabic penmanship while ensuring deep cognitive retention through centuries-proven methods.
+                      We use authentic Islamic texts that have educated students for centuries. During Arabic and Tajweed classes, teachers write on the board live and students take physical notes. This traditional method develops your Arabic handwriting and helps knowledge stick better than passive learning.
                     </p>
                   </div>
                 </div>
@@ -745,11 +735,8 @@ const LandingPage = () => {
                   </div>
 
                   <div className={`${openApproachCard === 3 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
-                      All classes are conducted via secure video conferencing platforms, eliminating geographical barriers to authentic Islamic education. Whether you're in Auckland, Wellington, or Christchurch, quality instruction is just a click away.
-                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      This digital approach combines convenience with consistency, allowing students throughout New Zealand to access the same high-caliber teaching without compromising on traditional standards.
+                      All classes run online via secure video conferencing. Whether you're in Auckland, Wellington, or anywhere in New Zealand, quality Islamic education is just a click away. No geographical barriers, no compromising on traditional standards.
                     </p>
                   </div>
                 </div>
@@ -778,11 +765,8 @@ const LandingPage = () => {
                   </div>
 
                   <div className={`${openApproachCard === 4 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
-                      Regular evaluations throughout your learning journey ensure genuine knowledge retention and mastery, not just superficial familiarity with concepts.
-                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      Our systematic assessment approach helps identify areas for growth early, allowing for targeted intervention and support to solidify your understanding before advancing to the next slated module.
+                      Regular assessments ensure you truly understand what you're learning - not just surface familiarity. We catch gaps early and help you solidify your knowledge before moving forward.
                     </p>
                   </div>
                 </div>
@@ -811,11 +795,8 @@ const LandingPage = () => {
                   </div>
 
                   <div className={`${openApproachCard === 5 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify mb-3">
-                      We don't just teach—we mentor. Each student is paired with an experienced guide who provides dedicated follow-up and personalized academic support throughout their journey.
-                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      Our mentorship extends beyond the virtual classroom to support students in their spiritual development and help them navigate daily life challenges through an Islamic lens.
+                      You get a dedicated mentor who follows up with you personally, supports your learning, and helps you navigate life's challenges through an Islamic lens. We're in this with you beyond just the classroom.
                     </p>
                   </div>
                 </div>
