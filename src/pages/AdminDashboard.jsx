@@ -405,13 +405,15 @@ const AdminDashboard = () => {
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
-              <Link
-                to={backLink}
-                className="inline-flex items-center gap-2 px-3 py-2 text-xs sm:text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-              >
-                <Home className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Link>
+              {profile?.role === 'director' && (
+                <Link
+                  to={backLink}
+                  className="inline-flex items-center gap-2 px-3 py-2 text-xs sm:text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                >
+                  <Home className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Dashboard</span>
+                </Link>
+              )}
               <span className="text-xs sm:text-sm text-gray-600 hidden md:inline truncate max-w-[120px]">
                 {profile?.full_name || 'Admin'}
               </span>
