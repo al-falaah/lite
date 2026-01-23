@@ -11,9 +11,9 @@ const LessonNotes = () => {
   const [chapters, setChapters] = useState([]);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('lessonNotesDarkMode');
-    return saved ? JSON.parse(saved) : false;
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('lessonNotesTheme');
+    return saved || 'light';
   });
 
   useEffect(() => {
@@ -21,8 +21,16 @@ const LessonNotes = () => {
   }, [courseSlug]);
 
   useEffect(() => {
-    localStorage.setItem('lessonNotesDarkMode', JSON.stringify(darkMode));
-  }, [darkMode]);
+    localStorage.setItem('lessonNotesTheme', theme);
+  }, [theme]);
+
+  const cycleTheme = () => {
+    setTheme(current => {
+      if (current === 'light') return 'sepia';
+      if (current === 'sepia') return 'dark';
+      return 'light';
+    });
+  };
 
   const fetchCourseAndChapters = async () => {
     try {
@@ -102,7 +110,9 @@ const LessonNotes = () => {
   const hasNext = currentIndex < chapters.length - 1;
 
   return (
-    <div className={`min-h-screen transition-colors ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
+    <div className={`min-h-screen transition-colors ${
+      theme === 'dark' ? 'bg-gray-900' : theme === 'sepia' ? 'bg-[#f5f1e8]' : 'bg-white'
+    }`}>
       <Helmet>
         <title>{course.title} | Lesson Notes | The FastTrack Madrasah</title>
         <meta
@@ -113,25 +123,31 @@ const LessonNotes = () => {
 
       {/* Navigation */}
       <nav className={`sticky top-0 z-50 border-b transition-colors ${
-        darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
+        theme === 'dark' ? 'bg-gray-900 border-gray-700' : 
+        theme === 'sepia' ? 'bg-[#f5f1e8] border-[#d4c9b8]' : 
+        'bg-white border-gray-200'
       }`}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center h-14">
             <Link to="/resources" className={`flex items-center gap-1.5 transition-colors text-sm ${
-              darkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-600 hover:text-gray-900'
+              theme === 'dark' ? 'text-gray-400 hover:text-gray-200' : 
+              theme === 'sepia' ? 'text-[#5a4a3a] hover:text-[#3d3229]' :
+              'text-gray-600 hover:text-gray-900'
             }`}>
               <ChevronLeft className="h-4 w-4" />
               <span>Resources</span>
             </Link>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-lg transition-colors ${
-                  darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-100 text-gray-600'
+                onClick={cycleTheme}
+                className={`px-3 py-1.5 text-xs font-medium rounded border transition-colors ${
+                  theme === 'dark' ? 'border-gray-700 text-gray-400 hover:bg-gray-800' : 
+                  theme === 'sepia' ? 'border-[#d4c9b8] text-[#5a4a3a] hover:bg-[#ebe4d8]' :
+                  'border-gray-300 text-gray-600 hover:bg-gray-50'
                 }`}
-                aria-label="Toggle dark mode"
+                aria-label="Change theme"
               >
-                {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {theme === 'light' ? 'Light' : theme === 'sepia' ? 'Sepia' : 'Dark'}
               </button>
               <Link to="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
                 <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
@@ -146,17 +162,25 @@ const LessonNotes = () => {
           {/* Left Sidebar - Chapters */}
           <div className="lg:col-span-1">
             <div className={`lg:sticky lg:top-24 border p-4 transition-colors ${
-              darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'
+              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 
+              theme === 'sepia' ? 'bg-[#ebe4d8] border-[#d4c9b8]' :
+              'bg-gray-50 border-gray-200'
             }`}>
               <div className={`mb-4 pb-3 border-b ${
-                darkMode ? 'border-gray-700' : 'border-gray-200'
+                theme === 'dark' ? 'border-gray-700' : 
+                theme === 'sepia' ? 'border-[#d4c9b8]' :
+                'border-gray-200'
               }`}>
                 <h2 className={`font-medium text-sm mb-1 ${
-                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                  theme === 'dark' ? 'text-gray-100' : 
+                  theme === 'sepia' ? 'text-[#3d3229]' :
+                  'text-gray-900'
                 }`}>{course.title}</h2>
                 {course.description && (
                   <p className={`text-xs leading-relaxed ${
-                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                    theme === 'dark' ? 'text-gray-400' : 
+                    theme === 'sepia' ? 'text-[#5a4a3a]' :
+                    'text-gray-600'
                   }`}>{course.description}</p>
                 )}
               </div>
@@ -169,16 +193,20 @@ const LessonNotes = () => {
                     className={`w-full text-left px-2.5 py-2 text-sm transition-colors ${
                       selectedChapter?.id === chapter.id
                         ? 'bg-emerald-600 text-white'
-                        : darkMode
+                        : theme === 'dark'
                           ? 'text-gray-300 hover:bg-gray-700'
-                          : 'text-gray-700 hover:bg-gray-50'
+                          : theme === 'sepia'
+                            ? 'text-[#3d3229] hover:bg-[#dfd6c8]'
+                            : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     <div className="flex items-start gap-2">
                       <span className={`text-xs font-medium mt-0.5 min-w-[18px] ${
                         selectedChapter?.id === chapter.id 
                           ? 'text-emerald-100' 
-                          : darkMode ? 'text-gray-500' : 'text-gray-400'
+                          : theme === 'dark' ? 'text-gray-500' : 
+                            theme === 'sepia' ? 'text-[#8a7a6a]' :
+                            'text-gray-400'
                       }`}>
                         {chapter.chapter_number}
                       </span>
@@ -189,7 +217,11 @@ const LessonNotes = () => {
               </nav>
 
               {chapters.length === 0 && (
-                <p className="text-sm text-gray-500 text-center py-6">No chapters yet</p>
+                <p className={`text-sm text-center py-6 ${
+                  theme === 'dark' ? 'text-gray-400' : 
+                  theme === 'sepia' ? 'text-[#5a4a3a]' :
+                  'text-gray-500'
+                }`}>No chapters yet</p>
               )}
             </div>
           </div>
@@ -198,22 +230,30 @@ const LessonNotes = () => {
           <div className="lg:col-span-3">
             {selectedChapter ? (
               <div className={`border transition-colors ${
-                darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                theme === 'dark' ? 'bg-gray-800 border-gray-700' : 
+                theme === 'sepia' ? 'bg-[#f5f1e8] border-[#d4c9b8]' :
+                'bg-white border-gray-200'
               }`}>
                 <div className={`px-8 pt-8 pb-6 border-b transition-colors ${
-                  darkMode ? 'border-gray-700' : 'border-gray-100'
+                  theme === 'dark' ? 'border-gray-700' : 
+                  theme === 'sepia' ? 'border-[#d4c9b8]' :
+                  'border-gray-100'
                 }`}>
                   <h1 className={`text-2xl font-normal ${
-                    darkMode ? 'text-gray-100' : 'text-gray-900'
+                    theme === 'dark' ? 'text-gray-100' : 
+                    theme === 'sepia' ? 'text-[#3d3229]' :
+                    'text-gray-900'
                   }`}>{selectedChapter.chapter_number}. {selectedChapter.title}</h1>
                 </div>
 
                 <div className="px-8 py-6">
                   <div 
                     className={`prose max-w-none transition-colors ${
-                      darkMode
+                      theme === 'dark'
                         ? 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-code:text-emerald-400 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border-gray-700 prose-td:border-gray-700 [&_.verse]:text-gray-100 [&_.tip]:bg-blue-950 [&_.tip]:border-blue-800 [&_.tip:before]:text-blue-400'
-                        : 'prose-headings:font-normal prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:underline prose-strong:text-gray-900 prose-strong:font-semibold prose-li:text-gray-700 prose-code:text-sm prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:text-gray-900 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-l-2 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4 [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip:before]:content-[\"Tip:\"] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1'
+                        : theme === 'sepia'
+                          ? 'prose-headings:font-normal prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-p:leading-relaxed prose-a:text-[#2c5f7f] hover:prose-a:underline prose-strong:text-[#3d3229] prose-strong:font-semibold prose-li:text-[#3d3229] prose-code:text-sm prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:text-[#3d3229] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-l-2 prose-blockquote:border-[#8a7a6a] prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-[#3d3229] [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4 [&_.tip]:bg-[#e8dcc8] [&_.tip]:border-l-2 [&_.tip]:border-[#8a7a6a] [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip:before]:content-[\"Tip:\"] [&_.tip:before]:font-semibold [&_.tip:before]:text-[#5a4a3a] [&_.tip:before]:block [&_.tip:before]:mb-1'
+                          : 'prose-headings:font-normal prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:underline prose-strong:text-gray-900 prose-strong:font-semibold prose-li:text-gray-700 prose-code:text-sm prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:text-gray-900 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-l-2 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4 [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip:before]:content-[\"Tip:\"] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1'
                     } prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm`}
                     dangerouslySetInnerHTML={{ __html: sanitizeContent(selectedChapter.content) }}
                     style={{ direction: 'ltr' }}
@@ -222,7 +262,9 @@ const LessonNotes = () => {
 
                 {/* Navigation Footer */}
                 <div className={`border-t px-8 py-4 transition-colors ${
-                  darkMode ? 'border-gray-700' : 'border-gray-200'
+                  theme === 'dark' ? 'border-gray-700' : 
+                  theme === 'sepia' ? 'border-[#d4c9b8]' :
+                  'border-gray-200'
                 }`}>
                   <div className="flex items-center justify-between text-sm">
                     <button
@@ -230,14 +272,20 @@ const LessonNotes = () => {
                       disabled={!hasPrev}
                       className={`${
                         hasPrev
-                          ? darkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'
-                          : darkMode ? 'text-gray-600 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed'
+                          ? theme === 'dark' ? 'text-blue-400 hover:underline' : 
+                            theme === 'sepia' ? 'text-[#2c5f7f] hover:underline' :
+                            'text-blue-600 hover:underline'
+                          : theme === 'dark' ? 'text-gray-600 cursor-not-allowed' : 
+                            theme === 'sepia' ? 'text-[#b5a594] cursor-not-allowed' :
+                            'text-gray-300 cursor-not-allowed'
                       }`}
                     >
                       ← Previous
                     </button>
 
-                    <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>
+                    <span className={theme === 'dark' ? 'text-gray-400' : 
+                      theme === 'sepia' ? 'text-[#5a4a3a]' :
+                      'text-gray-500'}>
                       {selectedChapter.chapter_number} / {chapters.length}
                     </span>
 
@@ -246,8 +294,12 @@ const LessonNotes = () => {
                       disabled={!hasNext}
                       className={`${
                         hasNext
-                          ? darkMode ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'
-                          : darkMode ? 'text-gray-600 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed'
+                          ? theme === 'dark' ? 'text-blue-400 hover:underline' : 
+                            theme === 'sepia' ? 'text-[#2c5f7f] hover:underline' :
+                            'text-blue-600 hover:underline'
+                          : theme === 'dark' ? 'text-gray-600 cursor-not-allowed' : 
+                            theme === 'sepia' ? 'text-[#b5a594] cursor-not-allowed' :
+                            'text-gray-300 cursor-not-allowed'
                       }`}
                     >
                       Next →
@@ -257,13 +309,19 @@ const LessonNotes = () => {
               </div>
             ) : (
               <div className={`text-center py-20 border transition-colors ${
-                darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                theme === 'dark' ? 'bg-gray-800 border-gray-700' : 
+                theme === 'sepia' ? 'bg-[#f5f1e8] border-[#d4c9b8]' :
+                'bg-white border-gray-200'
               }`}>
                 <BookOpen className={`h-12 w-12 mx-auto mb-3 ${
-                  darkMode ? 'text-gray-600' : 'text-gray-300'
+                  theme === 'dark' ? 'text-gray-600' : 
+                  theme === 'sepia' ? 'text-[#b5a594]' :
+                  'text-gray-300'
                 }`} />
                 <p className={`text-sm ${
-                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                  theme === 'dark' ? 'text-gray-400' : 
+                  theme === 'sepia' ? 'text-[#5a4a3a]' :
+                  'text-gray-500'
                 }`}>Select a chapter to begin</p>
               </div>
             )}
