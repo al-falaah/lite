@@ -598,30 +598,30 @@ const LandingPage = () => {
             )}
           </div>
 
-          {/* Support CTA */}
-          <div className="bg-gray-50 rounded-lg p-6 sm:p-12 border border-gray-200">
+          {/* Sadaqah Jaariyah CTA */}
+          <div className="bg-emerald-50 rounded-lg p-6 sm:p-12 border border-gray-200">
             <div className="max-w-2xl mx-auto text-center">
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
-                Ready to Begin Your Journey?
+                Be Part of Sadaqah Jaariyah
               </h3>
               <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
-                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology that meets you where you are.
+                Support our mission to make Qur'anic education accessible to every Muslim. Your contribution helps subsidize students who cannot afford fees and ensures this knowledge continues to benefit the Ummah—a charity whose rewards never cease.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link to="/apply">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
-                    <span>Start Your Application</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                </Link>
-
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm">
                     <Heart className="h-4 w-4" />
                     <span>Support Our Mission</span>
                   </button>
                 </a>
+
+                <Link to="/programs">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
+                    <span>Learn About Our Programs</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -722,30 +722,42 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Additional CTA */}
+          {/* CTA with Application and Contact Info */}
           <div className="mt-12 sm:mt-16">
             <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
-              <p className="text-gray-900 mb-2 text-lg font-semibold">
-                Not sure which program is right for you?
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+                Ready to Begin Your Journey?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology that meets you where you are.
               </p>
-              <p className="text-gray-600 mb-6">
-                We're here to help
+              <p className="text-gray-600 mb-6 text-sm">
+                Not sure which program is right for you? We're here to help.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-                <a href="mailto:salam@tftmadrasah.nz" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors">
-                  <Mail className="h-4 w-4" />
-                  salam@tftmadrasah.nz
-                </a>
-                <span className="hidden sm:inline text-gray-300">|</span>
-                <a href="tel:+64272131486" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors">
-                  <Phone className="h-4 w-4" />
-                  +6427 213 1486
-                </a>
-                <span className="hidden sm:inline text-gray-300">|</span>
-                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors">
-                  <MessageCircle className="h-4 w-4" />
-                  +6422 465 3509
-                </a>
+              <div className="flex flex-col gap-4">
+                <Link to="/apply">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm mx-auto">
+                    <span>Start Your Application</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-2 border-t border-gray-200">
+                  <p className="text-sm text-gray-500">Have questions?</p>
+                  <a href="mailto:salam@tftmadrasah.nz" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                    <Mail className="h-4 w-4" />
+                    salam@tftmadrasah.nz
+                  </a>
+                  <span className="hidden sm:inline text-gray-300">|</span>
+                  <a href="tel:+64272131486" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                    <Phone className="h-4 w-4" />
+                    +6427 213 1486
+                  </a>
+                  <span className="hidden sm:inline text-gray-300">|</span>
+                  <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                    <MessageCircle className="h-4 w-4" />
+                    +6422 465 3509
+                  </a>
+                </div>
               </div>
             </div>
           </div>
