@@ -395,8 +395,8 @@ const LandingPage = () => {
               </h1>
               <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
                 From reading the Qur'an accurately to understanding Arabic and Islamic sciences—
-                <span className="text-emerald-400 font-semibold"> structured programs</span> built especially for 
-                <span className="text-emerald-400 font-semibold">  busy Muslims</span> with clear timelines and dedicated mentoring.
+                <span className="text-emerald-400 font-semibold">structured programs</span> for
+                <span className="text-emerald-400 font-semibold"> everyone</span> ready to connect with the Book of Allah.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
@@ -477,15 +477,15 @@ const LandingPage = () => {
             {/* Left Column - Mission Text */}
             <div className="lg:col-span-2 space-y-6">
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                Today, many Muslims can't read the Qur'an accurately. Many who can read don't understand what they're reciting. This gap has become generational - passed down from parents to children - and it shouldn't continue. For those who genuinely want to learn, life gets in the way. Professional commitments, family responsibilities, and demanding schedules make traditional Islamic education feel impossible. But this shouldn't be a barrier. That's why we founded <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> - to help you learn what truly matters in a focused timeframe, building a solid foundation you can carry for life.
+                Today, many Muslims can't read the Qur'an accurately. Many who can read don't understand what they're reciting. This gap has become generational - passed down from parents to children - and it shouldn't continue. That's why we founded <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> - to help you learn what truly matters in a focused timeframe, building a solid foundation you can carry for life.
               </p>
 
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                We created programs for busy people. <span className="font-semibold text-gray-900">Our QARI program takes complete beginners from zero to fluent reading</span> - whether you've never touched Arabic or can't read accurately. Our Tajweed Mastery Program refines your recitation with proper rules. And <span className="font-semibold text-gray-900">our EASI program opens the door to Arabic grammar, morphology, and Islamic sciences</span> - enabling direct engagement with the Qur'an and Sunnah. With flexible scheduling designed for working adults and parents, we meet you where you are.
+                <span className="font-semibold text-gray-900">Our QARI program is perfect for absolute beginners and new Muslims</span> - taking you from zero to fluent Qur'an reading. Never touched Arabic? This is your starting point. <span className="font-semibold text-gray-900">Our Tajweed Mastery Program is designed for those who've completed Qur'an reading but still don't know or can't apply Tajweed rules properly.</span> And <span className="font-semibold text-gray-900">our EASI program bridges the gap between reading and understanding</span> - teaching Arabic grammar, morphology, and Islamic sciences. For children who can already read Qur'an, combining Tajweed with EASI is highly recommended to deepen their connection with what they're reciting.
               </p>
 
               <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                Our mission is simple: help every Muslim develop a genuine connection with the Qur'an. We're especially passionate about serving those who thought this opportunity had passed them by. Through patient instruction and supportive community, we guide you from wherever you are to wherever you want to be. May Allah accept this effort and make it a means of bringing His servants closer to His Book. Ameen.
+                Our mission is simple: help every Muslim develop a genuine connection with the Qur'an. With flexible scheduling, we accommodate everyone - working adults, parents, students, and retirees. Through patient instruction and supportive community, we guide you from wherever you are to wherever you want to be. May Allah accept this effort and make it a means of bringing His servants closer to His Book. Ameen.
               </p>
             </div>
 
@@ -513,13 +513,13 @@ const LandingPage = () => {
 
                 {/* Quote */}
                 <blockquote className="text-sm text-gray-600 leading-relaxed italic text-center mb-4">
-                  "It's not about choosing between professional success and spiritual commitment. It's about showing they can work together."
+                  "Teaching the Qur'an and Islamic knowledge is the most honorable work. My goal is to make this accessible to every Muslim."
                 </blockquote>
 
                 {/* Bio Preview & Modal Trigger */}
                 <div className="border-t border-gray-100 pt-4">
                   <p className="text-sm text-gray-600 leading-relaxed text-center">
-                    Bringing together busy life and Islamic learning.
+                    Supporting fellow Muslims through Islamic education 
                   </p>
 
                   <button
@@ -574,23 +574,23 @@ const LandingPage = () => {
                   {/* Modal Body */}
                   <div className="p-6 sm:p-8 space-y-4 text-gray-600 leading-relaxed text-justify">
                     <p>
-                      Dr. Abdulquadri Alaka's path reflects what FastTrack Madrasah is all about: bringing together professional life and Islamic learning in a way that actually works.
+                      Dr. Abdulquadri Alaka's journey in Islamic education began at a young age, learning from prominent local scholars of Ahlus Sunnah wal Jama'ah in South West, Nigeria. His dedication to preserving and transmitting authentic Islamic knowledge has been the cornerstone of his life's work.
                     </p>
 
                     <p>
-                      His Islamic education started young, learning from prominent local scholars of Ahlus Sunnah wal Jama'ah in South West, Nigeria. He earned his Higher School Certificate in Arabic and Islamic Sciences and is currently pursuing Advanced Studies to further deepen his knowledge.
+                      He earned his Higher School Certificate in Arabic and Islamic Sciences and is currently pursuing Advanced Studies to further deepen his knowledge in classical Islamic texts. His scholarly focus remains on making the Qur'an and Sunnah accessible through sound methodology and patient instruction.
                     </p>
 
                     <p>
-                      During his doctoral studies at Massey University, New Zealand, Dr. Abdulquadri served as both General Secretary (2022) and President (2023) of the Massey Muslim Society in Palmerston North. During this tenure, he became a pillar of the community - leading weekly Jumu'ah khutbahs on campus and in the city, while teaching Qur'an and Islamic Studies to the next generation.
+                      During his doctoral studies at Massey University, New Zealand, Dr. Abdulquadri served as both General Secretary (2022) and President (2023) of the Massey Muslim Society in Palmerston North. During this tenure, he became a pillar of the community - leading weekly Jumu'ah khutbahs on campus and in the city, while teaching Qur'an and Islamic Studies to students and community members.
                     </p>
 
                     <p>
-                      Today, Dr. Abdulquadri is based in Tauranga, where he navigates both worlds daily - managing a corporate career while staying active in local da'wah and Islamic education. For him, it's not about choosing between professional success and spiritual commitment. It's about showing they can work together.
+                      Today, Dr. Abdulquadri is based in Tauranga, where he remains dedicated to da'wah and Islamic education. His vision for FastTrack Madrasah stems from a deep conviction that every Muslim deserves access to quality Qur'anic education, regardless of their starting point.
                     </p>
 
                     <blockquote className="border-l-4 border-emerald-600 pl-4 italic text-gray-700 my-6">
-                      "I founded FastTrack Madrasah because I saw too many talented professionals and students sacrificing their Qur'an and Islamic learnings for careers. My goal is to show you that with the right methodology after Allah's help, you can carry the Book of Allah in your heart while you excel in your career."
+                      "I founded FastTrack Madrasah because I believe that learning the Qur'an and understanding our Deen should not remain out of reach for any Muslim. With the right methodology and Allah's help, anyone can master what they once thought impossible."
                     </blockquote>
                   </div>
                 </div>
@@ -605,7 +605,7 @@ const LandingPage = () => {
                 Ready to Begin Your Journey?
               </h3>
               <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
-                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology designed for busy Muslims in the modern world.
+                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology that meets you where you are.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -628,8 +628,132 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Who We Serve - Target Audience Cards */}
+      <section className="bg-gray-50 py-10 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+              Who We Serve
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Our programs are designed for Muslims at every stage of their Qur'anic journey
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {/* Absolute Beginners & New Muslims */}
+            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="p-6">
+                <div className="mb-4">
+                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                    01
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Absolute Beginners</h3>
+                  <p className="text-sm text-gray-500 font-medium">& New Muslims</p>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  Never read Arabic before? Our <span className="font-semibold text-gray-900">QARI program</span> takes you from zero to fluent Qur'an reading in {PROGRAMS[PROGRAM_IDS.QARI].duration.display}.
+                </p>
+                <Link to="/programs#qari" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                  <span>Learn about QARI</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Can Read but No Tajweed */}
+            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="p-6">
+                <div className="mb-4">
+                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                    02
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Can Read</h3>
+                  <p className="text-sm text-gray-500 font-medium">But Don't Know Tajweed</p>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  Completed Qur'an but can't apply proper rules? Our <span className="font-semibold text-gray-900">Tajweed Mastery Program</span> perfects your recitation in {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}.
+                </p>
+                <Link to="/programs#tajweed" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                  <span>Learn about TMP</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Want to Understand */}
+            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="p-6">
+                <div className="mb-4">
+                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                    03
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Want to Understand</h3>
+                  <p className="text-sm text-gray-500 font-medium">What You're Reading</p>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  Bridge the gap between reading and understanding. Our <span className="font-semibold text-gray-900">EASI program</span> teaches Arabic grammar and Islamic sciences in {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}.
+                </p>
+                <Link to="/programs#easi" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                  <span>Learn about EASI</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Parents & Children */}
+            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="p-6">
+                <div className="mb-4">
+                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                    04
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Parents & Children</h3>
+                  <p className="text-sm text-gray-500 font-medium">Learning Together</p>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                  For children who can read Qur'an, combining <span className="font-semibold text-gray-900">Tajweed + EASI</span> deepens their understanding and connection with what they recite.
+                </p>
+                <Link to="/programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                  <span>View all programs</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional CTA */}
+          <div className="mt-12 sm:mt-16">
+            <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
+              <p className="text-gray-900 mb-2 text-lg font-semibold">
+                Not sure which program is right for you?
+              </p>
+              <p className="text-gray-600 mb-6">
+                We're here to help
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors">
+                  <Mail className="h-4 w-4" />
+                  salam@tftmadrasah.nz
+                </a>
+                <span className="hidden sm:inline text-gray-300">|</span>
+                <a href="tel:+64272131486" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors">
+                  <Phone className="h-4 w-4" />
+                  +6427 213 1486
+                </a>
+                <span className="hidden sm:inline text-gray-300">|</span>
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors">
+                  <MessageCircle className="h-4 w-4" />
+                  +6422 465 3509
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Our Approach Section */}
-      <section className="bg-emerald-50 py-10 sm:py-24">
+      <section className="bg-white py-10 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             Our Approach
@@ -822,7 +946,7 @@ const LandingPage = () => {
 
 
       {/* How Admission Works Section */}
-      <section className="bg-white py-10 sm:py-24">
+      <section className="bg-gray-50 py-10 sm:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             The Path to Mastery
@@ -987,6 +1111,66 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Flexible Learning for Every Lifestyle */}
+      <section className="bg-gradient-to-b from-white to-gray-50 py-10 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-3">
+              Designed for Your Life
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+              Whether you're working full-time, raising children, studying, or retired—our programs adapt to your schedule and commitments
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {/* Working Professionals */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="mb-4">
+                <h3 className="font-semibold text-gray-900 mb-2">Evening & Weekend Classes</h3>
+                <p className="text-xs text-gray-500">For Working Professionals</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Classes scheduled outside work hours so you can pursue Qur'anic education without compromising your career. Learn at your own pace with dedicated mentorship.
+              </p>
+            </div>
+
+            {/* Parents & Homemakers */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="mb-4">
+                <h3 className="font-semibold text-gray-900 mb-2">Daytime Sessions</h3>
+                <p className="text-xs text-gray-500">For Parents & Homemakers</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Morning and afternoon options while children are at school or napping. Learn alongside your family and guide them with confidence in their own Qur'anic journey.
+              </p>
+            </div>
+
+            {/* Seniors & Beginners */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="mb-4">
+                <h3 className="font-semibold text-gray-900 mb-2">Patient Instruction</h3>
+                <p className="text-xs text-gray-500">For Seniors & Beginners</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                It's never too late to start. Our teachers provide age-appropriate, patient guidance with small class sizes ensuring personal attention at a comfortable pace.
+              </p>
+            </div>
+
+            {/* Students & Youth */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+              <div className="mb-4">
+                <h3 className="font-semibold text-gray-900 mb-2">Structured Timelines</h3>
+                <p className="text-xs text-gray-500">For Students & Youth</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Clear goals and accountability to keep you on track between lectures and assignments. Online format fits seamlessly into your digital lifestyle with mentorship support.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-10 md:py-24 bg-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1030,28 +1214,6 @@ const LandingPage = () => {
                 )}
               </div>
             ))}
-          </div>
-          <div className="mt-12 text-center p-8 bg-gray-50 rounded-lg border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Still have questions?</h3>
-            <p className="text-gray-600 mb-6">
-              If you're unsure which track is right for you, we're here to help.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-              <a href="mailto:salam@tftmadrasah.nz" className="text-gray-700 font-medium hover:text-gray-900 underline flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                salam@tftmadrasah.nz
-              </a>
-              <span className="hidden sm:inline text-gray-400">|</span>
-              <a href="tel:+64272131486" className="text-gray-700 font-medium hover:text-gray-900 underline flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                +6427 213 1486
-              </a>
-              <span className="hidden sm:inline text-gray-400">|</span>
-              <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-700 font-medium hover:text-gray-900 underline flex items-center gap-2">
-                <MessageCircle className="h-4 w-4" />
-                +6422 465 3509
-              </a>
-            </div>
           </div>
         </div>
       </section>
