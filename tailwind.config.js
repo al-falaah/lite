@@ -18,6 +18,8 @@ export default {
       },
       fontFamily: {
         brand: ['Poppins', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'sans-serif'],
+        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       }
     },
   },

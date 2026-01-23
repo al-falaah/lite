@@ -5,6 +5,7 @@ import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut } 
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
+import DOMPurify from 'dompurify';
 
 // Helper function to generate URL-friendly slugs
 const generateSlug = (text) => {
@@ -24,6 +25,7 @@ const ResearchAdmin = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [editingChapter, setEditingChapter] = useState(null);
+  const [previewChapter, setPreviewChapter] = useState(null);
   const [showCourseModal, setShowCourseModal] = useState(false);
   const [courseForm, setCourseForm] = useState({
     title: '',
@@ -240,6 +242,13 @@ const ResearchAdmin = () => {
     return program ? program.shortName : programId.toUpperCase();
   };
 
+  const sanitizeContent = (html) => {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'hr'],
+      ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'id', 'style']
+    });
+  };
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -441,6 +450,13 @@ const ResearchAdmin = () => {
                           
                           <div className="flex items-center gap-2">
                             <button
+                              onClick={() => setPreviewChapter(chapter)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                              title="Preview content"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                            <button
                               onClick={() => handleTogglePublish(chapter)}
                               className={`p-2 rounded-lg ${
                                 chapter.is_published
@@ -562,6 +578,69 @@ const ResearchAdmin = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Preview Modal */}
+      {previewChapter && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Preview: {previewChapter.title}</h2>
+                <p className="text-sm text-gray-500 mt-1">Chapter {previewChapter.chapter_number}</p>
+              </div>
+              <button
+                onClick={() => setPreviewChapter(null)}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto px-8 py-6">
+              <div 
+                className="prose max-w-none
+                  prose-headings:font-normal prose-headings:text-gray-900
+                  prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
+                  prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2
+                  prose-p:text-gray-700 prose-p:leading-relaxed
+                  prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-gray-900 prose-strong:font-semibold
+                  prose-ul:my-4 prose-li:my-1 prose-li:text-gray-700
+                  prose-ol:my-4
+                  prose-code:text-sm prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-['']
+                  prose-pre:bg-gray-50 prose-pre:text-gray-900 prose-pre:border prose-pre:border-gray-200
+                  prose-blockquote:border-l-2 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
+                  prose-table:border-collapse prose-table:w-full
+                  prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm
+                  prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-2 prose-td:text-sm
+                  [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4
+                  [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4
+                  [&_.tip:before]:content-['Tip:'] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1"
+                dangerouslySetInnerHTML={{ __html: sanitizeContent(previewChapter.content) }}
+                style={{ direction: 'ltr' }}
+              />
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setEditingChapter(previewChapter);
+                  setPreviewChapter(null);
+                }}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => setPreviewChapter(null)}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
