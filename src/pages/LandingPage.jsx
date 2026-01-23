@@ -290,6 +290,11 @@ const LandingPage = () => {
                       Blog
                     </button>
                   </Link>
+                  <Link to="/resources" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
+                      Resources
+                    </button>
+                  </Link>
                   <Link to="/store" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Store
