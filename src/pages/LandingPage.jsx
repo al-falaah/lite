@@ -137,7 +137,7 @@ const LandingPage = () => {
                     Our Mission
                   </button>
                 </a>
-                <Link to="/programs">
+                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
                       ? 'text-gray-700 hover:text-emerald-600'
@@ -570,7 +570,7 @@ const LandingPage = () => {
                   </button>
                 </a>
 
-                <Link to="/programs">
+                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
                     <span>Learn About Our Programs</span>
                     <ArrowRight className="h-4 w-4" />
@@ -689,7 +689,7 @@ const LandingPage = () => {
                 Not sure which program is right for you? We're here to help.
               </p>
               <div className="flex flex-col gap-4">
-                <Link to="/apply">
+                 <Link to="/apply#select-your-program" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm mx-auto">
                     <span>Start Your Application</span>
                     <ArrowRight className="h-4 w-4" />
@@ -1147,7 +1147,7 @@ const LandingPage = () => {
             <p className="text-sm sm:text-lg text-gray-600 mb-6 sm:mb-8">
               Check out our comprehensive FAQ page for answers about programs, admission process, materials, and more
             </p>
-            <Link to="/faqs">
+             <Link to="/faqs#frequently-asked-questions" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
               <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors">
                 <span>View FAQs</span>
                 <ArrowRight className="h-4 w-4" />
