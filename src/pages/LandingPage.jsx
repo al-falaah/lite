@@ -1173,13 +1173,13 @@ const LandingPage = () => {
               </Button>
             </Link>
             <a href={donationLink} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 w-full sm:w-auto flex items-center justify-center gap-2">
+              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 hover:text-emerald-950 w-full sm:w-auto flex items-center justify-center gap-2">
                 <Heart className="h-5 w-5" />
                 Support Us
               </Button>
             </a>
             <Link to="/student">
-              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 hover:text-emerald-950 w-full sm:w-auto">
                 Student Portal
               </Button>
             </Link>
