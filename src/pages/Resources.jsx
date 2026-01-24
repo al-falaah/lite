@@ -10,14 +10,15 @@ const Resources = () => {
   const getCachedCourses = () => {
     try {
       const cached = localStorage.getItem('courses_cache');
-      return cached ? JSON.parse(cached) : [];
+      return cached ? JSON.parse(cached) : null;
     } catch {
-      return [];
+      return null;
     }
   };
 
   const [courses, setCourses] = useState(getCachedCourses());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchCourses();
@@ -31,13 +32,19 @@ const Resources = () => {
         .order('program_id')
         .order('display_order');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        setError(error.message);
+        throw error;
+      }
       
       const freshData = data || [];
       setCourses(freshData);
       
       // Cache for next visit
-      localStorage.setItem('courses_cache', JSON.stringify(freshData));
+      if (freshData.length > 0) {
+        localStorage.setItem('courses_cache', JSON.stringify(freshData));
+      }
     } catch (error) {
       console.error('Error fetching courses:', error);
     } finally {
@@ -103,7 +110,18 @@ const Resources = () => {
       {/* Content */}
       <section className="py-8">
         <div className="max-w-5xl mx-auto px-6">
-          {courses.length === 0 ? (
+          {loading && !courses ? (
+            <div className="text-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-3"></div>
+              <p className="text-gray-500 text-sm">Loading resources...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 bg-red-50 rounded-lg border border-red-200">
+              <BookOpen className="h-12 w-12 text-red-300 mx-auto mb-3" />
+              <p className="text-red-600 mb-2">Error loading resources</p>
+              <p className="text-sm text-red-500">{error}</p>
+            </div>
+          ) : !courses || courses.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-lg border">
               <BookOpen className="h-12 w-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">No resources available yet</p>
