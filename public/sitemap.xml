@@ -5,36 +5,60 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 
-  <!-- Homepage -->
+  <!-- Homepage - Qur'anic education for absolute beginners, new Muslims, and advanced learners -->
   <url>
     <loc>https://tftmadrasah.nz/</loc>
-    <lastmod>2026-01-23</lastmod>
+    <lastmod>2026-01-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Programs Page -->
+  <!-- Programs - QARI (beginners), Tajweed Mastery, EASI (Arabic grammar & Islamic sciences) -->
   <url>
     <loc>https://tftmadrasah.nz/programs</loc>
-    <lastmod>2026-01-23</lastmod>
+    <lastmod>2026-01-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Application Page -->
+  <!-- Application Page - Online interview and enrollment process -->
   <url>
     <loc>https://tftmadrasah.nz/apply</loc>
-    <lastmod>2026-01-23</lastmod>
+    <lastmod>2026-01-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Blog Main Page -->
+  <!-- FAQs - Programs, admission, materials, mentoring -->
+  <url>
+    <loc>https://tftmadrasah.nz/faqs</loc>
+    <lastmod>2026-01-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog - Islamic education articles and insights -->
   <url>
     <loc>https://tftmadrasah.nz/blog</loc>
-    <lastmod>2026-01-23</lastmod>
+    <lastmod>2026-01-25</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
+  </url>
+
+  <!-- Resources - Lesson notes and course materials -->
+  <url>
+    <loc>https://tftmadrasah.nz/resources</loc>
+    <lastmod>2026-01-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Store - Islamic learning materials and textbooks -->
+  <url>
+    <loc>https://tftmadrasah.nz/store</loc>
+    <lastmod>2026-01-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <!-- Vacancies/Careers -->

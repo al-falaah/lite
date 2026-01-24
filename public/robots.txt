@@ -1,5 +1,6 @@
 # robots.txt for The FastTrack Madrasah
 # https://tftmadrasah.nz
+# Online Qur'anic education: QARI (beginners), Tajweed Mastery, EASI (Arabic & Islamic sciences)
 
 # Allow all search engines to crawl the site
 User-agent: *
@@ -8,12 +9,23 @@ Allow: /
 # Disallow admin and private areas
 Disallow: /admin
 Disallow: /blog/admin
+Disallow: /store/admin
 Disallow: /student/
 Disallow: /teacher/
+Disallow: /payment
+Disallow: /payment-success
+Disallow: /payment-cancel
+Disallow: /enroll-additional
 
-# Allow blog content to be crawled
+# Allow public content to be crawled
 Allow: /blog
 Allow: /blog/*
+Allow: /programs
+Allow: /apply
+Allow: /faqs
+Allow: /resources
+Allow: /store
+Allow: /vacancies
 
 # Sitemap location
 Sitemap: https://tftmadrasah.nz/sitemap.xml
