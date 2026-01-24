@@ -6,8 +6,18 @@ import { supabase } from '../services/supabase';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const Resources = () => {
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Load cached data immediately for instant display
+  const getCachedCourses = () => {
+    try {
+      const cached = localStorage.getItem('courses_cache');
+      return cached ? JSON.parse(cached) : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const [courses, setCourses] = useState(getCachedCourses());
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCourses();
@@ -22,7 +32,12 @@ const Resources = () => {
         .order('display_order');
 
       if (error) throw error;
-      setCourses(data || []);
+      
+      const freshData = data || [];
+      setCourses(freshData);
+      
+      // Cache for next visit
+      localStorage.setItem('courses_cache', JSON.stringify(freshData));
     } catch (error) {
       console.error('Error fetching courses:', error);
     } finally {
@@ -45,14 +60,6 @@ const Resources = () => {
     tajweed: courses.filter(c => c.program_id === 'tajweed'),
     essentials: courses.filter(c => c.program_id === 'essentials')
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white">
