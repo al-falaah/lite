@@ -8,7 +8,6 @@ import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentQuote, setCurrentQuote] = useState(0);
-  const [openFaq, setOpenFaq] = useState(null);
   const [expandedProgram, setExpandedProgram] = useState(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [openApproachCard, setOpenApproachCard] = useState(null);
@@ -40,56 +39,6 @@ const LandingPage = () => {
     {
       text: "The superiority of the scholar over the worshipper is like that of the moon on the night when it is full over the rest of the stars.",
       source: "Sunan Abu Dawud 3641"
-    }
-  ];
-
-  const faqs = [
-    {
-      question: "I can't read Arabic at all. Is there a program for me?",
-      subQuestion: "What if I'm an absolute beginner?",
-      answer: `Yes! Our QARI program is made for absolute beginners. Over ${PROGRAMS[PROGRAM_IDS.QARI].duration.display}, you'll learn the Arabic alphabet, pronunciation, and develop fluent reading skills. Perfect for adult learners, new Muslims, or anyone starting from zero.`,
-      isRecommended: true
-    },
-    {
-      question: "Who are the other programs designed for?",
-      subQuestion: "What if I can already read Arabic?",
-      answer: `If you can read Arabic with vowel markings, you have two options: TMP (${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}) is for those who can read but need proper Tajweed rules. EASI (${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}) is for those who already have Tajweed and want to master Arabic grammar and Islamic sciences.`
-    },
-    {
-      question: "Can I enroll in multiple programs at once?",
-      subQuestion: "Should I take more than one track?",
-      answer: "We strongly recommend focusing on one program at a time. Our methodology is intensive and designed for deep learning. Splitting your attention dilutes your progress. Start with the track that matches your current level and build from there.",
-      isRecommended: true
-    },
-    {
-      question: "What makes FastTrack different from traditional classes?",
-      subQuestion: "Why is this approach better?",
-      answer: `We have fixed timelines (${PROGRAMS[PROGRAM_IDS.QARI].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.QARI].shortName}, ${PROGRAMS[PROGRAM_IDS.TAJWEED].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.TAJWEED].shortName}, ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.weeks} weeks for ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName}) with clear goals each week. Combined with regular assessments and dedicated mentoring, you stay accountable and make consistent progress—unlike open-ended classes where you can drift.`
-    },
-    {
-      question: "How much time do I need each week?",
-      subQuestion: "What's the weekly commitment?",
-      answer: "Two live sessions per week: one main class (length varies by program) and one 30-minute mentoring session. Plus 2-3 hours of independent study to practice what you learned that week."
-    },
-    {
-      question: "What if I fall behind?",
-      subQuestion: "Can I catch up if life gets busy?",
-      answer: "Life happens—we get it. But because we move through the curriculum at a set pace, staying on track is important. If you're struggling, talk to your mentor early. We'll work with you to find solutions, but consistent engagement is key."
-    },
-    {
-      question: "Why do you require a phone interview?",
-      subQuestion: "What's the admission process?",
-      answer: "The interview helps us place you in the right program based on your current level and goals. Since we move at a structured pace, we want to make sure everyone starts where they'll succeed and stay challenged."
-    },
-    {
-      question: "Do I need to buy textbooks?",
-      subQuestion: "What materials do I need?",
-      answer: "For QARI, you'll need to buy the primary text (Al-Qāʿidah al-Qurʾāniyyah) from our store or elsewhere. For TMP and EASI, teachers write on the board live and you take physical notes—this builds your Arabic handwriting. We also provide online materials to supplement your learning."
-    },
-    {
-      question: "What does mentoring actually include?",
-      subQuestion: "Am I just another student in a Zoom room?",
-      answer: "No. We track your progress weekly. If you're struggling with something, your mentor gives you one-on-one attention in your follow-up sessions to fix the gaps before moving forward. You're not invisible here."
     }
   ];
 
@@ -293,6 +242,11 @@ const LandingPage = () => {
                   <Link to="/resources" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Resources
+                    </button>
+                  </Link>
+                  <Link to="/faqs" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
+                      FAQs
                     </button>
                   </Link>
                   <Link to="/store" onClick={() => setMobileMenuOpen(false)}>
@@ -1183,49 +1137,22 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* FAQ Link Section */}
       <section className="py-10 md:py-24 bg-gray-100">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
+          <div className="bg-white rounded-lg border border-gray-200 p-8 sm:p-12 text-center shadow-sm">
             <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Frequently Asked Questions
+              Have Questions?
             </h2>
-            <p className="text-sm sm:text-lg text-gray-600">
-              Find answers to common questions about our programs
+            <p className="text-sm sm:text-lg text-gray-600 mb-6 sm:mb-8">
+              Check out our comprehensive FAQ page for answers about programs, admission process, materials, and more
             </p>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq, idx) => (
-              <div key={idx} className="bg-white rounded-lg border border-gray-200">
-                <button
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full px-6 py-4 text-left flex items-start justify-between hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex-1 pr-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-gray-900">{faq.question}</span>
-                      {faq.isRecommended && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
-                          Recommended
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-sm text-gray-600">{faq.subQuestion}</span>
-                  </div>
-                  {openFaq === idx ? (
-                    <Minus className="h-5 w-5 text-gray-600 flex-shrink-0 mt-1" />
-                  ) : (
-                    <Plus className="h-5 w-5 text-gray-400 flex-shrink-0 mt-1" />
-                  )}
-                </button>
-                {openFaq === idx && (
-                  <div className="px-6 pb-4">
-                    <p className="text-gray-600 leading-relaxed text-justify">{faq.answer}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+            <Link to="/faqs">
+              <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors">
+                <span>View FAQs</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </Link>
           </div>
         </div>
       </section>

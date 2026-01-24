@@ -19,6 +19,7 @@ import TeacherPortal from './pages/TeacherPortal';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
+import FAQs from './pages/FAQs';
 import Unsubscribe from './pages/Unsubscribe';
 import StorePage from './pages/StorePage';
 import StoreOrderPage from './pages/StoreOrderPage';
@@ -63,6 +64,7 @@ function App() {
             <Route path="/teacher" element={<TeacherPortal />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/faqs" element={<FAQs />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/resources/:courseSlug" element={<LessonNotes />} />
             <Route path="/store" element={<StorePage />} />
