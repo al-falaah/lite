@@ -435,7 +435,7 @@ const LandingPage = () => {
               </p>
 
               <p className="text-gray-800 leading-relaxed text-lg">
-                That's why we founded The FastTrack Madrasah: to help you learn what truly matters through structured, time-bound programs that build a solid foundation you can carry for life.
+                That's why we founded <span className="font-semibold text-gray-900">The FastTrack Madrasah</span>: to help you learn what truly matters through structured, time-bound programs that build a solid foundation you can carry for life.
               </p>
 
               <p className="text-gray-800 leading-relaxed text-lg">
@@ -453,19 +453,19 @@ const LandingPage = () => {
 
             {/* Right Column - Founder Card (Emphasized) */}
             <div className="lg:col-span-1 flex justify-center lg:justify-start">
-              <div className="bg-white border border-gray-200 p-6 sm:p-8 sticky top-24">
+              <div className="bg-white border border-gray-200 p-6 sm:p-8 sticky top-24 transition-all duration-300 hover:border-gray-300 hover:shadow-sm group">
                 {/* Founder Image - Large and Centered */}
-                <div className="flex justify-center mb-6">
+                <div className="flex justify-center mb-6 overflow-hidden">
                   <img
                     src="/founder.jpeg"
                     alt="Dr Abdulquadri Alaka"
-                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover"
+                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
                 {/* Founder Info - Centered */}
                 <div className="text-center mb-4">
-                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 transition-colors duration-300 group-hover:text-gray-700">
                     Dr Abdulquadri Alaka
                   </h3>
                   <p className="text-sm text-gray-600">
@@ -482,10 +482,10 @@ const LandingPage = () => {
                 <div className="pt-4 mt-4 border-t border-gray-200">
                   <button
                     onClick={() => setFounderBioExpanded(true)}
-                    className="text-sm text-gray-900 hover:text-gray-700 font-medium flex items-center gap-1 mx-auto transition-colors"
+                    className="text-sm text-gray-900 hover:text-gray-700 font-medium flex items-center gap-1 mx-auto transition-all duration-300 group-hover:gap-2"
                   >
                     <span>Read biography</span>
-                    <ArrowRight className="h-3 w-3" />
+                    <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 </div>
               </div>
