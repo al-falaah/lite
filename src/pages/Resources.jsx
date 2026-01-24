@@ -63,9 +63,9 @@ const Resources = () => {
   };
 
   const coursesByProgram = {
-    qari: courses.filter(c => c.program_id === 'qari'),
-    tajweed: courses.filter(c => c.program_id === 'tajweed'),
-    essentials: courses.filter(c => c.program_id === 'essentials')
+    qari: courses?.filter(c => c.program_id === 'qari') || [],
+    tajweed: courses?.filter(c => c.program_id === 'tajweed') || [],
+    essentials: courses?.filter(c => c.program_id === 'essentials') || []
   };
 
   return (
