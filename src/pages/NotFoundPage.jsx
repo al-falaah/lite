@@ -19,7 +19,7 @@ const NotFoundPage = () => {
                 className="h-8 w-8 md:h-10 md:w-10"
               />
               <div className="flex flex-col">
-                <span className="text-md md:text-xl font-brand font-semibold text-emerald-600">The FastTrack Madrasah</span>
+                <span className="text-md md:text-xl font-brand font-semibold text-gray-900">The FastTrack Madrasah</span>
               </div>
             </Link>
             <Link to="/">

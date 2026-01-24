@@ -108,18 +108,18 @@ const LandingPage = () => {
         <div className={`px-3 sm:px-6 lg:px-8 ${!isScrolled ? 'bg-transparent' : ''}`}>
             <div className={`flex justify-between items-center h-14 md:h-16 ${!isScrolled ? 'bg-transparent' : ''}`}>
               {/* Logo only on mobile, Logo + Brand name on desktop */}
-              <Link to="/" className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-2.5">
                 <img
                   src={isScrolled ? "/favicon.svg" : "/favicon-white.svg"}
                   alt="The FastTrack Madrasah Logo"
-                  className="h-7 w-7 md:h-10 md:w-10 transition-all duration-300"
+                  className="h-7 w-7 md:h-9 md:w-9 transition-all duration-300"
                 />
                 {/* Brand name - hidden on mobile, shown on desktop */}
-                <div className="hidden md:flex flex-col leading-none -space-y-1">
-                  <span className={`text-xs sm:text-sm md:text-base font-brand font-semibold transition-colors duration-300 ${
+                <div className="hidden md:flex flex-col justify-center leading-tight">
+                  <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
                     isScrolled ? 'text-gray-900' : 'text-white'
-                  }`} style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className={`text-xs sm:text-sm md:text-base font-brand font-semibold transition-colors duration-300 ${
+                  }`} style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                  <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
                     isScrolled ? 'text-gray-900' : 'text-white'
                   }`} style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
@@ -219,7 +219,7 @@ const LandingPage = () => {
                   {/* Brand name - shown in mobile menu with larger font */}
                   <Link to="/" onClick={() => setMobileMenuOpen(false)} className="mb-2 pb-3 border-b border-white/10">
                     <div className="flex flex-col leading-none -space-y-1 px-4">
-                      <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                      <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
                       <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                     </div>
                   </Link>
@@ -429,59 +429,63 @@ const LandingPage = () => {
           {/* Main Content Grid - Two Column Layout */}
           <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 mb-12 sm:mb-16">
             {/* Left Column - Mission Text */}
-            <div className="lg:col-span-2 space-y-6">
-              <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                Today, many Muslims can't read the Qur'an accurately. Many who can read don't understand what they're reciting. This gap has become generational - passed down from parents to children - and it shouldn't continue. That's why we founded <span className="font-brand font-bold text-gray-900">The FastTrack Madrasah</span> - to help you learn what truly matters in a focused timeframe, building a solid foundation you can carry for life.
+            <div className="lg:col-span-2 space-y-8">
+              <p className="text-gray-800 leading-relaxed text-lg">
+                Today, many Muslims can't read the Qur'an accurately. Those who can often don't understand what they're reciting. This gap has become generational - passed from parents to children - and it shouldn't continue.
               </p>
 
-              <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                <span className="font-semibold text-gray-900">Our QARI program is perfect for absolute beginners and new Muslims</span> - taking you from zero to fluent Qur'an reading. Never touched Arabic? This is your starting point. <span className="font-semibold text-gray-900">Our Tajweed Mastery Program is designed for those who've completed Qur'an reading but still don't know or can't apply Tajweed rules properly.</span> And <span className="font-semibold text-gray-900">our EASI program bridges the gap between reading and understanding</span> - teaching Arabic grammar, morphology, and Islamic sciences. For children who can already read Qur'an, combining Tajweed with EASI is highly recommended to deepen their connection with what they're reciting.
+              <p className="text-gray-800 leading-relaxed text-lg">
+                That's why we founded The FastTrack Madrasah: to help you learn what truly matters through structured, time-bound programs that build a solid foundation you can carry for life.
               </p>
 
-              <p className="text-base sm:text-lg leading-relaxed text-gray-700 text-justify">
-                Our mission is simple: help every Muslim develop a genuine connection with the Qur'an. With flexible scheduling, we accommodate everyone - working adults, parents, students, and retirees. Through patient instruction and supportive community, we guide you from wherever you are to wherever you want to be. May Allah accept this effort and make it a means of bringing His servants closer to His Book. Ameen.
+              <p className="text-gray-800 leading-relaxed text-lg">
+                Whether you're an absolute beginner, need to master Tajweed, or want to understand Arabic and Islamic sciences - we meet you where you are. With flexible scheduling and patient instruction, we accommodate everyone: working adults, parents, students, and retirees.
+              </p>
+
+              <p className="text-xl font-medium text-gray-900 mt-10 pt-8 border-t border-gray-200">
+                Our mission: help every Muslim develop a genuine connection with the Qur'an.
+              </p>
+
+              <p className="text-sm text-gray-500 italic">
+                May Allah accept this effort and make it a means of bringing His servants closer to His Book. Ameen.
               </p>
             </div>
 
             {/* Right Column - Founder Card (Emphasized) */}
             <div className="lg:col-span-1 flex justify-center lg:justify-start">
-              <div className="bg-white rounded-xl p-6 sm:p-8 shadow-lg sticky top-24">
+              <div className="bg-white border border-gray-200 p-6 sm:p-8 sticky top-24">
                 {/* Founder Image - Large and Centered */}
                 <div className="flex justify-center mb-6">
                   <img
                     src="/founder.jpeg"
                     alt="Dr Abdulquadri Alaka"
-                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-gray-100 shadow-md"
+                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover"
                   />
                 </div>
 
                 {/* Founder Info - Centered */}
                 <div className="text-center mb-4">
-                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1">
                     Dr Abdulquadri Alaka
                   </h3>
-                  <p className="text-sm text-emerald-700 font-medium">
+                  <p className="text-sm text-gray-600">
                     Founder & Director
                   </p>
                 </div>
 
                 {/* Quote */}
-                <blockquote className="text-sm text-gray-600 leading-relaxed italic text-center mb-4">
+                <p className="text-sm text-gray-600 leading-relaxed text-center mb-4">
                   "Teaching the Qur'an and Islamic knowledge is the most honorable work. My goal is to make this accessible to every Muslim."
-                </blockquote>
+                </p>
 
                 {/* Bio Preview & Modal Trigger */}
-                <div className="border-t border-gray-100 pt-4">
-                  <p className="text-sm text-gray-600 leading-relaxed text-center">
-                    Supporting fellow Muslims through Islamic education 
-                  </p>
-
+                <div className="pt-4 mt-4 border-t border-gray-200">
                   <button
                     onClick={() => setFounderBioExpanded(true)}
-                    className="mt-3 text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 mx-auto"
+                    className="text-sm text-gray-900 hover:text-gray-700 font-medium flex items-center gap-1 mx-auto transition-colors"
                   >
-                    <span>Read full bio</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <span>Read biography</span>
+                    <ArrowRight className="h-3 w-3" />
                   </button>
                 </div>
               </div>
@@ -495,38 +499,37 @@ const LandingPage = () => {
 
                 {/* Modal Content */}
                 <div
-                  className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+                  className="relative bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Close Button */}
                   <button
                     onClick={() => setFounderBioExpanded(false)}
-                    className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                    className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors z-10"
                   >
                     <X className="h-5 w-5" />
                   </button>
 
-                  {/* Modal Header */}
-                  <div className="p-6 sm:p-8 pb-0">
-                    <div className="flex flex-col sm:flex-row items-center gap-6">
-                      <img
-                        src="/founder.jpeg"
-                        alt="Dr Abdulquadri Alaka"
-                        className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100 shadow-md"
-                      />
-                      <div className="text-center sm:text-left">
-                        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-                          Dr Abdulquadri Alaka
-                        </h3>
-                        <p className="text-emerald-700 font-medium">
-                          Founder & Director
-                        </p>
-                      </div>
+                  {/* Modal Header with Portrait */}
+                  <div className="relative">
+                    <img
+                      src="/founder.jpeg"
+                      alt="Dr Abdulquadri Alaka"
+                      className="w-full h-64 object-cover object-top"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                      <h3 className="text-3xl font-bold mb-1">
+                        Dr Abdulquadri Alaka
+                      </h3>
+                      <p className="text-lg">
+                        Founder & Director
+                      </p>
                     </div>
                   </div>
 
                   {/* Modal Body */}
-                  <div className="p-6 sm:p-8 space-y-4 text-gray-600 leading-relaxed text-justify">
+                  <div className="p-8 space-y-4 text-gray-700 leading-relaxed">
                     <p>
                       Dr. Abdulquadri Alaka's journey in Islamic education began at a young age, learning from prominent local scholars of Ahlus Sunnah wal Jama'ah in South West, Nigeria. His dedication to preserving and transmitting authentic Islamic knowledge has been the cornerstone of his life's work.
                     </p>
@@ -543,7 +546,7 @@ const LandingPage = () => {
                       Today, Dr. Abdulquadri is based in Tauranga, where he remains dedicated to da'wah and Islamic education. His vision for FastTrack Madrasah stems from a deep conviction that every Muslim deserves access to quality Qur'anic education, regardless of their starting point.
                     </p>
 
-                    <blockquote className="border-l-4 border-emerald-600 pl-4 italic text-gray-700 my-6">
+                    <blockquote className="border-l-2 border-gray-900 pl-6 italic text-gray-600 my-8">
                       "I founded FastTrack Madrasah because I believe that learning the Qur'an and understanding our Deen should not remain out of reach for any Muslim. With the right methodology and Allah's help, anyone can master what they once thought impossible."
                     </blockquote>
                   </div>
@@ -553,26 +556,26 @@ const LandingPage = () => {
           </div>
 
           {/* Sadaqah Jaariyah CTA */}
-          <div className="bg-emerald-50 rounded-lg p-6 sm:p-12 border border-gray-200">
-            <div className="max-w-2xl mx-auto text-center">
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">
+          <div className="max-w-2xl mx-auto mt-16 pt-12 border-t border-gray-200">
+            <div className="text-center space-y-6">
+              <h3 className="text-2xl font-semibold text-gray-900">
                 Be Part of Sadaqah Jaariyah
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-base text-gray-600 leading-relaxed">
                 Support our mission to make Qur'anic education accessible to every Muslim. Your contribution helps subsidize students who cannot afford fees and ensures this knowledge continues to benefit the Ummah—a charity whose rewards never cease.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded transition-colors">
                     <Heart className="h-4 w-4" />
-                    <span>Support Our Mission</span>
+                    <span>Support our Mission</span>
                   </button>
                 </a>
 
-                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-medium rounded transition-colors text-sm">
-                    <span>Learn About Our Programs</span>
+                <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)}>
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-700 font-medium rounded transition-colors">
+                    <span>Our Programs</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </Link>
@@ -1201,8 +1204,8 @@ const LandingPage = () => {
                 />
                 <div>
                   <div className="flex flex-col leading-none -space-y-1">
-                    <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                    <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
                   {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
                 </div>

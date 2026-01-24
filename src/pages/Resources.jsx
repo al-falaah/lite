@@ -69,10 +69,10 @@ const Resources = () => {
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex justify-between items-center h-14">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-70 transition-opacity">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
-              <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-xs font-brand font-semibold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-xs font-brand font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-7 w-7" />
+              <div className="flex flex-col justify-center leading-tight">
+                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link

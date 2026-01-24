@@ -17,9 +17,10 @@ export default {
         }
       },
       fontFamily: {
-        brand: ['Poppins', 'sans-serif'],
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'sans-serif'],
-        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+        brand: ['Space Grotesk', 'Inter', '-apple-system', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        serif: ['Lora', 'Georgia', 'Cambria', 'serif'],
+        arabic: ['Amiri Quran', 'serif'],
       }
     },
   },

@@ -534,8 +534,8 @@ export default function TeacherPortal() {
               <a href="/" className="flex items-center gap-2 sm:gap-3 group">
                 <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 sm:h-12 sm:w-12 transition-colors" />
                 <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-sm sm:text-base font-brand font-bold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-sm sm:text-base font-brand font-bold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                  <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                   {/* <div className="text-xs text-gray-600 font-arabic hidden sm:block"> أكاديمية الفلاح</div> */}
                 </div>
               </a>

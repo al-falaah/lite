@@ -31,11 +31,11 @@ const Programs = () => {
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-8 w-8" />
-              <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-sm sm:text-base font-brand font-semibold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-sm sm:text-base font-brand font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-7 w-7 md:h-8 md:w-8" />
+              <div className="flex flex-col justify-center leading-tight">
+                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link
@@ -104,7 +104,7 @@ const Programs = () => {
                     {/* Program Header */}
                     <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">{qari.name}</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl'}}>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
                         {qari.arabicName}
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -135,7 +135,7 @@ const Programs = () => {
                         <div className="flex gap-2 pt-1">
                           <span className="text-emerald-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
-                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>{qari.primaryText.arabic}</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">{qari.primaryText.transliteration}</span>
+                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm font-arabic">{qari.primaryText.arabic}</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">{qari.primaryText.transliteration}</span>
                           </p>
                         </div>
                       </div>
@@ -225,7 +225,7 @@ const Programs = () => {
                     {/* Program Header */}
                     <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">Tajweed Mastery Program (TMP)</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl'}}>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
                         برنامج إتقان التجويد
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -260,7 +260,7 @@ const Programs = () => {
                         <div className="flex gap-2 pt-1">
                           <span className="text-emerald-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
-                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> <span className="text-gray-600">(Su'ād 'Abdul-Ḥamīd)</span>
+                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm font-arabic">تيسير الرحمن في تجويد القرآن</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> <span className="text-gray-600">(Su'ād 'Abdul-Ḥamīd)</span>
                           </p>
                         </div>
                       </div>
@@ -353,7 +353,7 @@ const Programs = () => {
                     {/* Program Header */}
                     <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">Essential Arabic & Islamic Studies (EASI)</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl'}}>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose" className="font-arabic" style={{direction: 'rtl'}}>
                         الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -388,7 +388,7 @@ const Programs = () => {
                         <div className="flex gap-2 pt-1">
                           <span className="text-emerald-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
-                            <span className="font-semibold text-gray-900">Primary Texts:</span> Engage with classical works including <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide text-gray-600">Alfiyyat Ibn Mālik</span>), <span className="text-sm" style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> (<span className="italic font-serif tracking-wide text-gray-600">An-Naḥw al-Wāḍiḥ</span>), and more.
+                            <span className="font-semibold text-gray-900">Primary Texts:</span> Engage with classical works including <span className="text-sm font-arabic">ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide text-gray-600">Alfiyyat Ibn Mālik</span>), <span className="text-sm font-arabic">النحو الواضح</span> (<span className="italic font-serif tracking-wide text-gray-600">An-Naḥw al-Wāḍiḥ</span>), and more.
                           </p>
                         </div>
                       </div>
@@ -556,7 +556,7 @@ const Programs = () => {
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   {qari.name} ({qari.shortName})
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2" className="font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
                   {qari.arabicName}
                 </p>
                 {/* <p className="text-xs text-gray-500 italic">
@@ -606,7 +606,7 @@ const Programs = () => {
                         {qari.objectives.map((obj, idx) => (
                           <li key={idx}><span className="font-semibold">{obj.title}:</span> {obj.description}</li>
                         ))}
-                        <li><span className="font-semibold">Primary Text:</span> <span style={{fontFamily: 'Traditional Arabic, serif'}}>{qari.primaryText.arabic}</span> | <span className="italic font-serif tracking-wide">{qari.primaryText.transliteration}</span></li>
+                        <li><span className="font-semibold">Primary Text:</span> <span className="font-arabic">{qari.primaryText.arabic}</span> | <span className="italic font-serif tracking-wide">{qari.primaryText.transliteration}</span></li>
                       </ul>
                     </div>
 
@@ -651,7 +651,7 @@ const Programs = () => {
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   Tajweed Mastery Program (TMP)
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2" className="font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
                   برنامج إتقان التجويد
                 </p>
                 {/* <p className="text-xs text-gray-500 italic">
@@ -700,7 +700,7 @@ const Programs = () => {
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
                         <li> <span className="font-semibold">Mastery from A to Z:</span> Complete command over Tajweed rules through effective, focused instruction.</li>
                         <li> <span className="font-semibold">Scholarly Foundation:</span> Attain essential knowledge of <span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>.</li>
-                        <li> <span className="font-semibold">Primary Text:</span> <span style={{fontFamily: 'Traditional Arabic, serif'}}>تيسير الرحمن في تجويد القرآن</span> | <span className="italic font-serif tracking-wide">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> (Su'ād 'Abdul-Ḥamīd).</li>
+                        <li> <span className="font-semibold">Primary Text:</span> <span className="font-arabic">تيسير الرحمن في تجويد القرآن</span> | <span className="italic font-serif tracking-wide">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> (Su'ād 'Abdul-Ḥamīd).</li>
                       </ul>
                     </div>
 
@@ -745,7 +745,7 @@ const Programs = () => {
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   Essential Arabic & Islamic Studies (EASI)
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-2" style={{fontFamily: 'Traditional Arabic, serif', direction: 'rtl', lineHeight: '1.6'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2" className="font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
                   الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                 </p>
                 {/* <p className="text-xs text-gray-500 italic">
@@ -794,7 +794,7 @@ const Programs = () => {
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
                         <li> <span className="font-semibold">Linguistic Mastery:</span> Achieve intermediate Arabic proficiency through structured study of Grammar (<span className="italic font-serif tracking-wide">An-Naḥw</span>), Morphology (<span className="italic font-serif tracking-wide">Aṣ-Ṣarf</span>), and Spelling (<span className="italic font-serif tracking-wide">Al-Imlā&rsquo;</span>).</li>
                         <li> <span className="font-semibold">Scholarly Foundation:</span> Build sound Islamic knowledge in Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>).</li>
-                        <li> <span className="font-semibold">Primary Texts:</span> Engage with classical works including <span style={{fontFamily: 'Traditional Arabic, serif'}}>ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide">Alfiyyat Ibn Mālik</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>النحو الواضح</span> (<span className="italic font-serif tracking-wide">An-Naḥw al-Wāḍiḥ</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>المنهاج المختصر</span> (<span className="italic font-serif tracking-wide">Al-Minhāj al-Mukhtaṣar</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>مجموع عقيدة أهل السنة</span> (<span className="italic font-serif tracking-wide">Majmū&rsquo; &lsquo;Aqīdat Ahlus Sunnah</span>), <span style={{fontFamily: 'Traditional Arabic, serif'}}>الدرر البهية</span> (<span className="italic font-serif tracking-wide">Ad-Durar al-Bahiyyah</span>), and <span style={{fontFamily: 'Traditional Arabic, serif'}}>من آداب الإسلام</span> (<span className="italic font-serif tracking-wide">Min Ādāb al-Islām</span>).</li>
+                        <li> <span className="font-semibold">Primary Texts:</span> Engage with classical works including <span className="font-arabic">ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide">Alfiyyat Ibn Mālik</span>), <span className="font-arabic">النحو الواضح</span> (<span className="italic font-serif tracking-wide">An-Naḥw al-Wāḍiḥ</span>), <span className="font-arabic">المنهاج المختصر</span> (<span className="italic font-serif tracking-wide">Al-Minhāj al-Mukhtaṣar</span>), <span className="font-arabic">مجموع عقيدة أهل السنة</span> (<span className="italic font-serif tracking-wide">Majmū&rsquo; &lsquo;Aqīdat Ahlus Sunnah</span>), <span className="font-arabic">الدرر البهية</span> (<span className="italic font-serif tracking-wide">Ad-Durar al-Bahiyyah</span>), and <span className="font-arabic">من آداب الإسلام</span> (<span className="italic font-serif tracking-wide">Min Ādāb al-Islām</span>).</li>
                       </ul>
                     </div>
 
@@ -986,8 +986,8 @@ const Programs = () => {
                 />
                 <div>
                   <div className="flex flex-col leading-none -space-y-1">
-                    <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                    <span className="text-xs sm:text-sm md:text-base font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                   </div>
                 </div>
               </div>
