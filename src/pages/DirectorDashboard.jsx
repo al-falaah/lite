@@ -549,14 +549,14 @@ const DirectorDashboard = () => {
   const StatCard = ({ stat }) => {
     const Icon = stat.icon;
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 hover:shadow-sm transition-all">
-        <div className="flex items-start justify-between mb-3">
-          <div className={`${stat.bgColor} p-2 rounded-lg`}>
+      <div className="bg-white rounded-xl border border-gray-200 p-5 hover:border-gray-300 hover:shadow-sm transition-all">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`${stat.bgColor} p-2.5 rounded-lg shadow-sm`}>
             <Icon className={`h-5 w-5 ${stat.color}`} />
           </div>
         </div>
-        <p className="text-xs font-medium text-gray-600 mb-1">{stat.label}</p>
-        <p className={`text-2xl font-bold ${stat.color}`}>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{stat.label}</p>
+        <p className={`text-3xl font-bold ${stat.color}`}>
           {loading ? '...' : stat.value.toLocaleString()}
         </p>
       </div>
@@ -569,25 +569,30 @@ const DirectorDashboard = () => {
         <title>Director Dashboard | The FastTrack Madrasah</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200">
+        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-3">
-                <Shield className="h-6 w-6 text-emerald-600" />
-                <h1 className="text-lg sm:text-xl font-semibold text-gray-900">Director Dashboard</h1>
+                <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg flex items-center justify-center shadow-sm">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold text-gray-900">Director Dashboard</h1>
+                  <p className="text-xs text-gray-500">Administrative control center</p>
+                </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Link
                   to="/"
-                  className="hidden sm:block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  className="hidden sm:block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Visit Website
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
                 >
                   <LogOut className="h-4 w-4" />
                   <span className="hidden sm:inline">Logout</span>
@@ -600,13 +605,13 @@ const DirectorDashboard = () => {
         {/* Tabs */}
         <div className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-8 overflow-x-auto">
+            <div className="flex gap-6 overflow-x-auto">
               <button
                 onClick={() => setActiveTab('overview')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-semibold text-sm transition-all whitespace-nowrap ${
                   activeTab === 'overview'
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
                 }`}
               >
                 <BarChart3 className="h-5 w-5" />
@@ -614,10 +619,10 @@ const DirectorDashboard = () => {
               </button>
               <button
                 onClick={() => setActiveTab('links')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-semibold text-sm transition-all whitespace-nowrap ${
                   activeTab === 'links'
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
                 }`}
               >
                 <Shield className="h-5 w-5" />
@@ -628,15 +633,15 @@ const DirectorDashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           {/* Welcome Section */}
-          <div className="mb-8">
+          <div className="mb-10">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-1.5">
                   Welcome back, {profile?.full_name?.split(' ')[0] || 'Director'}
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-base">
                   {activeTab === 'overview'
                     ? 'Overview of all madrasah statistics and metrics'
                     : 'Quick access to all administrative areas'}
@@ -650,7 +655,7 @@ const DirectorDashboard = () => {
                     toast.success('Statistics refreshed');
                   }}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 text-white rounded-lg hover:bg-slate-900 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md font-semibold"
                 >
                   <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                   <span className="hidden sm:inline">Refresh</span>
@@ -664,7 +669,7 @@ const DirectorDashboard = () => {
             <div className="space-y-8">
               {/* Totals Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Totals</h3>
+                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Totals</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {statGroups.totals.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -674,7 +679,7 @@ const DirectorDashboard = () => {
 
               {/* Students Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Students</h3>
+                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Students</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   {statGroups.students.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -684,7 +689,7 @@ const DirectorDashboard = () => {
 
               {/* Teachers Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Teachers</h3>
+                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Teachers</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                   {statGroups.teachers.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -694,7 +699,7 @@ const DirectorDashboard = () => {
 
               {/* Applications & Store Section */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Applications & Store</h3>
+                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Applications & Store</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                   {statGroups.applications.map((stat) => (
                     <StatCard key={stat.label} stat={stat} />
@@ -709,9 +714,9 @@ const DirectorDashboard = () => {
               {!loading && (
                 <>
                   {/* Time Series - Applications by Month */}
-                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Applications Over Time</h3>
+                      <h3 className="text-lg font-bold text-gray-900 mb-4 sm:mb-0">Applications Over Time</h3>
 
                       {/* Filters */}
                       <div className="flex flex-wrap gap-3">
@@ -749,21 +754,21 @@ const DirectorDashboard = () => {
 
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart data={applicationsTimeSeries}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#6b7280' }} />
+                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
                         <Tooltip />
                         <Legend />
-                        <Line type="monotone" dataKey="applications" stroke="#10b981" strokeWidth={2} />
+                        <Line type="monotone" dataKey="applications" stroke="#4f46e5" strokeWidth={2.5} dot={{ fill: '#4f46e5', r: 4 }} activeDot={{ r: 6 }} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
 
                   {/* Track Comparison */}
-                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <div className="flex flex-col gap-4 mb-6">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-0">Applications by Track</h3>
+                        <h3 className="text-lg font-bold text-gray-900 mb-4 sm:mb-0">Applications by Track</h3>
 
                         {/* Time Range Filter */}
                         <div className="flex items-center gap-2">
@@ -786,12 +791,12 @@ const DirectorDashboard = () => {
                       <div className="flex flex-wrap gap-2">
                         <span className="text-sm text-gray-600 self-center">Show:</span>
                         {[
-                          { key: 'received', label: 'Received', color: 'bg-blue-500' },
-                          { key: 'approved', label: 'Approved', color: 'bg-emerald-500' },
-                          { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
-                          { key: 'enrolled', label: 'Enrolled', color: 'bg-purple-500' },
-                          { key: 'dropouts', label: 'Drop-outs', color: 'bg-amber-500' },
-                          { key: 'graduated', label: 'Graduated', color: 'bg-pink-500' }
+                          { key: 'received', label: 'Received', color: 'bg-slate-500' },
+                          { key: 'approved', label: 'Approved', color: 'bg-teal-600' },
+                          { key: 'rejected', label: 'Rejected', color: 'bg-rose-600' },
+                          { key: 'enrolled', label: 'Enrolled', color: 'bg-indigo-600' },
+                          { key: 'dropouts', label: 'Drop-outs', color: 'bg-amber-600' },
+                          { key: 'graduated', label: 'Graduated', color: 'bg-violet-600' }
                         ].map(({ key, label, color }) => (
                           <button
                             key={key}
@@ -816,44 +821,44 @@ const DirectorDashboard = () => {
 
                     <ResponsiveContainer width="100%" height={400}>
                       <BarChart data={trackComparison}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="track" />
-                        <YAxis />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis dataKey="track" tick={{ fontSize: 12, fill: '#6b7280' }} />
+                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
                         <Tooltip />
                         <Legend />
                         {trackComparisonFilter.categories.includes('received') && (
-                          <Bar dataKey="received" fill="#3b82f6" name="Received" />
+                          <Bar dataKey="received" fill="#64748b" name="Received" radius={[4, 4, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('approved') && (
-                          <Bar dataKey="approved" fill="#10b981" name="Approved" />
+                          <Bar dataKey="approved" fill="#0d9488" name="Approved" radius={[4, 4, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('rejected') && (
-                          <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
+                          <Bar dataKey="rejected" fill="#e11d48" name="Rejected" radius={[4, 4, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('enrolled') && (
-                          <Bar dataKey="enrolled" fill="#8b5cf6" name="Enrolled" />
+                          <Bar dataKey="enrolled" fill="#4f46e5" name="Enrolled" radius={[4, 4, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('dropouts') && (
-                          <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" />
+                          <Bar dataKey="dropouts" fill="#d97706" name="Drop-outs" radius={[4, 4, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('graduated') && (
-                          <Bar dataKey="graduated" fill="#ec4899" name="Graduated" />
+                          <Bar dataKey="graduated" fill="#7c3aed" name="Graduated" radius={[4, 4, 0, 0]} />
                         )}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
 
                   {/* Referral Sources Chart */}
-                  <div className="bg-white rounded-lg shadow p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">How Students Found Us</h3>
+                  <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">How Students Found Us</h3>
                     {referralSourceData.length > 0 ? (
                       <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={referralSourceData} layout="vertical">
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis type="number" />
-                          <YAxis dataKey="source" type="category" width={120} tick={{ fontSize: 12 }} />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
+                          <YAxis dataKey="source" type="category" width={120} tick={{ fontSize: 12, fill: '#6b7280' }} />
                           <Tooltip />
-                          <Bar dataKey="count" fill="#10b981" name="Applications" radius={[0, 4, 4, 0]} />
+                          <Bar dataKey="count" fill="#4f46e5" name="Applications" radius={[0, 4, 4, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
@@ -869,12 +874,14 @@ const DirectorDashboard = () => {
               {!loading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {stats.studentsWithoutTeacher > 0 && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <div className="flex items-start gap-3">
-                        <UserX className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-semibold text-red-900 mb-1">Action Required</h4>
-                          <p className="text-sm text-red-700">
+                    <div className="bg-white border-l-4 border-rose-500 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-rose-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <UserX className="h-5 w-5 text-rose-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 mb-1.5">Action Required</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">
                             {stats.studentsWithoutTeacher} {stats.studentsWithoutTeacher === 1 ? 'student needs' : 'students need'} to be assigned a teacher
                           </p>
                         </div>
@@ -883,12 +890,14 @@ const DirectorDashboard = () => {
                   )}
 
                   {stats.studentsPendingPayment > 0 && (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <div className="flex items-start gap-3">
-                        <DollarSign className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-semibold text-yellow-900 mb-1">Payment Pending</h4>
-                          <p className="text-sm text-yellow-700">
+                    <div className="bg-white border-l-4 border-amber-500 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <DollarSign className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 mb-1.5">Payment Pending</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">
                             {stats.studentsPendingPayment} {stats.studentsPendingPayment === 1 ? 'student has' : 'students have'} pending payments
                           </p>
                         </div>
@@ -897,12 +906,14 @@ const DirectorDashboard = () => {
                   )}
 
                   {stats.pendingApplications > 0 && (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                      <div className="flex items-start gap-3">
-                        <FileText className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-semibold text-yellow-900 mb-1">Pending Review</h4>
-                          <p className="text-sm text-yellow-700">
+                    <div className="bg-white border-l-4 border-blue-500 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FileText className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 mb-1.5">Pending Review</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">
                             {stats.pendingApplications} {stats.pendingApplications === 1 ? 'application needs' : 'applications need'} review
                           </p>
                         </div>
@@ -911,12 +922,14 @@ const DirectorDashboard = () => {
                   )}
 
                   {stats.teachersWithoutStudents > 0 && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-start gap-3">
-                        <Clock className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <h4 className="font-semibold text-blue-900 mb-1">Available Teachers</h4>
-                          <p className="text-sm text-blue-700">
+                    <div className="bg-white border-l-4 border-slate-400 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Clock className="h-5 w-5 text-slate-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 mb-1.5">Available Teachers</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">
                             {stats.teachersWithoutStudents} {stats.teachersWithoutStudents === 1 ? 'teacher is' : 'teachers are'} available for new students
                           </p>
                         </div>
@@ -930,29 +943,29 @@ const DirectorDashboard = () => {
 
           {/* Links Tab */}
           {activeTab === 'links' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {adminAreas.map((area) => {
                 const Icon = area.icon;
                 return (
                   <Link
                     key={area.href}
                     to={area.href}
-                    className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-md transition-all"
+                    className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-indigo-500 hover:shadow-md transition-all"
                   >
                     <div className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className={`${area.iconBg} p-3 rounded-lg group-hover:scale-110 transition-transform`}>
+                        <div className={`${area.iconBg} p-3.5 rounded-xl group-hover:scale-110 transition-transform shadow-sm`}>
                           <Icon className={`h-6 w-6 ${area.iconColor}`} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">
+                          <h4 className="text-base font-bold text-gray-900 mb-1.5 group-hover:text-indigo-600 transition-colors">
                             {area.title}
                           </h4>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-gray-600 leading-relaxed">
                             {area.description}
                           </p>
                         </div>
-                        <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                        <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
                       </div>
                     </div>
                   </Link>

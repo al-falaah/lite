@@ -268,30 +268,32 @@ const ResearchAdmin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Book className="h-8 w-8 text-emerald-600" />
+              <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg flex items-center justify-center shadow-sm">
+                <Book className="h-6 w-6 text-white" />
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Research Admin</h1>
-                <p className="text-sm text-gray-600">Manage lesson notes and course materials</p>
+                <h1 className="text-lg font-bold text-gray-900">Research Admin</h1>
+                <p className="text-xs text-gray-500">Manage lesson notes and course materials</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               {profile?.role === 'director' && (
                 <button
                   onClick={() => navigate('/director')}
-                  className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 font-medium"
+                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Dashboard
                 </button>
               )}
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-gray-900 font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
               >
                 <LogOut className="h-4 w-4" />
                 Logout
@@ -301,16 +303,17 @@ const ResearchAdmin = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-12 gap-6">
           {/* Left Sidebar - Courses */}
           <div className="col-span-12 lg:col-span-3">
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Courses</h2>
+            <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-bold text-gray-900 text-sm uppercase tracking-wide">Courses</h2>
                 <button
                   onClick={() => setShowCourseModal(true)}
-                  className="p-1 text-emerald-600 hover:text-emerald-700"
+                  className="p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all"
+                  title="Add new course"
                 >
                   <Plus className="h-5 w-5" />
                 </button>
@@ -320,24 +323,25 @@ const ResearchAdmin = () => {
                 {courses.map((course) => (
                   <div
                     key={course.id}
-                    className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                    className={`p-3.5 rounded-lg border cursor-pointer transition-all ${
                       selectedCourse?.id === course.id
-                        ? 'bg-emerald-50 border-emerald-200'
-                        : 'bg-white border-gray-200 hover:border-gray-300'
+                        ? 'bg-indigo-50 border-indigo-300 shadow-sm'
+                        : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm'
                     }`}
                     onClick={() => setSelectedCourse(course)}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <span className="text-xs font-medium text-emerald-600">{getProgramName(course.program_id)}</span>
-                        <p className="text-sm font-medium text-gray-900 truncate">{course.title}</p>
+                        <span className="text-xs font-bold text-indigo-600 uppercase tracking-wide">{getProgramName(course.program_id)}</span>
+                        <p className="text-sm font-semibold text-gray-900 truncate mt-0.5">{course.title}</p>
                       </div>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteCourse(course.id);
                         }}
-                        className="text-gray-400 hover:text-red-600"
+                        className="text-gray-400 hover:text-red-600 hover:bg-red-50 rounded p-1 transition-all"
+                        title="Delete course"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -346,7 +350,7 @@ const ResearchAdmin = () => {
                 ))}
                 
                 {courses.length === 0 && (
-                  <p className="text-sm text-gray-500 text-center py-8">No courses yet</p>
+                  <p className="text-sm text-gray-500 text-center py-10">No courses yet</p>
                 )}
               </div>
             </div>
@@ -355,13 +359,13 @@ const ResearchAdmin = () => {
           {/* Main Content - Chapters */}
           <div className="col-span-12 lg:col-span-9">
             {selectedCourse ? (
-              <div className="bg-white rounded-lg border border-gray-200">
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
                 <div className="border-b border-gray-200 p-6">
                   <h2 className="text-xl font-bold text-gray-900">{selectedCourse.title}</h2>
-                  <p className="text-sm text-gray-600 mt-1">{selectedCourse.description}</p>
+                  <p className="text-sm text-gray-600 mt-1.5">{selectedCourse.description}</p>
                   <button
                     onClick={handleCreateChapter}
-                    className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                    className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 text-white rounded-lg hover:bg-slate-900 font-semibold shadow-sm hover:shadow-md transition-all"
                   >
                     <Plus className="h-4 w-4" />
                     New Chapter
@@ -370,20 +374,20 @@ const ResearchAdmin = () => {
 
                 <div className="p-6">
                   {editingChapter ? (
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900">Editing Chapter</h3>
+                        <h3 className="text-lg font-bold text-gray-900">Editing Chapter</h3>
                         <div className="flex items-center gap-2">
                           <button
                             onClick={handleSaveChapter}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 text-white rounded-lg hover:bg-slate-900 font-semibold shadow-sm hover:shadow-md transition-all"
                           >
                             <Save className="h-4 w-4" />
                             Save
                           </button>
                           <button
                             onClick={() => setEditingChapter(null)}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-all"
                           >
                             <X className="h-4 w-4" />
                             Cancel
@@ -392,24 +396,24 @@ const ResearchAdmin = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Chapter Title</label>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Chapter Title</label>
                         <input
                           type="text"
                           value={editingChapter.title}
                           onChange={(e) => setEditingChapter({ ...editingChapter, title: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">
                           Content (Supports Markdown, Arabic text, and HTML)
                         </label>
                         <textarea
                           value={editingChapter.content}
                           onChange={(e) => setEditingChapter({ ...editingChapter, content: e.target.value })}
                           rows={20}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 font-mono text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow font-mono text-sm"
                           placeholder="Write your lesson content here...&#10;&#10;Use HTML for special formatting:&#10;- <div class='verse'>Quranic verse</div>&#10;- <div class='tip'>Quick tip</div>&#10;- <table> for tables&#10;- Arabic text works natively"
                         />
                       </div>
@@ -428,19 +432,19 @@ const ResearchAdmin = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       {chapters.map((chapter) => (
                         <div
                           key={chapter.id}
-                          className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300"
+                          className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium text-gray-500">#{chapter.chapter_number}</span>
+                            <span className="text-sm font-bold text-gray-500">#{chapter.chapter_number}</span>
                             <div>
-                              <p className="font-medium text-gray-900">{chapter.title}</p>
-                              <p className="text-xs text-gray-500">
+                              <p className="font-semibold text-gray-900">{chapter.title}</p>
+                              <p className="text-xs text-gray-500 mt-0.5">
                                 {chapter.is_published ? (
-                                  <span className="text-emerald-600">Published</span>
+                                  <span className="text-indigo-600 font-semibold">Published</span>
                                 ) : (
                                   <span className="text-gray-500">Draft</span>
                                 )}
@@ -448,7 +452,7 @@ const ResearchAdmin = () => {
                             </div>
                           </div>
                           
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
                             <button
                               onClick={() => setPreviewChapter(chapter)}
                               className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
@@ -491,9 +495,9 @@ const ResearchAdmin = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                <Book className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Select a course to manage its chapters</p>
+              <div className="bg-white rounded-xl border border-gray-200 p-16 text-center shadow-sm">
+                <Book className="h-14 w-14 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-600 font-medium">Select a course to manage its chapters</p>
               </div>
             )}
           </div>
@@ -502,9 +506,9 @@ const ResearchAdmin = () => {
 
       {/* Create Course Modal */}
       {showCourseModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Create New Course</h2>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl">
+            <h2 className="text-xl font-bold text-gray-900 mb-5">Create New Course</h2>
             <form onSubmit={handleCreateCourse} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Course Title</label>
