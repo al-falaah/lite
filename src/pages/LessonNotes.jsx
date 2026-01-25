@@ -5,6 +5,99 @@ import { BookOpen, ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DOMPurify from 'dompurify';
 
+// Disable screenshots and screen recording
+const preventScreenCapture = () => {
+  // Add visual watermark overlay
+  const watermark = document.createElement('div');
+  watermark.className = 'lesson-watermark';
+  document.body.appendChild(watermark);
+
+  // Prevent right-click context menu
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.lesson-content-protected')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Detect screenshot attempts and blur content
+  let blurTimeout;
+  const blurContent = () => {
+    const content = document.querySelector('.lesson-content-protected');
+    if (content) {
+      content.style.filter = 'blur(20px)';
+      content.style.transition = 'filter 0.1s';
+      
+      clearTimeout(blurTimeout);
+      blurTimeout = setTimeout(() => {
+        content.style.filter = 'none';
+      }, 3000);
+    }
+  };
+
+  // Prevent keyboard shortcuts for copy/screenshot
+  document.addEventListener('keydown', (e) => {
+    if (!e.target.closest('.lesson-content-protected')) return;
+    
+    // Prevent Cmd+C, Cmd+X, Cmd+P, Cmd+S
+    if ((e.metaKey || e.ctrlKey) && 
+        ['c', 'x', 'p', 's'].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+      blurContent();
+      return false;
+    }
+    
+    // Detect screenshot shortcuts and blur
+    // Mac: Cmd+Shift+3, Cmd+Shift+4, Cmd+Shift+5
+    if (e.metaKey && e.shiftKey && ['3', '4', '5'].includes(e.key)) {
+      blurContent();
+      e.preventDefault();
+      return false;
+    }
+    
+    // Windows: PrintScreen, Alt+PrintScreen, Win+Shift+S
+    if (e.key === 'PrintScreen' || 
+        (e.key === 's' && e.metaKey && e.shiftKey) ||
+        (e.key === 'S' && e.metaKey && e.shiftKey)) {
+      blurContent();
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Detect when window loses focus (possible screenshot tool)
+  let wasBlurred = false;
+  window.addEventListener('blur', () => {
+    wasBlurred = true;
+    blurContent();
+  });
+
+  window.addEventListener('focus', () => {
+    if (wasBlurred) {
+      setTimeout(() => {
+        const content = document.querySelector('.lesson-content-protected');
+        if (content) content.style.filter = 'none';
+      }, 500);
+      wasBlurred = false;
+    }
+  });
+
+  // Prevent drag and drop
+  document.addEventListener('dragstart', (e) => {
+    if (e.target.closest('.lesson-content-protected')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // Detect visibility change (screenshot tools often cause this)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      blurContent();
+    }
+  });
+};
+
 const LessonNotes = () => {
   const { courseSlug } = useParams();
   const [course, setCourse] = useState(null);
@@ -23,6 +116,17 @@ const LessonNotes = () => {
   useEffect(() => {
     localStorage.setItem('lessonNotesTheme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    // Enable content protection
+    preventScreenCapture();
+    
+    return () => {
+      // Cleanup watermark on unmount
+      const watermark = document.querySelector('.lesson-watermark');
+      if (watermark) watermark.remove();
+    };
+  }, []);
 
   const cycleTheme = () => {
     setTheme(current => {
@@ -110,15 +214,96 @@ const LessonNotes = () => {
   const hasNext = currentIndex < chapters.length - 1;
 
   return (
-    <div className={`min-h-screen transition-colors ${
+    <div className={`min-h-screen transition-colors lesson-content-protected ${
       theme === 'dark' ? 'bg-gray-900' : theme === 'sepia' ? 'bg-[#f5f1e8]' : 'bg-white'
-    }`}>
+    }`} style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}>
       <Helmet>
         <title>{course.title} | Lesson Notes | The FastTrack Madrasah</title>
         <meta
           name="description"
           content={course.description || `Lesson notes and study materials for ${course.title}`}
         />
+        <style>{`
+          @media print {
+            body { display: none !important; }
+          }
+          .lesson-content-protected * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-touch-callout: none !important;
+          }
+          .lesson-watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            overflow: hidden;
+          }
+          .lesson-watermark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 250px,
+              rgba(0, 0, 0, 0.005) 250px,
+              rgba(0, 0, 0, 0.005) 500px
+            );
+          }
+          .lesson-watermark::after {
+            content: '\u00a9 The FastTrack Madrasah';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 4rem;
+            color: rgba(0, 0, 0, 0.012);
+            white-space: nowrap;
+            pointer-events: none;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+          }
+          /* Dynamic watermark repeating pattern */
+          body.lesson-page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            pointer-events: none;
+            z-index: 9997;
+            background-image: 
+              repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 150px,
+                rgba(0, 0, 0, 0.008) 150px,
+                rgba(0, 0, 0, 0.008) 151px
+              );
+          }
+          @media screen and (-webkit-min-device-pixel-ratio:0) {
+            body::before {
+              content: '';
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              pointer-events: none;
+              z-index: 9999;
+            }
+          }
+        `}</style>
       </Helmet>
 
       {/* Navigation */}
@@ -305,6 +490,28 @@ const LessonNotes = () => {
                       Next →
                     </button>
                   </div>
+                </div>
+
+                {/* Copyright Notice */}
+                <div className={`border-t px-8 py-4 text-center transition-colors ${
+                  theme === 'dark' ? 'border-gray-700 bg-gray-900' : 
+                  theme === 'sepia' ? 'border-[#d4c9b8] bg-[#ebe4d8]' :
+                  'border-gray-200 bg-gray-50'
+                }`}>
+                  <p className={`text-xs ${
+                    theme === 'dark' ? 'text-gray-400' : 
+                    theme === 'sepia' ? 'text-[#5a4a3a]' :
+                    'text-gray-600'
+                  }`}>
+                    © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
+                  </p>
+                  <p className={`text-xs mt-1 ${
+                    theme === 'dark' ? 'text-gray-500' : 
+                    theme === 'sepia' ? 'text-[#8a7a6a]' :
+                    'text-gray-500'
+                  }`}>
+                    This content is proprietary and confidential. Unauthorized copying, distribution, or reproduction is strictly prohibited.
+                  </p>
                 </div>
               </div>
             ) : (
