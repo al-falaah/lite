@@ -17,7 +17,9 @@ import {
   AlignLeft,
   AlignCenter,
   Eye,
-  Code2
+  Code2,
+  Undo,
+  Redo
 } from 'lucide-react';
 
 const RichTextEditor = ({ value, onChange, placeholder }) => {
@@ -26,6 +28,71 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
   const [linkText, setLinkText] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   const textareaRef = useRef(null);
+  
+  // Undo/Redo state
+  const [history, setHistory] = useState([value]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+  const isUndoRedoAction = useRef(false);
+
+  // Update history when value changes (but not during undo/redo)
+  useEffect(() => {
+    if (!isUndoRedoAction.current && value !== history[historyIndex]) {
+      const newHistory = history.slice(0, historyIndex + 1);
+      newHistory.push(value);
+      
+      // Limit history to 50 states
+      if (newHistory.length > 50) {
+        newHistory.shift();
+        setHistory(newHistory);
+        setHistoryIndex(newHistory.length - 1);
+      } else {
+        setHistory(newHistory);
+        setHistoryIndex(newHistory.length - 1);
+      }
+    }
+    isUndoRedoAction.current = false;
+  }, [value]);
+
+  // Handle keyboard shortcuts for undo/redo
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Undo: Cmd/Ctrl + Z
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+      // Redo: Cmd/Ctrl + Shift + Z or Cmd/Ctrl + Y
+      else if (((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'z') ||
+               ((e.metaKey || e.ctrlKey) && e.key === 'y')) {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.addEventListener('keydown', handleKeyDown);
+      return () => textarea.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [historyIndex, history]);
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      isUndoRedoAction.current = true;
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      onChange(history[newIndex]);
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      isUndoRedoAction.current = true;
+      const newIndex = historyIndex + 1;
+      setHistoryIndex(newIndex);
+      onChange(history[newIndex]);
+    }
+  };
 
   const insertAtCursor = (before, after = '', defaultText = '') => {
     const textarea = textareaRef.current;
@@ -102,8 +169,8 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
     insertBlock('<blockquote>\n  Quote text here\n</blockquote>');
   };
 
-  const formatVerse = () => {
-    insertBlock('<div class="verse">\n  Quranic verse or Arabic text here\n</div>');
+  const formatArabicText = () => {
+    insertBlock('<div class="verse">\n  Arabic text here (Quranic or otherwise)\n</div>');
   };
 
   const formatTip = () => {
@@ -173,6 +240,22 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
     <div className="border border-gray-300 rounded-lg overflow-hidden">
       {/* Toolbar */}
       <div className="bg-gray-50 border-b border-gray-300 p-2 flex flex-wrap gap-1">
+        {/* Undo/Redo */}
+        <div className="flex items-center gap-1 pr-2 border-r border-gray-300">
+          <FormatButton 
+            icon={Undo} 
+            onClick={handleUndo} 
+            title="Undo (Ctrl+Z)" 
+            className={historyIndex === 0 ? 'opacity-40 cursor-not-allowed' : ''}
+          />
+          <FormatButton 
+            icon={Redo} 
+            onClick={handleRedo} 
+            title="Redo (Ctrl+Y)" 
+            className={historyIndex === history.length - 1 ? 'opacity-40 cursor-not-allowed' : ''}
+          />
+        </div>
+
         {/* Text Formatting */}
         <div className="flex items-center gap-1 pr-2 border-r border-gray-300">
           <FormatButton icon={Bold} onClick={formatBold} title="Bold (Ctrl+B)" />
@@ -207,7 +290,7 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
 
         {/* Special Blocks */}
         <div className="flex items-center gap-1 pr-2 border-r border-gray-300">
-          <FormatButton icon={BookOpen} onClick={formatVerse} title="Quranic Verse Block" />
+          <FormatButton icon={BookOpen} onClick={formatArabicText} title="Arabic Text Block" />
           <FormatButton icon={Lightbulb} onClick={formatTip} title="Tip Box" />
           <FormatButton icon={Table} onClick={formatTable} title="Insert Table" />
         </div>
@@ -285,6 +368,17 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
       {/* Editor Area */}
       {showPreview ? (
         <div className="p-6 bg-white min-h-[400px] max-h-[600px] overflow-y-auto">
+          <style>{`
+            .verse {
+              font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+              font-size: 28px !important;
+              line-height: 2 !important;
+              text-align: center;
+              direction: rtl;
+              font-style: normal !important;
+              font-weight: normal !important;
+            }
+          `}</style>
           <div 
             className="prose max-w-none
               prose-headings:font-normal prose-headings:text-gray-900
@@ -302,9 +396,10 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
               prose-table:border-collapse prose-table:w-full
               prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm
               prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-2 prose-td:text-sm
-              [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4
+              [&_.verse]:text-2xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:leading-relaxed [&_.verse]:py-4
               [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4
               [&_.tip:before]:content-['💡_Tip:'] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1"
+            style={{ fontFamily: 'inherit' }}
             dangerouslySetInnerHTML={{ __html: value }}
           />
         </div>
@@ -326,8 +421,8 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
           <Code2 className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
           <div>
             <span className="font-semibold">Special blocks:</span> 
-            <span className="ml-1">Use the toolbar buttons to insert verse blocks, tip boxes, and tables.</span>
-            <span className="ml-2 text-gray-500">Arabic text is fully supported.</span>
+            <span className="ml-1">Use the toolbar buttons to insert Arabic text blocks, tip boxes, and tables.</span>
+            <span className="ml-2 text-gray-500">Arabic text uses Amiri font.</span>
           </div>
         </div>
       </div>
