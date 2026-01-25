@@ -12,9 +12,53 @@ const preventScreenCapture = () => {
   watermark.className = 'lesson-watermark';
   document.body.appendChild(watermark);
 
-  // Prevent right-click context menu
+  // Prevent right-click context menu (desktop and mobile)
   document.addEventListener('contextmenu', (e) => {
     if (e.target.closest('.lesson-content-protected')) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, { capture: true, passive: false });
+
+  // Prevent iOS long-press context menu
+  document.addEventListener('touchstart', (e) => {
+    if (e.target.closest('.lesson-content-protected')) {
+      const touch = e.touches[0];
+      let longPressTimer = setTimeout(() => {
+        // Prevent long press menu
+      }, 500);
+      
+      document.addEventListener('touchend', () => {
+        clearTimeout(longPressTimer);
+      }, { once: true });
+      
+      document.addEventListener('touchmove', () => {
+        clearTimeout(longPressTimer);
+      }, { once: true });
+    }
+  }, { passive: true });
+
+  // Prevent iOS callout (long-press menu)
+  document.addEventListener('touchend', (e) => {
+    if (e.target.closest('.lesson-content-protected')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Prevent iOS copy/paste
+  document.addEventListener('copy', (e) => {
+    if (e.target.closest('.lesson-content-protected') || 
+        document.activeElement.closest('.lesson-content-protected')) {
+      e.preventDefault();
+      e.clipboardData?.setData('text/plain', '');
+      return false;
+    }
+  });
+
+  document.addEventListener('cut', (e) => {
+    if (e.target.closest('.lesson-content-protected') || 
+        document.activeElement.closest('.lesson-content-protected')) {
       e.preventDefault();
       return false;
     }
@@ -226,13 +270,37 @@ const LessonNotes = () => {
         <style>{`
           @media print {
             body { display: none !important; }
+            * { display: none !important; }
           }
+          .lesson-content-protected,
           .lesson-content-protected * {
             user-select: none !important;
             -webkit-user-select: none !important;
             -moz-user-select: none !important;
             -ms-user-select: none !important;
             -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-user-drag: none !important;
+            -khtml-user-select: none !important;
+            pointer-events: auto !important;
+          }
+          /* iOS specific protections */
+          @supports (-webkit-touch-callout: none) {
+            .lesson-content-protected,
+            .lesson-content-protected * {
+              -webkit-touch-callout: none !important;
+              -webkit-user-select: none !important;
+              user-select: none !important;
+            }
+          }
+          /* Prevent iOS text selection handles */
+          .lesson-content-protected *::selection {
+            background: transparent !important;
+            color: inherit !important;
+          }
+          .lesson-content-protected *::-moz-selection {
+            background: transparent !important;
+            color: inherit !important;
           }
           .lesson-watermark {
             position: fixed;
@@ -271,6 +339,23 @@ const LessonNotes = () => {
             pointer-events: none;
             font-weight: 600;
             letter-spacing: 0.2em;
+          }
+          /* Mobile watermark - more visible on smaller screens */
+          @media (max-width: 768px) {
+            .lesson-watermark::after {
+              font-size: 2.5rem;
+              color: rgba(0, 0, 0, 0.025);
+              content: '\u00a9 TFM - Do Not Copy';
+            }
+            .lesson-watermark::before {
+              background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 150px,
+                rgba(0, 0, 0, 0.015) 150px,
+                rgba(0, 0, 0, 0.015) 300px
+              );
+            }
           }
           /* Dynamic watermark repeating pattern */
           body.lesson-page::before {
