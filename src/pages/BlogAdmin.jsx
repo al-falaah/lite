@@ -6,6 +6,7 @@ import { Save, Eye, Trash2, Edit2, Home } from 'lucide-react';
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/common/Card';
+import RichTextEditor from '../components/common/RichTextEditor';
 
 const CATEGORIES = [
   'General',
@@ -507,28 +508,7 @@ const BlogAdmin = () => {
     });
   };
 
-  const insertFormatting = (before, after = '') => {
-    const textarea = document.getElementById('content-editor');
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = formData.content.substring(start, end);
-    const newText =
-      formData.content.substring(0, start) +
-      before +
-      selectedText +
-      after +
-      formData.content.substring(end);
 
-    setFormData({ ...formData, content: newText });
-
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(
-        start + before.length,
-        start + before.length + selectedText.length
-      );
-    }, 0);
-  };
 
   // Only show loading while auth is checking
   // Don't wait indefinitely for profile if user exists
@@ -870,96 +850,17 @@ const BlogAdmin = () => {
                 />
               </div>
 
-              {/* Formatting Toolbar */}
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Content * (HTML supported)
-                </label>
-                <div className="flex flex-wrap gap-2 mb-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<h2>', '</h2>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Heading 2"
-                  >
-                    H2
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<h3>', '</h3>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Heading 3"
-                  >
-                    H3
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<p>', '</p>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Paragraph"
-                  >
-                    P
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<strong>', '</strong>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 font-bold"
-                    title="Bold"
-                  >
-                    B
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<em>', '</em>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 italic"
-                    title="Italic"
-                  >
-                    I
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<ul>\n  <li>', '</li>\n</ul>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Bullet List"
-                  >
-                    UL
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<a href="">', '</a>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Link"
-                  >
-                    Link
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<sup>', '</sup>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Superscript"
-                  >
-                    X<sup className="text-xs">2</sup>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('<sub>', '</sub>')}
-                    className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100"
-                    title="Subscript"
-                  >
-                    X<sub className="text-xs">2</sub>
-                  </button>
-                </div>
-              </div>
-
               {/* Content Editor */}
-              <textarea
-                id="content-editor"
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                rows="20"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm"
-                placeholder="Write your content here. HTML tags are supported."
-              />
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Content *
+                </label>
+                <RichTextEditor
+                  value={formData.content}
+                  onChange={(newContent) => setFormData({ ...formData, content: newContent })}
+                  placeholder="Write your blog content here... Use the formatting buttons above to style your content."
+                />
+              </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3 mt-6">
