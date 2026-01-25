@@ -629,6 +629,7 @@ const AdminStudentsList = () => {
     enrolled: studentsData.filter(s => s.status === 'enrolled').length,
     graduated: studentsData.filter(s => s.status === 'graduated').length,
     dropout: studentsData.filter(s => s.status === 'dropout').length,
+    qariEnrollments: enrollmentsData.filter(e => e.program === PROGRAM_IDS.QARI && e.status === 'active').length,
     essentialsEnrollments: enrollmentsData.filter(e => e.program === PROGRAM_IDS.ESSENTIALS && e.status === 'active').length,
     tajweedEnrollments: enrollmentsData.filter(e => e.program === PROGRAM_IDS.TAJWEED && e.status === 'active').length
   };
@@ -668,7 +669,7 @@ const AdminStudentsList = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-6">
         <Card>
           <div className="flex items-center justify-between">
             <div>
@@ -706,6 +707,16 @@ const AdminStudentsList = () => {
               <div className="text-xl sm:text-3xl font-bold text-red-600">{stats.dropout}</div>
             </div>
             <XCircle className="h-8 w-8 sm:h-10 sm:w-10 text-red-400" />
+          </div>
+        </Card>
+
+        <Card className="bg-emerald-50 border-emerald-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs sm:text-sm text-emerald-700">QARI</div>
+              <div className="text-xl sm:text-3xl font-bold text-emerald-900">{stats.qariEnrollments}</div>
+            </div>
+            <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-emerald-400" />
           </div>
         </Card>
 
@@ -791,8 +802,9 @@ const AdminStudentsList = () => {
           <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
             {[
               { value: 'all', label: 'All Programs' },
-              { value: PROGRAM_IDS.ESSENTIALS, label: PROGRAMS[PROGRAM_IDS.ESSENTIALS].name },
-              { value: PROGRAM_IDS.TAJWEED, label: PROGRAMS[PROGRAM_IDS.TAJWEED].name }
+              { value: PROGRAM_IDS.QARI, label: PROGRAMS[PROGRAM_IDS.QARI].shortName },
+              { value: PROGRAM_IDS.ESSENTIALS, label: PROGRAMS[PROGRAM_IDS.ESSENTIALS].shortName },
+              { value: PROGRAM_IDS.TAJWEED, label: PROGRAMS[PROGRAM_IDS.TAJWEED].shortName }
             ].map((filter) => (
               <button
                 key={filter.value}
@@ -890,6 +902,8 @@ const AdminStudentsList = () => {
                               className={`px-2 py-1 rounded text-xs font-medium ${
                                 enrollment.program === PROGRAM_IDS.TAJWEED
                                   ? 'bg-purple-100 text-purple-800'
+                                  : enrollment.program === PROGRAM_IDS.QARI
+                                  ? 'bg-emerald-100 text-emerald-800'
                                   : 'bg-blue-100 text-blue-800'
                               }`}
                             >
@@ -1086,6 +1100,8 @@ const AdminStudentsList = () => {
                         className={`rounded-lg p-3 sm:p-4 border-2 ${
                           enrollment.program === PROGRAM_IDS.TAJWEED
                             ? 'bg-purple-50 border-purple-200'
+                            : enrollment.program === PROGRAM_IDS.QARI
+                            ? 'bg-emerald-50 border-emerald-200'
                             : 'bg-blue-50 border-blue-200'
                         }`}
                       >

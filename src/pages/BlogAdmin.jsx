@@ -859,6 +859,7 @@ const BlogAdmin = () => {
                   value={formData.content}
                   onChange={(newContent) => setFormData({ ...formData, content: newContent })}
                   placeholder="Write your blog content here... Use the formatting buttons above to style your content."
+                  useBlogStyle={true}
                 />
               </div>
 

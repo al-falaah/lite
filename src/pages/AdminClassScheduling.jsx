@@ -233,7 +233,7 @@ const AdminClassScheduling = () => {
       if (checkError) throw checkError;
 
       if (existingSchedules && existingSchedules.length > 0) {
-        const programName = generateForm.program === 'tajweed' ? 'Tajweed Program' : 'Essentials Program';
+        const programName = PROGRAMS[generateForm.program]?.name || generateForm.program;
         toast.error(`Schedules already exist for ${programName}. Delete existing schedules first or add classes individually.`);
         setGenerating(false);
         return;
@@ -290,7 +290,7 @@ const AdminClassScheduling = () => {
       }
 
       const totalClasses = schedulesToCreate.length;
-      const programName = isTajweed ? 'Tajweed Program' : 'Essentials Program';
+      const programName = PROGRAMS[generateForm.program]?.name || generateForm.program;
       toast.success(`Full schedule generated for ${programName}! (${totalClasses} classes created)`);
       setShowGenerateModal(false);
       setGenerateForm({
@@ -819,10 +819,9 @@ const AdminClassScheduling = () => {
                             // Count schedules for this program
                             const programSchedules = schedules.filter(s => s.program === enrollment.program);
                             const hasSchedules = programSchedules.length > 0;
-                            const programName = enrollment.program === 'tajweed'
-                              ? 'Tajweed Program'
-                              : 'Essential Islamic Studies';
-                            const expectedClasses = enrollment.program === 'tajweed' ? 48 : 208;
+                            const programName = PROGRAMS[enrollment.program]?.name || enrollment.program;
+                            const programConfig = PROGRAMS[enrollment.program];
+                            const expectedClasses = programConfig ? programConfig.duration.weeks * 2 : 0;
 
                             return (
                               <div
@@ -881,16 +880,18 @@ const AdminClassScheduling = () => {
                       {Array.isArray(progress) ? (
                         // Multiple programs - show each separately
                         progress.map((prog, index) => {
-                          const programName = prog.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies';
+                          const programName = PROGRAMS[prog.program]?.name || prog.program;
                           return (
                             <div key={`${prog.student_id}-${prog.program}`} className="space-y-2">
                               <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
                                 <span className="text-sm font-semibold text-gray-800">{programName}</span>
-                                {prog.program === 'tajweed' ? (
-                                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">6 months</span>
-                                ) : (
-                                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">2 years</span>
-                                )}
+                                <span className={`text-xs px-2 py-0.5 rounded ${
+                                  prog.program === 'tajweed' ? 'bg-purple-100 text-purple-700' :
+                                  prog.program === 'qari' ? 'bg-emerald-100 text-emerald-700' :
+                                  'bg-blue-100 text-blue-700'
+                                }`}>
+                                  {PROGRAMS[prog.program]?.duration.display || ''}
+                                </span>
                               </div>
                               <div className="grid md:grid-cols-3 gap-4">
                                 {prog.program !== 'tajweed' && (
@@ -956,13 +957,15 @@ const AdminClassScheduling = () => {
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg">
                             <span className="text-sm font-semibold text-gray-800">
-                              {progress.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies'}
+                              {PROGRAMS[progress.program]?.name || progress.program}
                             </span>
-                            {progress.program === 'tajweed' ? (
-                              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">6 months</span>
-                            ) : (
-                              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">2 years</span>
-                            )}
+                            <span className={`text-xs px-2 py-0.5 rounded ${
+                              progress.program === 'tajweed' ? 'bg-purple-100 text-purple-700' :
+                              progress.program === 'qari' ? 'bg-emerald-100 text-emerald-700' :
+                              'bg-blue-100 text-blue-700'
+                            }`}>
+                              {PROGRAMS[progress.program]?.duration.display || ''}
+                            </span>
                           </div>
                           <div className="grid md:grid-cols-3 gap-4">
                             {progress.program !== 'tajweed' && (
@@ -1433,7 +1436,7 @@ const AdminClassScheduling = () => {
                   <option value="">Select program</option>
                   {selectedStudent?.enrollments?.filter(e => e.status === 'active').map(enrollment => (
                     <option key={enrollment.program} value={enrollment.program}>
-                      {enrollment.program === 'tajweed' ? 'Tajweed Program' : 'Essential Arabic & Islamic Studies'}
+                      {PROGRAMS[enrollment.program]?.name || enrollment.program}
                     </option>
                   ))}
                 </select>

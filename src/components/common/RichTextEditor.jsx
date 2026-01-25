@@ -22,7 +22,7 @@ import {
   Redo
 } from 'lucide-react';
 
-const RichTextEditor = ({ value, onChange, placeholder }) => {
+const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
@@ -56,6 +56,24 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
   // Handle keyboard shortcuts for undo/redo
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Tab key - insert tab character
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+        
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const newText = value.substring(0, start) + '  ' + value.substring(end); // 2 spaces
+        onChange(newText);
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 2, start + 2);
+        }, 0);
+        return;
+      }
+      
       // Undo: Cmd/Ctrl + Z
       if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
         e.preventDefault();
@@ -378,9 +396,53 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
               font-style: normal !important;
               font-weight: normal !important;
             }
+            ${useBlogStyle ? `
+              .blog-style-preview p {
+                font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
+                font-size: 21px !important;
+                line-height: 1.58 !important;
+                color: #1a1a1a !important;
+                margin-bottom: 28px !important;
+                text-align: left !important;
+              }
+              @media (min-width: 640px) {
+                .blog-style-preview p[dir="ltr"],
+                .blog-style-preview p:not([dir="rtl"]) {
+                  text-align: justify !important;
+                }
+              }
+              .blog-style-preview p[dir="rtl"] {
+                text-align: right !important;
+                font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+                font-size: 24px !important;
+                line-height: 2 !important;
+              }
+              .blog-style-preview ul,
+              .blog-style-preview ol {
+                font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
+                margin: 24px 0 !important;
+              }
+              .blog-style-preview li {
+                font-size: 21px !important;
+                line-height: 1.58 !important;
+                margin: 8px 0 !important;
+              }
+              .blog-style-preview h2 {
+                font-size: 32px !important;
+                line-height: 1.25 !important;
+                margin-top: 48px !important;
+                margin-bottom: 16px !important;
+              }
+              .blog-style-preview h3 {
+                font-size: 24px !important;
+                line-height: 1.35 !important;
+                margin-top: 40px !important;
+                margin-bottom: 12px !important;
+              }
+            ` : ''}
           `}</style>
-          <div 
-            className="prose max-w-none
+          <div
+            className={`${useBlogStyle ? 'blog-style-preview' : ''} prose max-w-none
               prose-headings:font-normal prose-headings:text-gray-900
               prose-h1:text-2xl prose-h1:mt-6 prose-h1:mb-4 prose-h1:font-bold
               prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
@@ -398,7 +460,7 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
               prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-2 prose-td:text-sm
               [&_.verse]:text-2xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:leading-relaxed [&_.verse]:py-4
               [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4
-              [&_.tip:before]:content-['💡_Tip:'] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1"
+              [&_.tip:before]:content-['💡_Tip:'] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1`}
             style={{ fontFamily: 'inherit' }}
             dangerouslySetInnerHTML={{ __html: value }}
           />

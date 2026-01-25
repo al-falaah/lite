@@ -24,8 +24,9 @@ import { supabase } from '../../services/supabase';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import { toast } from 'sonner';
+import { PROGRAMS, PROGRAM_IDS, getProgramMilestones } from '../../config/programs';
 
-// Milestone configurations
+// Milestone configurations (fallback - prefer using centralized config)
 const TAJWEED_MILESTONES = [
   { id: 1, name: 'Foundation', subtitle: 'Laying Your Foundation', weekStart: 1, weekEnd: 4 },
   { id: 2, name: 'Discovery', subtitle: 'The Path of Discovery', weekStart: 5, weekEnd: 8 },
@@ -289,16 +290,17 @@ const AvailabilityCalendar = () => {
       if (checkError) throw checkError;
 
       if (existingSchedules && existingSchedules.length > 0) {
-        const programName = generateForm.program === 'tajweed' ? 'Tajweed Program' : 'Essentials Program';
+        const programConfig = PROGRAMS[generateForm.program];
+        const programName = programConfig?.name || generateForm.program;
         toast.error(`Schedules already exist for ${programName}. Delete existing schedules first.`);
         setGenerating(false);
         return;
       }
 
-      // Determine number of weeks based on program
-      const isTajweed = generateForm.program === 'tajweed';
-      const totalWeeks = isTajweed ? 24 : 52; // Tajweed: 24 weeks (6 months), Essentials: 52 weeks/year
-      const totalYears = isTajweed ? 1 : 2; // Tajweed: 1 year, Essentials: 2 years
+      // Determine number of weeks based on program from centralized config
+      const programConfig = PROGRAMS[generateForm.program];
+      const totalWeeks = programConfig?.duration.weeks || 52;
+      const totalYears = programConfig?.duration.years || 1;
 
       // Generate schedules
       const schedulesToCreate = [];
@@ -345,7 +347,7 @@ const AvailabilityCalendar = () => {
       }
 
       const totalClasses = schedulesToCreate.length;
-      const programName = isTajweed ? 'Tajweed Program' : 'Essentials Program';
+      const programName = programConfig?.name || generateForm.program;
       toast.success(`Full schedule generated for ${programName}! (${totalClasses} classes created)`);
       setShowGenerateModal(false);
       setGenerateForm({
@@ -1018,9 +1020,7 @@ const AvailabilityCalendar = () => {
                                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                   }`}
                                 >
-                                  {enrollment.program === 'tajweed'
-                                    ? 'Tajweed Track'
-                                    : 'Essential Islamic Studies Track'}
+                                  {PROGRAMS[enrollment.program]?.name || enrollment.program}
                                 </button>
                               ))}
                             </div>
@@ -1032,7 +1032,7 @@ const AvailabilityCalendar = () => {
                           <div className="flex items-center justify-between mb-3">
                             <div>
                               <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
-                                {isTajweed ? 'Tajweed Mastery Program' : 'Essential Arabic & Islamic Studies'}
+                                {PROGRAMS[selectedProgram]?.name || selectedProgram}
                               </h3>
                               <p className="text-sm text-gray-500 mt-0.5">Week {currentActive.week} • {progressPercent}% Complete</p>
                             </div>
@@ -1313,7 +1313,7 @@ const AvailabilityCalendar = () => {
                       <p className="text-lg font-medium mb-2 text-gray-900">Generate Track Schedule</p>
                       <p className="text-sm mb-6 text-gray-600">
                         {unscheduledPrograms.length === 1
-                          ? `${unscheduledPrograms[0].program === 'tajweed' ? 'Tajweed Track' : 'Essentials Track'} needs scheduling`
+                          ? `${PROGRAMS[unscheduledPrograms[0].program]?.shortName || unscheduledPrograms[0].program} Track needs scheduling`
                           : `${unscheduledPrograms.length} tracks need scheduling`}
                       </p>
                       <button
@@ -1493,21 +1493,24 @@ const AvailabilityCalendar = () => {
                     // Filter to only show unscheduled programs
                     const unscheduledEnrollments = activeEnrollments.filter(e => !scheduledPrograms.has(e.program));
 
-                    return unscheduledEnrollments.map(enrollment => (
-                      <option key={enrollment.program} value={enrollment.program}>
-                        {enrollment.program === 'tajweed'
-                          ? 'Tajweed Track (6 months)'
-                          : 'Essential Arabic & Islamic Studies Track (2 years)'}
-                      </option>
-                    ));
+                    return unscheduledEnrollments.map(enrollment => {
+                      const config = PROGRAMS[enrollment.program];
+                      const duration = config?.duration.display || '';
+                      return (
+                        <option key={enrollment.program} value={enrollment.program}>
+                          {config?.name || enrollment.program} ({duration})
+                        </option>
+                      );
+                    });
                   })()}
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  {generateForm.program === 'tajweed'
-                    ? 'Will create 48 classes (24 weeks × 2 classes)'
-                    : generateForm.program === 'essentials'
-                    ? 'Will create 208 classes (2 years × 52 weeks × 2 classes)'
-                    : 'Choose a track to continue'}
+                  {generateForm.program ? (() => {
+                    const config = PROGRAMS[generateForm.program];
+                    if (!config) return 'Choose a track to continue';
+                    const totalClasses = config.duration.weeks * config.duration.years * 2;
+                    return `Will create ${totalClasses} classes (${config.duration.years} year${config.duration.years > 1 ? 's' : ''} × ${config.duration.weeks} weeks × 2 classes)`;
+                  })() : 'Choose a track to continue'}
                 </p>
               </div>
 

@@ -597,9 +597,11 @@ const AdminDashboard = () => {
                             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                               app.program === 'tajweed'
                                 ? 'bg-purple-100 text-purple-700'
+                                : app.program === 'qari'
+                                ? 'bg-emerald-100 text-emerald-700'
                                 : 'bg-blue-100 text-blue-700'
                             }`}>
-                              {app.program === 'tajweed' ? 'Tajweed' : 'Essentials'}
+                              {app.program === 'tajweed' ? 'Tajweed' : app.program === 'qari' ? 'QARI' : 'Essentials'}
                             </span>
                             {getStatusIcon(app.status)}
                             <span
@@ -781,9 +783,11 @@ const AdminDashboard = () => {
                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
                       selectedApplication.program === 'tajweed'
                         ? 'bg-purple-100 text-purple-800'
+                        : selectedApplication.program === 'qari'
+                        ? 'bg-emerald-100 text-emerald-800'
                         : 'bg-blue-100 text-blue-800'
                     }`}>
-                      {selectedApplication.program === 'tajweed' ? 'Tajweed Track' : 'Essential Islamic Studies Track'}
+                      {selectedApplication.program === 'tajweed' ? 'Tajweed Track' : selectedApplication.program === 'qari' ? 'QARI Track' : 'Essential Islamic Studies Track'}
                     </span>
                     <p className="text-sm text-gray-500">
                       ID: <span className="font-mono">{selectedApplication.id}</span>
