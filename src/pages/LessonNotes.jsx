@@ -7,11 +7,6 @@ import DOMPurify from 'dompurify';
 
 // Disable screenshots and screen recording
 const preventScreenCapture = () => {
-  // Add visual watermark overlay
-  const watermark = document.createElement('div');
-  watermark.className = 'lesson-watermark';
-  document.body.appendChild(watermark);
-
   // Prevent right-click context menu (desktop and mobile)
   document.addEventListener('contextmenu', (e) => {
     if (e.target.closest('.lesson-content-protected')) {
@@ -164,12 +159,6 @@ const LessonNotes = () => {
   useEffect(() => {
     // Enable content protection
     preventScreenCapture();
-    
-    return () => {
-      // Cleanup watermark on unmount
-      const watermark = document.querySelector('.lesson-watermark');
-      if (watermark) watermark.remove();
-    };
   }, []);
 
   const cycleTheme = () => {
@@ -301,80 +290,6 @@ const LessonNotes = () => {
           .lesson-content-protected *::-moz-selection {
             background: transparent !important;
             color: inherit !important;
-          }
-          .lesson-watermark {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-            overflow: hidden;
-          }
-          .lesson-watermark::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 250px,
-              rgba(0, 0, 0, 0.005) 250px,
-              rgba(0, 0, 0, 0.005) 500px
-            );
-          }
-          .lesson-watermark::after {
-            content: '\u00a9 The FastTrack Madrasah';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 4rem;
-            color: rgba(0, 0, 0, 0.012);
-            white-space: nowrap;
-            pointer-events: none;
-            font-weight: 600;
-            letter-spacing: 0.2em;
-          }
-          /* Mobile watermark - more visible on smaller screens */
-          @media (max-width: 768px) {
-            .lesson-watermark::after {
-              font-size: 2.5rem;
-              color: rgba(0, 0, 0, 0.025);
-              content: '\u00a9 TFM - Do Not Copy';
-            }
-            .lesson-watermark::before {
-              background-image: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 150px,
-                rgba(0, 0, 0, 0.015) 150px,
-                rgba(0, 0, 0, 0.015) 300px
-              );
-            }
-          }
-          /* Dynamic watermark repeating pattern */
-          body.lesson-page::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 200%;
-            height: 200%;
-            pointer-events: none;
-            z-index: 9997;
-            background-image: 
-              repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 150px,
-                rgba(0, 0, 0, 0.008) 150px,
-                rgba(0, 0, 0, 0.008) 151px
-              );
           }
           @media screen and (-webkit-min-device-pixel-ratio:0) {
             body::before {
