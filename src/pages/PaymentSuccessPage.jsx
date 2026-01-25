@@ -51,25 +51,25 @@ const PaymentSuccessPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
       {/* Header */}
-      <nav className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center gap-3">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
-              <div className="flex flex-col">
-                <span className="text-base font-brand font-bold text-gray-900 leading-tight">
-                  The FastTrack Madrasah
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-9 w-9 transition-transform group-hover:scale-105" />
+              <div className="flex flex-col leading-tight -space-y-0.5">
+                <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>
+                  The FastTrack
                 </span>
-                {/* <span className="text-xs text-gray-600 leading-tight">
-                  Essential Islamic Studies
-                </span> */}
+                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>
+                  Madrasah
+                </span>
               </div>
             </Link>
             <Link
               to="/"
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
             >
               Back to Home
             </Link>
@@ -82,63 +82,63 @@ const PaymentSuccessPage = () => {
         <div className="max-w-2xl w-full">
           {/* Success Indicator */}
           <div className="flex justify-center mb-8">
-            <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-emerald-600" strokeWidth={2} />
+            <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+              <CheckCircle2 className="w-11 h-11 text-white" strokeWidth={2.5} />
             </div>
           </div>
 
           {/* Heading */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-4xl font-brand font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight">
               Payment Confirmed
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-base text-gray-600">
               Welcome to The FastTrack Madrasah
             </p>
           </div>
 
           {/* Enrollment Details */}
-          <div className="bg-gray-50 rounded-lg p-8 mb-8">
-            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
+          <div className="bg-white border border-gray-200 rounded-xl p-8 mb-6 shadow-sm">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               Program Enrollment
-            </h2>
-            <p className="text-xl font-semibold text-gray-900 mb-6">
+            </div>
+            <p className="text-xl font-bold text-gray-900 mb-6">
               {programName}
             </p>
 
-            <div className="space-y-4 text-gray-700">
-              <p className="leading-relaxed">
+            <div className="space-y-4 text-gray-700 text-sm leading-relaxed">
+              <p>
                 Assalaamu 'alaykum. Your payment has been processed successfully.
                 You will receive a welcome email within the next few minutes containing:
               </p>
 
-              <ul className="space-y-2 ml-4">
-                <li className="flex items-start gap-2">
-                  <span className="text-emerald-600 mt-1">•</span>
+              <ul className="space-y-2.5 ml-4">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
                   <span>Student ID and portal access credentials</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-emerald-600 mt-1">•</span>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
                   <span>Course schedule and program overview</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-emerald-600 mt-1">•</span>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
                   <span>Next steps to begin your studies</span>
                 </li>
               </ul>
 
-              <p className="text-sm text-gray-600 pt-4 border-t border-gray-200">
+              <p className="pt-4 border-t border-gray-200 text-xs text-gray-600">
                 If you don't receive the email within 10 minutes, please check your spam folder
-                or contact us at <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-medium">admin@tftmadrasah.nz</a>
+                or contact us at <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-semibold">admin@tftmadrasah.nz</a>
               </p>
             </div>
           </div>
 
           {/* Reference Number */}
           {sessionId && (
-            <div className="bg-white border border-gray-200 rounded-lg p-4 mb-8">
-              <p className="text-xs text-gray-500 mb-1">Payment Reference</p>
-              <p className="font-mono text-sm text-gray-700 break-all overflow-wrap-anywhere">{sessionId}</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-8">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Payment Reference</p>
+              <p className="font-mono text-xs text-gray-700 break-all">{sessionId}</p>
             </div>
           )}
 
@@ -146,7 +146,7 @@ const PaymentSuccessPage = () => {
           <div className="flex justify-center">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
             >
               Return to Home
               <ArrowRight className="h-4 w-4" />
@@ -156,8 +156,8 @@ const PaymentSuccessPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <footer className="border-t border-gray-200 mt-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-sm text-gray-600">
             © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
           </p>

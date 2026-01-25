@@ -80,95 +80,87 @@ const StripePaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
-      <nav className="bg-white shadow-sm border-b border-emerald-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 md:h-16">
-            <Link to="/" className="flex items-center gap-2">
+      <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/" className="flex items-center gap-2.5 group">
               <img
                 src="/favicon.svg"
                 alt="The FastTrack Madrasah"
-                className="h-8 w-8 md:h-10 md:w-10"
+                className="h-9 w-9 transition-transform group-hover:scale-105"
               />
-              <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-sm md:text-base font-semibold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-sm md:text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+              <div className="flex flex-col leading-tight -space-y-0.5">
+                <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
-            <Link to="/">
-              <button className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors rounded-lg hover:bg-emerald-50">
-                Back to Home
-              </button>
+            <Link to="/" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              Back to Home
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
-            <CreditCard className="h-8 w-8 text-emerald-600" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 tracking-tight">
             {isOneTimePayment ? 'Complete Your Payment' : 'Choose Your Payment Plan'}
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-base text-gray-600 max-w-xl mx-auto">
             {isOneTimePayment ? `${programName} - ${programDuration}` : 'Select the payment option that works best for you'}
           </p>
         </div>
 
         {/* Email Input */}
         {!emailFromUrl && (
-          <Card className="mb-8">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <p className="text-sm text-gray-500 mb-3">
-                Enter the email address you used for your application
-              </p>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@example.com"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              />
-            </div>
-          </Card>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 mb-10 shadow-sm">
+            <label className="block text-sm font-semibold text-gray-900 mb-1">
+              Email Address
+            </label>
+            <p className="text-sm text-gray-500 mb-4">
+              Enter the email address you used for your application
+            </p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your.email@example.com"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+            />
+          </div>
         )}
 
         {/* Payment Plans */}
         {isOneTimePayment ? (
           /* One-time payment (QARI, Tajweed) */
-          <div className="max-w-md mx-auto mb-8">
-            <Card className="hover:shadow-xl transition-shadow border-2 border-emerald-500">
+          <div className="max-w-md mx-auto mb-10">
+            <div className="bg-white border-2 border-emerald-600 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
-                  <DollarSign className="h-6 w-6 text-emerald-600" />
+                <div className="mb-6">
+                  <div className="text-sm font-semibold text-emerald-600 uppercase tracking-wide mb-3">{programConfig?.shortName || programConfig?.name} Program</div>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-5xl font-bold text-gray-900">${programConfig?.pricing.oneTime || 300}</span>
+                    <span className="text-gray-500 text-lg">one-time</span>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{programConfig?.shortName || programConfig?.name} Program</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">${programConfig?.pricing.oneTime || 300}</span>
-                  <span className="text-gray-600"> one-time</span>
-                </div>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 mb-8 text-base">
                   Complete {programConfig?.duration.display || '1-year'} {programConfig?.name || 'Program'}
                 </p>
-                <ul className="text-left space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
+                <ul className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">One-time payment for full course</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">One-time payment for full course</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{programConfig?.duration.display || '1 year'} of comprehensive training</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">{programConfig?.duration.display || '1 year'} of comprehensive training</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Certificate upon completion</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Certificate upon completion</span>
                   </li>
                 </ul>
                 <Button
@@ -190,37 +182,36 @@ const StripePaymentPage = () => {
                   )}
                 </Button>
               </div>
-            </Card>
+            </div>
           </div>
         ) : (
           /* Essentials: Monthly or Annual plans */
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          <div className="grid md:grid-cols-2 gap-6 mb-10">
             {/* Monthly Plan */}
-            <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500">
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-emerald-500 hover:shadow-lg transition-all">
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 mb-4">
-                  <Calendar className="h-6 w-6 text-blue-600" />
+                <div className="mb-6">
+                  <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Monthly Plan</div>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-5xl font-bold text-gray-900">${programConfig?.pricing.monthly || 35}</span>
+                    <span className="text-gray-500 text-lg">/month</span>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Monthly Plan</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">${programConfig?.pricing.monthly || 35}</span>
-                  <span className="text-gray-600">/month</span>
-                </div>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 mb-8 text-sm">
                   Pay monthly and spread the cost over {programConfig?.duration.display || '2 years'}
                 </p>
-                <ul className="text-left space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
+                <ul className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Auto-renewing monthly subscription</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Auto-renewing monthly subscription</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Cancel anytime (non-refundable)</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Cancel anytime (non-refundable)</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Total: ${(programConfig?.pricing.monthly || 35) * (programConfig?.duration.months || 24)} over {programConfig?.duration.months || 24} months</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Total: ${(programConfig?.pricing.monthly || 35) * (programConfig?.duration.months || 24)} over {programConfig?.duration.months || 24} months</span>
                   </li>
                 </ul>
                 <Button
@@ -242,37 +233,36 @@ const StripePaymentPage = () => {
                   )}
                 </Button>
               </div>
-            </Card>
+            </div>
 
             {/* Annual Plan */}
-            <Card className="hover:shadow-xl transition-shadow border-2 hover:border-emerald-500 relative">
-              <div className="absolute -top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                Save ${((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)}!
+            <div className="bg-white border-2 border-emerald-600 rounded-2xl p-8 hover:shadow-lg transition-all relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-md">
+                Save ${((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)}
               </div>
               <div className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 mb-4">
-                  <DollarSign className="h-6 w-6 text-emerald-600" />
+                <div className="mb-6 pt-2">
+                  <div className="text-sm font-semibold text-emerald-600 uppercase tracking-wide mb-3">Annual Plan</div>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-5xl font-bold text-gray-900">${programConfig?.pricing.annual || 375}</span>
+                    <span className="text-gray-500 text-lg">/year</span>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Annual Plan</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-emerald-600">${programConfig?.pricing.annual || 375}</span>
-                  <span className="text-gray-600">/year</span>
-                </div>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 mb-8 text-sm">
                   Pay once per year and save money
                 </p>
-                <ul className="text-left space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
+                <ul className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">One-time annual payment</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">One-time annual payment</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Pay for 2nd year next academic year</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Pay for 2nd year next academic year</span>
                   </li>
-                  <li className="flex items-start gap-2">
+                  <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">Total: ${(programConfig?.pricing.annual || 375) * (programConfig?.duration.years || 2)} over {programConfig?.duration.display || '2 years'} (save ${(((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)) * (programConfig?.duration.years || 2)}!)</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Total: ${(programConfig?.pricing.annual || 375) * (programConfig?.duration.years || 2)} over {programConfig?.duration.display || '2 years'} (save ${(((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)) * (programConfig?.duration.years || 2)}!)</span>
                   </li>
                 </ul>
                 <Button
@@ -293,51 +283,44 @@ const StripePaymentPage = () => {
                   )}
                 </Button>
               </div>
-            </Card>
+            </div>
           </div>
         )}
 
         {/* Info Section */}
-        <Card className="bg-emerald-50 border-emerald-200">
-          <div className="text-sm text-emerald-900">
-            <p className="font-semibold mb-3 text-emerald-800">Important Information:</p>
-            <ul className="space-y-2">
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                <span>All payments are processed securely through Stripe</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                <span>You will be enrolled immediately after your first payment</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                <span>You'll receive a welcome email with your student dashboard access</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                <span>Monthly subscriptions can be cancelled anytime (non-refundable)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                <span>For questions, contact us at <a href="mailto:admin@tftmadrasah.nz" className="font-medium text-emerald-700 hover:text-emerald-800 underline">admin@tftmadrasah.nz</a></span>
-              </li>
-            </ul>
-          </div>
-        </Card>
+        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200/60 rounded-xl p-6 shadow-sm">
+          <p className="font-semibold mb-4 text-emerald-900 text-sm">Important Information:</p>
+          <ul className="space-y-3 text-sm text-emerald-900/90">
+            <li className="flex items-start gap-2.5">
+              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <span className="leading-relaxed">All payments are processed securely through Stripe</span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <span className="leading-relaxed">You will be enrolled immediately after your first payment</span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <span className="leading-relaxed">You'll receive a welcome email with your student dashboard access</span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <span className="leading-relaxed">Monthly subscriptions can be cancelled anytime (non-refundable)</span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <span className="leading-relaxed">For questions, contact us at <a href="mailto:admin@tftmadrasah.nz" className="font-semibold text-emerald-700 hover:text-emerald-800 underline decoration-2 underline-offset-2">admin@tftmadrasah.nz</a></span>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
-            </p>
-            <p className="text-xs text-gray-500 mt-2">
-              Authentic Islamic Education Rooted in the Qur'an and Sunnah
-            </p>
-          </div>
+      <footer className="bg-white border-t border-gray-200 mt-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <p className="text-center text-sm text-gray-600">
+            © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

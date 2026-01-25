@@ -194,27 +194,26 @@ const StoreOrderPage = () => {
         <meta name="description" content="Complete your order for Islamic books and madrasah souvenirs" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <Link to="/store" className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 mb-4">
+          <div className="mb-10">
+            <Link to="/store" className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 mb-4 font-medium transition-colors">
               <ArrowLeft className="h-4 w-4" />
               Back to Store
             </Link>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 flex items-center gap-3">
-              <ShoppingCart className="h-8 w-8 text-emerald-600" />
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-2">
               Submit Your Order
             </h1>
-            <p className="text-gray-600 mt-2">Review your items and provide delivery details</p>
+            <p className="text-gray-600">Review your items and provide delivery details</p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Order Form */}
             <div className="lg:col-span-2 space-y-6">
               {/* Cart Items */}
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Your Items</h2>
+              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-900 mb-5">Your Items</h2>
                 <div className="space-y-4">
                   {cart.map((item) => (
                     <div key={item.productId} className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
@@ -273,11 +272,11 @@ const StoreOrderPage = () => {
               </div>
 
               {/* Contact Information */}
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h2>
+              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-900 mb-5">Contact Information</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Full Name *
                     </label>
                     <input
@@ -285,13 +284,13 @@ const StoreOrderPage = () => {
                       required
                       value={formData.customerName}
                       onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
                       placeholder="John Doe"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Email Address *
                     </label>
                     <input
@@ -299,13 +298,13 @@ const StoreOrderPage = () => {
                       required
                       value={formData.customerEmail}
                       onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
                       placeholder="john@example.com"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
                       Phone Number *
                     </label>
                     <input
@@ -313,20 +312,20 @@ const StoreOrderPage = () => {
                       required
                       value={formData.customerPhone}
                       onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
                       placeholder="+64 21 234 5678"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      WhatsApp Number (optional)
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      WhatsApp Number <span className="text-gray-500 font-normal">(optional)</span>
                     </label>
                     <input
                       type="tel"
                       value={formData.customerWhatsapp}
                       onChange={(e) => setFormData({ ...formData, customerWhatsapp: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
                       placeholder="Leave blank to use phone number"
                     />
                   </div>
@@ -334,8 +333,8 @@ const StoreOrderPage = () => {
               </div>
 
               {/* Delivery Address */}
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Delivery Address</h2>
+              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-900 mb-5">Delivery Address</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -411,54 +410,55 @@ const StoreOrderPage = () => {
               </div>
 
               {/* Additional Notes */}
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Additional Notes (Optional)</h2>
+              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">Additional Notes</h2>
+                <p className="text-sm text-gray-500 mb-4">Any special instructions or requests</p>
                 <textarea
                   value={formData.customerNotes}
                   onChange={(e) => setFormData({ ...formData, customerNotes: e.target.value })}
                   rows="4"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="Any special instructions or requests..."
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+                  placeholder="e.g., Please leave at front door..."
                 />
               </div>
             </div>
 
             {/* Order Summary Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 sticky top-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm sticky top-8">
+                <h2 className="text-lg font-bold text-gray-900 mb-5">Order Summary</h2>
 
                 <div className="space-y-3 mb-6">
-                  <div className="flex justify-between text-gray-600">
+                  <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal</span>
-                    <span className="font-semibold">${getSubtotal().toFixed(2)}</span>
+                    <span className="font-semibold text-gray-900">${getSubtotal().toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-gray-600">
+                  <div className="flex justify-between text-sm text-gray-600">
                     <span>Shipping</span>
-                    <span className="text-sm">Calculated later</span>
+                    <span className="text-xs">Calculated later</span>
                   </div>
                   <div className="border-t border-gray-200 pt-3">
-                    <div className="flex justify-between text-lg font-bold text-gray-900">
+                    <div className="flex justify-between text-base font-bold text-gray-900">
                       <span>Total</span>
                       <span className="text-emerald-600">${getSubtotal().toFixed(2)}*</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">*Plus shipping (to be calculated)</p>
+                    <p className="text-xs text-gray-500 mt-1.5">*Plus shipping cost</p>
                   </div>
                 </div>
 
                 {/* Delivery Notice */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                  <div className="flex gap-2">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 rounded-lg p-4 mb-6">
+                  <div className="flex gap-2.5">
                     <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-blue-800">
-                      <p className="font-semibold mb-1">What happens next?</p>
-                      <ul className="space-y-1 text-xs">
+                    <div className="text-sm text-blue-900">
+                      <p className="font-semibold mb-2">What happens next?</p>
+                      <ol className="space-y-1.5 text-xs leading-relaxed">
                         <li>1. We'll review your order</li>
                         <li>2. Calculate delivery cost</li>
                         <li>3. Email you an invoice</li>
                         <li>4. You make payment</li>
                         <li>5. We ship your order</li>
-                      </ul>
+                      </ol>
                     </div>
                   </div>
                 </div>
@@ -466,7 +466,7 @@ const StoreOrderPage = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full bg-emerald-600 text-white py-3.5 rounded-lg font-semibold hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Submitting...' : 'Submit Order Request'}
                 </button>
