@@ -236,13 +236,13 @@ export default function Login() {
           <div className="flex gap-2">
             <Link
               to="/student"
-              className="flex-1 py-2 text-sm text-blue-700 bg-blue-50 rounded-md hover:bg-blue-100"
+              className="flex-1 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Student Portal
             </Link>
             <Link
               to="/teacher"
-              className="flex-1 py-2 text-sm text-purple-700 bg-purple-50 rounded-md hover:bg-purple-100"
+              className="flex-1 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
             >
               Teacher Portal
             </Link>
