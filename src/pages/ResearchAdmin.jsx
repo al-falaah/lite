@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
 import DOMPurify from 'dompurify';
+import RichTextEditor from '../components/common/RichTextEditor';
 
 // Helper function to generate URL-friendly slugs
 const generateSlug = (text) => {
@@ -407,14 +408,12 @@ const ResearchAdmin = () => {
 
                       <div>
                         <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          Content (Supports Markdown, Arabic text, and HTML)
+                          Content
                         </label>
-                        <textarea
+                        <RichTextEditor
                           value={editingChapter.content}
-                          onChange={(e) => setEditingChapter({ ...editingChapter, content: e.target.value })}
-                          rows={20}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow font-mono text-sm"
-                          placeholder="Write your lesson content here...&#10;&#10;Use HTML for special formatting:&#10;- <div class='verse'>Quranic verse</div>&#10;- <div class='tip'>Quick tip</div>&#10;- <table> for tables&#10;- Arabic text works natively"
+                          onChange={(newContent) => setEditingChapter({ ...editingChapter, content: newContent })}
+                          placeholder="Write your lesson content here... Use the formatting buttons above to style your content."
                         />
                       </div>
 
