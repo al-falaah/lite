@@ -430,23 +430,23 @@ const LandingPage = () => {
           <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 mb-12 sm:mb-16">
             {/* Left Column - Mission Text */}
             <div className="lg:col-span-2 space-y-8">
-              <p className="text-gray-800 leading-relaxed text-lg">
+              <p className="text-gray-800 leading-relaxed text-lg text-justify">
                 Today, many Muslims can't read the Qur'an accurately. Those who can often don't understand what they're reciting. This gap has become generational - passed from parents to children - and it shouldn't continue.
               </p>
 
-              <p className="text-gray-800 leading-relaxed text-lg">
+              <p className="text-gray-800 leading-relaxed text-lg text-justify">
                 That's why we founded <span className="font-semibold text-gray-900">The FastTrack Madrasah</span>: to help you learn what truly matters through structured, time-bound programs that build a solid foundation you can carry for life.
               </p>
 
-              <p className="text-gray-800 leading-relaxed text-lg">
+              <p className="text-gray-800 leading-relaxed text-lg text-justify">
                 Whether you're an absolute beginner, need to master Tajweed, or want to understand Arabic and Islamic sciences - we meet you where you are. With flexible scheduling and patient instruction, we accommodate everyone: working adults, parents, students, and retirees.
               </p>
 
-              <p className="text-xl font-medium text-gray-900 mt-10 pt-8 border-t border-gray-200">
+              <p className="text-xl font-medium text-gray-900 mt-10 pt-8 border-t border-gray-200 text-justify">
                 Our mission: help every Muslim develop a genuine connection with the Qur'an.
               </p>
 
-              <p className="text-sm text-gray-500 italic">
+              <p className="text-sm text-gray-500 italic text-justify">
                 May Allah accept this effort and make it a means of bringing His servants closer to His Book. Ameen.
               </p>
             </div>
@@ -529,7 +529,7 @@ const LandingPage = () => {
                   </div>
 
                   {/* Modal Body */}
-                  <div className="p-8 space-y-4 text-gray-700 leading-relaxed">
+                  <div className="p-8 space-y-4 text-gray-700 leading-relaxed text-justify">
                     <p>
                       Dr. Abdulquadri Alaka's journey in Islamic education began at a young age, learning from prominent local scholars of Ahlus Sunnah wal Jama'ah in South West, Nigeria. His dedication to preserving and transmitting authentic Islamic knowledge has been the cornerstone of his life's work.
                     </p>
