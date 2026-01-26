@@ -26,30 +26,24 @@ import Button from '../common/Button';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS, getProgramMilestones } from '../../config/programs';
 
-// Milestone configurations (fallback - prefer using centralized config)
-const TAJWEED_MILESTONES = [
-  { id: 1, name: 'Foundation', subtitle: 'Laying Your Foundation', weekStart: 1, weekEnd: 4 },
-  { id: 2, name: 'Discovery', subtitle: 'The Path of Discovery', weekStart: 5, weekEnd: 8 },
-  { id: 3, name: 'Clarity', subtitle: 'Achieving Clarity', weekStart: 9, weekEnd: 12 },
-  { id: 4, name: 'Precision', subtitle: 'Developing Precision', weekStart: 13, weekEnd: 16 },
-  { id: 5, name: 'Refinement', subtitle: 'The Refinement Stage', weekStart: 17, weekEnd: 20 },
-  { id: 6, name: 'Mastery', subtitle: 'Reaching Mastery', weekStart: 21, weekEnd: 24 }
-];
+// Calculate current milestone based on week number and program
+const getCurrentMilestone = (currentWeek, programId) => {
+  const milestones = getProgramMilestones(programId);
 
-const EAIS_MILESTONES = [
-  { id: 1, name: 'Awakening', subtitle: 'The Awakening - Beginning Your Journey', weekStart: 1, weekEnd: 13 },
-  { id: 2, name: 'Foundation', subtitle: 'Building Your Foundation', weekStart: 14, weekEnd: 26 },
-  { id: 3, name: 'Growth', subtitle: 'Experiencing Growth', weekStart: 27, weekEnd: 39 },
-  { id: 4, name: 'Transformation', subtitle: 'The First Transformation', weekStart: 40, weekEnd: 52 },
-  { id: 5, name: 'Insight', subtitle: 'Gaining Deep Insight', weekStart: 53, weekEnd: 65 },
-  { id: 6, name: 'Mastery', subtitle: 'Developing Mastery', weekStart: 66, weekEnd: 78 },
-  { id: 7, name: 'Wisdom', subtitle: 'Cultivating Wisdom', weekStart: 79, weekEnd: 91 },
-  { id: 8, name: 'Legacy', subtitle: 'Becoming a Legacy', weekStart: 92, weekEnd: 104 }
-];
-
-// Calculate current milestone based on week number
-const getCurrentMilestone = (currentWeek, isTajweed) => {
-  const milestones = isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES;
+  // Fallback if no milestones defined for program
+  if (!milestones || milestones.length === 0) {
+    return {
+      id: 1,
+      name: 'Progress',
+      subtitle: 'Making Progress',
+      weekStart: 1,
+      weekEnd: 52,
+      weeksInMilestone: 52,
+      weeksCompleted: currentWeek - 1,
+      milestoneProgress: Math.round(((currentWeek - 1) / 52) * 100),
+      isCompleted: false
+    };
+  }
 
   const milestone = milestones.find(
     m => currentWeek >= m.weekStart && currentWeek <= m.weekEnd
@@ -939,12 +933,13 @@ const AvailabilityCalendar = () => {
 
                   const currentActive = getCurrentActiveWeekAndYear();
 
-                  // Calculate progress based on program
-                  const isTajweed = selectedProgram === 'tajweed';
-                  const totalWeeks = isTajweed ? 24 : 104; // Tajweed: 24 weeks, Essentials: 104 weeks (2 years)
-                  const weeksPerYear = isTajweed ? 24 : 52;
+                  // Calculate progress based on program using centralized config
+                  const programConfig = PROGRAMS[selectedProgram];
+                  const totalWeeks = programConfig?.duration.weeks * programConfig?.duration.years || 52;
+                  const weeksPerYear = programConfig?.duration.weeks || 52;
                   const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
                   const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
+                  const programMilestones = getProgramMilestones(selectedProgram);
 
                   // Get current week's classes
                   const currentWeekClasses = studentSchedules.filter(
@@ -1043,8 +1038,8 @@ const AvailabilityCalendar = () => {
                         <div className="mb-8">
                           {(() => {
                             const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
-                            const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
-                            const totalMilestones = isTajweed ? 6 : 8;
+                            const currentMilestone = getCurrentMilestone(currentWeekNumber, selectedProgram);
+                            const totalMilestones = programMilestones.length || 1;
 
                             return (
                               <>
@@ -1080,7 +1075,7 @@ const AvailabilityCalendar = () => {
 
                                     {/* Milestone Nodes */}
                                     <div className="relative flex justify-between">
-                                      {(isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES).map((milestone) => {
+                                      {programMilestones.map((milestone) => {
                                         const isCompleted = currentMilestone.id > milestone.id;
                                         const isCurrent = currentMilestone.id === milestone.id;
 
@@ -1641,17 +1636,27 @@ const AvailabilityCalendar = () => {
                 </p>
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-900">
-                  This will create <strong>208 classes</strong> for {selectedApplicant?.full_name}:
-                </p>
-                <ul className="text-sm text-blue-800 mt-2 space-y-1 ml-4 list-disc">
-                  <li>Year 1: 52 weeks × 2 classes = 104 classes</li>
-                  <li>Year 2: 52 weeks × 2 classes = 104 classes</li>
-                  <li>Main classes on {generateForm.main_day_of_week || '[Day]'}</li>
-                  <li>Short classes on {generateForm.short_day_of_week || '[Day]'}</li>
-                </ul>
-              </div>
+              {generateForm.program && (() => {
+                const config = PROGRAMS[generateForm.program];
+                if (!config) return null;
+                const totalClasses = config.duration.weeks * config.duration.years * 2;
+                const classesPerYear = config.duration.weeks * 2;
+
+                return (
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <p className="text-sm text-blue-900">
+                      This will create <strong>{totalClasses} classes</strong> for {selectedApplicant?.full_name}:
+                    </p>
+                    <ul className="text-sm text-blue-800 mt-2 space-y-1 ml-4 list-disc">
+                      {Array.from({ length: config.duration.years }, (_, i) => (
+                        <li key={i}>Year {i + 1}: {config.duration.weeks} weeks × 2 classes = {classesPerYear} classes</li>
+                      ))}
+                      <li>Main classes on {generateForm.main_day_of_week || '[Day]'}</li>
+                      <li>Short classes on {generateForm.short_day_of_week || '[Day]'}</li>
+                    </ul>
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="flex items-center justify-end gap-3 mt-6">
