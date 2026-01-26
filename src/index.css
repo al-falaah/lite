@@ -168,21 +168,24 @@ input[type="date"]::-webkit-date-and-time-value {
 
 /* Tip boxes in blog content */
 .blog-content .tip {
-  background-color: #eff6ff !important;
-  border-left: 3px solid #3b82f6 !important;
-  padding: 16px !important;
-  margin: 24px 0 !important;
-  border-radius: 4px !important;
+  background-color: #fffbeb !important;
+  border-left: 4px solid #f59e0b !important;
+  padding: 20px 24px !important;
+  margin: 32px 0 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
 .blog-content .tip::before {
-  content: '💡 Tip: ' !important;
+  content: '💡 Tip' !important;
   font-weight: 600 !important;
-  color: #1e40af !important;
+  color: #92400e !important;
   display: block !important;
-  margin-bottom: 8px !important;
+  margin-bottom: 10px !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-  font-size: 16px !important;
+  font-size: 15px !important;
+  letter-spacing: 0.025em !important;
+  text-transform: uppercase !important;
 }
 
 /* Verse/Arabic text blocks in blog content */
