@@ -26,7 +26,7 @@ import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../service
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import AdminStudentsList from './AdminStudentsList';
-import AvailabilityCalendar from '../components/admin/AvailabilityCalendar';
+import ClassScheduler from '../components/admin/ClassScheduler';
 import AdminTeachersList from './AdminTeachersList';
 
 const AdminDashboard = () => {
@@ -693,7 +693,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'students' && <AdminStudentsList />}
 
-        {activeTab === 'availability' && <AvailabilityCalendar />}
+        {activeTab === 'availability' && <ClassScheduler />}
 
         {activeTab === 'teachers' && <AdminTeachersList />}
       </div>

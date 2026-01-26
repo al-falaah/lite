@@ -72,7 +72,7 @@ const getCurrentMilestone = (currentWeek, programId) => {
   };
 };
 
-const AvailabilityCalendar = () => {
+const ClassScheduler = () => {
   const [applicants, setApplicants] = useState([]);
   const [enrolledStudents, setEnrolledStudents] = useState([]);
   const [scheduledClasses, setScheduledClasses] = useState([]);
@@ -1692,4 +1692,4 @@ const AvailabilityCalendar = () => {
   );
 };
 
-export default AvailabilityCalendar;
+export default ClassScheduler;
