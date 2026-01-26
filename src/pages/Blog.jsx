@@ -309,29 +309,26 @@ const Blog = () => {
       </nav>
 
       {/* Header */}
-      <div className="bg-gradient-to-b from-gray-50 to-white py-16 sm:py-20 border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
+      <div className="border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3 tracking-tight">
             The FastTrack Journal
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-            Reflections on Arabic language and Islam for Spiritual Uplift and Intellectual Growth
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl">
+            Reflections on Arabic and Islamic knowledge
           </p>
         </div>
       </div>
 
       {/* Main Content with Sidebar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="lg:grid lg:grid-cols-4 lg:gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-16">
           {/* Sidebar - Categories */}
-          <aside className="lg:col-span-1 mb-12 lg:mb-0">
+          <aside className="lg:col-span-3 mb-12 lg:mb-0">
             <div className="lg:sticky lg:top-24">
-              <div className="flex items-center gap-2 mb-6">
-                <Filter className="h-5 w-5 text-gray-700" />
-                <h2 className="text-lg font-bold text-gray-900">Categories</h2>
-              </div>
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Topics</h2>
 
-              <nav className="space-y-2">
+              <nav className="space-y-1">
                 {CATEGORIES.map((category) => {
                   const count = categoryCounts[category] || 0;
                   const isActive = selectedCategory === category;
@@ -340,18 +337,20 @@ const Blog = () => {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`w-full text-left px-4 py-2.5 rounded-lg transition-all flex items-center justify-between ${
+                      className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center justify-between text-sm ${
                         isActive
-                          ? 'bg-emerald-600 text-white font-semibold shadow-md'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          ? 'bg-gray-900 text-white font-medium'
+                          : 'text-gray-700 hover:bg-gray-50 font-normal'
                       }`}
                     >
-                      <span className="text-sm">{category}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        isActive ? 'bg-emerald-500' : 'bg-gray-200 text-gray-600'
-                      }`}>
-                        {count}
-                      </span>
+                      <span>{category}</span>
+                      {count > 0 && (
+                        <span className={`text-xs tabular-nums ${
+                          isActive ? 'text-gray-300' : 'text-gray-400'
+                        }`}>
+                          {count}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -360,16 +359,14 @@ const Blog = () => {
           </aside>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-9">
             {/* Selected Category Header */}
             {selectedCategory !== 'All' && (
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-2">
-                  <h2 className="text-2xl font-bold text-gray-900">{selectedCategory}</h2>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${CATEGORY_COLORS[selectedCategory]}`}>
-                    {filteredPosts.length} {filteredPosts.length === 1 ? 'article' : 'articles'}
-                  </span>
-                </div>
+              <div className="mb-10 pb-6 border-b border-gray-200">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-1">{selectedCategory}</h2>
+                <p className="text-sm text-gray-500">
+                  {filteredPosts.length} {filteredPosts.length === 1 ? 'article' : 'articles'}
+                </p>
               </div>
             )}
 
@@ -395,66 +392,67 @@ const Blog = () => {
                 </div>
               </div>
             ) : (
-              <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-2">
-                {filteredPosts.map((post) => (
-                  <Link
+              <div className="space-y-12">
+                {filteredPosts.map((post, index) => (
+                  <article
                     key={post.id}
-                    to={`/blog/${post.slug}`}
-                    className="group"
+                    className={`group ${index !== filteredPosts.length - 1 ? 'pb-12 border-b border-gray-200' : ''}`}
                   >
-                    {/* Featured Image */}
-                    {post.featured_image && (
-                      <div className="aspect-[16/10] bg-gray-100 overflow-hidden rounded-lg mb-5">
-                        <img
-                          src={post.featured_image}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
+                    <Link to={`/blog/${post.slug}`}>
+                      <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+                        {/* Image */}
+                        {post.featured_image && (
+                          <div className="lg:col-span-5 mb-6 lg:mb-0">
+                            <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
+                              <img
+                                src={post.featured_image}
+                                alt={post.title}
+                                className="w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-300"
+                                loading="lazy"
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Content */}
+                        <div className={post.featured_image ? 'lg:col-span-7' : 'lg:col-span-12'}>
+                          {/* Category */}
+                          {post.category && (
+                            <div className="mb-3">
+                              <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                {post.category}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Title */}
+                          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 leading-tight group-hover:text-gray-600 transition-colors">
+                            {post.title}
+                          </h2>
+
+                          {/* Excerpt */}
+                          {post.excerpt && (
+                            <p className="text-gray-600 text-base leading-relaxed mb-4 line-clamp-2">
+                              {post.excerpt}
+                            </p>
+                          )}
+
+                          {/* Meta */}
+                          <div className="flex items-center gap-3 text-sm text-gray-500">
+                            <time className="font-light">{formatDate(post.published_at)}</time>
+                            <span className="text-gray-300">·</span>
+                            <span className="font-light">{calculateReadingTime(post.content)} min read</span>
+                          </div>
+                        </div>
                       </div>
-                    )}
-
-                    {/* Category Badge */}
-                    {post.category && (
-                      <div className="mb-3">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${CATEGORY_COLORS[post.category] || CATEGORY_COLORS['General']}`}>
-                          {post.category}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Meta */}
-                    <div className="flex flex-col gap-1 text-xs text-gray-500 mb-3">
-                      <time>{formatDate(post.published_at)}</time>
-                      <div className="flex items-center gap-2">
-                        <span>{post.author_name}</span>
-                        <span>·</span>
-                        <span>{calculateReadingTime(post.content)} min read</span>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-emerald-600 transition-colors">
-                      {post.title}
-                    </h2>
-
-                    {post.excerpt && (
-                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-4 line-clamp-3">
-                        {post.excerpt}
-                      </p>
-                    )}
-
-                    {/* Read More */}
-                    <div className="flex items-center gap-2 text-emerald-600 font-medium text-sm group-hover:gap-3 transition-all">
-                      <span>Read more</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </div>
-                  </Link>
+                    </Link>
+                  </article>
                 ))}
               </div>
             )}
 
             {/* Blog Subscription Section */}
-            <div ref={subscribeRef} className="mt-16 sm:mt-20">
+            <div ref={subscribeRef} className="mt-20 pt-12 border-t border-gray-200">
               <BlogSubscribe />
             </div>
 
@@ -492,7 +490,7 @@ const Blog = () => {
       {showSubscribeButton && !showSlideInBanner && (
         <button
           onClick={scrollToSubscribe}
-          className="fixed bottom-6 right-6 z-40 bg-emerald-950 text-white px-4 py-2.5 rounded-lg shadow-lg hover:bg-emerald-900 transition-colors flex items-center gap-2"
+          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white px-4 py-2.5 rounded-md shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
           aria-label="Subscribe to newsletter"
         >
           <Mail className="h-4 w-4" />

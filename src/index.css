@@ -130,15 +130,7 @@ input[type="date"]::-webkit-date-and-time-value {
   line-height: 1.58 !important;
   color: #1a1a1a !important;
   margin-bottom: 28px !important;
-  text-align: left !important;
-}
-
-/* Justified text on larger screens for LTR content */
-@media (min-width: 640px) {
-  .blog-content p[dir="ltr"],
-  .blog-content p:not([dir="rtl"]) {
-    text-align: justify !important;
-  }
+  text-align: justify !important;
 }
 
 /* Arabic/RTL content always right-aligned */

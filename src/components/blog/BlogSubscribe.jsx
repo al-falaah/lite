@@ -70,7 +70,7 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
   if (subscribed) {
     return (
       <div className={`${inline ? 'bg-gray-50 rounded-xl p-8' : 'bg-white p-6'} text-center border ${inline ? 'border-gray-200' : 'border-t border-gray-100'}`}>
-        <CheckCircle className={`${inline ? 'w-12 h-12' : 'w-10 h-10'} text-emerald-600 mx-auto mb-3`} />
+        <CheckCircle className={`${inline ? 'w-12 h-12' : 'w-10 h-10'} text-gray-900 mx-auto mb-3`} />
         <h3 className={`${inline ? 'text-xl' : 'text-lg'} font-semibold text-gray-900 mb-2`}>
           Subscribed
         </h3>
@@ -123,7 +123,7 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-sm"
               required
               disabled={loading}
             />
@@ -132,13 +132,13 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Name (optional)"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-sm"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {loading ? 'Subscribing...' : 'Subscribe'}
             </button>
@@ -155,14 +155,14 @@ const BlogSubscribe = ({ inline = true, onClose }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-sm"
                 required
                 disabled={loading}
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-emerald-950 hover:bg-emerald-900 text-white font-medium py-2 px-5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
+                className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
               >
                 {loading ? 'Subscribing...' : 'Subscribe'}
               </button>
