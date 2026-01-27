@@ -261,7 +261,6 @@ const LessonNotes = () => {
             body { display: none !important; }
             * { display: none !important; }
           }
-          .lesson-content-protected,
           .lesson-content-protected * {
             user-select: none !important;
             -webkit-user-select: none !important;
@@ -271,11 +270,13 @@ const LessonNotes = () => {
             -webkit-tap-highlight-color: transparent !important;
             -webkit-user-drag: none !important;
             -khtml-user-select: none !important;
+          }
+          /* Allow pointer events on navigation and interactive elements */
+          nav, nav *, button, button *, a, a *, input, input * {
             pointer-events: auto !important;
           }
           /* iOS specific protections */
           @supports (-webkit-touch-callout: none) {
-            .lesson-content-protected,
             .lesson-content-protected * {
               -webkit-touch-callout: none !important;
               -webkit-user-select: none !important;
