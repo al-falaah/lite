@@ -247,9 +247,9 @@ const LessonNotes = () => {
   const hasNext = currentIndex < chapters.length - 1;
 
   return (
-    <div className={`min-h-screen transition-colors lesson-content-protected ${
+    <div className={`min-h-screen transition-colors ${
       theme === 'dark' ? 'bg-gray-900' : theme === 'sepia' ? 'bg-[#f5f1e8]' : 'bg-white'
-    }`} style={{ userSelect: 'none', WebkitUserSelect: 'none', msUserSelect: 'none' }}>
+    }`}>
       <Helmet>
         <title>{course.title} | Lesson Notes | The FastTrack Madrasah</title>
         <meta
@@ -270,10 +270,6 @@ const LessonNotes = () => {
             -webkit-tap-highlight-color: transparent !important;
             -webkit-user-drag: none !important;
             -khtml-user-select: none !important;
-          }
-          /* Allow pointer events on navigation and interactive elements */
-          nav, nav *, button, button *, a, a *, input, input * {
-            pointer-events: auto !important;
           }
           /* iOS specific protections */
           @supports (-webkit-touch-callout: none) {
@@ -432,7 +428,7 @@ const LessonNotes = () => {
                   }`}>{selectedChapter.chapter_number}. {selectedChapter.title}</h1>
                 </div>
 
-                <div className="px-8 py-6">
+                <div className="px-8 py-6 lesson-content-protected">
                   <div 
                     className={`prose max-w-none transition-colors ${
                       theme === 'dark'
