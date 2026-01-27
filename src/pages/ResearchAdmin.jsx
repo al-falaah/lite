@@ -28,6 +28,7 @@ const ResearchAdmin = () => {
   const [editingChapter, setEditingChapter] = useState(null);
   const [previewChapter, setPreviewChapter] = useState(null);
   const [showCourseModal, setShowCourseModal] = useState(false);
+  const [editingCourse, setEditingCourse] = useState(null);
   const [courseForm, setCourseForm] = useState({
     title: '',
     slug: '',
@@ -129,21 +130,42 @@ const ResearchAdmin = () => {
     e.preventDefault();
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      const { error } = await supabase
-        .from('lesson_courses')
-        .insert({
-          ...courseForm,
-          created_by: user.id
-        });
+      
+      if (editingCourse) {
+        // Update existing course
+        const { error } = await supabase
+          .from('lesson_courses')
+          .update({
+            title: courseForm.title,
+            slug: courseForm.slug,
+            description: courseForm.description,
+            program_id: courseForm.program_id,
+            display_order: courseForm.display_order
+          })
+          .eq('id', editingCourse.id);
 
-      if (error) throw error;
-      toast.success('Course created successfully');
+        if (error) throw error;
+        toast.success('Course updated successfully');
+      } else {
+        // Create new course
+        const { error } = await supabase
+          .from('lesson_courses')
+          .insert({
+            ...courseForm,
+            created_by: user.id
+          });
+
+        if (error) throw error;
+        toast.success('Course created successfully');
+      }
+      
       setShowCourseModal(false);
+      setEditingCourse(null);
       setCourseForm({ title: '', slug: '', description: '', program_id: 'qari', display_order: 0 });
       fetchCourses();
     } catch (error) {
-      console.error('Error creating course:', error);
-      toast.error(error.message || 'Failed to create course');
+      console.error('Error saving course:', error);
+      toast.error(error.message || 'Failed to save course');
     }
   };
 
@@ -360,16 +382,36 @@ const ResearchAdmin = () => {
                         <span className="text-xs font-bold text-indigo-600 uppercase tracking-wide">{getProgramName(course.program_id)}</span>
                         <p className="text-sm font-semibold text-gray-900 truncate mt-0.5">{course.title}</p>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteCourse(course.id);
-                        }}
-                        className="text-gray-400 hover:text-red-600 hover:bg-red-50 rounded p-1 transition-all"
-                        title="Delete course"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingCourse(course);
+                            setCourseForm({
+                              title: course.title,
+                              slug: course.slug,
+                              description: course.description || '',
+                              program_id: course.program_id,
+                              display_order: course.display_order || 0
+                            });
+                            setShowCourseModal(true);
+                          }}
+                          className="text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded p-1 transition-all"
+                          title="Edit course"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteCourse(course.id);
+                          }}
+                          className="text-gray-400 hover:text-red-600 hover:bg-red-50 rounded p-1 transition-all"
+                          title="Delete course"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -527,11 +569,13 @@ const ResearchAdmin = () => {
         </div>
       </div>
 
-      {/* Create Course Modal */}
+      {/* Create/Edit Course Modal */}
       {showCourseModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl">
-            <h2 className="text-xl font-bold text-gray-900 mb-5">Create New Course</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-5">
+              {editingCourse ? 'Edit Course' : 'Create New Course'}
+            </h2>
             <form onSubmit={handleCreateCourse} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Course Title</label>
@@ -594,11 +638,15 @@ const ResearchAdmin = () => {
                   type="submit"
                   className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
                 >
-                  Create Course
+                  {editingCourse ? 'Update Course' : 'Create Course'}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowCourseModal(false)}
+                  onClick={() => {
+                    setShowCourseModal(false);
+                    setEditingCourse(null);
+                    setCourseForm({ title: '', slug: '', description: '', program_id: 'qari', display_order: 0 });
+                  }}
                   className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
                 >
                   Cancel
