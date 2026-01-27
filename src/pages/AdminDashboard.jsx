@@ -323,27 +323,25 @@ const AdminDashboard = () => {
   // Show login form if not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
-            <p className="text-gray-600 font-brand">The FastTrack Madrasah</p>
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-10">
+            <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-12 w-12 mx-auto mb-6" />
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Admin Portal</h1>
+            <p className="text-sm text-gray-500">The FastTrack Madrasah</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                Email
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-sm"
                 placeholder="admin@tftmadrasah.nz"
                 required
                 autoComplete="email"
@@ -359,35 +357,28 @@ const AdminDashboard = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-gray-900 focus:border-gray-900 text-sm"
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
               />
             </div>
 
-            <Button
+            <button
               type="submit"
-              className="w-full"
               disabled={loggingIn}
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              {loggingIn ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Logging in...
-                </>
-              ) : (
-                'Login to Dashboard'
-              )}
-            </Button>
+              {loggingIn ? 'Signing in...' : 'Sign in'}
+            </button>
           </form>
 
           <div className="mt-6 text-center">
-            <a href="/" className="text-sm text-emerald-600 hover:text-emerald-700">
+            <a href="/" className="text-sm text-gray-500 hover:text-gray-900">
               ← Back to Homepage
             </a>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
@@ -395,7 +386,7 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+      <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center min-w-0">
@@ -427,52 +418,52 @@ const AdminDashboard = () => {
       </nav>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200 overflow-x-auto">
+      <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-4 sm:gap-8 min-w-max sm:min-w-0">
+          <div className="flex gap-1 overflow-x-auto">
             <button
               onClick={() => setActiveTab('applications')}
-              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
+              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
                 activeTab === 'applications'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                  ? 'text-gray-900 border-b-2 border-gray-900'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden xs:inline">Applications</span>
+              <FileText className="h-4 w-4" />
+              <span>Applications</span>
             </button>
             <button
               onClick={() => setActiveTab('students')}
-              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
+              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
                 activeTab === 'students'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                  ? 'text-gray-900 border-b-2 border-gray-900'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden xs:inline">Students</span>
+              <Users className="h-4 w-4" />
+              <span>Students</span>
             </button>
             <button
               onClick={() => setActiveTab('availability')}
-              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
+              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
                 activeTab === 'availability'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                  ? 'text-gray-900 border-b-2 border-gray-900'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <Calendar className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden xs:inline">Scheduling</span>
+              <Calendar className="h-4 w-4" />
+              <span>Scheduling</span>
             </button>
             <button
               onClick={() => setActiveTab('teachers')}
-              className={`py-3 sm:py-4 px-2 sm:px-3 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 whitespace-nowrap ${
+              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
                 activeTab === 'teachers'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                  ? 'text-gray-900 border-b-2 border-gray-900'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden xs:inline">Teachers</span>
+              <UserCheck className="h-4 w-4" />
+              <span>Teachers</span>
             </button>
           </div>
         </div>
@@ -482,66 +473,38 @@ const AdminDashboard = () => {
         {activeTab === 'applications' && (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <Card>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm text-gray-600">Total</div>
-                    <div className="text-3xl font-bold text-gray-900">
-                      {stats.total}
-                    </div>
-                  </div>
-                  <FileText className="h-10 w-10 text-gray-400" />
-                </div>
-              </Card>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Total</div>
+                <div className="text-3xl font-semibold text-gray-900">{stats.total}</div>
+              </div>
 
-              <Card>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm text-gray-600">Pending</div>
-                    <div className="text-3xl font-bold text-yellow-600">
-                      {stats.pending}
-                    </div>
-                  </div>
-                  <Clock className="h-10 w-10 text-yellow-400" />
-                </div>
-              </Card>
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Pending</div>
+                <div className="text-3xl font-semibold text-gray-900">{stats.pending}</div>
+              </div>
 
-              <Card>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm text-gray-600">Approved</div>
-                    <div className="text-3xl font-bold text-green-600">
-                      {stats.approved}
-                    </div>
-                  </div>
-                  <CheckCircle className="h-10 w-10 text-green-400" />
-                </div>
-              </Card>
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Approved</div>
+                <div className="text-3xl font-semibold text-gray-900">{stats.approved}</div>
+              </div>
 
-              <Card>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm text-gray-600">Rejected</div>
-                    <div className="text-3xl font-bold text-red-600">
-                      {stats.rejected}
-                    </div>
-                  </div>
-                  <XCircle className="h-10 w-10 text-red-400" />
-                </div>
-              </Card>
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Rejected</div>
+                <div className="text-3xl font-semibold text-gray-900">{stats.rejected}</div>
+              </div>
             </div>
 
             {/* Filters */}
-            <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
-              <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+            <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
+              <div className="flex gap-2">
                 {['all', 'pending', 'approved', 'rejected'].map((filter) => (
                   <button
                     key={filter}
                     onClick={() => setStatusFilter(filter)}
-                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium capitalize whitespace-nowrap ${
+                    className={`px-3 py-1.5 rounded-md text-sm font-medium capitalize ${
                       statusFilter === filter
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-gray-900 text-white'
                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -552,11 +515,11 @@ const AdminDashboard = () => {
               <button
                 onClick={() => loadApplications()}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Refresh applications"
               >
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                <span className="hidden sm:inline">Refresh</span>
+                <span>Refresh</span>
               </button>
             </div>
 
