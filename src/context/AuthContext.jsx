@@ -77,9 +77,9 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('[checkUser] Starting session check...');
 
-      // Increased timeout to 15 seconds for better session persistence on slow connections
+      // Increase timeout to 30 seconds for slower connections
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Auth check timeout')), 15000)
+        setTimeout(() => reject(new Error('Auth check timeout')), 30000)
       );
 
       const authCheck = supabase.auth.getSession();

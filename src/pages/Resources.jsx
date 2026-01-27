@@ -20,37 +20,49 @@ const Resources = () => {
       setLoading(true);
       setError(null);
       
-      // Set timeout
+      console.log('Fetching courses from Supabase...');
+      
+      // Increase timeout to 20 seconds for slower connections
       const timeoutPromise = new Promise((_, reject) => {
         timeoutId = setTimeout(() => {
           reject(new Error('Connection timeout - please check your internet connection'));
-        }, 10000);
+        }, 20000);
       });
 
-      // Fetch courses
-      const fetchPromise = supabase
-        .from('lesson_courses')
-        .select('*')
-        .order('program_id')
-        .order('display_order')
-        .then(result => {
-          // Clear timeout on success
-          if (timeoutId) clearTimeout(timeoutId);
-          return result;
-        });
+      // Fetch courses with better error handling
+      const { data, error: fetchError } = await Promise.race([
+        supabase
+          .from('lesson_courses')
+          .select('*')
+          .order('program_id')
+          .order('display_order'),
+        timeoutPromise
+      ]);
 
-      const { data, error: fetchError } = await Promise.race([fetchPromise, timeoutPromise]);
+      // Clear timeout immediately on response
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
 
       if (fetchError) {
         console.error('Supabase error:', fetchError);
-        throw fetchError;
+        throw new Error(fetchError.message || 'Database error occurred');
       }
       
-      console.log('Courses loaded:', data?.length || 0);
+      console.log('Courses loaded successfully:', data?.length || 0);
       setCourses(data || []);
     } catch (error) {
       console.error('Error fetching courses:', error);
-      setError(error.message || 'Failed to load courses');
+      
+      // More specific error messages
+      if (error.message.includes('timeout')) {
+        setError('Connection is taking too long. Please check your internet and try again.');
+      } else if (error.message.includes('Failed to fetch')) {
+        setError('Cannot reach the server. Please check your internet connection.');
+      } else {
+        setError(error.message || 'Failed to load courses');
+      }
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);

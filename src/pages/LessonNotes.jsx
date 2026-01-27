@@ -172,7 +172,7 @@ const LessonNotes = () => {
   const fetchCourseAndChapters = async () => {
     try {
       // Add timeout to prevent infinite loading
-      const fetchWithTimeout = (promise, timeout = 10000) => {
+      const fetchWithTimeout = (promise, timeout = 20000) => {
         return Promise.race([
           promise,
           new Promise((_, reject) =>
