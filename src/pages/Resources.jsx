@@ -8,36 +8,65 @@ import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 const Resources = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchCourses();
+    let isMounted = true;
+    
+    const loadCourses = async () => {
+      if (isMounted) {
+        await fetchCourses();
+      }
+    };
+    
+    loadCourses();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const fetchCourses = async () => {
+    let timeoutId;
     try {
-      // Add timeout to prevent infinite loading
-      const fetchWithTimeout = (promise, timeout = 10000) => {
-        return Promise.race([
-          promise,
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Request timeout')), timeout)
-          )
-        ]);
-      };
+      setLoading(true);
+      setError(null);
+      
+      // Create abort controller for cleanup
+      const abortController = new AbortController();
+      
+      // Set timeout with cleanup
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          abortController.abort();
+          reject(new Error('Connection timeout - please check your internet connection'));
+        }, 10000);
+      });
 
-      const { data, error } = await fetchWithTimeout(
-        supabase
-          .from('lesson_courses')
-          .select('*')
-          .order('program_id')
-          .order('display_order')
-      );
+      // Fetch with cache prevention
+      const fetchPromise = supabase
+        .from('lesson_courses')
+        .select('*')
+        .order('program_id')
+        .order('display_order');
 
-      if (error) throw error;
+      const { data, error: fetchError } = await Promise.race([fetchPromise, timeoutPromise]);
+
+      if (fetchError) {
+        console.error('Supabase error:', fetchError);
+        throw fetchError;
+      }
+      
       setCourses(data || []);
     } catch (error) {
       console.error('Error fetching courses:', error);
+      if (error.name === 'AbortError') {
+        setError('Request was cancelled. Please try again.');
+      } else {
+        setError(error.message || 'Failed to load courses');
+      }
     } finally {
+      if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -60,8 +89,36 @@ const Resources = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading resources...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center max-w-md mx-auto px-6">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-4">
+            <h2 className="text-xl font-semibold text-red-800 mb-2">Unable to Load Resources</h2>
+            <p className="text-red-600 mb-4">{error}</p>
+            <button
+              onClick={fetchCourses}
+              className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+          <Link
+            to="/"
+            className="text-emerald-600 hover:text-emerald-700 underline"
+          >
+            Return to Home
+          </Link>
+        </div>
       </div>
     );
   }
