@@ -11,19 +11,7 @@ const Resources = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-    
-    const loadCourses = async () => {
-      if (isMounted) {
-        await fetchCourses();
-      }
-    };
-    
-    loadCourses();
-    
-    return () => {
-      isMounted = false;
-    };
+    fetchCourses();
   }, []);
 
   const fetchCourses = async () => {
@@ -32,23 +20,24 @@ const Resources = () => {
       setLoading(true);
       setError(null);
       
-      // Create abort controller for cleanup
-      const abortController = new AbortController();
-      
-      // Set timeout with cleanup
+      // Set timeout
       const timeoutPromise = new Promise((_, reject) => {
         timeoutId = setTimeout(() => {
-          abortController.abort();
           reject(new Error('Connection timeout - please check your internet connection'));
         }, 10000);
       });
 
-      // Fetch with cache prevention
+      // Fetch courses
       const fetchPromise = supabase
         .from('lesson_courses')
         .select('*')
         .order('program_id')
-        .order('display_order');
+        .order('display_order')
+        .then(result => {
+          // Clear timeout on success
+          if (timeoutId) clearTimeout(timeoutId);
+          return result;
+        });
 
       const { data, error: fetchError } = await Promise.race([fetchPromise, timeoutPromise]);
 
@@ -57,14 +46,11 @@ const Resources = () => {
         throw fetchError;
       }
       
+      console.log('Courses loaded:', data?.length || 0);
       setCourses(data || []);
     } catch (error) {
       console.error('Error fetching courses:', error);
-      if (error.name === 'AbortError') {
-        setError('Request was cancelled. Please try again.');
-      } else {
-        setError(error.message || 'Failed to load courses');
-      }
+      setError(error.message || 'Failed to load courses');
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
       setLoading(false);
