@@ -100,24 +100,56 @@ const Resources = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center max-w-md mx-auto px-6">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-4">
-            <h2 className="text-xl font-semibold text-red-800 mb-2">Unable to Load Resources</h2>
-            <p className="text-red-600 mb-4">{error}</p>
-            <button
-              onClick={fetchCourses}
-              className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+      <div className="min-h-screen bg-white">
+        <nav className="bg-white border-b border-gray-200">
+          <div className="max-w-5xl mx-auto px-6 py-4">
+            <Link
+              to="/"
+              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
-              Try Again
-            </button>
+              ← Home
+            </Link>
           </div>
-          <Link
-            to="/"
-            className="text-emerald-600 hover:text-emerald-700 underline"
-          >
-            Return to Home
-          </Link>
+        </nav>
+        
+        <div className="max-w-2xl mx-auto px-6 py-20">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-6">
+              <BookOpen className="h-8 w-8 text-gray-400" />
+            </div>
+            
+            <h1 className="text-2xl font-normal text-gray-900 mb-3">
+              Unable to Load Resources
+            </h1>
+            
+            <p className="text-base text-gray-600 mb-8 max-w-md mx-auto">
+              {error}
+            </p>
+            
+            <div className="flex items-center justify-center gap-4">
+              <button
+                onClick={fetchCourses}
+                className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                Try Again
+              </button>
+              <Link
+                to="/"
+                className="px-6 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Go Home
+              </Link>
+            </div>
+            
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              <p className="text-sm text-gray-500">
+                Still having trouble? Contact us at{' '}
+                <a href="mailto:admin@tftmadrasah.nz" className="text-gray-900 hover:underline">
+                  admin@tftmadrasah.nz
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
