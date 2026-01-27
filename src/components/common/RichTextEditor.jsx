@@ -19,7 +19,8 @@ import {
   Eye,
   Code2,
   Undo,
-  Redo
+  Redo,
+  Superscript
 } from 'lucide-react';
 
 const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) => {
@@ -243,6 +244,59 @@ const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) 
     insertAtCursor('<br>\n');
   };
 
+  const formatFootnote = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = value.substring(start, end);
+    
+    // Count existing footnotes to determine the next number
+    const footnoteMatches = value.match(/class="footnote-ref"/g);
+    const nextNumber = footnoteMatches ? footnoteMatches.length + 1 : 1;
+    
+    // Use selected text or placeholder
+    const referenceText = selectedText || 'Reference text here';
+    
+    // Escape quotes for data attribute
+    const escapedText = referenceText.replace(/"/g, '&quot;');
+    
+    // Insert the footnote reference with data attribute for tooltip
+    const footnoteRef = `<sup class="footnote-ref"><a href="#fn${nextNumber}" id="ref${nextNumber}" data-footnote="${escapedText}">[${nextNumber}]</a></sup>`;
+    
+    // Add reference section if it doesn't exist
+    let updatedText = value;
+    if (!value.includes('<div class="references">')) {
+      updatedText = value + '\n\n<div class="references">\n<h3>References</h3>\n<ol>\n</ol>\n</div>';
+    }
+    
+    // Insert the footnote marker at cursor position
+    const beforeSelection = updatedText.substring(0, start);
+    const afterSelection = updatedText.substring(end);
+    const newText = beforeSelection + footnoteRef + afterSelection;
+    
+    // Add the reference item to the references list
+    const referencesMatch = newText.match(/<ol>([\s\S]*?)<\/ol>/);
+    if (referencesMatch) {
+      const referenceItem = `\n  <li id="fn${nextNumber}">${referenceText} <a href="#ref${nextNumber}">↩</a></li>`;
+      const updatedReferences = newText.replace(
+        /<\/ol>/,
+        referenceItem + '\n</ol>'
+      );
+      onChange(updatedReferences);
+    } else {
+      onChange(newText);
+    }
+
+    setTimeout(() => {
+      textarea.focus();
+      // Position cursor after the footnote
+      const newPos = start + footnoteRef.length;
+      textarea.setSelectionRange(newPos, newPos);
+    }, 0);
+  };
+
   const FormatButton = ({ icon: Icon, onClick, title, className = '' }) => (
     <button
       type="button"
@@ -311,6 +365,7 @@ const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) 
           <FormatButton icon={BookOpen} onClick={formatArabicText} title="Arabic Text Block" />
           <FormatButton icon={Lightbulb} onClick={formatTip} title="Tip Box" />
           <FormatButton icon={Table} onClick={formatTable} title="Insert Table" />
+          <FormatButton icon={Superscript} onClick={formatFootnote} title="Add Footnote" />
         </div>
 
         {/* Alignment & Misc */}

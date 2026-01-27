@@ -15,11 +15,23 @@ const Resources = () => {
 
   const fetchCourses = async () => {
     try {
-      const { data, error } = await supabase
-        .from('lesson_courses')
-        .select('*')
-        .order('program_id')
-        .order('display_order');
+      // Add timeout to prevent infinite loading
+      const fetchWithTimeout = (promise, timeout = 10000) => {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
+
+      const { data, error } = await fetchWithTimeout(
+        supabase
+          .from('lesson_courses')
+          .select('*')
+          .order('program_id')
+          .order('display_order')
+      );
 
       if (error) throw error;
       setCourses(data || []);

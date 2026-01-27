@@ -171,23 +171,37 @@ const LessonNotes = () => {
 
   const fetchCourseAndChapters = async () => {
     try {
+      // Add timeout to prevent infinite loading
+      const fetchWithTimeout = (promise, timeout = 10000) => {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
+
       // Fetch course
-      const { data: courseData, error: courseError } = await supabase
-        .from('lesson_courses')
-        .select('*')
-        .eq('slug', courseSlug)
-        .single();
+      const { data: courseData, error: courseError } = await fetchWithTimeout(
+        supabase
+          .from('lesson_courses')
+          .select('*')
+          .eq('slug', courseSlug)
+          .single()
+      );
 
       if (courseError) throw courseError;
       setCourse(courseData);
 
       // Fetch published chapters
-      const { data: chaptersData, error: chaptersError } = await supabase
-        .from('lesson_chapters')
-        .select('*')
-        .eq('course_id', courseData.id)
-        .eq('is_published', true)
-        .order('chapter_number');
+      const { data: chaptersData, error: chaptersError } = await fetchWithTimeout(
+        supabase
+          .from('lesson_chapters')
+          .select('*')
+          .eq('course_id', courseData.id)
+          .eq('is_published', true)
+          .order('chapter_number')
+      );
 
       if (chaptersError) throw chaptersError;
       setChapters(chaptersData || []);
@@ -198,6 +212,8 @@ const LessonNotes = () => {
       }
     } catch (error) {
       console.error('Error fetching course:', error);
+      // Set error state even on timeout
+      setCourse(null);
     } finally {
       setLoading(false);
     }
@@ -216,8 +232,8 @@ const LessonNotes = () => {
     return DOMPurify.sanitize(html, {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
                      'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'div', 'span', 
-                     'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img'],
-      ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style']
+                     'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img', 'sup'],
+      ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'data-footnote']
     });
   };
 

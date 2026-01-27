@@ -193,3 +193,136 @@ input[type="date"]::-webkit-date-and-time-value {
   font-style: normal !important;
   font-weight: normal !important;
 }
+
+/* Wikipedia-style Footnotes */
+.footnote-ref {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  top: -0.5em;
+  margin-left: 1px;
+  margin-right: 1px;
+}
+
+.footnote-ref a {
+  color: #0645ad;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 2px;
+  position: relative;
+}
+
+.footnote-ref a:hover {
+  text-decoration: underline;
+}
+
+/* Footnote tooltip on hover */
+.footnote-ref a::after {
+  content: attr(data-footnote);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: #2d3748;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: normal;
+  max-width: 300px;
+  width: max-content;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+  font-weight: normal;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.footnote-ref a:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Arrow for tooltip */
+.footnote-ref a::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #2d3748;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1001;
+}
+
+.footnote-ref a:hover::before {
+  opacity: 1;
+}
+
+/* References section */
+.references {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.references h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.references ol {
+  counter-reset: footnote-counter;
+  list-style: none;
+  padding-left: 0;
+}
+
+.references ol li {
+  counter-increment: footnote-counter;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  padding-left: 28px;
+  position: relative;
+  color: #4b5563;
+}
+
+.references ol li::before {
+  content: counter(footnote-counter) ".";
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.references ol li a {
+  color: #0645ad;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.references ol li a:hover {
+  text-decoration: underline;
+}
+
+/* Smooth scroll for footnote links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Highlight target footnote when jumped to */
+.references ol li:target {
+  background-color: #fef3c7;
+  padding: 8px 8px 8px 28px;
+  margin-left: -8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}

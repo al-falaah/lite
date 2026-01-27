@@ -69,11 +69,23 @@ const ResearchAdmin = () => {
 
   const fetchCourses = async () => {
     try {
-      const { data, error } = await supabase
-        .from('lesson_courses')
-        .select('*')
-        .order('program_id')
-        .order('display_order');
+      // Add timeout to prevent infinite loading
+      const fetchWithTimeout = (promise, timeout = 10000) => {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
+
+      const { data, error } = await fetchWithTimeout(
+        supabase
+          .from('lesson_courses')
+          .select('*')
+          .order('program_id')
+          .order('display_order')
+      );
 
       if (error) throw error;
       setCourses(data || []);
@@ -87,11 +99,23 @@ const ResearchAdmin = () => {
 
   const fetchChapters = async (courseId) => {
     try {
-      const { data, error } = await supabase
-        .from('lesson_chapters')
-        .select('*')
-        .eq('course_id', courseId)
-        .order('chapter_number');
+      // Add timeout to prevent infinite loading
+      const fetchWithTimeout = (promise, timeout = 10000) => {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+          )
+        ]);
+      };
+
+      const { data, error } = await fetchWithTimeout(
+        supabase
+          .from('lesson_chapters')
+          .select('*')
+          .eq('course_id', courseId)
+          .order('chapter_number')
+      );
 
       if (error) throw error;
       setChapters(data || []);
@@ -245,8 +269,8 @@ const ResearchAdmin = () => {
 
   const sanitizeContent = (html) => {
     return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'hr'],
-      ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'id', 'style']
+      ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'hr', 'sup'],
+      ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'id', 'style', 'data-footnote']
     });
   };
 
