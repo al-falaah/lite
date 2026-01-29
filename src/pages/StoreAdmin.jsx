@@ -69,6 +69,7 @@ const StoreAdmin = () => {
   // Products state
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
+  const [productsLoadingProgress, setProductsLoadingProgress] = useState(0);
   const [editingProduct, setEditingProduct] = useState(null);
   const [productFormData, setProductFormData] = useState({
     name: '',
@@ -84,6 +85,7 @@ const StoreAdmin = () => {
   // Orders state
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersLoadingProgress, setOrdersLoadingProgress] = useState(0);
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [editingOrder, setEditingOrder] = useState(null);
@@ -124,8 +126,20 @@ const StoreAdmin = () => {
   // ============================================
 
   const fetchProducts = async () => {
-    setProductsLoading(true);
+    let progressInterval;
     try {
+      setProductsLoading(true);
+      setProductsLoadingProgress(0);
+
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setProductsLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+
       const headers = await getAuthHeaders();
       const response = await fetch(`${supabaseUrl}/rest/v1/store_products?order=created_at.desc`, { headers });
 
@@ -139,6 +153,8 @@ const StoreAdmin = () => {
       console.error('Error fetching products:', error);
       toast.error('Failed to load products');
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setProductsLoadingProgress(100);
       setProductsLoading(false);
     }
   };
@@ -281,8 +297,20 @@ const StoreAdmin = () => {
   // ============================================
 
   const fetchOrders = async () => {
-    setOrdersLoading(true);
+    let progressInterval;
     try {
+      setOrdersLoading(true);
+      setOrdersLoadingProgress(0);
+
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setOrdersLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+
       const headers = await getAuthHeaders();
 
       let url = `${supabaseUrl}/rest/v1/store_orders?select=*,items:store_order_items(*)&order=created_at.desc`;
@@ -305,6 +333,8 @@ const StoreAdmin = () => {
       console.error('Error fetching orders:', error);
       toast.error('Failed to load orders');
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setOrdersLoadingProgress(100);
       setOrdersLoading(false);
     }
   };
@@ -484,8 +514,43 @@ const StoreAdmin = () => {
 
               {productsLoading ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading products...</p>
+                  <div className="relative w-24 h-24 inline-block">
+                    <svg className="w-24 h-24" viewBox="0 0 80 80">
+                      <circle
+                        className="text-gray-200"
+                        strokeWidth="6"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="34"
+                        cx="40"
+                        cy="40"
+                      />
+                      <circle
+                        className="text-emerald-600"
+                        strokeWidth="6"
+                        strokeDasharray={213.628}
+                        strokeDashoffset={213.628 - (213.628 * productsLoadingProgress) / 100}
+                        strokeLinecap="round"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="34"
+                        cx="40"
+                        cy="40"
+                        style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-lg font-semibold text-gray-700">
+                        {Math.round(productsLoadingProgress)}%
+                      </span>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-gray-600">
+                    {productsLoadingProgress < 30 && 'Connecting...'}
+                    {productsLoadingProgress >= 30 && productsLoadingProgress < 60 && 'Loading products...'}
+                    {productsLoadingProgress >= 60 && productsLoadingProgress < 90 && 'Processing...'}
+                    {productsLoadingProgress >= 90 && 'Almost there...'}
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -719,8 +784,43 @@ const StoreAdmin = () => {
 
               {ordersLoading ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600">Loading orders...</p>
+                  <div className="relative w-24 h-24 inline-block">
+                    <svg className="w-24 h-24" viewBox="0 0 80 80">
+                      <circle
+                        className="text-gray-200"
+                        strokeWidth="6"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="34"
+                        cx="40"
+                        cy="40"
+                      />
+                      <circle
+                        className="text-emerald-600"
+                        strokeWidth="6"
+                        strokeDasharray={213.628}
+                        strokeDashoffset={213.628 - (213.628 * ordersLoadingProgress) / 100}
+                        strokeLinecap="round"
+                        stroke="currentColor"
+                        fill="transparent"
+                        r="34"
+                        cx="40"
+                        cy="40"
+                        style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-lg font-semibold text-gray-700">
+                        {Math.round(ordersLoadingProgress)}%
+                      </span>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-gray-600">
+                    {ordersLoadingProgress < 30 && 'Connecting...'}
+                    {ordersLoadingProgress >= 30 && ordersLoadingProgress < 60 && 'Loading orders...'}
+                    {ordersLoadingProgress >= 60 && ordersLoadingProgress < 90 && 'Processing...'}
+                    {ordersLoadingProgress >= 90 && 'Almost there...'}
+                  </p>
                 </div>
               ) : orders.length === 0 ? (
                 <div className="bg-white rounded-lg shadow-sm p-12 text-center">

@@ -22,6 +22,7 @@ const ResearchAdmin = () => {
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [chapters, setChapters] = useState([]);
@@ -69,7 +70,18 @@ const ResearchAdmin = () => {
   };
 
   const fetchCourses = async () => {
+    let progressInterval;
     try {
+      setLoadingProgress(0);
+      
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+      
       // Add timeout to prevent infinite loading
       const fetchWithTimeout = (promise, timeout = 20000) => {
         return Promise.race([
@@ -93,7 +105,10 @@ const ResearchAdmin = () => {
     } catch (error) {
       console.error('Error fetching courses:', error);
       toast.error('Failed to load courses');
+      if (progressInterval) clearInterval(progressInterval);
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
       setLoading(false);
     }
   };
@@ -308,8 +323,22 @@ const ResearchAdmin = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="relative inline-flex items-center justify-center mb-4">
+            <svg className="w-24 h-24 transform -rotate-90">
+              <circle cx="48" cy="48" r="40" stroke="#e5e7eb" strokeWidth="6" fill="none" />
+              <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="6" fill="none" strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 40}
+                strokeDashoffset={2 * Math.PI * 40 * (1 - loadingProgress / 100)}
+                className="transition-all duration-300 ease-out" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xl font-semibold text-gray-900">{Math.round(loadingProgress)}%</span>
+            </div>
+          </div>
+          <p className="text-gray-600">Loading research admin...</p>
+        </div>
       </div>
     );
   }

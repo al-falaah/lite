@@ -6,6 +6,7 @@ import { supabase, teachers, supabaseUrl, supabaseAnonKey } from '../services/su
 export default function AdminTeachersList() {
   const [teachersList, setTeachersList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [filter, setFilter] = useState('all'); // all, male, female, active, inactive
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -23,16 +24,33 @@ export default function AdminTeachersList() {
   }, []);
 
   const fetchTeachers = async () => {
-    setLoading(true);
-    const { data, error } = await teachers.getAll();
+    let progressInterval;
+    try {
+      setLoading(true);
+      setLoadingProgress(0);
 
-    if (error) {
-      toast.error('Failed to load teachers');
-      console.error(error);
-    } else {
-      setTeachersList(data || []);
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+
+      const { data, error } = await teachers.getAll();
+
+      if (error) {
+        toast.error('Failed to load teachers');
+        console.error(error);
+      } else {
+        setTeachersList(data || []);
+      }
+    } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const generateStaffId = async () => {
@@ -383,8 +401,43 @@ export default function AdminTeachersList() {
       {/* Teachers List */}
       {loading ? (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-          <p className="mt-2 text-sm sm:text-base text-gray-600">Loading teachers...</p>
+          <div className="relative w-24 h-24 inline-block">
+            <svg className="w-24 h-24" viewBox="0 0 80 80">
+              <circle
+                className="text-gray-200"
+                strokeWidth="6"
+                stroke="currentColor"
+                fill="transparent"
+                r="34"
+                cx="40"
+                cy="40"
+              />
+              <circle
+                className="text-emerald-600"
+                strokeWidth="6"
+                strokeDasharray={213.628}
+                strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
+                strokeLinecap="round"
+                stroke="currentColor"
+                fill="transparent"
+                r="34"
+                cx="40"
+                cy="40"
+                style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-lg font-semibold text-gray-700">
+                {Math.round(loadingProgress)}%
+              </span>
+            </div>
+          </div>
+          <p className="mt-4 text-sm sm:text-base text-gray-600">
+            {loadingProgress < 30 && 'Connecting...'}
+            {loadingProgress >= 30 && loadingProgress < 60 && 'Fetching teachers...'}
+            {loadingProgress >= 60 && loadingProgress < 90 && 'Processing data...'}
+            {loadingProgress >= 90 && 'Almost there...'}
+          </p>
         </div>
       ) : filteredTeachers.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-gray-200">

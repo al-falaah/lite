@@ -11,6 +11,7 @@ const StorePage = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [cart, setCart] = useState([]);
 
@@ -36,8 +37,20 @@ const StorePage = () => {
   };
 
   const fetchProducts = async () => {
-    setLoading(true);
+    let progressInterval;
     try {
+      setLoading(true);
+      setLoadingProgress(0);
+
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+
       const { data, error } = await storeProducts.getAll(true); // Only active products
       if (error) throw error;
       setProducts(data || []);
@@ -46,6 +59,8 @@ const StorePage = () => {
       toast.error('Failed to load products');
       setProducts([]);
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
       setLoading(false);
     }
   };
@@ -164,8 +179,43 @@ const StorePage = () => {
           {/* Products Grid */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading products...</p>
+              <div className="relative w-24 h-24 inline-block">
+                <svg className="w-24 h-24" viewBox="0 0 80 80">
+                  <circle
+                    className="text-gray-200"
+                    strokeWidth="6"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="34"
+                    cx="40"
+                    cy="40"
+                  />
+                  <circle
+                    className="text-emerald-600"
+                    strokeWidth="6"
+                    strokeDasharray={213.628}
+                    strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
+                    strokeLinecap="round"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="34"
+                    cx="40"
+                    cy="40"
+                    style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-semibold text-gray-700">
+                    {Math.round(loadingProgress)}%
+                  </span>
+                </div>
+              </div>
+              <p className="mt-4 text-gray-600">
+                {loadingProgress < 30 && 'Connecting...'}
+                {loadingProgress >= 30 && loadingProgress < 60 && 'Loading products...'}
+                {loadingProgress >= 60 && loadingProgress < 90 && 'Processing...'}
+                {loadingProgress >= 90 && 'Almost there...'}
+              </p>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20">

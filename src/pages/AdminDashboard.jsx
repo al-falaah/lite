@@ -418,54 +418,74 @@ const AdminDashboard = () => {
       </nav>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1 overflow-x-auto">
+          <nav className="flex gap-2 overflow-x-auto scrollbar-hide py-2" aria-label="Tabs">
             <button
               onClick={() => setActiveTab('applications')}
-              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'applications'
-                  ? 'text-gray-900 border-b-2 border-gray-900'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              <FileText className="h-4 w-4" />
-              <span>Applications</span>
+              <FileText className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                activeTab === 'applications' ? 'text-emerald-600' : 'text-gray-400'
+              }`} />
+              <span className="font-semibold">Applications</span>
+              {activeTab === 'applications' && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+              )}
             </button>
             <button
               onClick={() => setActiveTab('students')}
-              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'students'
-                  ? 'text-gray-900 border-b-2 border-gray-900'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              <Users className="h-4 w-4" />
-              <span>Students</span>
+              <Users className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                activeTab === 'students' ? 'text-emerald-600' : 'text-gray-400'
+              }`} />
+              <span className="font-semibold">Students</span>
+              {activeTab === 'students' && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+              )}
             </button>
             <button
               onClick={() => setActiveTab('availability')}
-              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'availability'
-                  ? 'text-gray-900 border-b-2 border-gray-900'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              <Calendar className="h-4 w-4" />
-              <span>Scheduling</span>
+              <Calendar className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                activeTab === 'availability' ? 'text-emerald-600' : 'text-gray-400'
+              }`} />
+              <span className="font-semibold">Scheduling</span>
+              {activeTab === 'availability' && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+              )}
             </button>
             <button
               onClick={() => setActiveTab('teachers')}
-              className={`py-3 px-4 text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors ${
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'teachers'
-                  ? 'text-gray-900 border-b-2 border-gray-900'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              <UserCheck className="h-4 w-4" />
-              <span>Teachers</span>
+              <UserCheck className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                activeTab === 'teachers' ? 'text-emerald-600' : 'text-gray-400'
+              }`} />
+              <span className="font-semibold">Teachers</span>
+              {activeTab === 'teachers' && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+              )}
             </button>
-          </div>
+          </nav>
         </div>
       </div>
 
@@ -526,7 +546,17 @@ const AdminDashboard = () => {
             {/* Applications List */}
             {loading ? (
               <div className="flex justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+                <div className="text-center">
+                  <div className="relative inline-flex items-center justify-center">
+                    <svg className="w-16 h-16 transform -rotate-90">
+                      <circle cx="32" cy="32" r="28" stroke="#e5e7eb" strokeWidth="4" fill="none" />
+                      <circle cx="32" cy="32" r="28" stroke="#059669" strokeWidth="4" fill="none" strokeLinecap="round"
+                        strokeDasharray={2 * Math.PI * 28}
+                        className="animate-spin" style={{animationDuration: '1.5s'}} />
+                    </svg>
+                  </div>
+                  <p className="text-gray-600 mt-3 text-sm">Loading applications...</p>
+                </div>
               </div>
             ) : error && applicationsData.length === 0 ? (
               <Card>

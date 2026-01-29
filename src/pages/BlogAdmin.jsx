@@ -29,6 +29,7 @@ const BlogAdmin = () => {
   const backLink = profile?.role === 'director' ? '/director' : '/admin';
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [loggingIn, setLoggingIn] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [formData, setFormData] = useState({
@@ -50,9 +51,21 @@ const BlogAdmin = () => {
 
   const fetchAllPosts = async () => {
     console.log('[BlogAdmin] Fetching all posts using direct API...');
-    setLoading(true);
-
+    let progressInterval;
+    
     try {
+      setLoading(true);
+      setLoadingProgress(0);
+
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -98,6 +111,8 @@ const BlogAdmin = () => {
       toast.error(`Failed to load posts: ${error.message || 'Unknown error'}`);
       setPosts([]);
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
       setLoading(false);
     }
   };
@@ -517,8 +532,43 @@ const BlogAdmin = () => {
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
         <div className="text-center">
           <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-12 w-12 mx-auto mb-4" />
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="text-sm text-gray-500 mt-4">Loading...</p>
+          <div className="relative w-24 h-24 inline-block">
+            <svg className="w-24 h-24" viewBox="0 0 80 80">
+              <circle
+                className="text-gray-200"
+                strokeWidth="6"
+                stroke="currentColor"
+                fill="transparent"
+                r="34"
+                cx="40"
+                cy="40"
+              />
+              <circle
+                className="text-emerald-600"
+                strokeWidth="6"
+                strokeDasharray={213.628}
+                strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
+                strokeLinecap="round"
+                stroke="currentColor"
+                fill="transparent"
+                r="34"
+                cx="40"
+                cy="40"
+                style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-lg font-semibold text-gray-700">
+                {Math.round(loadingProgress)}%
+              </span>
+            </div>
+          </div>
+          <p className="mt-4 text-sm text-gray-500">
+            {loadingProgress < 30 && 'Connecting...'}
+            {loadingProgress >= 30 && loadingProgress < 60 && 'Loading...'}
+            {loadingProgress >= 60 && loadingProgress < 90 && 'Processing...'}
+            {loadingProgress >= 90 && 'Almost there...'}
+          </p>
         </div>
       </div>
     );
@@ -608,8 +658,38 @@ const BlogAdmin = () => {
             </form>
           ) : user && !profile ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-              <p className="text-gray-600 text-sm">Loading profile...</p>
+              <div className="relative w-16 h-16 inline-block">
+                <svg className="w-16 h-16" viewBox="0 0 64 64">
+                  <circle
+                    className="text-gray-200"
+                    strokeWidth="5"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="28"
+                    cx="32"
+                    cy="32"
+                  />
+                  <circle
+                    className="text-emerald-600"
+                    strokeWidth="5"
+                    strokeDasharray={175.929}
+                    strokeDashoffset={175.929 - (175.929 * loadingProgress) / 100}
+                    strokeLinecap="round"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="28"
+                    cx="32"
+                    cy="32"
+                    style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-sm font-semibold text-gray-700">
+                    {Math.round(loadingProgress)}%
+                  </span>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm mt-4">Loading profile...</p>
             </div>
           ) : !profile?.is_admin ? (
             <div className="text-center">

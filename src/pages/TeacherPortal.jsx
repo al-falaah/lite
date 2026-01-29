@@ -44,6 +44,7 @@ export default function TeacherPortal() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   // Login form
   const [staffId, setStaffId] = useState('');
@@ -177,9 +178,20 @@ export default function TeacherPortal() {
   };
 
   const loadTeacherData = async (teacherId) => {
-    setLoading(true);
-
+    let progressInterval;
     try {
+      setLoading(true);
+      setLoadingProgress(0);
+
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+
       // Load assigned students
       const { data: assigned, error: assignedError } = await teacherAssignments.getByTeacher(teacherId, 'assigned');
       if (assignedError) {
@@ -198,9 +210,11 @@ export default function TeacherPortal() {
     } catch (err) {
       console.error('Error loading teacher data:', err);
       toast.error('Failed to load student data');
+    } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleViewStudent = async (assignment) => {
@@ -756,8 +770,43 @@ export default function TeacherPortal() {
         {/* Students List */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
-            <p className="mt-2 text-gray-600">Loading students...</p>
+            <div className="relative w-24 h-24 inline-block">
+              <svg className="w-24 h-24" viewBox="0 0 80 80">
+                <circle
+                  className="text-gray-200"
+                  strokeWidth="6"
+                  stroke="currentColor"
+                  fill="transparent"
+                  r="34"
+                  cx="40"
+                  cy="40"
+                />
+                <circle
+                  className="text-emerald-600"
+                  strokeWidth="6"
+                  strokeDasharray={213.628}
+                  strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="transparent"
+                  r="34"
+                  cx="40"
+                  cy="40"
+                  style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-lg font-semibold text-gray-700">
+                  {Math.round(loadingProgress)}%
+                </span>
+              </div>
+            </div>
+            <p className="mt-4 text-gray-600">
+              {loadingProgress < 30 && 'Connecting...'}
+              {loadingProgress >= 30 && loadingProgress < 60 && 'Loading students...'}
+              {loadingProgress >= 60 && loadingProgress < 90 && 'Processing...'}
+              {loadingProgress >= 90 && 'Almost there...'}
+            </p>
           </div>
         ) : displayedStudents.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg border border-gray-200">

@@ -8,6 +8,7 @@ import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 const Resources = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -16,11 +17,23 @@ const Resources = () => {
 
   const fetchCourses = async () => {
     let timeoutId;
+    let progressInterval;
+    
     try {
       setLoading(true);
       setError(null);
+      setLoadingProgress(0);
       
       console.log('Fetching courses from Supabase...');
+      
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev; // Stop at 90% until actual data arrives
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
       
       // Increase timeout to 20 seconds for slower connections
       const timeoutPromise = new Promise((_, reject) => {
@@ -39,11 +52,18 @@ const Resources = () => {
         timeoutPromise
       ]);
 
-      // Clear timeout immediately on response
+      // Clear timeout and progress interval immediately on response
       if (timeoutId) {
         clearTimeout(timeoutId);
         timeoutId = null;
       }
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+      }
+      
+      // Complete progress
+      setLoadingProgress(100);
 
       if (fetchError) {
         console.error('Supabase error:', fetchError);
@@ -55,6 +75,9 @@ const Resources = () => {
     } catch (error) {
       console.error('Error fetching courses:', error);
       
+      // Clear intervals on error
+      if (progressInterval) clearInterval(progressInterval);
+      
       // More specific error messages
       if (error.message.includes('timeout')) {
         setError('Connection is taking too long. Please check your internet and try again.');
@@ -65,6 +88,7 @@ const Resources = () => {
       }
     } finally {
       if (timeoutId) clearTimeout(timeoutId);
+      if (progressInterval) clearInterval(progressInterval);
       setLoading(false);
     }
   };
@@ -88,9 +112,48 @@ const Resources = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading resources...</p>
+        <div className="text-center max-w-md mx-auto px-6">
+          {/* Circular Progress */}
+          <div className="relative inline-flex items-center justify-center mb-6">
+            <svg className="w-32 h-32 transform -rotate-90">
+              {/* Background circle */}
+              <circle
+                cx="64"
+                cy="64"
+                r="56"
+                stroke="#e5e7eb"
+                strokeWidth="8"
+                fill="none"
+              />
+              {/* Progress circle */}
+              <circle
+                cx="64"
+                cy="64"
+                r="56"
+                stroke="#059669"
+                strokeWidth="8"
+                fill="none"
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 56}
+                strokeDashoffset={2 * Math.PI * 56 * (1 - loadingProgress / 100)}
+                className="transition-all duration-300 ease-out"
+              />
+            </svg>
+            {/* Percentage text */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-2xl font-semibold text-gray-900">
+                {Math.round(loadingProgress)}%
+              </span>
+            </div>
+          </div>
+          
+          <p className="text-base text-gray-600 mb-2">Loading resources...</p>
+          <p className="text-sm text-gray-500">
+            {loadingProgress < 30 && 'Connecting to server...'}
+            {loadingProgress >= 30 && loadingProgress < 60 && 'Fetching course data...'}
+            {loadingProgress >= 60 && loadingProgress < 90 && 'Processing information...'}
+            {loadingProgress >= 90 && 'Almost there...'}
+          </p>
         </div>
       </div>
     );

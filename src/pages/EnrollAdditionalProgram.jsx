@@ -13,6 +13,7 @@ const EnrollAdditionalProgram = () => {
   const email = searchParams.get('email');
 
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [student, setStudent] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
   const [selectedProgram, setSelectedProgram] = useState('');
@@ -32,8 +33,19 @@ const EnrollAdditionalProgram = () => {
   }, [email]);
 
   const loadStudentData = async () => {
+    let progressInterval;
     try {
       setLoading(true);
+      setLoadingProgress(0);
+
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
 
       // Helper to add timeout to promises
       const withTimeout = (promise, ms, errorMessage) => {
@@ -100,6 +112,8 @@ const EnrollAdditionalProgram = () => {
         toast.error('Failed to load student data. Please try again.');
       }
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
       setLoading(false);
     }
   };
@@ -171,8 +185,43 @@ const EnrollAdditionalProgram = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading student information...</p>
+          <div className="relative w-24 h-24 inline-block">
+            <svg className="w-24 h-24" viewBox="0 0 80 80">
+              <circle
+                className="text-gray-200"
+                strokeWidth="6"
+                stroke="currentColor"
+                fill="transparent"
+                r="34"
+                cx="40"
+                cy="40"
+              />
+              <circle
+                className="text-emerald-600"
+                strokeWidth="6"
+                strokeDasharray={213.628}
+                strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
+                strokeLinecap="round"
+                stroke="currentColor"
+                fill="transparent"
+                r="34"
+                cx="40"
+                cy="40"
+                style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-lg font-semibold text-gray-700">
+                {Math.round(loadingProgress)}%
+              </span>
+            </div>
+          </div>
+          <p className="mt-4 text-gray-600">
+            {loadingProgress < 30 && 'Connecting...'}
+            {loadingProgress >= 30 && loadingProgress < 60 && 'Loading student information...'}
+            {loadingProgress >= 60 && loadingProgress < 90 && 'Processing...'}
+            {loadingProgress >= 90 && 'Almost there...'}
+          </p>
         </div>
       </div>
     );

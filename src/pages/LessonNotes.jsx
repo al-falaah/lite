@@ -143,6 +143,7 @@ const LessonNotes = () => {
   const [chapters, setChapters] = useState([]);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('lessonNotesTheme');
     return saved || 'light';
@@ -170,7 +171,19 @@ const LessonNotes = () => {
   };
 
   const fetchCourseAndChapters = async () => {
+    let progressInterval;
     try {
+      setLoadingProgress(0);
+      
+      // Simulate progress
+      progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) return 100;
+          if (prev >= 90) return prev;
+          return Math.min(prev + Math.random() * 15, 100);
+        });
+      }, 300);
+      
       // Add timeout to prevent infinite loading
       const fetchWithTimeout = (promise, timeout = 20000) => {
         return Promise.race([
@@ -214,7 +227,10 @@ const LessonNotes = () => {
       console.error('Error fetching course:', error);
       // Set error state even on timeout
       setCourse(null);
+      if (progressInterval) clearInterval(progressInterval);
     } finally {
+      if (progressInterval) clearInterval(progressInterval);
+      setLoadingProgress(100);
       setLoading(false);
     }
   };
@@ -239,8 +255,22 @@ const LessonNotes = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="relative inline-flex items-center justify-center mb-4">
+            <svg className="w-24 h-24 transform -rotate-90">
+              <circle cx="48" cy="48" r="40" stroke="#e5e7eb" strokeWidth="6" fill="none" />
+              <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="6" fill="none" strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 40}
+                strokeDashoffset={2 * Math.PI * 40 * (1 - loadingProgress / 100)}
+                className="transition-all duration-300 ease-out" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-xl font-semibold text-gray-900">{Math.round(loadingProgress)}%</span>
+            </div>
+          </div>
+          <p className="text-gray-600">Loading lesson notes...</p>
+        </div>
       </div>
     );
   }
