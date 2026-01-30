@@ -35,6 +35,7 @@ const AdminStudentsList = () => {
   const [showModal, setShowModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
   const [programFilter, setProgramFilter] = useState('all');
+  const [genderFilter, setGenderFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
@@ -61,7 +62,7 @@ const AdminStudentsList = () => {
   // Reset to page 1 when search or filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, programFilter]);
+  }, [searchQuery, statusFilter, programFilter, genderFilter]);
 
   const loadStudents = async () => {
     let progressInterval;
@@ -156,10 +157,10 @@ const AdminStudentsList = () => {
   };
 
   const handleToggleAllStudents = () => {
-    if (selectedStudentIds.length === paginatedStudents.length) {
+    if (selectedStudentIds.length === searchFilteredStudents.length && searchFilteredStudents.length > 0) {
       setSelectedStudentIds([]);
     } else {
-      setSelectedStudentIds(paginatedStudents.map(s => s.id));
+      setSelectedStudentIds(searchFilteredStudents.map(s => s.id));
     }
   };
 
@@ -440,15 +441,15 @@ const AdminStudentsList = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'pending_payment':
-        return <Clock className="h-5 w-5 text-yellow-500" />;
+        return <Clock className="h-5 w-5 text-gray-400" />;
       case 'enrolled':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-gray-400" />;
       case 'graduated':
-        return <CheckCircle className="h-5 w-5 text-blue-500" />;
+        return <CheckCircle className="h-5 w-5 text-gray-400" />;
       case 'dropout':
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-5 w-5 text-gray-400" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+        return <AlertCircle className="h-5 w-5 text-gray-400" />;
     }
   };
 
@@ -621,8 +622,13 @@ const AdminStudentsList = () => {
         return studentEnrollments.some(e => e.program === programFilter);
       });
 
+  // Filter students by gender
+  const genderFilteredStudents = genderFilter === 'all'
+    ? programFilteredStudents
+    : programFilteredStudents.filter(student => student.gender === genderFilter);
+
   // Filter students by search query
-  const searchFilteredStudents = programFilteredStudents.filter(student => {
+  const searchFilteredStudents = genderFilteredStudents.filter(student => {
     const query = searchQuery.toLowerCase();
     return (
       student.full_name?.toLowerCase().includes(query) ||
@@ -719,80 +725,80 @@ const AdminStudentsList = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-6">
-        <Card>
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm text-gray-600">Total Students</div>
-              <div className="text-xl sm:text-3xl font-bold text-gray-900">{stats.total}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total}</div>
             </div>
-            <Users className="h-8 w-8 sm:h-10 sm:w-10 text-gray-400" />
+            <Users className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
 
-        <Card>
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm text-gray-600">Enrolled</div>
-              <div className="text-xl sm:text-3xl font-bold text-green-600">{stats.enrolled}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.enrolled}</div>
             </div>
-            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-green-400" />
+            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
 
-        <Card>
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm text-gray-600">Graduated</div>
-              <div className="text-xl sm:text-3xl font-bold text-blue-600">{stats.graduated}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.graduated}</div>
             </div>
-            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-blue-400" />
+            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
 
-        <Card>
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs sm:text-sm text-gray-600">Dropout</div>
-              <div className="text-xl sm:text-3xl font-bold text-red-600">{stats.dropout}</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.dropout}</div>
             </div>
-            <XCircle className="h-8 w-8 sm:h-10 sm:w-10 text-red-400" />
+            <XCircle className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
 
-        <Card className="bg-emerald-50 border-emerald-200">
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs sm:text-sm text-emerald-700">QARI</div>
-              <div className="text-xl sm:text-3xl font-bold text-emerald-900">{stats.qariEnrollments}</div>
+              <div className="text-xs sm:text-sm text-gray-600">QARI</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.qariEnrollments}</div>
             </div>
-            <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-emerald-400" />
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
 
-        <Card className="bg-blue-50 border-blue-200">
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs sm:text-sm text-blue-700">Essentials</div>
-              <div className="text-xl sm:text-3xl font-bold text-blue-900">{stats.essentialsEnrollments}</div>
+              <div className="text-xs sm:text-sm text-gray-600">Essentials</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.essentialsEnrollments}</div>
             </div>
-            <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-blue-400" />
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
 
-        <Card className="bg-purple-50 border-purple-200">
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs sm:text-sm text-purple-700">Tajweed</div>
-              <div className="text-xl sm:text-3xl font-bold text-purple-900">{stats.tajweedEnrollments}</div>
+              <div className="text-xs sm:text-sm text-gray-600">Tajweed</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">{stats.tajweedEnrollments}</div>
             </div>
-            <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 text-purple-400" />
+            <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Search Bar */}
-      <Card>
+      <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
@@ -800,10 +806,10 @@ const AdminStudentsList = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, email, student ID, or phone..."
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border-0 focus:ring-0 focus:outline-none text-sm"
           />
         </div>
-      </Card>
+      </div>
 
       {/* Filters and Bulk Actions */}
       <div className="space-y-3 sm:space-y-4">
@@ -816,10 +822,10 @@ const AdminStudentsList = () => {
                 <button
                   key={filter}
                   onClick={() => setStatusFilter(filter)}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium capitalize whitespace-nowrap ${
+                  className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium capitalize whitespace-nowrap transition-colors ${
                     statusFilter === filter
                       ? 'bg-emerald-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   {filter === 'pending_payment' ? 'Pending Payment' : filter}
@@ -859,13 +865,33 @@ const AdminStudentsList = () => {
               <button
                 key={filter.value}
                 onClick={() => setProgramFilter(filter.value)}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap ${
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
                   programFilter === filter.value
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
                 {filter.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Gender Filter */}
+        <div>
+          <label className="text-xs sm:text-sm font-medium text-gray-700 mb-2 block">Filter by Gender</label>
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+            {['all', 'male', 'female'].map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setGenderFilter(filter)}
+                className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium capitalize whitespace-nowrap transition-colors ${
+                  genderFilter === filter
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                {filter}
               </button>
             ))}
           </div>
@@ -874,16 +900,33 @@ const AdminStudentsList = () => {
 
       {/* Students List */}
       {paginatedStudents.length === 0 ? (
-        <Card>
-          <p className="text-center text-gray-600 py-8">
+        <div className="bg-white p-8 rounded-lg border border-gray-200">
+          <p className="text-center text-gray-600">
             {searchQuery ? 'No students found matching your search' : 'No students found'}
           </p>
-        </Card>
+        </div>
       ) : (
         <>
+          {/* Select All Filtered Students */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handleToggleAllStudents}
+              className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 font-medium"
+            >
+              {selectedStudentIds.length === searchFilteredStudents.length && searchFilteredStudents.length > 0
+                ? `Deselect All (${searchFilteredStudents.length})`
+                : `Select All Filtered (${searchFilteredStudents.length})`}
+            </button>
+            {selectedStudentIds.length > 0 && (
+              <span className="text-xs sm:text-sm text-gray-600">
+                {selectedStudentIds.length} of {searchFilteredStudents.length} selected
+              </span>
+            )}
+          </div>
+
           <div className="grid gap-3 sm:gap-4">
             {paginatedStudents.map((student) => (
-              <Card key={student.id} className="hover:shadow-lg transition-shadow">
+              <div key={student.id} className="bg-white p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
                   {/* Checkbox for bulk selection */}
                   <div className="pt-1 hidden sm:block">
@@ -949,13 +992,7 @@ const AdminStudentsList = () => {
                           {getStudentEnrollments(student.id).map((enrollment) => (
                             <span
                               key={enrollment.id}
-                              className={`px-2 py-1 rounded text-xs font-medium ${
-                                enrollment.program === PROGRAM_IDS.TAJWEED
-                                  ? 'bg-purple-100 text-purple-800'
-                                  : enrollment.program === PROGRAM_IDS.QARI
-                                  ? 'bg-emerald-100 text-emerald-800'
-                                  : 'bg-blue-100 text-blue-800'
-                              }`}
+                              className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
                             >
                               {PROGRAMS[enrollment.program]?.shortName || enrollment.program}
                             </span>
@@ -1012,7 +1049,7 @@ const AdminStudentsList = () => {
                     )}
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
 

@@ -592,7 +592,7 @@ const ClassScheduler = () => {
 
   if (loading) {
     return (
-      <Card>
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
         <div className="flex flex-col items-center justify-center py-12">
           <div className="relative w-24 h-24">
             <svg className="w-24 h-24" viewBox="0 0 80 80">
@@ -632,13 +632,13 @@ const ClassScheduler = () => {
             {loadingProgress >= 90 && 'Almost there...'}
           </p>
         </div>
-      </Card>
+      </div>
     );
   }
 
   if (error && applicants.length === 0 && enrolledStudents.length === 0) {
     return (
-      <Card>
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
         <div className="flex flex-col items-center justify-center py-12">
           <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Data</h3>
@@ -648,7 +648,7 @@ const ClassScheduler = () => {
             Retry
           </Button>
         </div>
-      </Card>
+      </div>
     );
   }
 
@@ -658,7 +658,7 @@ const ClassScheduler = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-            <Calendar className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-emerald-600" />
+            <Calendar className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-gray-400" />
             <span>Class Schedules</span>
           </h2>
           <p className="text-sm sm:text-base text-gray-600 mt-1">
@@ -686,7 +686,7 @@ const ClassScheduler = () => {
                 className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'all'
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
                 All ({enrolledStudents.length})
@@ -696,7 +696,7 @@ const ClassScheduler = () => {
                 className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'with-schedules'
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
                 With ({studentsWithSchedules})
@@ -706,7 +706,7 @@ const ClassScheduler = () => {
                 className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'without-schedules'
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
                 Without ({studentsWithoutSchedules})
@@ -718,63 +718,63 @@ const ClassScheduler = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-        <Card>
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600 truncate">
                 {viewMode === 'applicants' ? 'Pending Applicants' : 'Enrolled Students'}
               </p>
-              <p className="text-xl sm:text-2xl font-bold text-amber-600">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">
                 {viewMode === 'applicants' ? stats.totalApplicants : stats.totalStudents}
               </p>
             </div>
             {viewMode === 'applicants' ? (
-              <AlertCircle className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 flex-shrink-0" />
+              <AlertCircle className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400 flex-shrink-0" />
             ) : (
-              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600 flex-shrink-0" />
+              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400 flex-shrink-0" />
             )}
           </div>
-        </Card>
-        <Card>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-600">Current Bookings</p>
-              <p className="text-xl sm:text-2xl font-bold text-blue-600">{stats.totalBookings}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">{stats.totalBookings}</p>
             </div>
-            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 flex-shrink-0" />
+            <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400 flex-shrink-0" />
           </div>
-        </Card>
-        <Card>
+        </div>
+        <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-gray-600">
                 {selectedApplicant ? `${selectedApplicant.full_name?.split(' ')[0]}'s Slots` : `Select ${viewMode === 'applicants' ? 'Applicant' : 'Student'}`}
               </p>
-              <p className="text-2xl font-bold text-emerald-600">{stats.selectedApplicantSlots}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900">{stats.selectedApplicantSlots}</p>
             </div>
-            <Clock className="h-8 w-8 text-emerald-600" />
+            <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400 flex-shrink-0" />
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Main Content: Split View */}
       <div className="grid lg:grid-cols-4 gap-6">
         {/* Left: Applicants/Students List */}
         <div className="lg:col-span-1">
-          <Card>
+          <div className="bg-white p-4 rounded-lg border border-gray-200">
             {/* Header with Collapse Toggle */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                 {viewMode === 'applicants' ? (
-                  <AlertCircle className="h-5 w-5 text-amber-600" />
+                  <AlertCircle className="h-5 w-5 text-gray-400" />
                 ) : (
-                  <Users className="h-5 w-5 text-emerald-600" />
+                  <Users className="h-5 w-5 text-gray-400" />
                 )}
                 {viewMode === 'applicants' ? 'Applicants' : 'Students'} ({filteredList.length})
               </h3>
               <button
                 onClick={() => setShowApplicantList(!showApplicantList)}
-                className="text-gray-600 hover:text-emerald-600 transition-colors p-1 rounded-lg hover:bg-emerald-50"
+                className="text-gray-600 hover:text-gray-900 transition-colors p-1 rounded-lg hover:bg-gray-100"
                 aria-label={showApplicantList ? 'Collapse list' : 'Expand list'}
               >
                 {showApplicantList ? (
@@ -829,22 +829,22 @@ const ClassScheduler = () => {
                     }}
                     className={`w-full text-left p-3 rounded-lg transition-all ${
                       selectedApplicant?.id === item.id
-                        ? 'bg-emerald-100 border-2 border-emerald-500 shadow-sm'
+                        ? 'bg-gray-100 border-2 border-gray-900'
                         : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-gray-300'
                     }`}
                   >
                     <div className="font-medium text-gray-900 truncate">{item.full_name}</div>
                     <div className="text-xs text-gray-600 mt-1 truncate">{item.email}</div>
                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                      <div className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 whitespace-nowrap">
+                      <div className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 whitespace-nowrap">
                         {item.preferred_days?.length || 0} days
                       </div>
                       {viewMode === 'students' && item.student_id && (
-                        <div className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 whitespace-nowrap font-mono">
+                        <div className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 whitespace-nowrap font-mono">
                           {item.student_id}
                         </div>
                       )}
-                      <div className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 whitespace-nowrap truncate max-w-[120px]" title={item.timezone || 'Pacific/Auckland'}>
+                      <div className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 whitespace-nowrap truncate max-w-[120px]" title={item.timezone || 'Pacific/Auckland'}>
                         {(item.timezone || 'Pacific/Auckland').split('/').pop()}
                       </div>
                     </div>
@@ -857,7 +857,7 @@ const ClassScheduler = () => {
                 )}
               </div>
             )}
-          </Card>
+          </div>
         </div>
 
         {/* Right: Calendar View */}
@@ -865,7 +865,7 @@ const ClassScheduler = () => {
           {selectedApplicant ? (
             <div className="space-y-6">
               {/* Applicant Info Card */}
-              <Card>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900">{selectedApplicant.full_name}</h3>
@@ -889,8 +889,8 @@ const ClassScheduler = () => {
                   <div className="flex flex-col gap-2">
                     <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                       selectedApplicant.status === 'enrolled'
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-amber-600 text-white'
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-gray-600 text-white'
                     }`}>
                       {selectedApplicant.status}
                     </div>
@@ -916,52 +916,52 @@ const ClassScheduler = () => {
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <div className="space-y-4">
                       <div className="grid md:grid-cols-3 gap-4">
-                        <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="bg-white p-4 rounded-lg border border-gray-200">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-blue-900">Year 1</span>
-                            <BarChart3 className="h-4 w-4 text-blue-600" />
+                            <span className="text-sm font-medium text-gray-700">Year 1</span>
+                            <Clock className="h-4 w-4 text-gray-400" />
                           </div>
-                          <div className="text-2xl font-bold text-blue-900">
+                          <div className="text-2xl font-bold text-gray-900">
                             {progress.year1_completed}/{progress.year1_total}
                           </div>
-                          <div className="text-sm text-blue-700">{progress.year1_progress_pct}% Complete</div>
-                          <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
+                          <div className="text-sm text-gray-600">{progress.year1_progress_pct}% Complete</div>
+                          <div className="mt-2 w-full bg-gray-100 rounded-full h-2">
                             <div
-                              className="bg-blue-600 h-2 rounded-full transition-all"
+                              className="bg-gray-900 h-2 rounded-full transition-all"
                               style={{ width: `${progress.year1_progress_pct}%` }}
                             />
                           </div>
                         </div>
 
-                        <div className="bg-purple-50 p-4 rounded-lg">
+                        <div className="bg-white p-4 rounded-lg border border-gray-200">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-purple-900">Year 2</span>
-                            <BarChart3 className="h-4 w-4 text-purple-600" />
+                            <span className="text-sm font-medium text-gray-700">Year 2</span>
+                            <Clock className="h-4 w-4 text-gray-400" />
                           </div>
-                          <div className="text-2xl font-bold text-purple-900">
+                          <div className="text-2xl font-bold text-gray-900">
                             {progress.year2_completed}/{progress.year2_total}
                           </div>
-                          <div className="text-sm text-purple-700">{progress.year2_progress_pct}% Complete</div>
-                          <div className="mt-2 w-full bg-purple-200 rounded-full h-2">
+                          <div className="text-sm text-gray-600">{progress.year2_progress_pct}% Complete</div>
+                          <div className="mt-2 w-full bg-gray-100 rounded-full h-2">
                             <div
-                              className="bg-purple-600 h-2 rounded-full transition-all"
+                              className="bg-gray-900 h-2 rounded-full transition-all"
                               style={{ width: `${progress.year2_progress_pct}%` }}
                             />
                           </div>
                         </div>
 
-                        <div className="bg-emerald-50 p-4 rounded-lg">
+                        <div className="bg-white p-4 rounded-lg border border-gray-200">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-emerald-900">Overall</span>
-                            <CheckCircle className="h-4 w-4 text-emerald-600" />
+                            <span className="text-sm font-medium text-gray-700">Overall</span>
+                            <CheckCircle className="h-4 w-4 text-gray-400" />
                           </div>
-                          <div className="text-2xl font-bold text-emerald-900">
+                          <div className="text-2xl font-bold text-gray-900">
                             {progress.total_completed}/{progress.total_classes}
                           </div>
-                          <div className="text-sm text-emerald-700">{progress.overall_progress_pct}% Complete</div>
-                          <div className="mt-2 w-full bg-emerald-200 rounded-full h-2">
+                          <div className="text-sm text-gray-600">{progress.overall_progress_pct}% Complete</div>
+                          <div className="mt-2 w-full bg-gray-100 rounded-full h-2">
                             <div
-                              className="bg-emerald-600 h-2 rounded-full transition-all"
+                              className="bg-gray-900 h-2 rounded-full transition-all"
                               style={{ width: `${progress.overall_progress_pct}%` }}
                             />
                           </div>
@@ -1047,7 +1047,7 @@ const ClassScheduler = () => {
 
                   return (
                     <div className="mt-4">
-                      <Card>
+                      <div className="bg-white p-4 rounded-lg border border-gray-200">
                         {/* Track Selector */}
                         {selectedApplicant?.enrollments?.filter(e => e.status === 'active').length > 1 && (
                           <div className="mb-4 pb-4 border-b border-gray-200">
@@ -1308,13 +1308,13 @@ const ClassScheduler = () => {
                                 {/* Header */}
                                 <div className="flex items-center justify-between mb-3">
                                   <h4 className="text-sm font-semibold text-gray-700">Overall Progress</h4>
-                                  <span className="text-2xl font-bold text-emerald-600">{completionPercent}%</span>
+                                  <span className="text-2xl font-bold text-gray-900">{completionPercent}%</span>
                                 </div>
 
                                 {/* Progress Bar */}
                                 <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-3">
                                   <div
-                                    className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all duration-500 ease-out"
+                                    className="absolute top-0 left-0 h-full bg-gray-900 rounded-full transition-all duration-500 ease-out"
                                     style={{ width: `${completionPercent}%` }}
                                   />
                                 </div>
@@ -1328,11 +1328,11 @@ const ClassScheduler = () => {
                             );
                           })()}
                         </div>
-                      </Card>
+                      </div>
                     </div>
                   );
                 })()}
-              </Card>
+              </div>
 
               {/* Show Generate Full Schedule button only if student has unscheduled programs */}
               {viewMode === 'students' && selectedApplicant && (() => {
@@ -1352,7 +1352,7 @@ const ClassScheduler = () => {
                 if (unscheduledPrograms.length === 0) return null;
 
                 return (
-                  <Card>
+                  <div className="bg-white p-4 rounded-lg border border-gray-200">
                     <div className="text-center py-12">
                       <Calendar className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
                       <p className="text-lg font-medium mb-2 text-gray-900">Generate Track Schedule</p>
@@ -1369,7 +1369,7 @@ const ClassScheduler = () => {
                         Generate Full Schedule
                       </button>
                     </div>
-                  </Card>
+                  </div>
                 );
               })()}
 
@@ -1377,12 +1377,12 @@ const ClassScheduler = () => {
                   Availability info still shown in Generate Full Schedule modal. */}
             </div>
           ) : (
-            <Card>
-              <div className="text-center py-12 text-gray-500">
+            <div className="bg-white p-12 rounded-lg border border-gray-200">
+              <div className="text-center text-gray-500">
                 <Users className="h-12 w-12 mx-auto mb-2 text-gray-400" />
                 <p>Select an applicant to view their availability</p>
               </div>
-            </Card>
+            </div>
           )}
         </div>
       </div>

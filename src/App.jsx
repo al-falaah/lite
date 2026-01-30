@@ -145,7 +145,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
 
-          <Toaster position="top-right" duration={3000} />
+          <Toaster position="top-right" duration={3000} closeButton />
           <Analytics />
           <FloatingWhatsApp />
           </div>

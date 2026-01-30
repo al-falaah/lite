@@ -19,7 +19,9 @@ import {
   RefreshCw,
   AlertCircle,
   UserCheck,
-  Home
+  Home,
+  Mail,
+  Phone
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -489,42 +491,54 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {activeTab === 'applications' && (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-white border border-gray-200 rounded-lg p-5">
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Total</div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+              <div className="bg-white rounded-lg p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <FileText className="h-5 w-5 text-blue-600" />
+                </div>
+                <div className="text-sm text-gray-600 mb-1">Total Applications</div>
                 <div className="text-3xl font-semibold text-gray-900">{stats.total}</div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-5">
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Pending</div>
+              <div className="bg-white rounded-lg p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <Clock className="h-5 w-5 text-yellow-600" />
+                </div>
+                <div className="text-sm text-gray-600 mb-1">Pending Review</div>
                 <div className="text-3xl font-semibold text-gray-900">{stats.pending}</div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-5">
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Approved</div>
+              <div className="bg-white rounded-lg p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <CheckCircle className="h-5 w-5 text-emerald-600" />
+                </div>
+                <div className="text-sm text-gray-600 mb-1">Approved</div>
                 <div className="text-3xl font-semibold text-gray-900">{stats.approved}</div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-5">
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Rejected</div>
+              <div className="bg-white rounded-lg p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <XCircle className="h-5 w-5 text-red-600" />
+                </div>
+                <div className="text-sm text-gray-600 mb-1">Rejected</div>
                 <div className="text-3xl font-semibold text-gray-900">{stats.rejected}</div>
               </div>
             </div>
 
             {/* Filters */}
             <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {['all', 'pending', 'approved', 'rejected'].map((filter) => (
                   <button
                     key={filter}
                     onClick={() => setStatusFilter(filter)}
-                    className={`px-3 py-1.5 rounded-md text-sm font-medium capitalize ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
                       statusFilter === filter
-                        ? 'bg-gray-900 text-white'
+                        ? 'bg-emerald-600 text-white'
                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -535,7 +549,7 @@ const AdminDashboard = () => {
               <button
                 onClick={() => loadApplications()}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 title="Refresh applications"
               >
                 <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
@@ -559,35 +573,35 @@ const AdminDashboard = () => {
                 </div>
               </div>
             ) : error && applicationsData.length === 0 ? (
-              <Card>
-                <div className="flex flex-col items-center justify-center py-12">
-                  <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
+              <div className="bg-white rounded-lg border border-gray-200 p-12">
+                <div className="flex flex-col items-center justify-center text-center">
+                  <AlertCircle className="h-12 w-12 text-red-600 mb-4" />
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Applications</h3>
-                  <p className="text-gray-600 mb-6 text-center max-w-md">{error}</p>
+                  <p className="text-gray-600 mb-6 max-w-md">{error}</p>
                   <Button onClick={() => loadApplications(true)} variant="primary">
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Retry
                   </Button>
                 </div>
-              </Card>
+              </div>
             ) : applicationsData.length === 0 ? (
-              <Card>
-                <p className="text-center text-gray-600 py-8">
-                  No applications found
-                </p>
-              </Card>
+              <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Applications Found</h3>
+                <p className="text-gray-600">There are no applications matching your current filter.</p>
+              </div>
             ) : (
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-4">
                 {applicationsData.map((app) => (
-                  <Card key={app.id} className="hover:shadow-md transition-shadow">
+                  <div key={app.id} className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-colors">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">
                             {app.full_name}
                           </h3>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                            <span className={`px-3 py-1 rounded-md text-xs font-medium ${
                               app.program === 'tajweed'
                                 ? 'bg-purple-100 text-purple-700'
                                 : app.program === 'qari'
@@ -596,61 +610,62 @@ const AdminDashboard = () => {
                             }`}>
                               {app.program === 'tajweed' ? 'Tajweed' : app.program === 'qari' ? 'QARI' : 'Essentials'}
                             </span>
-                            {getStatusIcon(app.status)}
                             <span
-                              className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                              className={`inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-medium ${getStatusColor(
                                 app.status
                               )}`}
                             >
+                              {getStatusIcon(app.status)}
                               {app.status.replace('_', ' ')}
                             </span>
                           </div>
                         </div>
 
-                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
-                          <div>
-                            <span className="font-medium">Email:</span> {app.email}
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm mb-4">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Mail className="h-4 w-4 flex-shrink-0" />
+                            <span className="truncate">{app.email}</span>
                           </div>
-                          <div>
-                            <span className="font-medium">Phone:</span> {app.phone}
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Phone className="h-4 w-4 flex-shrink-0" />
+                            <span>{app.phone}</span>
                           </div>
-                          <div>
-                            <span className="font-medium">Gender:</span>{' '}
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Users className="h-4 w-4 flex-shrink-0" />
                             <span className="capitalize">{app.gender}</span>
                           </div>
-                          <div>
-                            <span className="font-medium">Can Read Quran:</span>{' '}
-                            {app.can_read_quran ? `Yes${app.tajweed_level ? ` (${app.tajweed_level})` : ''}` : 'No'}
+                          <div className="text-gray-600">
+                            <span className="font-medium">Quran:</span> {app.can_read_quran ? `Yes${app.tajweed_level ? ` (${app.tajweed_level})` : ''}` : 'No'}
                           </div>
-                          <div>
-                            <span className="font-medium">Studied Arabic:</span>{' '}
-                            {app.has_studied_arabic ? `Yes${app.arabic_level ? ` (${app.arabic_level})` : ''}` : 'No'}
+                          <div className="text-gray-600">
+                            <span className="font-medium">Arabic:</span> {app.has_studied_arabic ? `Yes${app.arabic_level ? ` (${app.arabic_level})` : ''}` : 'No'}
                           </div>
-                          <div>
-                            <span className="font-medium">Submitted:</span>{' '}
-                            {formatDate(app.submitted_at)}
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Calendar className="h-4 w-4 flex-shrink-0" />
+                            <span>{formatDate(app.submitted_at)}</span>
                           </div>
                         </div>
 
                         {app.motivation && (
-                          <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-                            <p className="text-xs sm:text-sm text-gray-700 line-clamp-2 sm:line-clamp-none">
-                              <span className="font-medium">Motivation:</span>{' '}
+                          <div className="mt-3 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                            <p className="text-sm text-gray-700 line-clamp-2">
+                              <span className="font-medium text-gray-900">Motivation:</span>{' '}
                               {app.motivation}
                             </p>
                           </div>
                         )}
                       </div>
 
-                      <div className="flex sm:flex-col gap-2 sm:ml-4 w-full sm:w-auto">
+                      <div className="flex sm:flex-col gap-2 sm:ml-4 w-full sm:w-auto shrink-0">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleViewApplication(app)}
                           className="flex-1 sm:flex-none"
                         >
-                          <Eye className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                          <span className="hidden xs:inline">View</span>
+                          <Eye className="h-4 w-4 sm:mr-2" />
+                          <span className="hidden sm:inline">View Details</span>
+                          <span className="sm:hidden">View</span>
                         </Button>
 
                         {app.status === 'pending' && (
@@ -659,25 +674,25 @@ const AdminDashboard = () => {
                               size="sm"
                               variant="primary"
                               onClick={() => handleReviewApplication(app, 'approved')}
-                              className="flex-1 sm:flex-none text-xs sm:text-sm"
+                              className="flex-1 sm:flex-none"
                             >
-                              <Check className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                              <span className="hidden xs:inline">Approve</span>
+                              <Check className="h-4 w-4 sm:mr-2" />
+                              <span>Approve</span>
                             </Button>
                             <Button
                               size="sm"
                               variant="secondary"
                               onClick={() => handleReviewApplication(app, 'rejected')}
-                              className="flex-1 sm:flex-none text-xs sm:text-sm"
+                              className="flex-1 sm:flex-none"
                             >
-                              <X className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                              <span className="hidden xs:inline">Reject</span>
+                              <X className="h-4 w-4 sm:mr-2" />
+                              <span>Reject</span>
                             </Button>
                           </>
                         )}
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             )}
@@ -765,7 +780,7 @@ const AdminDashboard = () => {
       {/* Application Details Modal */}
       {selectedApplication && !reviewModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <div>
@@ -904,7 +919,7 @@ const AdminDashboard = () => {
                             {selectedApplication.preferred_days.map((day) => (
                               <span
                                 key={day}
-                                className="px-3 py-1 bg-emerald-100 text-emerald-800 text-sm rounded-full font-medium"
+                                className="px-3 py-1 bg-emerald-100 text-emerald-800 text-sm rounded-md font-medium"
                               >
                                 {day}
                               </span>
@@ -913,17 +928,67 @@ const AdminDashboard = () => {
                         </div>
                       )}
                       {selectedApplication.preferred_times?.length > 0 && (
-                        <div>
-                          <label className="text-sm text-gray-600">Preferred Time Slots</label>
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {selectedApplication.preferred_times.map((time) => (
-                              <span
-                                key={time}
-                                className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full font-medium"
-                              >
-                                {time}
-                              </span>
-                            ))}
+                        <div className="w-full">
+                          <label className="text-sm text-gray-600 mb-3 block">Preferred Time Slots</label>
+                          <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                              <thead className="bg-gray-50">
+                                <tr>
+                                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                    Slot Name
+                                  </th>
+                                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                    Applicant's Time
+                                  </th>
+                                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                    NZ Time
+                                  </th>
+                                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                    NZ Hours
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white divide-y divide-gray-200">
+                                {selectedApplication.preferred_times.map((timeSlot, index) => {
+                                  // Parse if it's a JSON string
+                                  let slotData = timeSlot;
+                                  if (typeof timeSlot === 'string') {
+                                    try {
+                                      slotData = JSON.parse(timeSlot);
+                                    } catch (e) {
+                                      slotData = timeSlot;
+                                    }
+                                  }
+                                  
+                                  if (typeof slotData === 'object' && slotData !== null) {
+                                    return (
+                                      <tr key={index} className="hover:bg-gray-50">
+                                        <td className="px-4 py-3 text-sm text-gray-900">
+                                          {slotData.slot || '-'}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-gray-900">
+                                          {slotData.user_time || '-'}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-gray-900">
+                                          {slotData.nz_time || '-'}
+                                        </td>
+                                        <td className="px-4 py-3 text-sm text-gray-900">
+                                          {slotData.nz_hours || '-'}
+                                        </td>
+                                      </tr>
+                                    );
+                                  } else {
+                                    return (
+                                      <tr key={index} className="hover:bg-gray-50">
+                                        <td colSpan="4" className="px-4 py-3 text-sm text-gray-900">
+                                          {slotData}
+                                        </td>
+                                      </tr>
+                                    );
+                                  }
+                                })}
+                              </tbody>
+                            </table>
                           </div>
                         </div>
                       )}
