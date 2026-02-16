@@ -19,9 +19,11 @@ import {
   TrendingUp,
   BarChart3,
   FileText,
-  RefreshCw
+  RefreshCw,
+  ClipboardList
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
+import DirectorPlanner from '../components/director/DirectorPlanner';
 import { toast } from 'sonner';
 import {
   LineChart,
@@ -628,6 +630,17 @@ const DirectorDashboard = () => {
                 <Shield className="h-5 w-5" />
                 Administrative Areas
               </button>
+              <button
+                onClick={() => setActiveTab('planner')}
+                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-semibold text-sm transition-all whitespace-nowrap ${
+                  activeTab === 'planner'
+                    ? 'border-indigo-600 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                }`}
+              >
+                <ClipboardList className="h-5 w-5" />
+                Planner
+              </button>
             </div>
           </div>
         </div>
@@ -644,6 +657,8 @@ const DirectorDashboard = () => {
                 <p className="text-gray-600 text-base">
                   {activeTab === 'overview'
                     ? 'Overview of all madrasah statistics and metrics'
+                    : activeTab === 'planner'
+                    ? 'Plan and track initiatives for the madrasah'
                     : 'Quick access to all administrative areas'}
                 </p>
               </div>
@@ -973,6 +988,9 @@ const DirectorDashboard = () => {
               })}
             </div>
           )}
+
+          {/* Planner Tab */}
+          {activeTab === 'planner' && <DirectorPlanner />}
         </div>
       </div>
     </>
