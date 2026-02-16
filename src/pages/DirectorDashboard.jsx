@@ -548,56 +548,27 @@ const DirectorDashboard = () => {
     ]
   };
 
-  const StatCard = ({ stat }) => {
-    const Icon = stat.icon;
-    return (
-      <div className="bg-white rounded-xl border border-gray-200 p-5 hover:border-gray-300 hover:shadow-sm transition-all">
-        <div className="flex items-start justify-between mb-4">
-          <div className={`${stat.bgColor} p-2.5 rounded-lg shadow-sm`}>
-            <Icon className={`h-5 w-5 ${stat.color}`} />
-          </div>
-        </div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{stat.label}</p>
-        <p className={`text-3xl font-bold ${stat.color}`}>
-          {loading ? '...' : stat.value.toLocaleString()}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <>
       <Helmet>
         <title>Director Dashboard | The FastTrack Madrasah</title>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen bg-white">
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg flex items-center justify-center shadow-sm">
-                  <Shield className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-gray-900">Director Dashboard</h1>
-                  <p className="text-xs text-gray-500">Administrative control center</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Link
-                  to="/"
-                  className="hidden sm:block text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  Visit Website
+        <div className="border-b border-gray-200 sticky top-0 z-50 bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="flex items-center justify-between h-14">
+              <h1 className="text-base font-semibold text-gray-900">Director Dashboard</h1>
+              <div className="flex items-center gap-4">
+                <Link to="/" className="text-sm text-gray-500 hover:text-gray-900">
+                  Site
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"
+                  className="text-sm text-gray-500 hover:text-gray-900"
                 >
-                  <LogOut className="h-4 w-4" />
-                  <span className="hidden sm:inline">Logout</span>
+                  Log out
                 </button>
               </div>
             </div>
@@ -605,213 +576,202 @@ const DirectorDashboard = () => {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="border-b border-gray-200">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex gap-6 overflow-x-auto">
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-semibold text-sm transition-all whitespace-nowrap ${
-                  activeTab === 'overview'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
-                }`}
-              >
-                <BarChart3 className="h-5 w-5" />
-                Quick Overview
-              </button>
-              <button
-                onClick={() => setActiveTab('links')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-semibold text-sm transition-all whitespace-nowrap ${
-                  activeTab === 'links'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
-                }`}
-              >
-                <Shield className="h-5 w-5" />
-                Administrative Areas
-              </button>
-              <button
-                onClick={() => setActiveTab('planner')}
-                className={`flex items-center gap-2 px-1 py-4 border-b-2 font-semibold text-sm transition-all whitespace-nowrap ${
-                  activeTab === 'planner'
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
-                }`}
-              >
-                <ClipboardList className="h-5 w-5" />
-                Planner
-              </button>
+              {[
+                { key: 'overview', label: 'Overview' },
+                { key: 'links', label: 'Admin' },
+                { key: 'planner', label: 'Planner' }
+              ].map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                    activeTab === tab.key
+                      ? 'border-gray-900 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          {/* Welcome Section */}
-          <div className="mb-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1.5">
-                  Welcome back, {profile?.full_name?.split(' ')[0] || 'Director'}
-                </h2>
-                <p className="text-gray-600 text-base">
-                  {activeTab === 'overview'
-                    ? 'Overview of all madrasah statistics and metrics'
-                    : activeTab === 'planner'
-                    ? 'Plan and track initiatives for the madrasah'
-                    : 'Quick access to all administrative areas'}
-                </p>
-              </div>
-              {activeTab === 'overview' && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+
+          {/* Overview Tab */}
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+
+              {/* Refresh */}
+              <div className="flex justify-end">
                 <button
                   onClick={async () => {
                     setLoading(true);
                     await fetchStats();
-                    toast.success('Statistics refreshed');
+                    toast.success('Refreshed');
                   }}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 text-white rounded-lg hover:bg-slate-900 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md font-semibold"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 disabled:text-gray-400"
                 >
-                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                  <span className="hidden sm:inline">Refresh</span>
+                  <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+                  Refresh
                 </button>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 border border-gray-200 rounded-lg overflow-hidden">
+                {/* Totals */}
+                <div className="bg-white p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Totals</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {statGroups.totals.map(stat => (
+                      <div key={stat.label}>
+                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                        <p className="text-sm text-gray-500">{stat.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Students */}
+                <div className="bg-white p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Students</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {statGroups.students.map(stat => (
+                      <div key={stat.label}>
+                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                        <p className="text-sm text-gray-500">{stat.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Teachers */}
+                <div className="bg-white p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Teachers</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {statGroups.teachers.map(stat => (
+                      <div key={stat.label}>
+                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                        <p className="text-sm text-gray-500">{stat.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Applications & Store */}
+                <div className="bg-white p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Applications & Store</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[...statGroups.applications, ...statGroups.store].map(stat => (
+                      <div key={stat.label}>
+                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                        <p className="text-sm text-gray-500">{stat.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Alerts */}
+              {!loading && (
+                <div className="space-y-1">
+                  {stats.studentsWithoutTeacher > 0 && (
+                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"></span>
+                      {stats.studentsWithoutTeacher} {stats.studentsWithoutTeacher === 1 ? 'student needs' : 'students need'} a teacher
+                    </div>
+                  )}
+                  {stats.studentsPendingPayment > 0 && (
+                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+                      {stats.studentsPendingPayment} pending {stats.studentsPendingPayment === 1 ? 'payment' : 'payments'}
+                    </div>
+                  )}
+                  {stats.pendingApplications > 0 && (
+                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+                      {stats.pendingApplications} {stats.pendingApplications === 1 ? 'application' : 'applications'} to review
+                    </div>
+                  )}
+                  {stats.teachersWithoutStudents > 0 && (
+                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
+                      {stats.teachersWithoutStudents} {stats.teachersWithoutStudents === 1 ? 'teacher' : 'teachers'} available
+                    </div>
+                  )}
+                </div>
               )}
-            </div>
-          </div>
 
-          {/* Overview Tab */}
-          {activeTab === 'overview' && (
-            <div className="space-y-8">
-              {/* Totals Section */}
-              <div>
-                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Totals</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {statGroups.totals.map((stat) => (
-                    <StatCard key={stat.label} stat={stat} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Students Section */}
-              <div>
-                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Students</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {statGroups.students.map((stat) => (
-                    <StatCard key={stat.label} stat={stat} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Teachers Section */}
-              <div>
-                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Teachers</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                  {statGroups.teachers.map((stat) => (
-                    <StatCard key={stat.label} stat={stat} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Applications & Store Section */}
-              <div>
-                <h3 className="text-base font-bold text-gray-900 mb-5 uppercase tracking-wide text-xs">Applications & Store</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                  {statGroups.applications.map((stat) => (
-                    <StatCard key={stat.label} stat={stat} />
-                  ))}
-                  {statGroups.store.map((stat) => (
-                    <StatCard key={stat.label} stat={stat} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Charts Section */}
+              {/* Charts */}
               {!loading && (
                 <>
-                  {/* Time Series - Applications by Month */}
-                  <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-4 sm:mb-0">Applications Over Time</h3>
-
-                      {/* Filters */}
+                  <div className="border border-gray-200 rounded-lg p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-5">
+                      <h3 className="text-sm font-medium text-gray-900 mb-3 sm:mb-0">Applications Over Time</h3>
                       <div className="flex flex-wrap gap-3">
-                        {/* Time Range Filter */}
-                        <div className="flex items-center gap-2">
-                          <label className="text-sm text-gray-600">Period:</label>
-                          <select
-                            value={timeSeriesFilter.timeRange}
-                            onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, timeRange: e.target.value })}
-                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                          >
-                            <option value="3">Last 3 months</option>
-                            <option value="6">Last 6 months</option>
-                            <option value="12">Last 12 months</option>
-                            <option value="24">Last 24 months</option>
-                            <option value="999">All time</option>
-                          </select>
-                        </div>
-
-                        {/* Program Filter */}
-                        <div className="flex items-center gap-2">
-                          <label className="text-sm text-gray-600">Program:</label>
-                          <select
-                            value={timeSeriesFilter.program}
-                            onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, program: e.target.value })}
-                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                          >
-                            <option value="all">All Programs</option>
-                            <option value="essentials">Essentials Arabic & Islamic Studies</option>
-                            <option value="tajweed">Tajweed Mastery</option>
-                          </select>
-                        </div>
+                        <select
+                          value={timeSeriesFilter.timeRange}
+                          onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, timeRange: e.target.value })}
+                          className="px-2 py-1 text-sm border border-gray-200 rounded text-gray-600"
+                        >
+                          <option value="3">3 months</option>
+                          <option value="6">6 months</option>
+                          <option value="12">12 months</option>
+                          <option value="24">24 months</option>
+                          <option value="999">All time</option>
+                        </select>
+                        <select
+                          value={timeSeriesFilter.program}
+                          onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, program: e.target.value })}
+                          className="px-2 py-1 text-sm border border-gray-200 rounded text-gray-600"
+                        >
+                          <option value="all">All programs</option>
+                          <option value="essentials">EASI</option>
+                          <option value="tajweed">TMP</option>
+                        </select>
                       </div>
                     </div>
-
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={280}>
                       <LineChart data={applicationsTimeSeries}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                        <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#6b7280' }} />
-                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
+                        <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="applications" stroke="#4f46e5" strokeWidth={2.5} dot={{ fill: '#4f46e5', r: 4 }} activeDot={{ r: 6 }} />
+                        <Line type="monotone" dataKey="applications" stroke="#374151" strokeWidth={1.5} dot={{ fill: '#374151', r: 3 }} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Track Comparison */}
-                  <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <div className="flex flex-col gap-4 mb-6">
+                  <div className="border border-gray-200 rounded-lg p-5">
+                    <div className="flex flex-col gap-3 mb-5">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <h3 className="text-lg font-bold text-gray-900 mb-4 sm:mb-0">Applications by Track</h3>
-
-                        {/* Time Range Filter */}
-                        <div className="flex items-center gap-2">
-                          <label className="text-sm text-gray-600">Period:</label>
-                          <select
-                            value={trackComparisonFilter.timeRange}
-                            onChange={(e) => setTrackComparisonFilter({ ...trackComparisonFilter, timeRange: e.target.value })}
-                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                          >
-                            <option value="3">Last 3 months</option>
-                            <option value="6">Last 6 months</option>
-                            <option value="12">Last 12 months</option>
-                            <option value="24">Last 24 months</option>
-                            <option value="999">All time</option>
-                          </select>
-                        </div>
+                        <h3 className="text-sm font-medium text-gray-900 mb-3 sm:mb-0">By Track</h3>
+                        <select
+                          value={trackComparisonFilter.timeRange}
+                          onChange={(e) => setTrackComparisonFilter({ ...trackComparisonFilter, timeRange: e.target.value })}
+                          className="px-2 py-1 text-sm border border-gray-200 rounded text-gray-600"
+                        >
+                          <option value="3">3 months</option>
+                          <option value="6">6 months</option>
+                          <option value="12">12 months</option>
+                          <option value="24">24 months</option>
+                          <option value="999">All time</option>
+                        </select>
                       </div>
-
-                      {/* Category Filter */}
-                      <div className="flex flex-wrap gap-2">
-                        <span className="text-sm text-gray-600 self-center">Show:</span>
+                      <div className="flex flex-wrap gap-1.5">
                         {[
-                          { key: 'received', label: 'Received', color: 'bg-slate-500' },
+                          { key: 'received', label: 'Received', color: 'bg-gray-400' },
                           { key: 'approved', label: 'Approved', color: 'bg-teal-600' },
-                          { key: 'rejected', label: 'Rejected', color: 'bg-rose-600' },
-                          { key: 'enrolled', label: 'Enrolled', color: 'bg-indigo-600' },
-                          { key: 'dropouts', label: 'Drop-outs', color: 'bg-amber-600' },
-                          { key: 'graduated', label: 'Graduated', color: 'bg-violet-600' }
+                          { key: 'rejected', label: 'Rejected', color: 'bg-rose-500' },
+                          { key: 'enrolled', label: 'Enrolled', color: 'bg-gray-700' },
+                          { key: 'dropouts', label: 'Drop-outs', color: 'bg-amber-500' },
+                          { key: 'graduated', label: 'Graduated', color: 'bg-violet-500' }
                         ].map(({ key, label, color }) => (
                           <button
                             key={key}
@@ -821,168 +781,84 @@ const DirectorDashboard = () => {
                                 : [...trackComparisonFilter.categories, key];
                               setTrackComparisonFilter({ ...trackComparisonFilter, categories: newCategories });
                             }}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                            className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded transition-colors ${
                               trackComparisonFilter.categories.includes(key)
-                                ? 'bg-gray-100 text-gray-900 border-2 border-gray-300'
-                                : 'bg-gray-50 text-gray-400 border-2 border-gray-200'
+                                ? 'text-gray-700 bg-gray-100'
+                                : 'text-gray-400'
                             }`}
                           >
-                            <span className={`w-3 h-3 rounded-sm ${color} ${!trackComparisonFilter.categories.includes(key) ? 'opacity-30' : ''}`}></span>
+                            <span className={`w-2 h-2 rounded-full ${color} ${!trackComparisonFilter.categories.includes(key) ? 'opacity-30' : ''}`}></span>
                             {label}
                           </button>
                         ))}
                       </div>
                     </div>
-
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={350}>
                       <BarChart data={trackComparison}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                        <XAxis dataKey="track" tick={{ fontSize: 12, fill: '#6b7280' }} />
-                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
+                        <XAxis dataKey="track" tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                        <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <Tooltip />
-                        <Legend />
                         {trackComparisonFilter.categories.includes('received') && (
-                          <Bar dataKey="received" fill="#64748b" name="Received" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="received" fill="#9ca3af" name="Received" radius={[2, 2, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('approved') && (
-                          <Bar dataKey="approved" fill="#0d9488" name="Approved" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="approved" fill="#0d9488" name="Approved" radius={[2, 2, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('rejected') && (
-                          <Bar dataKey="rejected" fill="#e11d48" name="Rejected" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="rejected" fill="#f43f5e" name="Rejected" radius={[2, 2, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('enrolled') && (
-                          <Bar dataKey="enrolled" fill="#4f46e5" name="Enrolled" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="enrolled" fill="#374151" name="Enrolled" radius={[2, 2, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('dropouts') && (
-                          <Bar dataKey="dropouts" fill="#d97706" name="Drop-outs" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" radius={[2, 2, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('graduated') && (
-                          <Bar dataKey="graduated" fill="#7c3aed" name="Graduated" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="graduated" fill="#8b5cf6" name="Graduated" radius={[2, 2, 0, 0]} />
                         )}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Referral Sources Chart */}
-                  <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">How Students Found Us</h3>
+                  <div className="border border-gray-200 rounded-lg p-5">
+                    <h3 className="text-sm font-medium text-gray-900 mb-4">Referral Sources</h3>
                     {referralSourceData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height={300}>
+                      <ResponsiveContainer width="100%" height={280}>
                         <BarChart data={referralSourceData} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: '#6b7280' }} />
-                          <YAxis dataKey="source" type="category" width={120} tick={{ fontSize: 12, fill: '#6b7280' }} />
+                          <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                          <YAxis dataKey="source" type="category" width={120} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                           <Tooltip />
-                          <Bar dataKey="count" fill="#4f46e5" name="Applications" radius={[0, 4, 4, 0]} />
+                          <Bar dataKey="count" fill="#374151" name="Applications" radius={[0, 2, 2, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
-                      <div className="flex items-center justify-center h-[300px] text-gray-500">
-                        <p>No referral data available yet</p>
-                      </div>
+                      <p className="text-sm text-gray-400 py-12 text-center">No referral data yet</p>
                     )}
                   </div>
                 </>
               )}
-
-              {/* Quick Insights */}
-              {!loading && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {stats.studentsWithoutTeacher > 0 && (
-                    <div className="bg-white border-l-4 border-rose-500 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-rose-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <UserX className="h-5 w-5 text-rose-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 mb-1.5">Action Required</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {stats.studentsWithoutTeacher} {stats.studentsWithoutTeacher === 1 ? 'student needs' : 'students need'} to be assigned a teacher
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {stats.studentsPendingPayment > 0 && (
-                    <div className="bg-white border-l-4 border-amber-500 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <DollarSign className="h-5 w-5 text-amber-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 mb-1.5">Payment Pending</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {stats.studentsPendingPayment} {stats.studentsPendingPayment === 1 ? 'student has' : 'students have'} pending payments
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {stats.pendingApplications > 0 && (
-                    <div className="bg-white border-l-4 border-blue-500 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <FileText className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 mb-1.5">Pending Review</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {stats.pendingApplications} {stats.pendingApplications === 1 ? 'application needs' : 'applications need'} review
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {stats.teachersWithoutStudents > 0 && (
-                    <div className="bg-white border-l-4 border-slate-400 rounded-lg p-5 shadow-sm hover:shadow transition-shadow">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Clock className="h-5 w-5 text-slate-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 mb-1.5">Available Teachers</h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {stats.teachersWithoutStudents} {stats.teachersWithoutStudents === 1 ? 'teacher is' : 'teachers are'} available for new students
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           )}
 
-          {/* Links Tab */}
+          {/* Admin Tab */}
           {activeTab === 'links' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="divide-y divide-gray-100">
               {adminAreas.map((area) => {
                 const Icon = area.icon;
                 return (
                   <Link
                     key={area.href}
                     to={area.href}
-                    className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-indigo-500 hover:shadow-md transition-all"
+                    className="flex items-center gap-3 py-3 px-2 -mx-2 rounded hover:bg-gray-50 transition-colors"
                   >
-                    <div className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className={`${area.iconBg} p-3.5 rounded-xl group-hover:scale-110 transition-transform shadow-sm`}>
-                          <Icon className={`h-6 w-6 ${area.iconColor}`} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-base font-bold text-gray-900 mb-1.5 group-hover:text-indigo-600 transition-colors">
-                            {area.title}
-                          </h4>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {area.description}
-                          </p>
-                        </div>
-                        <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" />
-                      </div>
+                    <Icon className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-medium text-gray-900">{area.title}</span>
+                      <span className="text-sm text-gray-400 ml-2 hidden sm:inline">{area.description}</span>
                     </div>
+                    <ArrowRight className="h-4 w-4 text-gray-300 flex-shrink-0" />
                   </Link>
                 );
               })}
