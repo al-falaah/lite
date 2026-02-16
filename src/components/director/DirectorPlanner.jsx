@@ -3,10 +3,10 @@ import {
   Plus,
   Pencil,
   Trash2,
-  ChevronLeft,
-  ChevronRight,
-  X as XIcon
+  X as XIcon,
+  GripVertical
 } from 'lucide-react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { supabase } from '../../services/supabase';
 import { toast } from 'sonner';
 
@@ -119,23 +119,6 @@ const DirectorPlanner = () => {
     }
   };
 
-  const moveStatus = async (planId, newStatus) => {
-    setPlans(prev => prev.map(p =>
-      p.id === planId ? { ...p, status: newStatus } : p
-    ));
-    try {
-      const { error } = await supabase
-        .from('director_plans')
-        .update({ status: newStatus })
-        .eq('id', planId);
-      if (error) throw error;
-    } catch (error) {
-      console.error('Error moving plan:', error);
-      toast.error('Failed to move plan');
-      fetchPlans();
-    }
-  };
-
   const deletePlan = async (planId) => {
     if (!window.confirm('Delete this plan?')) return;
     setDeletingId(planId);
@@ -163,40 +146,96 @@ const DirectorPlanner = () => {
     }
   };
 
-  const PlanCard = ({ plan }) => {
-    const statusIndex = STATUSES.indexOf(plan.status);
-    const canMoveLeft = statusIndex > 0;
-    const canMoveRight = statusIndex < STATUSES.length - 1;
+  const onDragEnd = async (result) => {
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
-    return (
-      <div className="bg-white rounded border border-gray-200 p-3 group">
-        <h4 className="text-sm text-gray-900 mb-0.5 line-clamp-2">{plan.title}</h4>
-        {plan.notes && (
-          <p className="text-xs text-gray-400 mb-2 line-clamp-2">{plan.notes}</p>
-        )}
-        <div className="flex items-center justify-between pt-1">
-          <div className="flex items-center gap-0.5">
-            <button
-              onClick={() => canMoveLeft && moveStatus(plan.id, STATUSES[statusIndex - 1])}
-              disabled={!canMoveLeft}
-              className="p-0.5 rounded hover:bg-gray-100 disabled:opacity-20 disabled:cursor-not-allowed"
-              title={canMoveLeft ? `Move to ${STATUS_CONFIG[STATUSES[statusIndex - 1]].label}` : ''}
+    const sourceStatus = source.droppableId;
+    const destStatus = destination.droppableId;
+    const destIndex = destination.index;
+
+    const plansCopy = plans.map(p => ({ ...p }));
+    const draggedPlan = plansCopy.find(p => p.id === draggableId);
+    if (!draggedPlan) return;
+
+    draggedPlan.status = destStatus;
+
+    const destItems = plansCopy
+      .filter(p => p.status === destStatus && p.id !== draggableId)
+      .sort((a, b) => a.position - b.position);
+
+    destItems.splice(destIndex, 0, draggedPlan);
+    destItems.forEach((item, idx) => { item.position = idx; });
+
+    if (sourceStatus !== destStatus) {
+      const sourceItems = plansCopy
+        .filter(p => p.status === sourceStatus && p.id !== draggableId)
+        .sort((a, b) => a.position - b.position);
+      sourceItems.forEach((item, idx) => { item.position = idx; });
+    }
+
+    setPlans([...plansCopy]);
+
+    try {
+      const updates = destItems.map(item => ({
+        id: item.id, status: item.status, position: item.position
+      }));
+
+      if (sourceStatus !== destStatus) {
+        plansCopy
+          .filter(p => p.status === sourceStatus)
+          .sort((a, b) => a.position - b.position)
+          .forEach((item, idx) => {
+            updates.push({ id: item.id, status: item.status, position: idx });
+          });
+      }
+
+      await Promise.all(
+        updates.map(u =>
+          supabase
+            .from('director_plans')
+            .update({ status: u.status, position: u.position })
+            .eq('id', u.id)
+        )
+      );
+    } catch (error) {
+      console.error('Error updating positions:', error);
+      toast.error('Failed to save changes');
+      fetchPlans();
+    }
+  };
+
+  const PlanCard = ({ plan, index }) => (
+    <Draggable draggableId={plan.id} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          className={`bg-white rounded-lg border p-3 group transition-shadow ${
+            snapshot.isDragging
+              ? 'border-gray-300 shadow-lg'
+              : 'border-gray-200 hover:border-gray-300'
+          }`}
+        >
+          <div className="flex items-start gap-2">
+            <div
+              {...provided.dragHandleProps}
+              className="pt-0.5 text-gray-300 hover:text-gray-400 cursor-grab active:cursor-grabbing flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
             >
-              <ChevronLeft className="h-3.5 w-3.5 text-gray-400" />
-            </button>
-            <button
-              onClick={() => canMoveRight && moveStatus(plan.id, STATUSES[statusIndex + 1])}
-              disabled={!canMoveRight}
-              className="p-0.5 rounded hover:bg-gray-100 disabled:opacity-20 disabled:cursor-not-allowed"
-              title={canMoveRight ? `Move to ${STATUS_CONFIG[STATUSES[statusIndex + 1]].label}` : ''}
-            >
-              <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
-            </button>
+              <GripVertical className="h-3.5 w-3.5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-sm text-gray-900 leading-snug line-clamp-2">{plan.title}</h4>
+              {plan.notes && (
+                <p className="text-xs text-gray-400 mt-1 line-clamp-2">{plan.notes}</p>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center justify-end gap-0.5 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => openEditModal(plan)}
-              className="p-0.5 rounded hover:bg-gray-100"
+              className="p-1 rounded hover:bg-gray-100"
               title="Edit"
             >
               <Pencil className="h-3 w-3 text-gray-400" />
@@ -204,35 +243,49 @@ const DirectorPlanner = () => {
             <button
               onClick={() => deletePlan(plan.id)}
               disabled={deletingId === plan.id}
-              className="p-0.5 rounded hover:bg-gray-100"
+              className="p-1 rounded hover:bg-gray-100"
               title="Delete"
             >
               <Trash2 className="h-3 w-3 text-gray-400" />
             </button>
           </div>
         </div>
-      </div>
-    );
-  };
+      )}
+    </Draggable>
+  );
 
   const KanbanColumn = ({ status }) => {
     const config = STATUS_CONFIG[status];
-    const columnPlans = plans.filter(p => p.status === status);
+    const columnPlans = plans
+      .filter(p => p.status === status)
+      .sort((a, b) => a.position - b.position);
 
     return (
-      <div className="flex flex-col">
-        <div className="flex items-center justify-between px-1 mb-2">
-          <h3 className="text-xs font-medium text-gray-500 uppercase">{config.label}</h3>
-          <span className="text-xs text-gray-400">{columnPlans.length}</span>
+      <div className="flex flex-col min-w-0">
+        <div className="flex items-center justify-between px-1 mb-3">
+          <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wide">{config.label}</h3>
+          <span className="text-xs text-gray-400 tabular-nums">{columnPlans.length}</span>
         </div>
-        <div className="space-y-2 flex-1 overflow-y-auto max-h-[60vh]">
-          {columnPlans.map(plan => (
-            <PlanCard key={plan.id} plan={plan} />
-          ))}
-          {columnPlans.length === 0 && (
-            <p className="text-xs text-gray-300 text-center py-8">Empty</p>
+        <Droppable droppableId={status}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={`space-y-2 flex-1 min-h-[120px] rounded-lg p-1 transition-colors ${
+                snapshot.isDraggingOver ? 'bg-gray-50' : ''
+              }`}
+              style={{ maxHeight: '60vh', overflowY: 'auto' }}
+            >
+              {columnPlans.map((plan, index) => (
+                <PlanCard key={plan.id} plan={plan} index={index} />
+              ))}
+              {provided.placeholder}
+              {columnPlans.length === 0 && !snapshot.isDraggingOver && (
+                <p className="text-xs text-gray-300 text-center py-8">Empty</p>
+              )}
+            </div>
           )}
-        </div>
+        </Droppable>
       </div>
     );
   };
@@ -243,7 +296,7 @@ const DirectorPlanner = () => {
         <p className="text-sm text-gray-500">{plans.length} plans</p>
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded hover:border-gray-300 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
         >
           <Plus className="h-3.5 w-3.5" />
           New
@@ -255,11 +308,13 @@ const DirectorPlanner = () => {
           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-400"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {STATUSES.map(status => (
-            <KanbanColumn key={status} status={status} />
-          ))}
-        </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {STATUSES.map(status => (
+              <KanbanColumn key={status} status={status} />
+            ))}
+          </div>
+        </DragDropContext>
       )}
 
       {modalOpen && (
@@ -268,7 +323,7 @@ const DirectorPlanner = () => {
           onClick={() => { setModalOpen(false); resetForm(); }}
         >
           <div
-            className="bg-white rounded-lg w-full max-w-md"
+            className="bg-white rounded-lg w-full max-w-md shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 pt-5">
@@ -292,7 +347,7 @@ const DirectorPlanner = () => {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="What needs to be done?"
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-gray-400"
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400"
                   autoFocus
                   required
                 />
@@ -306,7 +361,7 @@ const DirectorPlanner = () => {
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="Details..."
                   rows={3}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-gray-400 resize-none"
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 resize-none"
                 />
               </div>
 
@@ -314,14 +369,14 @@ const DirectorPlanner = () => {
                 <button
                   type="submit"
                   disabled={!formData.title.trim() || saving}
-                  className="px-3 py-1.5 text-sm bg-gray-900 text-white rounded hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 text-sm bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {saving ? 'Saving...' : (editingPlan ? 'Update' : 'Create')}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setModalOpen(false); resetForm(); }}
-                  className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900"
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
                 >
                   Cancel
                 </button>

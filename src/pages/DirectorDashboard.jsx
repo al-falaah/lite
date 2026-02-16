@@ -554,20 +554,21 @@ const DirectorDashboard = () => {
         <title>Director Dashboard | The FastTrack Madrasah</title>
       </Helmet>
 
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="border-b border-gray-200 sticky top-0 z-50 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex items-center justify-between h-14">
               <h1 className="text-base font-semibold text-gray-900">Director Dashboard</h1>
               <div className="flex items-center gap-4">
-                <Link to="/" className="text-sm text-gray-500 hover:text-gray-900">
+                <Link to="/" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
                   Site
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-sm text-gray-500 hover:text-gray-900"
+                  className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
                 >
+                  <LogOut className="h-3.5 w-3.5" />
                   Log out
                 </button>
               </div>
@@ -576,26 +577,30 @@ const DirectorDashboard = () => {
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex gap-6 overflow-x-auto">
               {[
-                { key: 'overview', label: 'Overview' },
-                { key: 'links', label: 'Admin' },
-                { key: 'planner', label: 'Planner' }
-              ].map(tab => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                    activeTab === tab.key
-                      ? 'border-gray-900 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+                { key: 'overview', label: 'Overview', icon: BarChart3 },
+                { key: 'links', label: 'Admin', icon: Shield },
+                { key: 'planner', label: 'Planner', icon: ClipboardList }
+              ].map(tab => {
+                const TabIcon = tab.icon;
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`inline-flex items-center gap-2 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                      activeTab === tab.key
+                        ? 'border-gray-900 text-gray-900'
+                        : 'border-transparent text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <TabIcon className="h-4 w-4" />
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -616,92 +621,125 @@ const DirectorDashboard = () => {
                     toast.success('Refreshed');
                   }}
                   disabled={loading}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 disabled:text-gray-400"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-900 disabled:text-gray-400 transition-colors"
                 >
                   <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
                   Refresh
                 </button>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 border border-gray-200 rounded-lg overflow-hidden">
-                {/* Totals */}
-                <div className="bg-white p-5">
-                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Totals</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {statGroups.totals.map(stat => (
-                      <div key={stat.label}>
-                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
-                        <p className="text-sm text-gray-500">{stat.label}</p>
-                      </div>
-                    ))}
+              {/* Stat Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Totals Card */}
+                <div className="bg-white rounded-lg border border-gray-200 p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-4">Totals</h3>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                    {statGroups.totals.map(stat => {
+                      const StatIcon = stat.icon;
+                      return (
+                        <div key={stat.label} className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+                            <StatIcon className={`h-4 w-4 ${stat.color}`} />
+                          </div>
+                          <div>
+                            <p className="text-xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                            <p className="text-xs text-gray-500">{stat.label}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Students */}
-                <div className="bg-white p-5">
-                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Students</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {statGroups.students.map(stat => (
-                      <div key={stat.label}>
-                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
-                        <p className="text-sm text-gray-500">{stat.label}</p>
-                      </div>
-                    ))}
+                {/* Students Card */}
+                <div className="bg-white rounded-lg border border-gray-200 p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-4">Students</h3>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                    {statGroups.students.map(stat => {
+                      const StatIcon = stat.icon;
+                      return (
+                        <div key={stat.label} className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+                            <StatIcon className={`h-4 w-4 ${stat.color}`} />
+                          </div>
+                          <div>
+                            <p className="text-xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                            <p className="text-xs text-gray-500">{stat.label}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Teachers */}
-                <div className="bg-white p-5">
-                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Teachers</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {statGroups.teachers.map(stat => (
-                      <div key={stat.label}>
-                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
-                        <p className="text-sm text-gray-500">{stat.label}</p>
-                      </div>
-                    ))}
+                {/* Teachers Card */}
+                <div className="bg-white rounded-lg border border-gray-200 p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-4">Teachers</h3>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                    {statGroups.teachers.map(stat => {
+                      const StatIcon = stat.icon;
+                      return (
+                        <div key={stat.label} className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+                            <StatIcon className={`h-4 w-4 ${stat.color}`} />
+                          </div>
+                          <div>
+                            <p className="text-xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                            <p className="text-xs text-gray-500">{stat.label}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Applications & Store */}
-                <div className="bg-white p-5">
-                  <h3 className="text-xs font-medium text-gray-400 uppercase mb-3">Applications & Store</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {[...statGroups.applications, ...statGroups.store].map(stat => (
-                      <div key={stat.label}>
-                        <p className="text-2xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
-                        <p className="text-sm text-gray-500">{stat.label}</p>
-                      </div>
-                    ))}
+                {/* Applications & Store Card */}
+                <div className="bg-white rounded-lg border border-gray-200 p-5">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-4">Applications & Store</h3>
+                  <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                    {[...statGroups.applications, ...statGroups.store].map(stat => {
+                      const StatIcon = stat.icon;
+                      return (
+                        <div key={stat.label} className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+                            <StatIcon className={`h-4 w-4 ${stat.color}`} />
+                          </div>
+                          <div>
+                            <p className="text-xl font-semibold text-gray-900">{loading ? '-' : stat.value.toLocaleString()}</p>
+                            <p className="text-xs text-gray-500">{stat.label}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
 
               {/* Alerts */}
-              {!loading && (
-                <div className="space-y-1">
+              {!loading && (stats.studentsWithoutTeacher > 0 || stats.studentsPendingPayment > 0 || stats.pendingApplications > 0 || stats.teachersWithoutStudents > 0) && (
+                <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-2">
+                  <h3 className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3">Attention</h3>
                   {stats.studentsWithoutTeacher > 0 && (
-                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"></span>
+                    <div className="flex items-center gap-2.5 py-1.5 text-sm text-gray-700">
+                      <span className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0"></span>
                       {stats.studentsWithoutTeacher} {stats.studentsWithoutTeacher === 1 ? 'student needs' : 'students need'} a teacher
                     </div>
                   )}
                   {stats.studentsPendingPayment > 0 && (
-                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+                    <div className="flex items-center gap-2.5 py-1.5 text-sm text-gray-700">
+                      <span className="w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
                       {stats.studentsPendingPayment} pending {stats.studentsPendingPayment === 1 ? 'payment' : 'payments'}
                     </div>
                   )}
                   {stats.pendingApplications > 0 && (
-                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+                    <div className="flex items-center gap-2.5 py-1.5 text-sm text-gray-700">
+                      <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0"></span>
                       {stats.pendingApplications} {stats.pendingApplications === 1 ? 'application' : 'applications'} to review
                     </div>
                   )}
                   {stats.teachersWithoutStudents > 0 && (
-                    <div className="flex items-center gap-2 py-2 px-3 text-sm text-gray-700 bg-gray-50 rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
+                    <div className="flex items-center gap-2.5 py-1.5 text-sm text-gray-700">
+                      <span className="w-2 h-2 rounded-full bg-gray-300 flex-shrink-0"></span>
                       {stats.teachersWithoutStudents} {stats.teachersWithoutStudents === 1 ? 'teacher' : 'teachers'} available
                     </div>
                   )}
@@ -711,14 +749,14 @@ const DirectorDashboard = () => {
               {/* Charts */}
               {!loading && (
                 <>
-                  <div className="border border-gray-200 rounded-lg p-5">
+                  <div className="bg-white rounded-lg border border-gray-200 p-5">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-5">
                       <h3 className="text-sm font-medium text-gray-900 mb-3 sm:mb-0">Applications Over Time</h3>
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-2">
                         <select
                           value={timeSeriesFilter.timeRange}
                           onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, timeRange: e.target.value })}
-                          className="px-2 py-1 text-sm border border-gray-200 rounded text-gray-600"
+                          className="px-2.5 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-600 bg-white"
                         >
                           <option value="3">3 months</option>
                           <option value="6">6 months</option>
@@ -729,7 +767,7 @@ const DirectorDashboard = () => {
                         <select
                           value={timeSeriesFilter.program}
                           onChange={(e) => setTimeSeriesFilter({ ...timeSeriesFilter, program: e.target.value })}
-                          className="px-2 py-1 text-sm border border-gray-200 rounded text-gray-600"
+                          className="px-2.5 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-600 bg-white"
                         >
                           <option value="all">All programs</option>
                           <option value="essentials">EASI</option>
@@ -739,23 +777,23 @@ const DirectorDashboard = () => {
                     </div>
                     <ResponsiveContainer width="100%" height={280}>
                       <LineChart data={applicationsTimeSeries}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                         <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <Tooltip />
-                        <Line type="monotone" dataKey="applications" stroke="#374151" strokeWidth={1.5} dot={{ fill: '#374151', r: 3 }} />
+                        <Line type="monotone" dataKey="applications" stroke="#374151" strokeWidth={2} dot={{ fill: '#374151', r: 3 }} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
 
-                  <div className="border border-gray-200 rounded-lg p-5">
+                  <div className="bg-white rounded-lg border border-gray-200 p-5">
                     <div className="flex flex-col gap-3 mb-5">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <h3 className="text-sm font-medium text-gray-900 mb-3 sm:mb-0">By Track</h3>
                         <select
                           value={trackComparisonFilter.timeRange}
                           onChange={(e) => setTrackComparisonFilter({ ...trackComparisonFilter, timeRange: e.target.value })}
-                          className="px-2 py-1 text-sm border border-gray-200 rounded text-gray-600"
+                          className="px-2.5 py-1.5 text-sm border border-gray-200 rounded-lg text-gray-600 bg-white"
                         >
                           <option value="3">3 months</option>
                           <option value="6">6 months</option>
@@ -781,10 +819,10 @@ const DirectorDashboard = () => {
                                 : [...trackComparisonFilter.categories, key];
                               setTrackComparisonFilter({ ...trackComparisonFilter, categories: newCategories });
                             }}
-                            className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded transition-colors ${
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full transition-colors ${
                               trackComparisonFilter.categories.includes(key)
                                 ? 'text-gray-700 bg-gray-100'
-                                : 'text-gray-400'
+                                : 'text-gray-400 hover:text-gray-500'
                             }`}
                           >
                             <span className={`w-2 h-2 rounded-full ${color} ${!trackComparisonFilter.categories.includes(key) ? 'opacity-30' : ''}`}></span>
@@ -795,42 +833,42 @@ const DirectorDashboard = () => {
                     </div>
                     <ResponsiveContainer width="100%" height={350}>
                       <BarChart data={trackComparison}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                         <XAxis dataKey="track" tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                         <Tooltip />
                         {trackComparisonFilter.categories.includes('received') && (
-                          <Bar dataKey="received" fill="#9ca3af" name="Received" radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="received" fill="#9ca3af" name="Received" radius={[3, 3, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('approved') && (
-                          <Bar dataKey="approved" fill="#0d9488" name="Approved" radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="approved" fill="#0d9488" name="Approved" radius={[3, 3, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('rejected') && (
-                          <Bar dataKey="rejected" fill="#f43f5e" name="Rejected" radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="rejected" fill="#f43f5e" name="Rejected" radius={[3, 3, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('enrolled') && (
-                          <Bar dataKey="enrolled" fill="#374151" name="Enrolled" radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="enrolled" fill="#374151" name="Enrolled" radius={[3, 3, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('dropouts') && (
-                          <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="dropouts" fill="#f59e0b" name="Drop-outs" radius={[3, 3, 0, 0]} />
                         )}
                         {trackComparisonFilter.categories.includes('graduated') && (
-                          <Bar dataKey="graduated" fill="#8b5cf6" name="Graduated" radius={[2, 2, 0, 0]} />
+                          <Bar dataKey="graduated" fill="#8b5cf6" name="Graduated" radius={[3, 3, 0, 0]} />
                         )}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
 
-                  <div className="border border-gray-200 rounded-lg p-5">
+                  <div className="bg-white rounded-lg border border-gray-200 p-5">
                     <h3 className="text-sm font-medium text-gray-900 mb-4">Referral Sources</h3>
                     {referralSourceData.length > 0 ? (
                       <ResponsiveContainer width="100%" height={280}>
                         <BarChart data={referralSourceData} layout="vertical">
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                           <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                           <YAxis dataKey="source" type="category" width={120} tick={{ fontSize: 12, fill: '#9ca3af' }} />
                           <Tooltip />
-                          <Bar dataKey="count" fill="#374151" name="Applications" radius={[0, 2, 2, 0]} />
+                          <Bar dataKey="count" fill="#374151" name="Applications" radius={[0, 3, 3, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
@@ -844,21 +882,23 @@ const DirectorDashboard = () => {
 
           {/* Admin Tab */}
           {activeTab === 'links' && (
-            <div className="divide-y divide-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {adminAreas.map((area) => {
                 const Icon = area.icon;
                 return (
                   <Link
                     key={area.href}
                     to={area.href}
-                    className="flex items-center gap-3 py-3 px-2 -mx-2 rounded hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors group"
                   >
-                    <Icon className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <span className="text-sm font-medium text-gray-900">{area.title}</span>
-                      <span className="text-sm text-gray-400 ml-2 hidden sm:inline">{area.description}</span>
+                    <div className={`p-2 rounded-lg ${area.iconBg}`}>
+                      <Icon className={`h-4 w-4 ${area.iconColor}`} />
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-300 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900">{area.title}</p>
+                      <p className="text-xs text-gray-400">{area.description}</p>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-gray-400 transition-colors flex-shrink-0" />
                   </Link>
                 );
               })}
