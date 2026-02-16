@@ -51,7 +51,7 @@ const CountdownBanner = () => {
           <div className="flex items-center gap-2">
             <Calendar className="h-5 w-5 flex-shrink-0" />
             <span className="font-semibold text-sm sm:text-base">
-              The FastTrack Madrasah is launching After Ramadan 1447 A.H. in shā'a Allāh | April 4, 2026
+              The FastTrack Madrasah is launching after Ramadan 1447 A.H. in shā'a Allāh | April 4, 2026
             </span>
           </div>
 
