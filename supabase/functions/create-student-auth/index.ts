@@ -60,6 +60,30 @@ serve(async (req) => {
     })
 
     if (authError) {
+      // If user already exists, look them up instead of failing
+      if (authError.message?.includes('already been registered') || authError.message?.includes('already exists')) {
+        console.log('Auth user already exists for email, looking up existing user...')
+        const { data: { users }, error: listError } = await supabaseClient.auth.admin.listUsers()
+        const existingUser = !listError && users?.find(u => u.email === email)
+        if (existingUser) {
+          console.log('✅ Found existing auth user:', existingUser.id)
+          const { data: resetData, error: resetError } = await supabaseClient.auth.admin.generateLink({
+            type: 'invite',
+            email: email,
+            options: { redirectTo: `${Deno.env.get('APP_URL') || 'https://www.tftmadrasah.nz'}/reset-password` },
+          })
+          if (resetError) {
+            return new Response(
+              JSON.stringify({ error: 'Failed to generate invite link', auth_user_id: existingUser.id }),
+              { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+            )
+          }
+          return new Response(
+            JSON.stringify({ success: true, auth_user_id: existingUser.id, invite_link: resetData.properties.action_link }),
+            { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+          )
+        }
+      }
       console.error('Failed to create student auth:', authError)
       return new Response(
         JSON.stringify({ error: authError.message }),
