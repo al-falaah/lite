@@ -47,13 +47,13 @@ const StoreOrderConfirmation = () => {
             </div>
 
             {/* Confirmation Email Notice */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 rounded-lg p-4 flex gap-3">
+            {/* <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 rounded-lg p-4 flex gap-3">
               <Mail className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-900">
                 <p className="font-semibold mb-1">Confirmation sent to:</p>
                 <p className="break-all">{customerEmail}</p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* What Happens Next */}
