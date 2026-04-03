@@ -78,9 +78,9 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('[checkUser] Starting session check...');
 
-      // Increase timeout to 30 seconds for slower connections
+      // Short timeout — if auth is slow, clear stale session instead of blocking the app
       const timeout = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Auth check timeout')), 30000)
+        setTimeout(() => reject(new Error('Auth check timeout')), 5000)
       );
 
       const authCheck = supabase.auth.getSession();
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
         // Only load profile if user is NOT a teacher
         const userRole = session.user.user_metadata?.role;
         if (userRole !== 'teacher') {
-          await loadProfile(session.user.id);
+          loadProfile(session.user.id); // intentionally not awaited
         } else {
           console.log('[checkUser] User is a teacher, skipping profile load');
           setProfile(null);
@@ -108,15 +108,13 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('[checkUser] Error checking user:', error);
-      // On timeout, DON'T clear user state - let onAuthStateChange handle it
-      // The onAuthStateChange listener may have already set the user
-      // Only clear if it's not a timeout (actual error)
-      if (!error.message?.includes('timeout')) {
-        setUser(null);
-        setProfile(null);
-      } else {
-        console.log('[checkUser] Timeout occurred, deferring to onAuthStateChange');
+      // On timeout, sign out locally to clear the stale session that's blocking requests
+      if (error.message?.includes('timeout')) {
+        console.log('[checkUser] Timeout — clearing stale session');
+        try { await supabase.auth.signOut({ scope: 'local' }); } catch (_) {}
       }
+      setUser(null);
+      setProfile(null);
     } finally {
       console.log('[checkUser] Auth check complete, setting loading to false');
       setLoading(false);
