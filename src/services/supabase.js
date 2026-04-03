@@ -18,6 +18,17 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 });
 
+// Anon-only client for public operations (application form, blog, etc.)
+// This client never attaches a user session, so it can't be blocked by
+// stale token refresh attempts from a previous login.
+export const supabaseAnon = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false,
+  }
+});
+
 // Export URL and key for use in Edge Function calls
 export { supabaseUrl, supabaseAnonKey };
 
@@ -215,7 +226,8 @@ export const students = {
 // Application helpers
 export const applications = {
   create: async (application) => {
-    const { data, error } = await supabase
+    // Use anon client — application submission is public, must not depend on user session
+    const { data, error } = await supabaseAnon
       .from('applications')
       .insert(application)
       .select()
