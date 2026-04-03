@@ -73,6 +73,9 @@ ENABLE_*.md
 STUDENT-LOGIN-INSTRUCTIONS.md
 PASSWORD-HASHING-MIGRATION.md
 
+# Supabase CLI internals
+supabase/.temp/
+
 # OS files
 Thumbs.db
 .vercel
