@@ -63,7 +63,7 @@ CREATE INDEX IF NOT EXISTS idx_store_orders_email ON store_orders(customer_email
 CREATE INDEX IF NOT EXISTS idx_store_orders_status ON store_orders(status);
 CREATE INDEX IF NOT EXISTS idx_store_order_items_order ON store_order_items(order_id);
 
--- Function to generate store order numbers (format: STO-YYYYMMDD-NNNN)
+-- Function to generate store order numbers (format: TFTMSHSTO-YYYYMMDD-NNNN)
 CREATE OR REPLACE FUNCTION generate_store_order_number()
 RETURNS TEXT AS $$
 DECLARE
@@ -77,10 +77,10 @@ BEGIN
   -- Get the count of orders created today + 1
   SELECT COUNT(*) + 1 INTO sequence_num
   FROM store_orders
-  WHERE order_number LIKE 'STO-' || today || '-%';
+  WHERE order_number LIKE 'TFTMSHSTO-' || today || '-%';
 
-  -- Format: STO-YYYYMMDD-NNNN (with leading zeros)
-  order_num := 'STO-' || today || '-' || LPAD(sequence_num::TEXT, 4, '0');
+  -- Format: TFTMSHSTO-YYYYMMDD-NNNN (with leading zeros)
+  order_num := 'TFTMSHSTO-' || today || '-' || LPAD(sequence_num::TEXT, 4, '0');
 
   RETURN order_num;
 END;
@@ -89,7 +89,6 @@ $$ LANGUAGE plpgsql;
 -- Trigger function to auto-update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_store_updated_at()
 RETURNS TRIGGER AS $$
-BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
