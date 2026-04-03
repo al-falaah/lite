@@ -442,7 +442,7 @@ const StoreOrderPage = () => {
                       <span>Total</span>
                       <span className="text-emerald-600">${getSubtotal().toFixed(2)}*</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1.5">*Plus shipping cost</p>
+                    <p className="text-xs text-gray-500 mt-1.5">*Excluding shipping cost</p>
                   </div>
                 </div>
 
