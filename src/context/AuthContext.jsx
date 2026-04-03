@@ -42,12 +42,13 @@ export const AuthProvider = ({ children }) => {
         if (session?.user) {
           console.log('Setting user from auth state change:', session.user.id);
           setUser(session.user);
+          setLoading(false);
 
           // Only load profile if user is NOT a teacher
           // Teachers use TeacherPortal which manages its own state
           const userRole = session.user.user_metadata?.role;
           if (userRole !== 'teacher') {
-            await loadProfile(session.user.id);
+            loadProfile(session.user.id); // intentionally not awaited - loading already cleared
           } else {
             console.log('User is a teacher, skipping profile load');
             setProfile(null); // Teachers don't have profiles
@@ -56,8 +57,8 @@ export const AuthProvider = ({ children }) => {
           console.log('No session, clearing user and profile');
           setUser(null);
           setProfile(null);
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 

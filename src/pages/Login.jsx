@@ -83,7 +83,7 @@ export default function Login() {
       console.log('Profile loaded:', profile);
 
       // Check if user has a valid admin role
-      const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin'];
+      const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin', 'research_admin'];
       const isValidAdmin = profile.is_admin && validAdminRoles.includes(profile.role);
 
       if (!isValidAdmin) {
