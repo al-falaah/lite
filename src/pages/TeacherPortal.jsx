@@ -93,10 +93,25 @@ export default function TeacherPortal() {
           return;
         }
 
-        // Look up teacher by auth_user_id
-        const { data: teacherRecord, error } = await teachers.getByAuthUserId(session.user.id);
+        // Look up teacher by auth_user_id, fall back to email
+        let teacherRecord = null;
+        const { data: byAuthId, error: authIdError } = await teachers.getByAuthUserId(session.user.id);
 
-        if (error || !teacherRecord) {
+        if (byAuthId) {
+          teacherRecord = byAuthId;
+        } else {
+          // Fallback: look up by email
+          console.warn('Teacher not found by auth_user_id, trying email lookup');
+          const { data: byEmail } = await supabase
+            .from('teachers')
+            .select('*')
+            .eq('email', session.user.email)
+            .single();
+          teacherRecord = byEmail;
+        }
+
+        if (!teacherRecord) {
+          console.error('Teacher not found by auth_user_id or email', { authIdError, userId: session.user.id, email: session.user.email });
           toast.error('Teacher record not found');
           navigate('/login', { replace: true });
           return;
@@ -124,13 +139,18 @@ export default function TeacherPortal() {
 
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setTeacher(null);
-    setAssignedStudents([]);
-    setRemovedStudents([]);
-    setSelectedStudent(null);
-    toast.success('Logged out successfully');
-    navigate('/login', { replace: true });
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setTeacher(null);
+      setAssignedStudents([]);
+      setRemovedStudents([]);
+      setSelectedStudent(null);
+      toast.success('Logged out successfully');
+      navigate('/login', { replace: true });
+    }
   };
 
   const loadTeacherData = async (teacherId) => {
@@ -494,15 +514,13 @@ export default function TeacherPortal() {
   };
 
   // Loading spinner while checking session
-  if (initialLoading) {
+  if (initialLoading || !teacher) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
       </div>
     );
   }
-
-  if (!teacher) return null;
 
   // Dashboard Screen
   const displayedStudents = activeView === 'assigned' ? assignedStudents : removedStudents;

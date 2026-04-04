@@ -310,16 +310,15 @@ const StudentPortal = () => {
 
   const handleLogout = async () => {
     try {
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
       setStudent(null);
       setEnrollments([]);
       setSchedules([]);
       setProgress(null);
-
-      await supabase.auth.signOut({ scope: 'local' });
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      navigate('/login');
+      navigate('/login', { replace: true });
     }
   };
 
@@ -400,7 +399,7 @@ const StudentPortal = () => {
     );
   };
 
-  if (initialLoading) {
+  if (initialLoading || !student) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
