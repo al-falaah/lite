@@ -66,9 +66,9 @@ export const PROGRAMS = {
 
     // Primary Text (from Programs page collapsible section)
     primaryText: {
-      arabic: 'تيسير الرحمن في تجويد القرآن',
-      transliteration: "Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān",
-      author: "Su'ād 'Abdul-Ḥamīd",
+      arabic: 'الفتح الرباني في تيسير تلاوة القرآن',
+      transliteration: "Al-Fatḥ ar-Rabbānī fī Taysīr Tilāwat al-Qur'ān",
+      author: "ʿAbd al-Raḥmān Bakr",
     },
 
     // Schedule (from Programs page curriculum details)

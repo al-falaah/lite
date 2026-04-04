@@ -260,7 +260,7 @@ const Programs = () => {
                         <div className="flex gap-2 pt-1">
                           <span className="text-emerald-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
-                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm font-arabic">تيسير الرحمن في تجويد القرآن</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> <span className="text-gray-600">(Su'ād 'Abdul-Ḥamīd)</span>
+                            <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm font-arabic">الفتح الرباني في تيسير تلاوة القرآن</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">Al-Fatḥ ar-Rabbānī fī Taysīr Tilāwat al-Qur'ān</span> <span className="text-gray-600">(ʿAbd al-Raḥmān Bakr)</span>
                           </p>
                         </div>
                       </div>
@@ -353,7 +353,7 @@ const Programs = () => {
                     {/* Program Header */}
                     <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">Essential Arabic & Islamic Studies (EASI)</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose" className="font-arabic" style={{direction: 'rtl'}}>
+                      <p className="text-base text-emerald-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
                         الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
@@ -556,7 +556,7 @@ const Programs = () => {
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   {qari.name} ({qari.shortName})
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-2" className="font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2 font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
                   {qari.arabicName}
                 </p>
                 {/* <p className="text-xs text-gray-500 italic">
@@ -651,7 +651,7 @@ const Programs = () => {
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   Tajweed Mastery Program (TMP)
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-2" className="font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2 font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
                   برنامج إتقان التجويد
                 </p>
                 {/* <p className="text-xs text-gray-500 italic">
@@ -700,7 +700,7 @@ const Programs = () => {
                       <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
                         <li> <span className="font-semibold">Mastery from A to Z:</span> Complete command over Tajweed rules through effective, focused instruction.</li>
                         <li> <span className="font-semibold">Scholarly Foundation:</span> Attain essential knowledge of <span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>.</li>
-                        <li> <span className="font-semibold">Primary Text:</span> <span className="font-arabic">تيسير الرحمن في تجويد القرآن</span> | <span className="italic font-serif tracking-wide">Taysīr ar-Raḥmān fī Tajwīd al-Qur'ān</span> (Su'ād 'Abdul-Ḥamīd).</li>
+                        <li> <span className="font-semibold">Primary Text:</span> <span className="font-arabic">الفتح الرباني في تيسير تلاوة القرآن</span> | <span className="italic font-serif tracking-wide">Al-Fatḥ ar-Rabbānī fī Taysīr Tilāwat al-Qur'ān</span> (ʿAbd al-Raḥmān Bakr).</li>
                       </ul>
                     </div>
 
@@ -745,7 +745,7 @@ const Programs = () => {
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   Essential Arabic & Islamic Studies (EASI)
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 mb-2" className="font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
+                <p className="text-sm sm:text-base text-gray-600 mb-2 font-arabic" style={{direction: 'rtl', lineHeight: '1.6'}}>
                   الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                 </p>
                 {/* <p className="text-xs text-gray-500 italic">
