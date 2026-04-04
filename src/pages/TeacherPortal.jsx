@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
@@ -77,19 +77,22 @@ export default function TeacherPortal() {
 
   // Session loading
   const [initialLoading, setInitialLoading] = useState(true);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     const restoreSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user) {
-          navigate('/login', { replace: true });
+          if (mounted) setShouldRedirect(true);
           return;
         }
 
         const role = session.user.user_metadata?.role;
         if (role !== 'teacher') {
-          navigate('/login', { replace: true });
+          if (mounted) setShouldRedirect(true);
           return;
         }
 
@@ -113,29 +116,33 @@ export default function TeacherPortal() {
         if (!teacherRecord) {
           console.error('Teacher not found by auth_user_id or email', { authIdError, userId: session.user.id, email: session.user.email });
           toast.error('Teacher record not found');
-          navigate('/login', { replace: true });
+          if (mounted) setShouldRedirect(true);
           return;
         }
 
         if (!teacherRecord.is_active) {
           toast.error('Your account is inactive. Please contact admin.');
           await supabase.auth.signOut({ scope: 'local' });
-          navigate('/login', { replace: true });
+          if (mounted) setShouldRedirect(true);
           return;
         }
 
-        setTeacher(teacherRecord);
-        await loadTeacherData(teacherRecord.id);
+        if (mounted) {
+          setTeacher(teacherRecord);
+          await loadTeacherData(teacherRecord.id);
+        }
       } catch (error) {
         console.error('Session restore error:', error);
-        navigate('/login', { replace: true });
+        if (mounted) setShouldRedirect(true);
       } finally {
-        setInitialLoading(false);
+        if (mounted) setInitialLoading(false);
       }
     };
 
     restoreSession();
-  }, [navigate]);
+
+    return () => { mounted = false; };
+  }, []);
 
 
   const handleLogout = async () => {
@@ -512,6 +519,11 @@ export default function TeacherPortal() {
       setLoading(false);
     }
   };
+
+  // Redirect to login if not authenticated
+  if (shouldRedirect) {
+    return <Navigate to="/login" replace />;
+  }
 
   // Loading spinner while checking session
   if (initialLoading || !teacher) {

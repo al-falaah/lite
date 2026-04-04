@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
 import {
@@ -79,23 +79,24 @@ const StudentPortal = () => {
 
   // Session loading
   const [initialLoading, setInitialLoading] = useState(true);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
     const restoreSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user) {
-          navigate('/login', { replace: true });
+          setShouldRedirect(true);
           return;
         }
 
         const role = session.user.user_metadata?.role;
         if (role !== 'student') {
-          navigate('/login', { replace: true });
+          setShouldRedirect(true);
           return;
         }
 
-        // Look up student by auth user id first, fall back to student_id from metadata
+        // Look up student by email
         const { data: studentData } = await supabase
           .from('students')
           .select('*')
@@ -104,7 +105,7 @@ const StudentPortal = () => {
 
         if (!studentData) {
           toast.error('Student record not found');
-          navigate('/login', { replace: true });
+          setShouldRedirect(true);
           return;
         }
 
@@ -112,14 +113,14 @@ const StudentPortal = () => {
         await loadStudentData(studentData.id);
       } catch (error) {
         console.error('Session restore error:', error);
-        navigate('/login', { replace: true });
+        setShouldRedirect(true);
       } finally {
         setInitialLoading(false);
       }
     };
 
     restoreSession();
-  }, [navigate]);
+  }, []);
 
   const loadStudentData = async (studentId) => {
     console.log('Loading student data for ID:', studentId);
@@ -398,6 +399,11 @@ const StudentPortal = () => {
       </span>
     );
   };
+
+  // Redirect to login if not authenticated
+  if (shouldRedirect) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (initialLoading || !student) {
     return (
