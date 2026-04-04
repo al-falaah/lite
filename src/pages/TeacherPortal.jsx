@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
+import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 // Get milestones from centralized config
@@ -602,6 +603,11 @@ export default function TeacherPortal() {
         <div className="mb-5 sm:mb-8">
           <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">Welcome, {teacher.full_name.split(' ')[0]}!</h1>
           <p className="text-xs sm:text-base text-gray-600">Manage students and track progress</p>
+        </div>
+
+        {/* Teaching Guidelines */}
+        <div className="mb-5 sm:mb-8">
+          <TeacherClassGuidelines />
         </div>
 
         {/* Stats Cards */}

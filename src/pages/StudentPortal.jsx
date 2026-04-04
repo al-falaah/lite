@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import StudentClassEtiquette from '../components/student/StudentClassEtiquette';
 import {
   PROGRAMS,
   PROGRAM_IDS,
@@ -473,6 +474,9 @@ const StudentPortal = () => {
               {student?.student_id ? `Student ID: ${student.student_id}` : 'Complete payment to receive your Student ID'}
             </p>
           </div>
+
+          {/* Class Etiquette */}
+          <StudentClassEtiquette />
 
           {/* Enrollments */}
           {enrollments.length === 0 ? (
