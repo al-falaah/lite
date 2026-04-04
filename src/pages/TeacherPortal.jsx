@@ -82,28 +82,15 @@ export default function TeacherPortal() {
   useEffect(() => {
     let mounted = true;
 
-    const restoreSession = async () => {
+    const loadTeacher = async (session) => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) {
-          if (mounted) setShouldRedirect(true);
-          return;
-        }
-
-        const role = session.user.user_metadata?.role;
-        if (role !== 'teacher') {
-          if (mounted) setShouldRedirect(true);
-          return;
-        }
-
         // Look up teacher by auth_user_id, fall back to email
         let teacherRecord = null;
-        const { data: byAuthId, error: authIdError } = await teachers.getByAuthUserId(session.user.id);
+        const { data: byAuthId } = await teachers.getByAuthUserId(session.user.id);
 
         if (byAuthId) {
           teacherRecord = byAuthId;
         } else {
-          // Fallback: look up by email
           console.warn('Teacher not found by auth_user_id, trying email lookup');
           const { data: byEmail } = await supabase
             .from('teachers')
@@ -114,7 +101,7 @@ export default function TeacherPortal() {
         }
 
         if (!teacherRecord) {
-          console.error('Teacher not found by auth_user_id or email', { authIdError, userId: session.user.id, email: session.user.email });
+          console.error('Teacher not found', { userId: session.user.id, email: session.user.email });
           toast.error('Teacher record not found');
           if (mounted) setShouldRedirect(true);
           return;
@@ -132,16 +119,53 @@ export default function TeacherPortal() {
           await loadTeacherData(teacherRecord.id);
         }
       } catch (error) {
-        console.error('Session restore error:', error);
+        console.error('Teacher load error:', error);
         if (mounted) setShouldRedirect(true);
       } finally {
         if (mounted) setInitialLoading(false);
       }
     };
 
+    const restoreSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        if (mounted) setShouldRedirect(true);
+        return;
+      }
+      const role = session.user.user_metadata?.role;
+      if (role !== 'teacher') {
+        // Double-check teachers table before redirecting
+        const { data: byAuthId } = await teachers.getByAuthUserId(session.user.id);
+        if (!byAuthId) {
+          if (mounted) setShouldRedirect(true);
+          return;
+        }
+      }
+      await loadTeacher(session);
+    };
+
     restoreSession();
 
-    return () => { mounted = false; };
+    // Also listen for auth state changes (handles navigation from Login page)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) return;
+        if (event === 'SIGNED_IN' && session?.user) {
+          const role = session.user.user_metadata?.role;
+          if (role === 'teacher') {
+            await loadTeacher(session);
+          }
+        }
+        if (event === 'SIGNED_OUT') {
+          setShouldRedirect(true);
+        }
+      }
+    );
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
 
