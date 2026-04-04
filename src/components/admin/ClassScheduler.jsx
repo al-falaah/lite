@@ -1592,31 +1592,46 @@ const ClassScheduler = () => {
 
                 return (
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-blue-900 mb-2">Student's Preferred Availability</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      {preferredDays && preferredDays.length > 0 && (
-                        <div>
-                          <span className="font-medium text-blue-800">Preferred Days:</span>
-                          <p className="text-blue-700 capitalize">{preferredDays.join(', ')}</p>
+                    <h4 className="text-sm font-semibold text-blue-900 mb-3">Student's Preferred Availability</h4>
+                    {preferredDays && preferredDays.length > 0 && (
+                      <div className="mb-3">
+                        <span className="text-xs font-medium text-blue-800 uppercase tracking-wider">Preferred Days</span>
+                        <div className="flex flex-wrap gap-1.5 mt-1">
+                          {preferredDays.map(day => (
+                            <span key={day} className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded text-xs font-medium">{day}</span>
+                          ))}
                         </div>
-                      )}
-                      {preferredTimes && preferredTimes.length > 0 && (
-                        <div>
-                          <span className="font-medium text-blue-800">Preferred Times:</span>
-                          <p className="text-blue-700 capitalize">{preferredTimes.join(', ')}</p>
+                      </div>
+                    )}
+                    {preferredTimes && preferredTimes.length > 0 && (
+                      <div className="mb-3">
+                        <span className="text-xs font-medium text-blue-800 uppercase tracking-wider">Preferred Times</span>
+                        <div className="space-y-1.5 mt-1">
+                          {preferredTimes.map((t, i) => {
+                            try {
+                              const parsed = typeof t === 'string' ? JSON.parse(t) : t;
+                              return (
+                                <div key={i} className="flex items-center gap-2 text-xs">
+                                  <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded font-medium min-w-[70px] text-center">{parsed.slot}</span>
+                                  <span className="text-blue-700">{parsed.user_time || parsed.nz_time}</span>
+                                </div>
+                              );
+                            } catch {
+                              return <span key={i} className="text-xs text-blue-700">{String(t)}</span>;
+                            }
+                          })}
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                     {timezone && (
-                      <div className="mt-2">
-                        <span className="font-medium text-blue-800 text-sm">Timezone:</span>
-                        <p className="text-blue-700 text-sm">{timezone}</p>
+                      <div className="flex items-center gap-1.5 text-xs text-blue-700">
+                        <MapPin className="h-3 w-3" />
+                        <span>{timezone}</span>
                       </div>
                     )}
                     {availabilityNotes && (
-                      <div className="mt-2">
-                        <span className="font-medium text-blue-800 text-sm">Notes:</span>
-                        <p className="text-blue-700 text-sm">{availabilityNotes}</p>
+                      <div className="mt-2 text-xs text-blue-700 italic">
+                        {availabilityNotes}
                       </div>
                     )}
                   </div>
