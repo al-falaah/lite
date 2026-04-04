@@ -56,6 +56,32 @@ export default function Login() {
         return;
       }
 
+      // Check if user exists in teachers table (handles cases where metadata role is missing/wrong)
+      const { data: teacherRecord } = await supabase
+        .from('teachers')
+        .select('id')
+        .eq('auth_user_id', data.user.id)
+        .single();
+
+      if (teacherRecord) {
+        toast.success('Welcome back!');
+        navigate('/teacher');
+        return;
+      }
+
+      // Check if user exists in students table (handles cases where metadata role is missing/wrong)
+      const { data: studentRecord } = await supabase
+        .from('students')
+        .select('id')
+        .eq('email', data.user.email)
+        .single();
+
+      if (studentRecord) {
+        toast.success('Welcome back!');
+        navigate('/student');
+        return;
+      }
+
       // For admin users, check profile for role-based routing
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -92,19 +118,6 @@ export default function Login() {
       // Check admin roles
       const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin', 'research_admin'];
       const isValidAdmin = profile.is_admin && validAdminRoles.includes(profile.role);
-
-      // Handle profile-based role routing (fallback for users without metadata)
-      if (profile.role === 'student') {
-        toast.success('Welcome back!');
-        navigate('/student');
-        return;
-      }
-
-      if (profile.role === 'teacher') {
-        toast.success('Welcome back!');
-        navigate('/teacher');
-        return;
-      }
 
       if (!isValidAdmin) {
         toast.error(`Your account role is invalid (${profile.role || 'none'}). Please contact admin@tftmadrasah.nz`);
