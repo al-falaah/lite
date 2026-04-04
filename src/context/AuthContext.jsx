@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
           // Teachers use TeacherPortal which manages its own state
           const userRole = session.user.user_metadata?.role;
           if (userRole !== 'teacher') {
-            await loadProfile(session.user.id);
+            await loadProfile(session.user.id, session.access_token);
           } else {
             console.log('User is a teacher, skipping profile load');
             setProfile(null); // Teachers don't have profiles
@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
         // Only load profile if user is NOT a teacher
         const userRole = session.user.user_metadata?.role;
         if (userRole !== 'teacher') {
-          await loadProfile(session.user.id);
+          await loadProfile(session.user.id, session.access_token);
         } else {
           console.log('[checkUser] User is a teacher, skipping profile load');
           setProfile(null);
@@ -121,13 +121,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const loadProfile = async (userId) => {
+  const loadProfile = async (userId, token) => {
     try {
       console.log('[loadProfile] Loading profile for userId:', userId);
 
-      // Use direct REST API call to bypass potential RLS timing issues during auth state changes
-      const { data: session } = await supabase.auth.getSession();
-      const accessToken = session?.session?.access_token;
+      // Use provided token or fall back to getSession (safe outside onAuthStateChange)
+      let accessToken = token;
+      if (!accessToken) {
+        const { data: session } = await supabase.auth.getSession();
+        accessToken = session?.session?.access_token;
+      }
 
       if (!accessToken) {
         console.error('[loadProfile] No access token available');
