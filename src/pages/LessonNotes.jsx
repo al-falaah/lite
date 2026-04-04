@@ -246,10 +246,18 @@ const LessonNotes = () => {
 
   const sanitizeContent = (html) => {
     return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
-                     'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'div', 'span', 
-                     'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img', 'sup'],
-      ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'data-footnote']
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                     'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'div', 'span',
+                     'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img', 'sup',
+                     'style', 'section', 'header', 'footer', 'nav', 'article',
+                     'svg', 'defs', 'linearGradient', 'stop', 'rect', 'circle', 'ellipse',
+                     'line', 'polygon', 'text', 'tspan', 'path', 'g'],
+      ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'data-footnote',
+                     'viewBox', 'xmlns', 'fill', 'stroke', 'stroke-width', 'stroke-dasharray',
+                     'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'x1', 'y1', 'x2', 'y2',
+                     'width', 'height', 'opacity', 'transform', 'text-anchor', 'font-family',
+                     'font-size', 'font-weight', 'font-style', 'letter-spacing', 'points',
+                     'offset', 'stop-color', 'stop-opacity', 'd', 'direction']
     });
   };
 
@@ -475,7 +483,29 @@ const LessonNotes = () => {
                 </div>
 
                 <div className="px-8 py-6 lesson-content-protected">
-                  <div 
+                  {/* Full HTML documents render in an iframe to preserve all styling */}
+                  {selectedChapter.content?.trim().startsWith('<!DOCTYPE') || selectedChapter.content?.trim().startsWith('<html') ? (
+                    <iframe
+                      srcDoc={selectedChapter.content}
+                      title={selectedChapter.title}
+                      className="w-full border-0 rounded-lg"
+                      style={{ minHeight: '80vh' }}
+                      sandbox="allow-same-origin"
+                      onLoad={(e) => {
+                        // Auto-resize iframe to fit content
+                        const doc = e.target.contentDocument;
+                        if (doc) {
+                          e.target.style.height = doc.documentElement.scrollHeight + 'px';
+                          // Observe for dynamic content changes
+                          const observer = new ResizeObserver(() => {
+                            e.target.style.height = doc.documentElement.scrollHeight + 'px';
+                          });
+                          observer.observe(doc.documentElement);
+                        }
+                      }}
+                    />
+                  ) : (
+                  <div
                     className={`prose max-w-none transition-colors ${
                       theme === 'dark'
                         ? 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-code:text-emerald-400 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border-gray-700 prose-td:border-gray-700 [&_.verse]:text-gray-100 [&_.tip]:bg-blue-950 [&_.tip]:border-blue-800 [&_.tip:before]:text-blue-400'
@@ -486,6 +516,7 @@ const LessonNotes = () => {
                     dangerouslySetInnerHTML={{ __html: sanitizeContent(selectedChapter.content) }}
                     style={{ direction: 'ltr' }}
                   />
+                  )}
                 </div>
 
                 {/* Navigation Footer */}

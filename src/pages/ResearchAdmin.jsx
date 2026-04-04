@@ -306,8 +306,16 @@ const ResearchAdmin = () => {
 
   const sanitizeContent = (html) => {
     return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'hr', 'sup'],
-      ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'id', 'style', 'data-footnote']
+      ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'hr', 'sup',
+                     'style', 'section', 'header', 'footer', 'nav', 'article',
+                     'svg', 'defs', 'linearGradient', 'stop', 'rect', 'circle', 'ellipse',
+                     'line', 'polygon', 'text', 'tspan', 'path', 'g'],
+      ALLOWED_ATTR: ['href', 'target', 'rel', 'class', 'id', 'style', 'data-footnote',
+                     'viewBox', 'xmlns', 'fill', 'stroke', 'stroke-width', 'stroke-dasharray',
+                     'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'x1', 'y1', 'x2', 'y2',
+                     'width', 'height', 'opacity', 'transform', 'text-anchor', 'font-family',
+                     'font-size', 'font-weight', 'font-style', 'letter-spacing', 'points',
+                     'offset', 'stop-color', 'stop-opacity', 'd', 'direction', 'src', 'alt']
     });
   };
 
