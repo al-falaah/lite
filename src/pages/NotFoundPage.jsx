@@ -103,10 +103,10 @@ const NotFoundPage = () => {
                   </Link>
                   <span className="text-gray-300">•</span>
                   <Link
-                    to="/student"
+                    to="/login"
                     className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
                   >
-                    Student Portal
+                    Sign In
                   </Link>
                   <span className="text-gray-300">•</span>
                   <a

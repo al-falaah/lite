@@ -1012,10 +1012,7 @@ const Programs = () => {
                 </li>
                 <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
                 <li className="pt-2 border-t border-emerald-900">
-                  <Link to="/student" className="text-gray-500 hover:text-gray-300 text-xs">Student Portal</Link>
-                </li>
-                <li>
-                  <Link to="/teacher" className="text-gray-500 hover:text-gray-300 text-xs">Teacher Portal</Link>
+                  <Link to="/login" className="text-gray-500 hover:text-gray-300 text-xs">Sign In</Link>
                 </li>
               </ul>
             </div>

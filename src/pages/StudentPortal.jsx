@@ -4,7 +4,7 @@ import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
-  ArrowLeft, User, LogOut, ExternalLink, CreditCard,
+  User, LogOut, ExternalLink, CreditCard,
   DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings
 } from 'lucide-react';
 import Button from '../components/common/Button';
@@ -57,16 +57,12 @@ const getCurrentMilestone = (currentWeek, isTajweed) => {
 const StudentPortal = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [studentId, setStudentId] = useState('');
-  const [password, setPassword] = useState('');
   const [student, setStudent] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [progress, setProgress] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(null);
   const [assignedTeachers, setAssignedTeachers] = useState({});
-
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -81,100 +77,49 @@ const StudentPortal = () => {
     phone: '',
   });
 
-  // Check for existing session on mount (persist across refresh)
+  // Session loading
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
     const restoreSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const role = session.user.user_metadata?.role;
-          const savedStudentId = session.user.user_metadata?.student_id;
-
-          // Only restore if user is a student
-          if (role === 'student' && savedStudentId) {
-            const { data: studentData } = await supabase
-              .from('students')
-              .select('*')
-              .eq('student_id', savedStudentId)
-              .single();
-
-            if (studentData) {
-              setStudent(studentData);
-              setAuthenticated(true);
-              await loadStudentData(studentData.id);
-            }
-          }
+        if (!session?.user) {
+          navigate('/login', { replace: true });
+          return;
         }
+
+        const role = session.user.user_metadata?.role;
+        if (role !== 'student') {
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        // Look up student by auth user id first, fall back to student_id from metadata
+        const { data: studentData } = await supabase
+          .from('students')
+          .select('*')
+          .eq('email', session.user.email)
+          .single();
+
+        if (!studentData) {
+          toast.error('Student record not found');
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        setStudent(studentData);
+        await loadStudentData(studentData.id);
       } catch (error) {
         console.error('Session restore error:', error);
+        navigate('/login', { replace: true });
       } finally {
         setInitialLoading(false);
       }
     };
 
     restoreSession();
-  }, []);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!studentId || !password) {
-      toast.error('Please enter your student ID and password');
-      return;
-    }
-
-    // Validate student ID format (6 digits)
-    if (!/^\d{6}$/.test(studentId)) {
-      toast.error('Student ID must be 6 digits');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Find student by student_id to get their email
-      const { data: studentData, error: studentError } = await supabase
-        .from('students')
-        .select('*')
-        .eq('student_id', studentId.trim())
-        .single();
-
-      if (studentError || !studentData) {
-        toast.error('Invalid Student ID or password');
-        setLoading(false);
-        return;
-      }
-
-      // Authenticate with Supabase Auth using email and password
-      console.log('Attempting login with email:', studentData.email);
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: studentData.email,
-        password: password,
-      });
-
-      if (authError) {
-        console.error('Auth error:', authError);
-        console.error('Auth error details:', JSON.stringify(authError, null, 2));
-        toast.error('Invalid Student ID or password');
-        setLoading(false);
-        return;
-      }
-
-      console.log('Login successful:', authData.user.email);
-      console.log('Email confirmed:', authData.user.email_confirmed_at);
-
-      setStudent(studentData);
-      setAuthenticated(true);
-
-      toast.success(`Welcome, ${studentData.full_name}!`);
-      // Load enrollments and student data
-      await loadStudentData(studentData.id);
-    } catch (error) {
-      console.error('Login error:', error);
-      toast.error('Failed to login. Please try again.');
-      setLoading(false);
-    }
-  };
+  }, [navigate]);
 
   const loadStudentData = async (studentId) => {
     console.log('Loading student data for ID:', studentId);
@@ -365,23 +310,16 @@ const StudentPortal = () => {
 
   const handleLogout = async () => {
     try {
-      // Clear local state first for immediate UI feedback
-      setAuthenticated(false);
       setStudent(null);
       setEnrollments([]);
       setSchedules([]);
       setProgress(null);
-      setStudentId('');
-      setPassword('');
 
-      // Then sign out from Supabase Auth (use local scope for reliability)
       await supabase.auth.signOut({ scope: 'local' });
-
-      toast.info('Logged out successfully');
+      navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
-      // State is already cleared, so logout is effectively complete
-      toast.info('Logged out successfully');
+      navigate('/login');
     }
   };
 
@@ -469,116 +407,6 @@ const StudentPortal = () => {
           <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4" />
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-3 text-sm text-gray-500">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!authenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <nav className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <img
-                  src="/favicon.svg"
-                  alt="The FastTrack Madrasah"
-                  className="h-8 w-8"
-                />
-                <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-sm sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-sm sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
-                  {/* <span className="text-xs text-gray-500 font-arabic"> أكاديمية الفلاح</span> */}
-                </div>
-              </Link>
-              <Link to="/">
-                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 rounded-lg hover:bg-gray-50 transition-colors">
-                  <ArrowLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Back to Home</span>
-                  <span className="sm:hidden">Back</span>
-                </button>
-              </Link>
-            </div>
-          </div>
-        </nav>
-
-        {/* Login Form */}
-        <div className="flex items-center justify-center px-4 py-12 sm:py-16">
-          <div className="w-full max-w-md">
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-              <div className="px-6 sm:px-8 py-8 sm:py-10">
-                <div className="text-center mb-8">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Student Portal</h1>
-                  <p className="text-gray-600 text-sm sm:text-base">Sign in to access your dashboard</p>
-                </div>
-
-                <form onSubmit={handleLogin} className="space-y-5">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Student ID
-                    </label>
-                    <input
-                      type="text"
-                      value={studentId}
-                      onChange={(e) => setStudentId(e.target.value)}
-                      placeholder="123456"
-                      maxLength={6}
-                      pattern="\d{6}"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                      required
-                      autoComplete="username"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                      required
-                      autoComplete="current-password"
-                    />
-                  </div>
-
-                  {/* Forgot Password Link */}
-                  <div className="text-right">
-                    <a
-                      href="/forgot-password"
-                      className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
-                    >
-                      Forgot password?
-                    </a>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    className="w-full py-2.5 rounded-lg transition-colors"
-                    disabled={loading}
-                  >
-                    {loading ? 'Signing in...' : 'Sign In'}
-                  </Button>
-                </form>
-
-                <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <p className="text-xs text-gray-700 text-center">
-                    Need help? Contact <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700">admin@tftmadrasah.nz</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-center text-sm text-gray-600 mt-6">
-              Authentic Islamic Education Rooted in the Qur'an and Sunnah
-            </p>
-          </div>
         </div>
       </div>
     );

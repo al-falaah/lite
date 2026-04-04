@@ -274,14 +274,9 @@ const LandingPage = () => {
                   {/* Portal Links - Secondary */}
                   <div className="mt-3 pt-3 border-t border-white/10">
                     <p className="px-4 text-xs text-white/60 mb-2 uppercase tracking-wider">Portals</p>
-                    <Link to="/student" onClick={() => setMobileMenuOpen(false)}>
+                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                       <button className="w-full px-4 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all text-left">
-                        Student Portal
-                      </button>
-                    </Link>
-                    <Link to="/teacher" onClick={() => setMobileMenuOpen(false)}>
-                      <button className="w-full px-4 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-all text-left">
-                        Teacher Portal
+                        Sign In
                       </button>
                     </Link>
                   </div>
@@ -1181,9 +1176,9 @@ const LandingPage = () => {
                 Support Us
               </Button>
             </a>
-            <Link to="/student">
+            <Link to="/login">
               <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 hover:text-emerald-950 w-full sm:w-auto">
-                Student Portal
+                Sign In
               </Button>
             </Link>
           </div>
@@ -1230,10 +1225,7 @@ const LandingPage = () => {
                 </li>
                 <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
                 <li className="pt-2 border-t border-emerald-900">
-                  <Link to="/student" className="text-gray-500 hover:text-gray-300 text-xs">Student Portal</Link>
-                </li>
-                <li>
-                  <Link to="/teacher" className="text-gray-500 hover:text-gray-300 text-xs">Teacher Portal</Link>
+                  <Link to="/login" className="text-gray-500 hover:text-gray-300 text-xs">Sign In</Link>
                 </li>
               </ul>
             </div>

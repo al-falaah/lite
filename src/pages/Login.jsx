@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
-import { Loader2, Mail, Lock, Eye, EyeOff, Home, Shield, Users, GraduationCap, ArrowRight } from 'lucide-react';
+import { Loader2, Mail, Lock, Eye, EyeOff, Home } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -41,8 +41,22 @@ export default function Login() {
         return;
       }
 
-      // Check user profile and role using direct REST API call
-      // This bypasses RLS timing issues during login
+      // Determine user role from metadata first (fast path for students/teachers)
+      const role = data.user.user_metadata?.role;
+
+      if (role === 'student') {
+        toast.success('Welcome back!');
+        navigate('/student');
+        return;
+      }
+
+      if (role === 'teacher') {
+        toast.success('Welcome back!');
+        navigate('/teacher');
+        return;
+      }
+
+      // For admin users, check profile for role-based routing
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -57,11 +71,7 @@ export default function Login() {
         }
       );
 
-      console.log('Profile fetch status:', profileResponse.status);
-
       if (!profileResponse.ok) {
-        const errorText = await profileResponse.text();
-        console.error('Profile fetch error:', profileResponse.status, errorText);
         toast.error('Account not found. Please contact admin@tftmadrasah.nz');
         await supabase.auth.signOut();
         setLoading(false);
@@ -69,42 +79,34 @@ export default function Login() {
       }
 
       const profileData = await profileResponse.json();
-      console.log('Profile data received:', profileData);
 
       if (!profileData || profileData.length === 0) {
-        console.error('No profile found for user:', data.user.id);
         toast.error('Account not found. Please contact admin@tftmadrasah.nz');
         await supabase.auth.signOut();
         setLoading(false);
         return;
       }
 
-      const profile = profileData[0]; // REST API returns array
-      console.log('Profile loaded:', profile);
+      const profile = profileData[0];
 
-      // Check if user has a valid admin role
+      // Check admin roles
       const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin', 'research_admin'];
       const isValidAdmin = profile.is_admin && validAdminRoles.includes(profile.role);
 
+      // Handle profile-based role routing (fallback for users without metadata)
+      if (profile.role === 'student') {
+        toast.success('Welcome back!');
+        navigate('/student');
+        return;
+      }
+
+      if (profile.role === 'teacher') {
+        toast.success('Welcome back!');
+        navigate('/teacher');
+        return;
+      }
+
       if (!isValidAdmin) {
-        console.error('Invalid admin role:', profile.role);
-
-        // More helpful error messages
-        if (profile.role === 'teacher') {
-          toast.error('Teachers should use the Teacher Portal');
-          await supabase.auth.signOut();
-          setLoading(false);
-          return;
-        }
-
-        if (profile.role === 'student') {
-          toast.error('Students should use the Student Portal');
-          await supabase.auth.signOut();
-          setLoading(false);
-          return;
-        }
-
-        // Invalid or missing role
         toast.error(`Your account role is invalid (${profile.role || 'none'}). Please contact admin@tftmadrasah.nz`);
         await supabase.auth.signOut();
         setLoading(false);
@@ -114,9 +116,7 @@ export default function Login() {
       // Valid admin - route to appropriate dashboard
       toast.success(`Welcome back, ${profile.full_name || 'Admin'}!`);
 
-      // Route based on specific admin role
       if (profile.role === 'director') {
-        // Director gets their own dashboard to choose admin areas
         navigate('/director');
       } else if (profile.role === 'madrasah_admin') {
         navigate('/admin');
@@ -125,7 +125,7 @@ export default function Login() {
       } else if (profile.role === 'store_admin') {
         navigate('/store/admin');
       } else {
-        navigate('/admin'); // Fallback to main admin
+        navigate('/admin');
       }
 
     } catch (err) {
@@ -147,8 +147,8 @@ export default function Login() {
               <span className="text-base font-bold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
             </div>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Admin Login</h1>
-          <p className="text-gray-600 text-sm">For staff and administrators</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Sign In</h1>
+          <p className="text-gray-600 text-sm">For students, teachers, and staff</p>
         </div>
 
         {/* Login Card */}
@@ -228,25 +228,6 @@ export default function Login() {
               )}
             </button>
           </form>
-        </div>
-
-        {/* Other Portals */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600 mb-3">Not an admin?</p>
-          <div className="flex gap-2">
-            <Link
-              to="/student"
-              className="flex-1 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Student Portal
-            </Link>
-            <Link
-              to="/teacher"
-              className="flex-1 py-2 text-sm text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Teacher Portal
-            </Link>
-          </div>
         </div>
 
         {/* Footer */}

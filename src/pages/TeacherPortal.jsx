@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ArrowLeft, BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
+import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
@@ -41,16 +42,10 @@ const getCurrentMilestone = (currentWeek, isTajweed) => {
 };
 
 export default function TeacherPortal() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-
-  // Login form
-  const [staffId, setStaffId] = useState('');
-  const [password, setPassword] = useState('');
-
-  // Password change modal
 
   // Data
   const [assignedStudents, setAssignedStudents] = useState([]);
@@ -80,113 +75,62 @@ export default function TeacherPortal() {
     phone: '',
   });
 
+  // Session loading
+  const [initialLoading, setInitialLoading] = useState(true);
+
   useEffect(() => {
     const restoreSession = async () => {
-      const savedTeacher = localStorage.getItem('teacher');
-      if (!savedTeacher) return;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          navigate('/login', { replace: true });
+          return;
+        }
 
-      // Verify the Supabase auth session is still valid
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        // Session expired — clear stale localStorage
-        localStorage.removeItem('teacher');
-        return;
+        const role = session.user.user_metadata?.role;
+        if (role !== 'teacher') {
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        // Look up teacher by auth_user_id
+        const { data: teacherRecord, error } = await teachers.getByAuthUserId(session.user.id);
+
+        if (error || !teacherRecord) {
+          toast.error('Teacher record not found');
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        if (!teacherRecord.is_active) {
+          toast.error('Your account is inactive. Please contact admin.');
+          await supabase.auth.signOut({ scope: 'local' });
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        setTeacher(teacherRecord);
+        await loadTeacherData(teacherRecord.id);
+      } catch (error) {
+        console.error('Session restore error:', error);
+        navigate('/login', { replace: true });
+      } finally {
+        setInitialLoading(false);
       }
-
-      const teacherData = JSON.parse(savedTeacher);
-      setTeacher(teacherData);
-      setIsAuthenticated(true);
-      loadTeacherData(teacherData.id);
     };
 
     restoreSession();
-  }, []);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      // Determine if staffId is an email or staff ID
-      const isEmail = staffId.includes('@');
-      let teacherEmail = staffId;
-
-      // If it's a staff ID, look up the teacher to get their email
-      if (!isEmail) {
-        const { data: teacherData, error: teacherError } = await teachers.getByStaffId(staffId);
-
-        if (teacherError || !teacherData) {
-          toast.error('Invalid Staff ID or password');
-          setLoading(false);
-          return;
-        }
-
-        if (!teacherData.is_active) {
-          toast.error('Your account is inactive. Please contact admin.');
-          setLoading(false);
-          return;
-        }
-
-        teacherEmail = teacherData.email;
-      }
-
-      // Authenticate with Supabase Auth using email and password
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: teacherEmail,
-        password: password,
-      });
-
-      if (authError) {
-        console.error('Auth error:', authError);
-        toast.error('Invalid credentials or password');
-        setLoading(false);
-        return;
-      }
-
-      // Get teacher record using auth_user_id
-      const { data: teacherRecord, error: teacherRecordError } = await teachers.getByAuthUserId(authData.user.id);
-
-      if (teacherRecordError || !teacherRecord) {
-        toast.error('Teacher account not found');
-        setLoading(false);
-        return;
-      }
-
-      if (!teacherRecord.is_active) {
-        toast.error('Your account is inactive. Please contact admin.');
-        await supabase.auth.signOut();
-        setLoading(false);
-        return;
-      }
-
-      // Login successful
-      setTeacher(teacherRecord);
-      setIsAuthenticated(true);
-      localStorage.setItem('teacher', JSON.stringify(teacherRecord));
-
-      toast.success(`Welcome, ${teacherRecord.full_name}!`);
-      // Load teacher data
-      await loadTeacherData(teacherRecord.id);
-    } catch (err) {
-      console.error('Login error:', err);
-      toast.error('An error occurred during login');
-    }
-
-    setLoading(false);
-  };
+  }, [navigate]);
 
 
   const handleLogout = async () => {
-    // Sign out from Supabase Auth
     await supabase.auth.signOut();
-
-    setIsAuthenticated(false);
     setTeacher(null);
     setAssignedStudents([]);
     setRemovedStudents([]);
     setSelectedStudent(null);
-    localStorage.removeItem('teacher');
     toast.success('Logged out successfully');
+    navigate('/login', { replace: true });
   };
 
   const loadTeacherData = async (teacherId) => {
@@ -549,123 +493,16 @@ export default function TeacherPortal() {
     }
   };
 
-  // Login Screen
-  if (!isAuthenticated) {
+  // Loading spinner while checking session
+  if (initialLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16 sm:h-20">
-              <a href="/" className="flex items-center gap-2 sm:gap-3 group">
-                <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 sm:h-12 sm:w-12 transition-colors" />
-                <div className="flex flex-col leading-none -space-y-1">
-                  <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                  <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
-                  {/* <div className="text-xs text-gray-600 font-arabic hidden sm:block"> أكاديمية الفلاح</div> */}
-                </div>
-              </a>
-              <a
-                href="/"
-                className="text-xs sm:text-sm text-gray-600 hover:text-emerald-600 transition-colors flex items-center gap-1"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="hidden sm:inline">Back to Homepage</span>
-                <span className="sm:hidden">Back</span>
-              </a>
-            </div>
-          </div>
-        </nav>
-
-        {/* Main Content */}
-        <div className="flex items-center justify-center px-4 py-8 sm:py-12 md:py-20">
-          <div className="max-w-md w-full">
-            {/* Card */}
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-              {/* Form Section */}
-              <div className="px-6 sm:px-8 py-8 sm:py-10">
-                <div className="text-center mb-8">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Teacher Portal</h1>
-                  <p className="text-gray-600 text-sm sm:text-base">Sign in to access your dashboard</p>
-                </div>
-
-                <form onSubmit={handleLogin} className="space-y-5">
-                  <div>
-                    <label htmlFor="staffId" className="block text-sm font-medium text-gray-700 mb-2">
-                      Staff ID
-                    </label>
-                    <input
-                      id="staffId"
-                      type="text"
-                      value={staffId}
-                      onChange={(e) => setStaffId(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                      placeholder="Enter your staff ID"
-                      required
-                      autoComplete="username"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                      Password
-                    </label>
-                    <input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                      placeholder="Enter your password"
-                      required
-                      autoComplete="current-password"
-                    />
-                  </div>
-
-                  {/* Forgot Password Link */}
-                  <div className="text-right">
-                    <a
-                      href="/forgot-password"
-                      className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
-                    >
-                      Forgot password?
-                    </a>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full py-2.5 rounded-lg transition-colors"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Signing in...
-                      </>
-                    ) : (
-                      'Sign In'
-                    )}
-                  </Button>
-                </form>
-
-                {/* Info Box */}
-                <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <p className="text-xs text-gray-700 text-center">
-                    Need help? Contact <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700">admin@tftmadrasah.nz</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer Text */}
-            <p className="text-center text-sm text-gray-600 mt-6">
-              Authentic Islamic Education Rooted in the Qur'an and Sunnah
-            </p>
-          </div>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
       </div>
     );
   }
+
+  if (!teacher) return null;
 
   // Dashboard Screen
   const displayedStudents = activeView === 'assigned' ? assignedStudents : removedStudents;

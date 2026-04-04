@@ -78,8 +78,8 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Legacy route redirects */}
-            <Route path="/student-portal" element={<Navigate to="/student" replace />} />
-            <Route path="/teacher-portal" element={<Navigate to="/teacher" replace />} />
+            <Route path="/student-portal" element={<Navigate to="/login" replace />} />
+            <Route path="/teacher-portal" element={<Navigate to="/login" replace />} />
 
             {/* Protected Blog Admin Route - blog_admin or director */}
             <Route
