@@ -81,6 +81,42 @@ const StudentPortal = () => {
     phone: '',
   });
 
+  // Check for existing session on mount (persist across refresh)
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const restoreSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const role = session.user.user_metadata?.role;
+          const savedStudentId = session.user.user_metadata?.student_id;
+
+          // Only restore if user is a student
+          if (role === 'student' && savedStudentId) {
+            const { data: studentData } = await supabase
+              .from('students')
+              .select('*')
+              .eq('student_id', savedStudentId)
+              .single();
+
+            if (studentData) {
+              setStudent(studentData);
+              setAuthenticated(true);
+              await loadStudentData(studentData.id);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Session restore error:', error);
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+
+    restoreSession();
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!studentId || !password) {
@@ -425,6 +461,18 @@ const StudentPortal = () => {
       </span>
     );
   };
+
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4" />
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600 mx-auto"></div>
+          <p className="mt-3 text-sm text-gray-500">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!authenticated) {
     return (

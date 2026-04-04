@@ -81,13 +81,25 @@ export default function TeacherPortal() {
   });
 
   useEffect(() => {
-    const savedTeacher = localStorage.getItem('teacher');
-    if (savedTeacher) {
+    const restoreSession = async () => {
+      const savedTeacher = localStorage.getItem('teacher');
+      if (!savedTeacher) return;
+
+      // Verify the Supabase auth session is still valid
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // Session expired — clear stale localStorage
+        localStorage.removeItem('teacher');
+        return;
+      }
+
       const teacherData = JSON.parse(savedTeacher);
       setTeacher(teacherData);
       setIsAuthenticated(true);
       loadTeacherData(teacherData.id);
-    }
+    };
+
+    restoreSession();
   }, []);
 
   const handleLogin = async (e) => {
