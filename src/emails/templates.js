@@ -417,10 +417,10 @@ export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://tftma
 };
 
 export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => {
-  const { full_name, student_id, program, password } = studentData;
+  const { full_name, student_id, email, program, password } = studentData;
   const programName = getProgramName(program);
   const programDuration = getProgramDuration(program);
-  const dashboardUrl = `${baseUrl}/student`;
+  const dashboardUrl = `${baseUrl}/login`;
 
   return `
     <!DOCTYPE html>
@@ -466,8 +466,8 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
               <div class="warning-box-title">🔐 Your Login Credentials</div>
               <table>
                 <tr>
-                  <td class="label">Student ID</td>
-                  <td class="value" style="color: #059669; font-size: 16px; font-family: monospace;">${student_id}</td>
+                  <td class="label">Email</td>
+                  <td class="value" style="color: #059669; font-size: 16px; font-family: monospace;">${email}</td>
                 </tr>
                 <tr>
                   <td class="label">Temporary Password</td>
@@ -488,14 +488,14 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
             </ul>
 
             <div class="center">
-              <a href="${dashboardUrl}" class="button">Access Student Portal →</a>
+              <a href="${dashboardUrl}" class="button">Sign In to Student Portal →</a>
             </div>
 
             <div class="divider"></div>
 
             <p class="paragraph"><strong>Important Reminders:</strong></p>
             <ul>
-              <li>Keep your Student ID and password safe - you'll need both to access your portal</li>
+              <li>Use your email and password to sign in at the link above</li>
               <li>Change your temporary password on first login</li>
               <li>Check your class schedule regularly for meeting times and links</li>
               <li>Attend all scheduled classes punctually</li>

@@ -77,7 +77,7 @@ function generateEmailHTML(teacherData: any, baseUrl: string, inviteLink: string
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Review your profile</strong> - Ensure your contact information is up to date</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Check assigned students</strong> - Review your student roster when available</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Prepare materials</strong> - Familiarize yourself with the curriculum and resources</li>
-              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your Staff ID</strong> - You'll use your email (${email}) to log in</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Sign in with your email</strong> - Use your email (${email}) and password to log in</li>
             </ul>
 
             <p class="paragraph" style="margin-top: 36px;">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>

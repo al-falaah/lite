@@ -73,7 +73,7 @@ function generateEmailHTML(studentData: any, baseUrl: string, inviteLink: string
 
             <p class="paragraph" style="margin-top: 32px;"><strong style="font-size: 18px; color: #1a202c;">What You Can Do Now:</strong></p>
             <ul style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
-              <li style="margin-bottom: 12px; line-height: 1.7;">Access your student portal at any time using your Student ID</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;">Access your student portal at any time by signing in with your email</li>
               <li style="margin-bottom: 12px; line-height: 1.7;">View your class schedule and join meeting links</li>
               <li style="margin-bottom: 12px; line-height: 1.7;">Track your progress through the program</li>
               <li style="margin-bottom: 12px; line-height: 1.7;">View your enrollment details and payment history</li>
@@ -83,7 +83,7 @@ function generateEmailHTML(studentData: any, baseUrl: string, inviteLink: string
             <p class="paragraph" style="margin-top: 36px;"><strong style="font-size: 18px; color: #1a202c;">Getting Started:</strong></p>
             <ul style="margin: 16px 0; padding-left: 28px; color: #4a5568;">
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Activate your account</strong> - Click the activation link above to set your password</li>
-              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Save your Student ID</strong> - You'll use your email (${email}) to log in</li>
+              <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Sign in with your email</strong> - Use your email (${email}) and password to log in</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Check your schedule</strong> - Review your class times regularly for any updates</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Join on time</strong> - Use the meeting links provided for each session</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Stay updated</strong> - Keep your contact information current in the portal</li>
