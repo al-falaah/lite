@@ -188,7 +188,7 @@ const LandingPage = () => {
                       ? 'text-gray-700 hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
-                    Admin
+                    Login
                   </button>
                 </Link>
                 <Link to="/apply">
@@ -262,7 +262,7 @@ const LandingPage = () => {
                   </a>
                   <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
-                      Admin
+                      Login
                     </button>
                   </Link>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
