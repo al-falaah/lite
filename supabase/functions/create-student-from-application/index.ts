@@ -54,51 +54,33 @@ serve(async (req) => {
       .single()
 
     let student
-    let isNewStudent = false
 
     if (existingStudent) {
-      console.log('Student already exists:', existingStudent.student_id)
-      student = existingStudent
+      console.log('Student already exists with this email:', existingStudent.student_id)
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `A student with the email ${application.email} already exists (Student ID: ${existingStudent.student_id || 'pending'}). Please use a different email address.`,
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
 
-      // Check if they already have an enrollment for this program
-      const { data: existingEnrollment } = await supabaseClient
-        .from('enrollments')
-        .select('*')
-        .eq('student_id', student.id)
-        .eq('program', program)
-        .single()
+    // Note: Student ID and password will be generated AFTER payment, not before
+    // Students who haven't paid yet don't get credentials
+    console.log('Creating new student record')
 
-      if (existingEnrollment) {
-        const programConfig = getProgram(program)
-        const programName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program
-        return new Response(
-          JSON.stringify({
-            success: false,
-            error: `Student is already enrolled in ${programName}`,
-            student: student,
-            enrollment: existingEnrollment
-          }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
-      }
-
-      console.log(`Creating new ${program} enrollment for existing student`)
-    } else {
-      // Note: Student ID and password will be generated AFTER payment, not before
-      // Students who haven't paid yet don't get credentials
-      console.log('Creating new student record')
-
-      // Create student record without student_id and password (will be set after payment)
-      const { data: newStudent, error: studentError } = await supabaseClient
-        .from('students')
-        .insert({
-          student_id: null, // Will be assigned after payment (6-digit random number)
-          password: null, // Will be generated after payment
-          auth_user_id: null, // Will be assigned after payment
-          full_name: application.full_name,
-          email: application.email,
-          phone: application.phone,
-          date_of_birth: application.date_of_birth,
+    // Create student record without student_id and password (will be set after payment)
+    const { data: newStudent, error: studentError } = await supabaseClient
+      .from('students')
+      .insert({
+        student_id: null, // Will be assigned after payment (6-digit random number)
+        password: null, // Will be generated after payment
+        auth_user_id: null, // Will be assigned after payment
+        full_name: application.full_name,
+        email: application.email,
+        phone: application.phone,
+        date_of_birth: application.date_of_birth,
           gender: application.gender,
           program: program, // IMPORTANT: Set the program from application
           application_id: application.id,
@@ -128,9 +110,7 @@ serve(async (req) => {
       }
 
       student = newStudent
-      isNewStudent = true
       console.log('Student created successfully')
-    }
 
     // Note: Enrollment will be created by Stripe webhook AFTER successful payment
     // Do NOT create enrollment here - student must pay first
@@ -167,17 +147,13 @@ serve(async (req) => {
 
     const programConfig = getProgram(program)
     const programDisplayName = programConfig ? `${programConfig.name} (${programConfig.shortName})` : program
-    const message = isNewStudent
-      ? `Student created for ${programDisplayName}. Payment instructions sent.`
-      : `Existing student will be enrolled in ${programDisplayName} after payment.`
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: message,
+        message: `Student created for ${programDisplayName}. Payment instructions sent.`,
         student: student,
         program: program,
-        isNewStudent: isNewStudent,
         note: 'Student created with pending_payment status. Student ID and password will be generated after payment. Enrollment will be created after successful Stripe payment.'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

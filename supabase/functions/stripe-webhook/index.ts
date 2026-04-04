@@ -64,17 +64,21 @@ serve(async (req) => {
 
       // If student is pending_payment, generate student ID, password and update status
       if (isNewStudent) {
-        // Generate random 6-digit numeric student ID using database function
-        const { data: idResult, error: idError } = await supabaseClient
-          .rpc('generate_random_student_id')
+        // If student already has a student_id (e.g. from a previous partial flow), reuse it
+        let generatedStudentId = student.student_id
+        if (!generatedStudentId) {
+          // Generate random 6-digit numeric student ID using database function
+          const { data: idResult, error: idError } = await supabaseClient
+            .rpc('generate_random_student_id')
 
-        if (idError || !idResult) {
-          console.error('Failed to generate unique student ID:', idError)
-          throw new Error('Failed to generate unique student ID')
+          if (idError || !idResult) {
+            console.error('Failed to generate unique student ID:', idError)
+            throw new Error('Failed to generate unique student ID')
+          }
+
+          generatedStudentId = idResult
         }
-
-        const generatedStudentId = idResult
-        console.log(`Generated random student ID: ${generatedStudentId}`)
+        console.log(`Using student ID: ${generatedStudentId}`)
 
         // Call create-student-auth edge function to create auth user and generate invite link
         console.log('Creating Supabase Auth user via edge function...')

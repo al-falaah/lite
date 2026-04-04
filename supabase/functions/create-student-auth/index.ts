@@ -67,6 +67,21 @@ serve(async (req) => {
         const existingUser = !listError && users?.find(u => u.email === email)
         if (existingUser) {
           console.log('✅ Found existing auth user:', existingUser.id)
+
+          // Update user metadata to keep student_id in sync
+          const { error: updateError } = await supabaseClient.auth.admin.updateUserById(existingUser.id, {
+            user_metadata: {
+              full_name: full_name,
+              student_id: student_id,
+              role: 'student',
+            },
+          })
+          if (updateError) {
+            console.error('Failed to update auth user metadata:', updateError)
+          } else {
+            console.log('✅ Updated auth user metadata with student_id:', student_id)
+          }
+
           const { data: resetData, error: resetError } = await supabaseClient.auth.admin.generateLink({
             type: 'invite',
             email: email,
