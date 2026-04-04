@@ -35,6 +35,7 @@ supabase/.env
 *.mjs
 *.html
 !index.html
+!public/content/*.html
 !supabase/migrations/*.sql
 !supabase/seed.sql
 
