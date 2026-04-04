@@ -20,7 +20,8 @@ import {
   BarChart3,
   FileText,
   RefreshCw,
-  ClipboardList
+  ClipboardList,
+  Calendar
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DirectorPlanner from '../components/director/DirectorPlanner';
@@ -582,6 +583,7 @@ const DirectorDashboard = () => {
             <div className="flex gap-6 overflow-x-auto">
               {[
                 { key: 'overview', label: 'Overview', icon: BarChart3 },
+                { key: 'calendar', label: 'Calendar', icon: Calendar },
                 { key: 'links', label: 'Admin', icon: Shield },
                 { key: 'planner', label: 'Planner', icon: ClipboardList }
               ].map(tab => {
@@ -902,6 +904,19 @@ const DirectorDashboard = () => {
                   </Link>
                 );
               })}
+            </div>
+          )}
+
+          {/* Calendar Tab */}
+          {activeTab === 'calendar' && (
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <iframe
+                src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
+                className="w-full border-0"
+                height="600"
+                scrolling="no"
+                title="Class Calendar"
+              />
             </div>
           )}
 

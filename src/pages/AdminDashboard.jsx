@@ -487,6 +487,22 @@ const AdminDashboard = () => {
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
               )}
             </button>
+            <button
+              onClick={() => setActiveTab('calendar')}
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
+                activeTab === 'calendar'
+                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <Calendar className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                activeTab === 'calendar' ? 'text-emerald-600' : 'text-gray-400'
+              }`} />
+              <span className="font-semibold">Calendar</span>
+              {activeTab === 'calendar' && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+              )}
+            </button>
           </nav>
         </div>
       </div>
@@ -704,6 +720,18 @@ const AdminDashboard = () => {
         {activeTab === 'availability' && <ClassScheduler />}
 
         {activeTab === 'teachers' && <AdminTeachersList />}
+
+        {activeTab === 'calendar' && (
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <iframe
+              src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
+              className="w-full border-0"
+              height="600"
+              scrolling="no"
+              title="Class Calendar"
+            />
+          </div>
+        )}
       </div>
 
       {/* Review Modal */}

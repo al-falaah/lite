@@ -893,6 +893,23 @@ export default function TeacherPortal() {
             ))}
           </div>
         )}
+
+        {/* Google Calendar */}
+        <div className="mt-8">
+          <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-gray-500" />
+            Class Calendar
+          </h2>
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <iframe
+              src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
+              className="w-full border-0"
+              height="600"
+              scrolling="no"
+              title="Class Calendar"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Student Details Modal */}
