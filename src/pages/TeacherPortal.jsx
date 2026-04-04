@@ -204,7 +204,7 @@ export default function TeacherPortal() {
       if (assignedError) {
         console.error('Error loading assigned students:', assignedError);
       } else {
-        setAssignedStudents(assigned || []);
+        setAssignedStudents((assigned || []).filter(a => a.student));
       }
 
       // Load removed students
@@ -212,7 +212,7 @@ export default function TeacherPortal() {
       if (removedError) {
         console.error('Error loading removed students:', removedError);
       } else {
-        setRemovedStudents(removed || []);
+        setRemovedStudents((removed || []).filter(a => a.student));
       }
     } catch (err) {
       console.error('Error loading teacher data:', err);
@@ -225,6 +225,7 @@ export default function TeacherPortal() {
   };
 
   const handleViewStudent = async (assignment) => {
+    if (!assignment.student) return;
     setLoading(true);
     setSelectedStudent(assignment.student);
     setCurrentAssignmentProgram(assignment.program); // Save the program for filtering
