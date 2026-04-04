@@ -26,6 +26,20 @@ import Button from '../common/Button';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS, getProgramMilestones } from '../../config/programs';
 
+// Get main session duration in hours based on program (EASI=2hrs, TMP/QARI=1hr)
+const getMainSessionDuration = (programId) => {
+  const config = PROGRAMS[programId];
+  if (!config) return 2;
+  const durationStr = config.schedule?.session1?.duration || '2 Hours';
+  return durationStr.toLowerCase().includes('2') ? 2 : 1;
+};
+
+// Get display label for main session duration
+const getMainSessionLabel = (programId) => {
+  const hours = getMainSessionDuration(programId);
+  return hours === 1 ? '1 hr' : '2 hrs';
+};
+
 // Calculate current milestone based on week number and program
 const getCurrentMilestone = (currentWeek, programId) => {
   const milestones = getProgramMilestones(programId);
@@ -138,7 +152,7 @@ const ClassScheduler = () => {
     bookedClasses.forEach(schedule => {
       if (schedule.class_time) {
         const [startHour] = schedule.class_time.split(':').map(Number);
-        const duration = schedule.class_type === 'main' ? 2 : 0.5; // 2 hours or 30 min
+        const duration = schedule.class_type === 'main' ? getMainSessionDuration(schedule.program) : 0.5;
 
         // Mark hours as booked
         for (let i = 0; i < duration; i++) {
@@ -220,6 +234,10 @@ const ClassScheduler = () => {
     );
     if (studentSchedules.length === 0) return { year: 1, week: 1 };
 
+    const programConfig = PROGRAMS[selectedProgram];
+    const weeksPerYear = programConfig?.duration.weeks || 52;
+    const totalYears = programConfig?.duration.years || 1;
+
     const weekMap = {};
 
     studentSchedules.forEach(schedule => {
@@ -230,33 +248,21 @@ const ClassScheduler = () => {
       weekMap[key].push(schedule);
     });
 
-    // Check Year 1 first
-    for (let weekNum = 1; weekNum <= 52; weekNum++) {
-      const weekClasses = weekMap[`1-${weekNum}`];
-      if (!weekClasses || weekClasses.length === 0) {
-        return { year: 1, week: weekNum }; // First week without classes
-      }
+    for (let year = 1; year <= totalYears; year++) {
+      for (let weekNum = 1; weekNum <= weeksPerYear; weekNum++) {
+        const weekClasses = weekMap[`${year}-${weekNum}`];
+        if (!weekClasses || weekClasses.length === 0) {
+          return { year, week: weekNum };
+        }
 
-      const allCompleted = weekClasses.every(c => c.status === 'completed');
-      if (!allCompleted) {
-        return { year: 1, week: weekNum }; // First incomplete week in Year 1
-      }
-    }
-
-    // Year 1 complete, check Year 2
-    for (let weekNum = 1; weekNum <= 52; weekNum++) {
-      const weekClasses = weekMap[`2-${weekNum}`];
-      if (!weekClasses || weekClasses.length === 0) {
-        return { year: 2, week: weekNum };
-      }
-
-      const allCompleted = weekClasses.every(c => c.status === 'completed');
-      if (!allCompleted) {
-        return { year: 2, week: weekNum };
+        const allCompleted = weekClasses.every(c => c.status === 'completed');
+        if (!allCompleted) {
+          return { year, week: weekNum };
+        }
       }
     }
 
-    return { year: 2, week: 52 }; // All complete
+    return { year: totalYears, week: weeksPerYear }; // All complete
   };
 
   // Generate full schedule for a student
@@ -302,7 +308,7 @@ const ClassScheduler = () => {
 
       for (let year = 1; year <= totalYears; year++) {
         for (let week = 1; week <= totalWeeks; week++) {
-          // Main class (2 hours) - can be on different day
+          // Main class - duration depends on program
           schedulesToCreate.push({
             student_id: selectedApplicant.id,
             program: generateForm.program,
@@ -912,13 +918,18 @@ const ClassScheduler = () => {
                 )}
 
                 {/* Progress Bars (Students view only) */}
-                {viewMode === 'students' && progress && (
+                {viewMode === 'students' && progress && (() => {
+                  const programConfig = PROGRAMS[progress.program || selectedProgram];
+                  const totalYears = programConfig?.duration.years || 1;
+                  const isMultiYear = totalYears > 1;
+
+                  return (
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <div className="space-y-4">
-                      <div className="grid md:grid-cols-3 gap-4">
+                      <div className={`grid ${isMultiYear ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4`}>
                         <div className="bg-white p-4 rounded-lg border border-gray-200">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-gray-700">Year 1</span>
+                            <span className="text-sm font-medium text-gray-700">{isMultiYear ? 'Year 1' : 'Progress'}</span>
                             <Clock className="h-4 w-4 text-gray-400" />
                           </div>
                           <div className="text-2xl font-bold text-gray-900">
@@ -933,6 +944,7 @@ const ClassScheduler = () => {
                           </div>
                         </div>
 
+                        {isMultiYear && (
                         <div className="bg-white p-4 rounded-lg border border-gray-200">
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-medium text-gray-700">Year 2</span>
@@ -949,6 +961,7 @@ const ClassScheduler = () => {
                             />
                           </div>
                         </div>
+                        )}
 
                         <div className="bg-white p-4 rounded-lg border border-gray-200">
                           <div className="flex items-center justify-between mb-2">
@@ -969,7 +982,8 @@ const ClassScheduler = () => {
                       </div>
                     </div>
                   </div>
-                )}
+                  );
+                })()}
 
                 {/* Current Week Schedule (Students view only) */}
                 {viewMode === 'students' && scheduledClasses.filter(s => s.student_id === selectedApplicant?.id).length > 0 && (() => {
@@ -1451,7 +1465,7 @@ const ClassScheduler = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">Main classes are 2 hours long</p>
+                <p className="text-xs text-gray-500 mt-1">Main classes are {getMainSessionLabel(scheduleForm.program || selectedProgram)} long</p>
               </div>
 
               {/* Class Type */}
@@ -1465,7 +1479,7 @@ const ClassScheduler = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 >
-                  <option value="main">Main Class (2 hours)</option>
+                  <option value="main">Main Class ({getMainSessionLabel(scheduleForm.program || selectedProgram)})</option>
                   <option value="makeup">Makeup Class (30 min)</option>
                 </select>
               </div>
@@ -1501,9 +1515,12 @@ const ClassScheduler = () => {
                 <p className="text-sm text-gray-600 mt-1">
                   {!generateForm.program
                     ? 'Select a program to see details'
-                    : generateForm.program === 'tajweed'
-                    ? 'Create 48 classes (24 weeks × 2 classes per week)'
-                    : 'Create 208 classes (2 years × 52 weeks × 2 classes per week)'}
+                    : (() => {
+                        const cfg = PROGRAMS[generateForm.program];
+                        if (!cfg) return 'Select a program to see details';
+                        const total = cfg.duration.weeks * cfg.duration.years * 2;
+                        return `Create ${total} classes (${cfg.duration.displayWeeks} × 2 classes per week)`;
+                      })()}
                 </p>
               </div>
               <button
@@ -1609,7 +1626,7 @@ const ClassScheduler = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Main Class Day (2 hrs) <span className="text-red-600">*</span>
+                    Main Class Day ({getMainSessionLabel(generateForm.program)}) <span className="text-red-600">*</span>
                   </label>
                   <select
                     value={generateForm.main_day_of_week}
