@@ -133,7 +133,7 @@ serve(async (req) => {
     // Create auth user
     const { data: authData, error: authError } = await supabaseClient.auth.admin.createUser({
       email: email,
-      email_confirm: true,
+      email_confirm: false,
       user_metadata: { full_name, role },
     })
 
@@ -156,12 +156,29 @@ serve(async (req) => {
               is_admin: true,
             })
 
-          // Generate invite link
-          const { data: resetData, error: resetError } = await supabaseClient.auth.admin.generateLink({
+          // Generate invite link (try invite, fall back to recovery for confirmed users)
+          const existingRedirectUrl = `${Deno.env.get('APP_URL') || 'https://www.tftmadrasah.nz'}/reset-password`
+          let resetData: any = null
+          let resetError: any = null
+
+          const existingInviteResult = await supabaseClient.auth.admin.generateLink({
             type: 'invite',
             email,
-            options: { redirectTo: `${Deno.env.get('APP_URL') || 'https://www.tftmadrasah.nz'}/reset-password` },
+            options: { redirectTo: existingRedirectUrl },
           })
+          resetData = existingInviteResult.data
+          resetError = existingInviteResult.error
+
+          if (resetError) {
+            console.log('Invite link failed for existing user, trying recovery:', resetError.message)
+            const existingRecoveryResult = await supabaseClient.auth.admin.generateLink({
+              type: 'recovery',
+              email,
+              options: { redirectTo: existingRedirectUrl },
+            })
+            resetData = existingRecoveryResult.data
+            resetError = existingRecoveryResult.error
+          }
 
           if (resetError) {
             return new Response(
@@ -201,17 +218,35 @@ serve(async (req) => {
         is_admin: true,
       })
 
-    // Generate invite link
+    // Generate invite link (try invite, fall back to recovery for confirmed users)
     const redirectUrl = `${Deno.env.get('APP_URL') || 'https://www.tftmadrasah.nz'}/reset-password`
-    const { data: resetData, error: resetError } = await supabaseClient.auth.admin.generateLink({
+    let resetData: any = null
+    let resetError: any = null
+
+    // Try invite first
+    const inviteResult = await supabaseClient.auth.admin.generateLink({
       type: 'invite',
       email,
       options: { redirectTo: redirectUrl },
     })
+    resetData = inviteResult.data
+    resetError = inviteResult.error
+
+    // If invite fails (e.g. user already confirmed), try recovery
+    if (resetError) {
+      console.log('Invite link failed, trying recovery link:', resetError.message)
+      const recoveryResult = await supabaseClient.auth.admin.generateLink({
+        type: 'recovery',
+        email,
+        options: { redirectTo: redirectUrl },
+      })
+      resetData = recoveryResult.data
+      resetError = recoveryResult.error
+    }
 
     if (resetError) {
       return new Response(
-        JSON.stringify({ error: 'User created but failed to generate invite link', auth_user_id: authData.user.id }),
+        JSON.stringify({ error: 'User created but failed to generate setup link', auth_user_id: authData.user.id }),
         { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
