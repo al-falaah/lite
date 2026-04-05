@@ -157,6 +157,14 @@ const LessonNotes = () => {
     localStorage.setItem('lessonNotesTheme', theme);
   }, [theme]);
 
+  // Default to sepia for full HTML chapters
+  useEffect(() => {
+    const isFullHtml = selectedChapter?.content?.trim().startsWith('<!DOCTYPE') || selectedChapter?.content?.trim().startsWith('<html');
+    if (isFullHtml) {
+      setTheme('sepia');
+    }
+  }, [selectedChapter]);
+
   useEffect(() => {
     // Enable content protection
     preventScreenCapture();
