@@ -43,6 +43,9 @@ const DirectorDashboard = () => {
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [inviteForm, setInviteForm] = useState({ full_name: '', email: '', role: 'madrasah_admin' });
+  const [inviting, setInviting] = useState(false);
   const [stats, setStats] = useState({
     // Student stats
     totalStudents: 0,
@@ -398,6 +401,39 @@ const DirectorDashboard = () => {
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Failed to logout');
+    }
+  };
+
+  const handleInviteAdmin = async (e) => {
+    e.preventDefault();
+    if (!inviteForm.full_name || !inviteForm.email || !inviteForm.role) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    setInviting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-admin-auth`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify(inviteForm),
+        }
+      );
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to invite admin');
+      toast.success(`Invitation sent to ${inviteForm.email}`);
+      setShowInviteForm(false);
+      setInviteForm({ full_name: '', email: '', role: 'madrasah_admin' });
+    } catch (error) {
+      console.error('Error inviting admin:', error);
+      toast.error(error.message || 'Failed to send invitation');
+    } finally {
+      setInviting(false);
     }
   };
 
@@ -884,26 +920,104 @@ const DirectorDashboard = () => {
 
           {/* Admin Tab */}
           {activeTab === 'links' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {adminAreas.map((area) => {
-                const Icon = area.icon;
-                return (
-                  <Link
-                    key={area.href}
-                    to={area.href}
-                    className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors group"
-                  >
-                    <div className={`p-2 rounded-lg ${area.iconBg}`}>
-                      <Icon className={`h-4 w-4 ${area.iconColor}`} />
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {adminAreas.map((area) => {
+                  const Icon = area.icon;
+                  return (
+                    <Link
+                      key={area.href}
+                      to={area.href}
+                      className="flex items-center gap-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors group"
+                    >
+                      <div className={`p-2 rounded-lg ${area.iconBg}`}>
+                        <Icon className={`h-4 w-4 ${area.iconColor}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900">{area.title}</p>
+                        <p className="text-xs text-gray-400">{area.description}</p>
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-gray-400 transition-colors flex-shrink-0" />
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Invite Admin */}
+              <div className="bg-white rounded-lg border border-gray-200 p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Invite Admin User</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">Send an invitation email with account setup link</p>
+                  </div>
+                  {!showInviteForm && (
+                    <button
+                      onClick={() => setShowInviteForm(true)}
+                      className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                      + Invite
+                    </button>
+                  )}
+                </div>
+
+                {showInviteForm && (
+                  <form onSubmit={handleInviteAdmin} className="space-y-3 pt-2 border-t border-gray-100">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Full Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={inviteForm.full_name}
+                          onChange={(e) => setInviteForm({ ...inviteForm, full_name: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          placeholder="e.g. Fatimah Ahmad"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
+                        <input
+                          type="email"
+                          required
+                          value={inviteForm.email}
+                          onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          placeholder="email@example.com"
+                        />
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">{area.title}</p>
-                      <p className="text-xs text-gray-400">{area.description}</p>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Role</label>
+                      <select
+                        value={inviteForm.role}
+                        onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      >
+                        <option value="madrasah_admin">Madrasah Administrator</option>
+                        <option value="blog_admin">Blog Administrator</option>
+                        <option value="store_admin">Store Administrator</option>
+                        <option value="research_admin">Research Administrator</option>
+                      </select>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-gray-400 transition-colors flex-shrink-0" />
-                  </Link>
-                );
-              })}
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="submit"
+                        disabled={inviting}
+                        className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 transition-colors"
+                      >
+                        {inviting ? 'Sending...' : 'Send Invitation'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowInviteForm(false); setInviteForm({ full_name: '', email: '', role: 'madrasah_admin' }); }}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
             </div>
           )}
 
