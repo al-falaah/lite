@@ -1,147 +1,66 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, BookOpen, Star, Heart } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const StudentClassEtiquette = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-emerald-50 border border-emerald-200 rounded-lg overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-emerald-100 transition-colors"
+        className="w-full flex items-center justify-between px-4 sm:px-5 py-3 text-left hover:bg-gray-50 transition-colors rounded-lg"
       >
-        <div className="flex items-center gap-2">
-          <BookOpen className="h-4 w-4 text-emerald-600 flex-shrink-0" />
-          <span className="text-sm font-semibold text-emerald-800">
-            Ādāb al-Ṭālib — Class Etiquette & Rules
-          </span>
-        </div>
+        <span className="text-sm font-medium text-gray-800">
+          📖 Ādāb al-Ṭālib — Class Etiquette
+        </span>
         {isOpen ? (
-          <ChevronUp className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+          <ChevronUp className="h-4 w-4 text-gray-400" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+          <ChevronDown className="h-4 w-4 text-gray-400" />
         )}
       </button>
 
       {isOpen && (
-        <div className="px-4 pb-4 space-y-4">
-          {/* Before Class */}
-          <div>
-            <h4 className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-              <Star className="h-3 w-3" />
-              Before Class
-            </h4>
-            <ul className="space-y-1.5 text-sm text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Make wuḍū before class (if you can) as a sign of respect for seeking sacred knowledge.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Find a quiet, clean space free from distractions.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Have your materials ready — Qurʾān, notebook, and pen.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>
-                  Join the class on time. The Prophet ﷺ said: <em>"Whoever travels a path in search of knowledge, Allāh will make easy for him a path to Paradise."</em>
-                  <span className="text-xs text-gray-500 ml-1">(Ṣaḥīḥ Muslim 2699)</span>
-                </span>
-              </li>
-            </ul>
-          </div>
+        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-1 text-sm text-gray-600 leading-relaxed">
+          <p className="mb-3 text-gray-500 text-xs">A few reminders to help you get the most out of every class, in shā Allāh.</p>
 
-          {/* During Class */}
-          <div>
-            <h4 className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-              <Star className="h-3 w-3" />
-              During Class
-            </h4>
-            <ul className="space-y-1.5 text-sm text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Begin with <em>Bismillāh</em> and greet your teacher with Salām.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Keep your camera on unless your teacher says otherwise.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Mute your microphone when not speaking.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Listen attentively — do not browse other tabs, apps, or games.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Raise your hand (virtually) before speaking; do not interrupt.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Address your teacher respectfully — say <em>"Ustādh"</em> (male teacher) or <em>"Ustādha"</em> (female teacher).</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Ask questions politely; there is no shame in asking to learn.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Do not eat during class; water is fine.</span>
-              </li>
-            </ul>
-          </div>
+          <p className="font-medium text-gray-700 mb-1.5">Before class</p>
+          <ul className="mb-3 space-y-1 pl-4 list-disc marker:text-gray-300">
+            <li>Make wuḍū if you can — it's a beautiful way to honour the knowledge you're about to receive.</li>
+            <li>Find a quiet, clean spot and have your Qurʾān, notebook, and pen ready.</li>
+            <li>
+              Be on time. The Prophet ﷺ said: <em>"Whoever travels a path in search of knowledge, Allāh will make easy for him a path to Paradise."</em>
+              <span className="text-gray-400"> — Ṣaḥīḥ Muslim 2699</span>
+            </li>
+          </ul>
 
-          {/* After Class */}
-          <div>
-            <h4 className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-              <Star className="h-3 w-3" />
-              After Class
-            </h4>
-            <ul className="space-y-1.5 text-sm text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>
-                  Thank your teacher and pray for them. You can simply say: <em>"Jazākumullāhu khayran."</em> The Prophet ﷺ said: <em>"Whoever does not thank people has not thanked Allāh."</em>
-                  <span className="text-xs text-gray-500 ml-1">(Sunan al-Tirmidhī 1954)</span>
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Review what you learned and practise before the next class.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Complete any homework on time.</span>
-              </li>
-            </ul>
-          </div>
+          <p className="font-medium text-gray-700 mb-1.5">During class</p>
+          <ul className="mb-3 space-y-1 pl-4 list-disc marker:text-gray-300">
+            <li>Start with <em>Bismillāh</em> and greet your teacher with Salām.</li>
+            <li>Camera on, mic muted when you're not speaking.</li>
+            <li>Stay focused — no other tabs, apps, or games.</li>
+            <li>Raise your hand before speaking and don't interrupt.</li>
+            <li>Call your teacher <em>Ustādh</em> (male) or <em>Ustādha</em> (female).</li>
+            <li>Ask questions — there's no shame in wanting to learn.</li>
+          </ul>
 
-          {/* General Conduct */}
-          <div>
-            <h4 className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-              <Heart className="h-3 w-3" />
-              General Conduct
-            </h4>
-            <ul className="space-y-1.5 text-sm text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Be kind and patient in class — we are all learning together.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>Do not share class links or recordings without permission.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-emerald-500 mt-0.5">•</span>
-                <span>If you will be absent, inform your teacher in advance (at least 24 hours before).</span>
-              </li>
-            </ul>
-          </div>
+          <p className="font-medium text-gray-700 mb-1.5">After class</p>
+          <ul className="mb-3 space-y-1 pl-4 list-disc marker:text-gray-300">
+            <li>
+              Thank your teacher and make duʿā for them — even a simple <em>"Jazākumullāhu khayran"</em> goes a long way.
+              The Prophet ﷺ said: <em>"Whoever does not thank people has not thanked Allāh."</em>
+              <span className="text-gray-400"> — Sunan al-Tirmidhī 1954</span>
+            </li>
+            <li>Revise what you learned and practise before the next class.</li>
+            <li>Finish any homework on time.</li>
+          </ul>
+
+          <p className="font-medium text-gray-700 mb-1.5">General</p>
+          <ul className="space-y-1 pl-4 list-disc marker:text-gray-300">
+            <li>Be kind and patient — we're all learning together.</li>
+            <li>Don't share class links or recordings without permission.</li>
+            <li>If you can't make it, let your teacher know at least 24 hours before.</li>
+          </ul>
         </div>
       )}
     </div>
