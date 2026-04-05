@@ -172,7 +172,7 @@ export default function ChapterQuiz() {
     return (
       <>
         <Helmet>
-          <title>Quiz Results — {quiz.title}</title>
+          <title>{`Quiz Results — ${quiz.title}`}</title>
         </Helmet>
         <div className="min-h-screen bg-[#fdf6e8] flex items-center justify-center p-4">
           <div className="max-w-lg w-full">
@@ -241,7 +241,7 @@ export default function ChapterQuiz() {
   return (
     <>
       <Helmet>
-        <title>{quiz.title} — Question {currentIndex + 1}</title>
+        <title>{`${quiz.title} — Question ${currentIndex + 1}`}</title>
       </Helmet>
       <div className="min-h-screen bg-[#fdf6e8]">
         {/* Header */}
