@@ -1,0 +1,172 @@
+{
+  "quiz": {
+    "title": "How the Qur'an Reached Us",
+    "subtitle": "Test your understanding of the preservation and transmission of the Qur'an",
+    "source": "Based on: Tayseer al-Rahman fi Tajweed al-Quran by Su'ad Abd al-Hamid, pp. 12–16",
+    "total_questions": 10,
+    "passing_score": 7,
+    "questions": [
+      {
+        "id": 1,
+        "question": "What did the Prophet ﷺ allow prisoners captured at the Battle of Badr to do in order to earn their freedom?",
+        "options": [
+          "A. Pay a ransom in gold",
+          "B. Teach ten children of Medina how to read and write",
+          "C. Memorise ten chapters of the Qur'an",
+          "D. Serve in the Muslim army for one year"
+        ],
+        "correct_answer": "B",
+        "explanation": "The Prophet ﷺ made literacy a priority. Prisoners from Badr could earn their freedom by teaching ten children of Medina to read and write — a decision that transformed literacy from a rarity into a growing asset in the early Muslim community.",
+        "difficulty": "medium",
+        "section": "Arabia Before Islam"
+      },
+      {
+        "id": 2,
+        "question": "What is the Arabic term for the dedicated scribes who wrote down the Qur'an as it was being revealed to the Prophet ﷺ?",
+        "options": [
+          "A. Al-Huffaz",
+          "B. Al-Tabi'een",
+          "C. Kuttab al-Wahy",
+          "D. Ahl al-Sunnah"
+        ],
+        "correct_answer": "C",
+        "explanation": "Kuttab al-Wahy literally means 'Scribes of Revelation'. These were companions specifically appointed by the Prophet ﷺ to write down every verse as it was revealed. They are the first layer of the Qur'an's written preservation.",
+        "difficulty": "easy",
+        "section": "Writing the Qur'an During the Prophet's Lifetime"
+      },
+      {
+        "id": 3,
+        "question": "Which of the following was NOT among the materials used to write the Qur'an during the Prophet's ﷺ lifetime?",
+        "options": [
+          "A. Likhaf — thin, flat white stones",
+          "B. Aktaf — shoulder blades of camels",
+          "C. Bardiyyah — papyrus reeds imported from Egypt",
+          "D. Usub — stripped palm branches"
+        ],
+        "correct_answer": "C",
+        "explanation": "The six materials mentioned in the source are: Suhuf (scrolls/pages), Alwah (flat wooden tablets), Usub (stripped palm branches), Riqa' (pieces of leather or parchment), Likhaf (thin flat white stones), and Aktaf (shoulder blades of camels or sheep). Papyrus (Bardiyyah) is not among them.",
+        "difficulty": "hard",
+        "section": "Writing the Qur'an During the Prophet's Lifetime"
+      },
+      {
+        "id": 4,
+        "question": "By the end of the Prophet's ﷺ life, what was the main limitation with the written Qur'an?",
+        "options": [
+          "A. Many verses had been lost and were never recovered",
+          "B. It was fully written down but scattered across different materials and companions — not yet in one book",
+          "C. Only half of the Qur'an had been written down; the rest was only memorised",
+          "D. The writing was only preserved in Mecca, not in Medina"
+        ],
+        "correct_answer": "B",
+        "explanation": "All verses were written down under the Prophet's ﷺ instruction. However, they were spread across different companions and different materials — palm branches, bones, leather, stones — and had not yet been compiled into a single organised book. That came later.",
+        "difficulty": "medium",
+        "section": "Writing the Qur'an During the Prophet's Lifetime"
+      },
+      {
+        "id": 5,
+        "question": "What event directly triggered Abu Bakr ؓ to order the compilation of the Qur'an into one manuscript?",
+        "options": [
+          "A. The rapid spread of Islam to Persia and Syria",
+          "B. Disagreements among companions about the order of the surahs",
+          "C. The death of many Huffaz (memorisers) in the Ridda Wars",
+          "D. The loss of the original written scrolls in a fire"
+        ],
+        "correct_answer": "C",
+        "explanation": "After the Prophet ﷺ passed away, many of the Qur'an's memorisers were killed in battles against those who apostatised (the Ridda Wars). Umar ؓ warned Abu Bakr ؓ that if this continued, large portions of the Qur'an could be lost forever — prompting the first official compilation.",
+        "difficulty": "easy",
+        "section": "Collecting the Qur'an Under Abu Bakr"
+      },
+      {
+        "id": 6,
+        "question": "Why was Zayd ibn Thabit ؓ chosen to lead the compilation of the Qur'an under Abu Bakr ؓ?",
+        "options": [
+          "A. He was the oldest of the companions and most senior in age",
+          "B. He had been a personal scribe of the Prophet ﷺ, witnessed the final review (Al-'Ardah al-Akhiirah), and was trusted for his precision and scholarship",
+          "C. He was the first companion to memorise the entire Qur'an",
+          "D. He had the largest personal written collection of Qur'anic verses"
+        ],
+        "correct_answer": "B",
+        "explanation": "Zayd ibn Thabit ؓ was selected because of his unique combination of qualifications: he served as a personal scribe of the Prophet ﷺ, he witnessed Al-'Ardah al-Akhiirah (the final review of the Qur'an with Jibreel ﷺ), and he was known for his trustworthiness, precise memory, and deep scholarship.",
+        "difficulty": "medium",
+        "section": "Collecting the Qur'an Under Abu Bakr"
+      },
+      {
+        "id": 7,
+        "question": "What does the term 'Mutawatir' mean in the context of Qur'anic preservation?",
+        "options": [
+          "A. A verse that was revealed twice",
+          "B. A narration transmitted by so many independent people in every generation that fabrication is impossible",
+          "C. A chapter that was revealed in Medina rather than Mecca",
+          "D. A reading style specific to one city"
+        ],
+        "correct_answer": "B",
+        "explanation": "Mutawatir refers to mass-transmission — a narration reported by such a large number of people, independently, in every generation, that it is impossible for them all to have agreed on a lie. Zayd ibn Thabit ؓ only included Qur'anic text that met this standard during the compilation.",
+        "difficulty": "medium",
+        "section": "Key Terms"
+      },
+      {
+        "id": 8,
+        "question": "What was the Mushaf al-Imam, and why was it significant?",
+        "options": [
+          "A. The personal copy of the Qur'an belonging to the Prophet ﷺ himself",
+          "B. The master copy ordered by Uthman ؓ, from which all other standardised copies were made and distributed to major cities",
+          "C. The copy sent specifically to the city of Mecca as a reference",
+          "D. The first copy of the Qur'an written by Abu Bakr ؓ from memory"
+        ],
+        "correct_answer": "B",
+        "explanation": "The Mushaf al-Imam was the master copy kept by Uthman ؓ in Medina. All other copies sent to the major Islamic cities — Basra, Kufa, Syria, Mecca — were made from this one master text first, which is why it is called 'al-Imam' (the leader/reference).",
+        "difficulty": "hard",
+        "section": "Standardising the Qur'an Under Uthman"
+      },
+      {
+        "id": 9,
+        "question": "What warning did Hudhayfah ibn al-Yaman ؓ bring to Caliph Uthman ؓ that led to the standardisation of the Qur'an?",
+        "options": [
+          "A. That enemy armies were planning to destroy the written manuscripts",
+          "B. That Muslims in different regions were reciting the Qur'an in conflicting ways, risking divisions like those of the Jews and Christians",
+          "C. That some companions were adding personal commentary into their written copies",
+          "D. That the copy held by Hafsa ؓ had been damaged and needed rewriting"
+        ],
+        "correct_answer": "B",
+        "explanation": "Hudhayfah ؓ witnessed Muslims from different regions — each proud of their own reading style — arguing over recitation during military campaigns in Armenia and Azerbaijan. He rushed to Uthman ؓ urging him to unite the Muslims on one standard text before disagreements grew into the kind of religious schism seen among the Jews and Christians.",
+        "difficulty": "easy",
+        "section": "Standardising the Qur'an Under Uthman"
+      },
+      {
+        "id": 10,
+        "question": "For a Qira'ah (recitation style) to be considered authentically valid, which THREE conditions must all be met?",
+        "options": [
+          "A. It must match the Uthmani Mushaf, be in correct Arabic, and have an unbroken chain of transmission back to the Prophet ﷺ",
+          "B. It must be from Mecca or Medina, be memorised by at least 1,000 people, and appear in the book of Ibn Mujahid",
+          "C. It must be approved by a caliph, recorded in a written manuscript, and supported by at least two companions",
+          "D. It must match the personal copy of Zayd ibn Thabit, be in the Qurayshi dialect, and taught in all five major cities"
+        ],
+        "correct_answer": "A",
+        "explanation": "The three conditions for a valid Qira'ah are: (1) it must be consistent with the written Uthmani Mushaf text; (2) it must be linguistically sound Arabic; and (3) it must have a verified, unbroken chain (isnad) of transmission going all the way back to the Prophet ﷺ through multiple narrators. All three must be met — none alone is sufficient.",
+        "difficulty": "hard",
+        "section": "How the Qira'at Reached Us"
+      }
+    ]
+  },
+  "metadata": {
+    "intended_audience": "General — primary school to tertiary and professional learners",
+    "language": "English",
+    "format_notes": {
+      "options_format": "Single letter prefix (A/B/C/D) followed by answer text",
+      "correct_answer_field": "Returns the letter only e.g. 'B' — map this to the full option text on the frontend",
+      "difficulty_levels": ["easy", "medium", "hard"],
+      "difficulty_distribution": "3 easy, 4 medium, 3 hard",
+      "explanation_field": "Full explanation to display after the user answers — whether correct or incorrect",
+      "section_field": "Maps each question back to the lesson section it comes from — useful for 'review this topic' links"
+    },
+    "suggested_ui_behaviours": {
+      "show_explanation": "Always — regardless of whether the answer is correct or wrong",
+      "score_display": "Show X out of 10 at the end with a pass/fail indicator (passing_score: 7)",
+      "retry_option": true,
+      "shuffle_questions": true,
+      "shuffle_options": true,
+      "progress_indicator": "Show question number and progress bar e.g. Question 3 of 10",
+      "section_tag": "Display the section name as a small tag above each question so learners know which part of the lesson it comes from"
+    }
+  }
+}

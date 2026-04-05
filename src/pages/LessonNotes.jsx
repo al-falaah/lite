@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { BookOpen, ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, Moon, Sun, HelpCircle } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DOMPurify from 'dompurify';
 
@@ -142,6 +142,7 @@ const LessonNotes = () => {
   const [course, setCourse] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [selectedChapter, setSelectedChapter] = useState(null);
+  const [chapterHasQuiz, setChapterHasQuiz] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [theme, setTheme] = useState(() => {
@@ -156,6 +157,21 @@ const LessonNotes = () => {
   useEffect(() => {
     localStorage.setItem('lessonNotesTheme', theme);
   }, [theme]);
+
+  // Check if selected chapter has a published quiz
+  useEffect(() => {
+    const checkQuiz = async () => {
+      if (!selectedChapter) { setChapterHasQuiz(false); return; }
+      const { data } = await supabase
+        .from('lesson_quizzes')
+        .select('id')
+        .eq('chapter_id', selectedChapter.id)
+        .eq('is_published', true)
+        .single();
+      setChapterHasQuiz(!!data);
+    };
+    checkQuiz();
+  }, [selectedChapter]);
 
   // Default to sepia for full HTML chapters
   useEffect(() => {
@@ -577,6 +593,34 @@ const LessonNotes = () => {
                     </button>
                   </div>
                 </div>
+
+                {/* Quiz CTA */}
+                {chapterHasQuiz && selectedChapter && (
+                  <div className={`border-t px-8 py-5 text-center transition-colors ${
+                    theme === 'dark' ? 'border-gray-700 bg-gray-800/50' :
+                    theme === 'sepia' ? 'border-[#d4c9b8] bg-[#ebe4d8]' :
+                    'border-gray-200 bg-amber-50'
+                  }`}>
+                    <Link
+                      to={`/resources/${courseSlug}/${selectedChapter.slug}/quiz`}
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all shadow-sm hover:shadow-md ${
+                        theme === 'dark'
+                          ? 'bg-amber-600 text-white hover:bg-amber-500'
+                          : 'bg-amber-600 text-white hover:bg-amber-700'
+                      }`}
+                    >
+                      <HelpCircle className="h-4 w-4" />
+                      Test Your Understanding
+                    </Link>
+                    <p className={`text-xs mt-2 ${
+                      theme === 'dark' ? 'text-gray-400' :
+                      theme === 'sepia' ? 'text-[#8a7a6a]' :
+                      'text-gray-500'
+                    }`}>
+                      Take the quiz for this chapter
+                    </p>
+                  </div>
+                )}
 
                 {/* Copyright Notice */}
                 <div className={`border-t px-8 py-4 text-center transition-colors ${

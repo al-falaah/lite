@@ -611,7 +611,7 @@ const StudentPortal = () => {
             // If enrollment is not active, show disabled message
             if (enrollment.status !== 'active') {
               return (
-                <Card key={enrollment.id} className="border-l-4 border-l-red-600">
+                <Card key={enrollment.id}>
                   <div className="text-center py-8 bg-red-50">
                     <Calendar className="h-16 w-16 mx-auto mb-4 text-red-400" />
                     <p className="text-lg font-semibold mb-2 text-red-800">{programName} - Enrollment {enrollment.status}</p>
@@ -629,7 +629,7 @@ const StudentPortal = () => {
 
             if (programSchedules.length === 0) {
               return (
-                <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
+                <Card key={enrollment.id}>
                   <div className="text-center py-8 text-gray-500">
                     <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
                     <p className="text-lg font-medium mb-2">{programName} - Schedule Coming Soon</p>
@@ -695,7 +695,7 @@ const StudentPortal = () => {
             const totalMilestones = milestones.length;
 
             return (
-              <Card key={enrollment.id} className="border-l-4 border-l-emerald-600">
+              <Card key={enrollment.id}>
                 {/* Program Header */}
                 <div className="mb-6 pb-4 border-b border-gray-100">
                   <div className="flex items-center justify-between mb-3">

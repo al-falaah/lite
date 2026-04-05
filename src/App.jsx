@@ -30,6 +30,7 @@ import DirectorDashboard from './pages/DirectorDashboard';
 import ResearchAdmin from './pages/ResearchAdmin';
 import Resources from './pages/Resources';
 import LessonNotes from './pages/LessonNotes';
+import ChapterQuiz from './pages/ChapterQuiz';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -67,6 +68,7 @@ function App() {
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/resources/:courseSlug" element={<LessonNotes />} />
+            <Route path="/resources/:courseSlug/:chapterSlug/quiz" element={<ChapterQuiz />} />
             <Route path="/store" element={<StorePage />} />
             <Route path="/store/order" element={<StoreOrderPage />} />
             <Route path="/store/order-confirmation" element={<StoreOrderConfirmation />} />

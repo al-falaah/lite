@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut } from 'lucide-react';
+import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
@@ -36,6 +36,20 @@ const ResearchAdmin = () => {
     description: '',
     program_id: 'qari',
     display_order: 0
+  });
+
+  // Quiz state
+  const [quizChapter, setQuizChapter] = useState(null); // chapter whose quiz we're managing
+  const [quiz, setQuiz] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [editingQuestion, setEditingQuestion] = useState(null);
+  const [showQuizSettings, setShowQuizSettings] = useState(false);
+  const [quizForm, setQuizForm] = useState({
+    title: '',
+    subtitle: '',
+    passing_score: 7,
+    shuffle_questions: true,
+    shuffle_options: true
   });
 
   useEffect(() => {
@@ -299,6 +313,236 @@ const ResearchAdmin = () => {
     }
   };
 
+  // ── Quiz Functions ──
+  const openQuizManager = async (chapter) => {
+    setQuizChapter(chapter);
+    setEditingChapter(null);
+    try {
+      const { data: quizData, error } = await supabase
+        .from('lesson_quizzes')
+        .select('*')
+        .eq('chapter_id', chapter.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
+
+      if (quizData) {
+        setQuiz(quizData);
+        setQuizForm({
+          title: quizData.title,
+          subtitle: quizData.subtitle || '',
+          passing_score: quizData.passing_score,
+          shuffle_questions: quizData.shuffle_questions,
+          shuffle_options: quizData.shuffle_options
+        });
+        // Fetch questions
+        const { data: qData, error: qError } = await supabase
+          .from('quiz_questions')
+          .select('*')
+          .eq('quiz_id', quizData.id)
+          .order('question_number');
+        if (qError) throw qError;
+        setQuestions(qData || []);
+      } else {
+        setQuiz(null);
+        setQuestions([]);
+        setQuizForm({
+          title: `Quiz: ${chapter.title}`,
+          subtitle: '',
+          passing_score: 7,
+          shuffle_questions: true,
+          shuffle_options: true
+        });
+      }
+    } catch (error) {
+      console.error('Error loading quiz:', error);
+      toast.error('Failed to load quiz');
+    }
+  };
+
+  const handleCreateQuiz = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data, error } = await supabase
+        .from('lesson_quizzes')
+        .insert({
+          chapter_id: quizChapter.id,
+          title: quizForm.title,
+          subtitle: quizForm.subtitle,
+          passing_score: quizForm.passing_score,
+          shuffle_questions: quizForm.shuffle_questions,
+          shuffle_options: quizForm.shuffle_options,
+          created_by: user.id
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setQuiz(data);
+      toast.success('Quiz created');
+    } catch (error) {
+      console.error('Error creating quiz:', error);
+      toast.error('Failed to create quiz');
+    }
+  };
+
+  const handleSaveQuizSettings = async () => {
+    if (!quiz) return;
+    try {
+      const { error } = await supabase
+        .from('lesson_quizzes')
+        .update({
+          title: quizForm.title,
+          subtitle: quizForm.subtitle,
+          passing_score: quizForm.passing_score,
+          shuffle_questions: quizForm.shuffle_questions,
+          shuffle_options: quizForm.shuffle_options
+        })
+        .eq('id', quiz.id);
+
+      if (error) throw error;
+      setQuiz({ ...quiz, ...quizForm });
+      setShowQuizSettings(false);
+      toast.success('Quiz settings saved');
+    } catch (error) {
+      console.error('Error saving quiz settings:', error);
+      toast.error('Failed to save settings');
+    }
+  };
+
+  const handleToggleQuizPublish = async () => {
+    if (!quiz) return;
+    try {
+      const { error } = await supabase
+        .from('lesson_quizzes')
+        .update({ is_published: !quiz.is_published })
+        .eq('id', quiz.id);
+
+      if (error) throw error;
+      setQuiz({ ...quiz, is_published: !quiz.is_published });
+      toast.success(quiz.is_published ? 'Quiz unpublished' : 'Quiz published');
+    } catch (error) {
+      console.error('Error toggling quiz publish:', error);
+      toast.error('Failed to update quiz');
+    }
+  };
+
+  const handleDeleteQuiz = async () => {
+    if (!quiz || !confirm('Delete this quiz and all its questions?')) return;
+    try {
+      const { error } = await supabase
+        .from('lesson_quizzes')
+        .delete()
+        .eq('id', quiz.id);
+
+      if (error) throw error;
+      setQuiz(null);
+      setQuestions([]);
+      setQuizChapter(null);
+      toast.success('Quiz deleted');
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      toast.error('Failed to delete quiz');
+    }
+  };
+
+  const handleAddQuestion = () => {
+    const newQ = {
+      question_number: questions.length + 1,
+      question: '',
+      options: ['A. ', 'B. ', 'C. ', 'D. '],
+      correct_answer: 'A',
+      explanation: '',
+      difficulty: 'medium',
+      section_tag: ''
+    };
+    setEditingQuestion(newQ);
+  };
+
+  const handleSaveQuestion = async () => {
+    if (!editingQuestion || !quiz) return;
+    try {
+      if (editingQuestion.id) {
+        // Update existing
+        const { error } = await supabase
+          .from('quiz_questions')
+          .update({
+            question: editingQuestion.question,
+            options: editingQuestion.options,
+            correct_answer: editingQuestion.correct_answer,
+            explanation: editingQuestion.explanation,
+            difficulty: editingQuestion.difficulty,
+            section_tag: editingQuestion.section_tag
+          })
+          .eq('id', editingQuestion.id);
+        if (error) throw error;
+        toast.success('Question updated');
+      } else {
+        // Create new
+        const { error } = await supabase
+          .from('quiz_questions')
+          .insert({
+            quiz_id: quiz.id,
+            question_number: editingQuestion.question_number,
+            question: editingQuestion.question,
+            options: editingQuestion.options,
+            correct_answer: editingQuestion.correct_answer,
+            explanation: editingQuestion.explanation,
+            difficulty: editingQuestion.difficulty,
+            section_tag: editingQuestion.section_tag
+          });
+        if (error) throw error;
+        toast.success('Question added');
+      }
+
+      // Refresh questions
+      const { data, error: fetchError } = await supabase
+        .from('quiz_questions')
+        .select('*')
+        .eq('quiz_id', quiz.id)
+        .order('question_number');
+      if (fetchError) throw fetchError;
+      setQuestions(data || []);
+      setEditingQuestion(null);
+    } catch (error) {
+      console.error('Error saving question:', error);
+      toast.error('Failed to save question');
+    }
+  };
+
+  const handleDeleteQuestion = async (questionId) => {
+    if (!confirm('Delete this question?')) return;
+    try {
+      const { error } = await supabase
+        .from('quiz_questions')
+        .delete()
+        .eq('id', questionId);
+      if (error) throw error;
+
+      // Refresh and renumber
+      const remaining = questions.filter(q => q.id !== questionId);
+      for (let i = 0; i < remaining.length; i++) {
+        if (remaining[i].question_number !== i + 1) {
+          await supabase
+            .from('quiz_questions')
+            .update({ question_number: i + 1 })
+            .eq('id', remaining[i].id);
+        }
+      }
+
+      const { data } = await supabase
+        .from('quiz_questions')
+        .select('*')
+        .eq('quiz_id', quiz.id)
+        .order('question_number');
+      setQuestions(data || []);
+      toast.success('Question deleted');
+    } catch (error) {
+      console.error('Error deleting question:', error);
+      toast.error('Failed to delete question');
+    }
+  };
+
   const getProgramName = (programId) => {
     const program = Object.values(PROGRAMS).find(p => p.id === programId);
     return program ? program.shortName : programId.toUpperCase();
@@ -556,6 +800,17 @@ const ResearchAdmin = () => {
                           
                           <div className="flex items-center gap-1.5">
                             <button
+                              onClick={() => openQuizManager(chapter)}
+                              className={`p-2 rounded-lg ${
+                                quizChapter?.id === chapter.id
+                                  ? 'text-amber-600 bg-amber-50'
+                                  : 'text-amber-500 hover:bg-amber-50'
+                              }`}
+                              title="Manage quiz"
+                            >
+                              <HelpCircle className="h-4 w-4" />
+                            </button>
+                            <button
                               onClick={() => setPreviewChapter(chapter)}
                               className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
                               title="Preview content"
@@ -591,6 +846,248 @@ const ResearchAdmin = () => {
                       
                       {chapters.length === 0 && (
                         <p className="text-center text-gray-500 py-12">No chapters yet. Create one to get started.</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Quiz Manager Panel */}
+                  {quizChapter && !editingChapter && (
+                    <div className="mt-6 border-t border-gray-200 pt-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <HelpCircle className="h-5 w-5 text-amber-500" />
+                            Quiz for: {quizChapter.title}
+                          </h3>
+                          {quiz && (
+                            <p className="text-sm text-gray-500 mt-0.5">
+                              {questions.length} question{questions.length !== 1 ? 's' : ''} · Pass: {quiz.passing_score}/{questions.length} · {quiz.is_published ? <span className="text-indigo-600 font-semibold">Published</span> : <span className="text-gray-500">Draft</span>}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {quiz && (
+                            <>
+                              <button
+                                onClick={() => setShowQuizSettings(!showQuizSettings)}
+                                className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+                              >
+                                Settings
+                              </button>
+                              <button
+                                onClick={handleToggleQuizPublish}
+                                className={`px-3 py-1.5 text-sm rounded-lg ${quiz.is_published ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100' : 'text-gray-600 bg-gray-100 hover:bg-gray-200'}`}
+                              >
+                                {quiz.is_published ? 'Published' : 'Publish'}
+                              </button>
+                              <button
+                                onClick={handleDeleteQuiz}
+                                className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg"
+                              >
+                                Delete Quiz
+                              </button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => { setQuizChapter(null); setQuiz(null); setQuestions([]); setEditingQuestion(null); }}
+                            className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Quiz Settings (collapsible) */}
+                      {showQuizSettings && quiz && (
+                        <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-3">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Quiz Title</label>
+                            <input type="text" value={quizForm.title}
+                              onChange={(e) => setQuizForm({ ...quizForm, title: e.target.value })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+                            <input type="text" value={quizForm.subtitle}
+                              onChange={(e) => setQuizForm({ ...quizForm, subtitle: e.target.value })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Passing Score</label>
+                              <input type="number" min="1" value={quizForm.passing_score}
+                                onChange={(e) => setQuizForm({ ...quizForm, passing_score: parseInt(e.target.value) || 1 })}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                            </div>
+                            <div className="flex items-end gap-2">
+                              <label className="flex items-center gap-2 text-sm text-gray-700">
+                                <input type="checkbox" checked={quizForm.shuffle_questions}
+                                  onChange={(e) => setQuizForm({ ...quizForm, shuffle_questions: e.target.checked })}
+                                  className="rounded border-gray-300 text-emerald-600" />
+                                Shuffle questions
+                              </label>
+                            </div>
+                            <div className="flex items-end gap-2">
+                              <label className="flex items-center gap-2 text-sm text-gray-700">
+                                <input type="checkbox" checked={quizForm.shuffle_options}
+                                  onChange={(e) => setQuizForm({ ...quizForm, shuffle_options: e.target.checked })}
+                                  className="rounded border-gray-300 text-emerald-600" />
+                                Shuffle options
+                              </label>
+                            </div>
+                          </div>
+                          <button onClick={handleSaveQuizSettings}
+                            className="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-900">
+                            Save Settings
+                          </button>
+                        </div>
+                      )}
+
+                      {/* No quiz yet — create one */}
+                      {!quiz && (
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
+                          <HelpCircle className="h-10 w-10 text-amber-400 mx-auto mb-3" />
+                          <p className="text-gray-700 mb-1 font-medium">No quiz for this chapter yet</p>
+                          <p className="text-sm text-gray-500 mb-4">Create a quiz to help students test their understanding</p>
+                          <div className="max-w-sm mx-auto space-y-3 mb-4">
+                            <input type="text" value={quizForm.title} placeholder="Quiz title"
+                              onChange={(e) => setQuizForm({ ...quizForm, title: e.target.value })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          </div>
+                          <button onClick={handleCreateQuiz}
+                            className="px-5 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-semibold text-sm">
+                            Create Quiz
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Questions list */}
+                      {quiz && !editingQuestion && (
+                        <div className="space-y-2">
+                          {questions.map((q) => (
+                            <div key={q.id} className="flex items-start justify-between p-3 border border-gray-200 rounded-lg hover:border-gray-300 transition-all">
+                              <div className="flex items-start gap-3 flex-1 min-w-0">
+                                <span className="flex-shrink-0 w-7 h-7 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                                  {q.question_number}
+                                </span>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-gray-900 line-clamp-2">{q.question}</p>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                      q.difficulty === 'easy' ? 'bg-green-100 text-green-700' :
+                                      q.difficulty === 'hard' ? 'bg-red-100 text-red-700' :
+                                      'bg-amber-100 text-amber-700'
+                                    }`}>{q.difficulty}</span>
+                                    {q.section_tag && <span className="text-xs text-gray-500">{q.section_tag}</span>}
+                                    <span className="text-xs text-emerald-600 font-medium">Answer: {q.correct_answer}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1 ml-2">
+                                <button onClick={() => setEditingQuestion(q)}
+                                  className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg">
+                                  <Edit className="h-3.5 w-3.5" />
+                                </button>
+                                <button onClick={() => handleDeleteQuestion(q.id)}
+                                  className="p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-lg">
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+
+                          <button onClick={handleAddQuestion}
+                            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-amber-400 hover:text-amber-600 flex items-center justify-center gap-2 transition-all">
+                            <Plus className="h-4 w-4" /> Add Question
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Question editor */}
+                      {quiz && editingQuestion && (
+                        <div className="bg-gray-50 rounded-lg p-5 space-y-4">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-bold text-gray-900">
+                              {editingQuestion.id ? `Edit Question #${editingQuestion.question_number}` : `New Question #${editingQuestion.question_number}`}
+                            </h4>
+                            <div className="flex gap-2">
+                              <button onClick={handleSaveQuestion}
+                                className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm hover:bg-slate-900">
+                                <Save className="h-3.5 w-3.5" /> Save
+                              </button>
+                              <button onClick={() => setEditingQuestion(null)}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
+                            <textarea rows={2} value={editingQuestion.question}
+                              onChange={(e) => setEditingQuestion({ ...editingQuestion, question: e.target.value })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Options</label>
+                            {(editingQuestion.options || []).map((opt, idx) => (
+                              <div key={idx} className="flex items-center gap-2 mb-2">
+                                <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                                  editingQuestion.correct_answer === String.fromCharCode(65 + idx)
+                                    ? 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-400'
+                                    : 'bg-gray-100 text-gray-600'
+                                }`}>
+                                  {String.fromCharCode(65 + idx)}
+                                </span>
+                                <input type="text" value={opt}
+                                  onChange={(e) => {
+                                    const newOpts = [...editingQuestion.options];
+                                    newOpts[idx] = e.target.value;
+                                    setEditingQuestion({ ...editingQuestion, options: newOpts });
+                                  }}
+                                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                                <button
+                                  onClick={() => setEditingQuestion({ ...editingQuestion, correct_answer: String.fromCharCode(65 + idx) })}
+                                  className={`px-2 py-1.5 rounded-lg text-xs font-medium ${
+                                    editingQuestion.correct_answer === String.fromCharCode(65 + idx)
+                                      ? 'bg-emerald-600 text-white'
+                                      : 'bg-gray-200 text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+                                  }`}
+                                >
+                                  {editingQuestion.correct_answer === String.fromCharCode(65 + idx) ? 'Correct' : 'Set correct'}
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Explanation (shown after answering)</label>
+                            <textarea rows={3} value={editingQuestion.explanation || ''}
+                              onChange={(e) => setEditingQuestion({ ...editingQuestion, explanation: e.target.value })}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                              <select value={editingQuestion.difficulty}
+                                onChange={(e) => setEditingQuestion({ ...editingQuestion, difficulty: e.target.value })}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Section Tag</label>
+                              <input type="text" value={editingQuestion.section_tag || ''}
+                                onChange={(e) => setEditingQuestion({ ...editingQuestion, section_tag: e.target.value })}
+                                placeholder="e.g. Arabia Before Islam"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                            </div>
+                          </div>
+                        </div>
                       )}
                     </div>
                   )}
