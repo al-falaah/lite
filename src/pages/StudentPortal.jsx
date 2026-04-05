@@ -479,6 +479,7 @@ const StudentPortal = () => {
           <StudentClassEtiquette />
 
           {/* Enrollments */}
+          <h2 className="text-lg font-semibold text-gray-900">Enrolment & Billing</h2>
           {enrollments.length === 0 ? (
             <Card>
               <div className="text-center py-12 text-gray-500">
@@ -601,6 +602,8 @@ const StudentPortal = () => {
               })}
             </div>
           )}
+
+          <h2 className="text-lg font-semibold text-gray-900 mt-2">Class Schedule & Progress</h2>
 
           {/* Class Schedules - Per Program */}
           {enrollments.map((enrollment) => {
