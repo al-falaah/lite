@@ -572,15 +572,15 @@
     body { font-size: 15px; line-height: 1.7; }
 
     /* Hero */
-    .hero { padding: 44px 16px 52px; }
+    .hero { padding: 40px 10px 48px; }
     .hero-icon { font-size: 44px; margin-bottom: 12px; }
     .hero-sub { font-size: .9rem; margin-top: 10px; }
     .badge { font-size: .72rem; padding: 4px 10px; }
     .badge-row { gap: 6px; margin-top: 16px; }
 
-    /* Layout */
-    .container { padding: 0 14px; }
-    .section { padding: 36px 14px; }
+    /* Layout — minimal side margins for max content width */
+    .container { padding: 0 6px; }
+    .section { padding: 32px 6px; }
 
     /* Section headers */
     .section-label { font-size: .66rem; letter-spacing: 2px; }
@@ -601,7 +601,7 @@
     .term-pill .term-def { font-size: .78rem; }
 
     /* Callout */
-    .callout { padding: 18px 16px; margin: 20px 0; border-radius: 10px; }
+    .callout { padding: 18px 14px; margin: 20px 0; border-radius: 10px; }
     .callout::before { font-size: 80px; top: -14px; left: 10px; }
     .callout p { font-size: .92rem; }
     .callout .attribution { font-size: .76rem; }
@@ -613,25 +613,24 @@
     .step-body p { font-size: .84rem; }
 
     /* Highlight band */
-    .highlight-band { padding: 18px 16px; margin: 20px 0; border-radius: 10px; font-size: .88rem; }
+    .highlight-band { padding: 16px 14px; margin: 20px 0; border-radius: 10px; font-size: .88rem; }
     .highlight-band strong { font-size: 1rem; }
 
     /* Two columns */
     .two-col { grid-template-columns: 1fr; gap: 14px; }
-    .col-box { padding: 18px 16px; }
+    .col-box { padding: 18px 14px; }
     .col-box .big-icon { font-size: 32px; margin-bottom: 8px; }
     .col-box h3 { font-size: 1rem; }
     .col-box p { font-size: .85rem; }
 
     /* City table */
     .city-table { font-size: .82rem; }
-    .city-table th { padding: 10px 10px; font-size: .8rem; }
-    .city-table td { padding: 10px 10px; font-size: .8rem; }
+    .city-table th { padding: 10px 8px; font-size: .8rem; }
+    .city-table td { padding: 10px 8px; font-size: .8rem; }
     .city-tag { font-size: .7rem; padding: 2px 7px; }
 
-    /* SVG illustrations */
-    .illus-wrap { margin: 18px 0; }
-    .illus-wrap svg { border-radius: 10px; }
+    /* SVG illustrations — hide on mobile (too detailed to read at small size) */
+    .illus-wrap { display: none; }
 
     /* Timeline */
     .timeline { padding-left: 22px; }
@@ -642,7 +641,7 @@
     .tl-body { font-size: .82rem; }
 
     /* Timeline graphic */
-    .tg-wrapper { padding: 18px 8px 16px; border-radius: 10px; }
+    .tg-wrapper { padding: 16px 8px 14px; border-radius: 10px; }
     .tg-title-h { font-size: .88rem; margin-bottom: 14px; }
     .tg-row { flex-direction: column; gap: 10px; }
     .tg-col { flex-direction: row; gap: 8px; align-items: center; }
@@ -659,14 +658,14 @@
     .tg-footer p { font-size: .68rem; }
 
     /* References */
-    .ref-section { padding: 36px 14px; }
-    .primary-source { padding: 16px 14px; border-radius: 10px; font-size: .85rem; }
+    .ref-section { padding: 32px 6px; }
+    .primary-source { padding: 14px 12px; border-radius: 10px; font-size: .85rem; }
     .primary-source strong { font-size: .92rem; }
     .ref-list li { gap: 10px; padding: 9px 0; font-size: .82rem; }
     .ref-num { min-width: 22px; font-size: .78rem; }
 
     /* Footer */
-    footer { padding: 22px 14px; font-size: .76rem; }
+    footer { padding: 22px 10px; font-size: .76rem; }
 
     /* Prose */
     .prose p { margin-bottom: 12px; font-size: .9rem; }
