@@ -482,13 +482,17 @@ const LessonNotes = () => {
                   }`}>{selectedChapter.chapter_number}. {selectedChapter.title}</h1>
                 </div>
 
-                <div className="px-8 py-6 lesson-content-protected">
+                <div className={`lesson-content-protected ${
+                  selectedChapter.content?.trim().startsWith('<!DOCTYPE') || selectedChapter.content?.trim().startsWith('<html')
+                    ? 'p-0'
+                    : 'px-8 py-6'
+                }`}>
                   {/* Full HTML documents render in an iframe to preserve all styling */}
                   {selectedChapter.content?.trim().startsWith('<!DOCTYPE') || selectedChapter.content?.trim().startsWith('<html') ? (
                     <iframe
                       srcDoc={selectedChapter.content}
                       title={selectedChapter.title}
-                      className="w-full border-0 rounded-lg"
+                      className="w-full border-0 block"
                       style={{ minHeight: '80vh' }}
                       sandbox="allow-same-origin"
                       onLoad={(e) => {
