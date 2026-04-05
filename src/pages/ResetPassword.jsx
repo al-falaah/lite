@@ -15,6 +15,7 @@ export default function ResetPassword() {
   const [checkingToken, setCheckingToken] = useState(true);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [authSubscription, setAuthSubscription] = useState(null);
+  const [isFirstTime, setIsFirstTime] = useState(false);
 
   useEffect(() => {
     // Skip token validation if password has been updated
@@ -35,12 +36,16 @@ export default function ResetPassword() {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setValidToken(true);
         setCheckingToken(false);
+        // Detect first-time user (invited, never signed in before)
+        if (session?.user && !session.user.last_sign_in_at) {
+          setIsFirstTime(true);
+        }
       } else if (event === 'USER_UPDATED') {
         // Password was successfully updated, now navigate
         console.log('Password updated via USER_UPDATED event');
 
         setPasswordUpdated(true);
-        toast.success('Password updated successfully!');
+        toast.success(isFirstTime ? 'Account activated! Redirecting...' : 'Password updated successfully!');
 
         // Use the session data from the event instead of calling getUser
         console.log('Session user:', session?.user);
@@ -55,14 +60,21 @@ export default function ResetPassword() {
           console.log('Timeout executing, stopping loading and navigating...');
           setLoading(false);
 
-          if (role === 'teacher') {
-            console.log('Navigating to teacher portal');
+          if (role === 'director') {
+            navigate('/director', { replace: true });
+          } else if (role === 'madrasah_admin') {
+            navigate('/admin', { replace: true });
+          } else if (role === 'blog_admin') {
+            navigate('/blog/admin', { replace: true });
+          } else if (role === 'store_admin') {
+            navigate('/store/admin', { replace: true });
+          } else if (role === 'research_admin') {
+            navigate('/research', { replace: true });
+          } else if (role === 'teacher') {
             navigate('/teacher', { replace: true });
           } else if (role === 'student') {
-            console.log('Navigating to student portal');
             navigate('/student', { replace: true });
           } else {
-            console.log('No role found, navigating to login');
             navigate('/login', { replace: true });
           }
         }, 1500);
@@ -150,7 +162,7 @@ export default function ResetPassword() {
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4">
         <div className="text-center">
           <Loader2 className="h-12 w-12 text-emerald-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Verifying reset link...</p>
+          <p className="text-gray-600">Verifying your link...</p>
         </div>
       </div>
     );
@@ -173,15 +185,15 @@ export default function ResetPassword() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-emerald-900 mb-2">The FastTrack Madrasah</h1>
-          <p className="text-gray-600">Set your new password</p>
+          <p className="text-gray-600">{isFirstTime ? 'Create your password to get started' : 'Set your new password'}</p>
         </div>
 
         {/* Reset Form */}
         <div className="bg-white rounded-lg shadow-xl p-8">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Reset Password</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">{isFirstTime ? 'Set Up Your Password' : 'Reset Password'}</h2>
             <p className="text-sm text-gray-600">
-              Choose a strong password for your account.
+              {isFirstTime ? 'Welcome! Create a password to activate your account.' : 'Choose a strong password for your account.'}
             </p>
           </div>
 
@@ -189,7 +201,7 @@ export default function ResetPassword() {
             {/* New Password Field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                New Password
+                {isFirstTime ? 'Password' : 'New Password'}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -217,7 +229,7 @@ export default function ResetPassword() {
             {/* Confirm Password Field */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                Confirm New Password
+                {isFirstTime ? 'Confirm Password' : 'Confirm New Password'}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -251,10 +263,10 @@ export default function ResetPassword() {
               {loading ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Updating password...
+                  {isFirstTime ? 'Setting up...' : 'Updating password...'}
                 </>
               ) : (
-                'Update Password'
+                isFirstTime ? 'Set Password' : 'Update Password'
               )}
             </button>
           </form>
