@@ -11,7 +11,7 @@ const TeacherClassGuidelines = () => {
         className="w-full flex items-center justify-between px-4 sm:px-5 py-3 text-left hover:bg-gray-50 transition-colors rounded-lg"
       >
         <span className="text-sm font-medium text-gray-800">
-          📖 Ādāb al-Muʿallim — Teaching Guidelines
+          Ādāb al-Muʿallim — Teaching Guidelines
         </span>
         {isOpen ? (
           <ChevronUp className="h-4 w-4 text-gray-400" />
