@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock } from 'lucide-react';
@@ -99,6 +100,7 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen">
+      <Helmet><title>The FastTrack Madrasah | Learn Quran Online</title></Helmet>
       {/* Navigation - Clean professional design */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${
         isScrolled

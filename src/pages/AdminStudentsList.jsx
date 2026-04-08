@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import {
@@ -715,6 +716,7 @@ const AdminStudentsList = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      <Helmet><title>Students Management | The FastTrack Madrasah</title></Helmet>
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Students Management</h2>
@@ -980,7 +982,7 @@ const AdminStudentsList = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                        Enrolled: {formatDate(student.enrolled_date)}
+                        {student.status === 'pending_payment' ? 'Applied' : 'Enrolled'}: {formatDate(student.enrolled_date)}
                       </div>
                     </div>
 
@@ -1158,7 +1160,7 @@ const AdminStudentsList = () => {
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                   <div>
-                    <p className="text-gray-600">Enrollment Date</p>
+                    <p className="text-gray-600">{selectedStudent.status === 'pending_payment' ? 'Application Date' : 'Enrollment Date'}</p>
                     <p className="font-semibold">{formatDate(selectedStudent.enrolled_date)}</p>
                   </div>
                   <div>
@@ -1226,7 +1228,7 @@ const AdminStudentsList = () => {
                             <p className="font-semibold">{enrollment.program_duration_months} months</p>
                           </div>
                           <div>
-                            <p className="text-gray-600">Enrolled On</p>
+                            <p className="text-gray-600">{enrollment.status === 'pending_payment' ? 'Applied On' : 'Enrolled On'}</p>
                             <p className="font-semibold">{formatDate(enrollment.enrolled_date)}</p>
                           </div>
                           {enrollment.expected_graduation_date && (

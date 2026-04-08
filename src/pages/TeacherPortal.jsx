@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -566,6 +567,7 @@ export default function TeacherPortal() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet><title>Teacher Portal | The FastTrack Madrasah</title></Helmet>
       {/* Navigation */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">

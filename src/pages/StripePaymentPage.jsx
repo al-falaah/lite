@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, CreditCard, Calendar, DollarSign, CheckCircle } from 'lucide-react';
@@ -81,6 +82,7 @@ const StripePaymentPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <Helmet><title>Payment | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
       <nav className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

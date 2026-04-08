@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
@@ -181,6 +182,7 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4">
+      <Helmet><title>Reset Password | The FastTrack Madrasah</title></Helmet>
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">

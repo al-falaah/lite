@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
@@ -110,6 +111,7 @@ const Unsubscribe = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <Helmet><title>Unsubscribe | The FastTrack Madrasah</title></Helmet>
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
         <div className="mb-6">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Home, Search, BookOpen, ArrowLeft, Heart } from 'lucide-react';
 import Button from '../components/common/Button';
@@ -8,6 +9,7 @@ const NotFoundPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 flex flex-col">
+      <Helmet><title>Page Not Found | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
       <nav className="bg-white shadow-sm border-b border-emerald-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

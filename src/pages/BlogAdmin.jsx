@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
@@ -712,6 +713,7 @@ const BlogAdmin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet><title>Blog Admin | The FastTrack Madrasah</title></Helmet>
       {/* Navigation Bar */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

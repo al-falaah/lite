@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -237,6 +238,7 @@ const EnrollAdditionalProgram = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-12 px-4">
+      <Helmet><title>Enrol in Additional Program | The FastTrack Madrasah</title></Helmet>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

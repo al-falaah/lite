@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -428,6 +429,7 @@ const ApplicationPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet><title>Apply | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
       <header className="border-b border-gray-200 bg-white sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">

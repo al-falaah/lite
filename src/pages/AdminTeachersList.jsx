@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { UserCheck, Plus, Edit2, Trash2, Mail, Phone, Globe, UserCircle, X } from 'lucide-react';
@@ -288,6 +289,7 @@ export default function AdminTeachersList() {
 
   return (
     <div className="p-3 sm:p-6">
+      <Helmet><title>Teachers Management | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Teachers</h1>
