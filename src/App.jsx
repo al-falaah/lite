@@ -35,6 +35,7 @@ import MilestoneTest from './pages/MilestoneTest';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import VerifyCertificate from './pages/VerifyCertificate';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -75,6 +76,7 @@ function App() {
             <Route path="/store/order" element={<StoreOrderPage />} />
             <Route path="/store/order-confirmation" element={<StoreOrderConfirmation />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
+            <Route path="/verify" element={<VerifyCertificate />} />
 
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />

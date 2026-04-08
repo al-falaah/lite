@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Send Teacher Welcome Email
 // Triggered when admin creates a new teacher account
 

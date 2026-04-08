@@ -22,7 +22,8 @@ import {
   UserCheck,
   Home,
   Mail,
-  Phone
+  Phone,
+  Award
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { applications, supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
@@ -31,6 +32,7 @@ import Card from '../components/common/Card';
 import AdminStudentsList from './AdminStudentsList';
 import ClassScheduler from '../components/admin/ClassScheduler';
 import AdminTeachersList from './AdminTeachersList';
+import CertificateManager from '../components/admin/CertificateManager';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -505,6 +507,22 @@ const AdminDashboard = () => {
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
               )}
             </button>
+            <button
+              onClick={() => setActiveTab('certificates')}
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
+                activeTab === 'certificates'
+                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <Award className={`h-4 w-4 transition-transform group-hover:scale-110 ${
+                activeTab === 'certificates' ? 'text-emerald-600' : 'text-gray-400'
+              }`} />
+              <span className="font-semibold">Certificates</span>
+              {activeTab === 'certificates' && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+              )}
+            </button>
           </nav>
         </div>
       </div>
@@ -734,6 +752,8 @@ const AdminDashboard = () => {
             />
           </div>
         )}
+
+        {activeTab === 'certificates' && <CertificateManager />}
       </div>
 
       {/* Review Modal */}

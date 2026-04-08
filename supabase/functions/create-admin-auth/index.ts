@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Create Admin Auth User
 // Called by director to invite a new admin (madrasah_admin, blog_admin, store_admin, research_admin)
 

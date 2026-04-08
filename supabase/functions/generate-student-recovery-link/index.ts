@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Generate Student Recovery Link
 // Called by admin to generate a password recovery link for a student
 

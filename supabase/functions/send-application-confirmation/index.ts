@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Send Application Confirmation Email
 // Triggered when a new application is submitted
 

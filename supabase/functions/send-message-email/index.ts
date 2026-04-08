@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Send Message Email (Teacher <-> Student Communication)
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { sendEmail } from '../_shared/email.ts';

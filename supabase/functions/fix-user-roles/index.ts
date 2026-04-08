@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Fix User Roles
 // One-time function to set user_metadata.role for all existing teachers and students
 

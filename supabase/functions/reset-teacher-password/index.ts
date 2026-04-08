@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Reset Teacher Password
 // Called by admin to reset a teacher's password
 

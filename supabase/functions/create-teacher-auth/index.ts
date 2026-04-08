@@ -1,3 +1,4 @@
+// @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Create Teacher Auth User
 // Called by admin to create a teacher with Supabase Auth
 
