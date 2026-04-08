@@ -5,6 +5,7 @@ import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircl
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
+import OralTestGrading from '../components/admin/OralTestGrading';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 // Get milestones from centralized config
@@ -1213,6 +1214,22 @@ export default function TeacherPortal() {
                   </div>
                 )}
               </div> */}
+
+              {/* Oral Test Grading */}
+              {currentAssignmentProgram && selectedStudent && (() => {
+                const active = getCurrentActiveWeekAndYear();
+                const pc = PROGRAMS[currentAssignmentProgram];
+                const isTj = currentAssignmentProgram === PROGRAM_IDS.TAJWEED;
+                const wpy = Math.ceil((pc?.duration.weeks || (isTj ? 24 : 104)) / (pc?.duration.years || (isTj ? 1 : 2)));
+                const cw = (active.year - 1) * wpy + active.week;
+                return (
+                  <OralTestGrading
+                    student={selectedStudent}
+                    program={currentAssignmentProgram}
+                    currentWeek={cw}
+                  />
+                );
+              })()}
 
               <div className="mt-6">
                 <Button

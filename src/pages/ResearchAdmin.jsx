@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3 } from 'lucide-react';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
 import DOMPurify from 'dompurify';
 import RichTextEditor from '../components/common/RichTextEditor';
+import TestSettingsPanel from '../components/admin/TestSettingsPanel';
+import TestQuestionManager from '../components/admin/TestQuestionManager';
+import TestResultsDashboard from '../components/admin/TestResultsDashboard';
 
 // Helper function to generate URL-friendly slugs
 const generateSlug = (text) => {
@@ -52,9 +55,16 @@ const ResearchAdmin = () => {
     shuffle_options: true
   });
 
+  // Tests & Exams state
+  const [activeTab, setActiveTab] = useState('courses'); // 'courses' | 'tests'
+  const [testSubTab, setTestSubTab] = useState('questions'); // 'settings' | 'questions' | 'results'
+  const [testSettings, setTestSettings] = useState([]);
+  const [selectedTestProgram, setSelectedTestProgram] = useState(Object.keys(PROGRAMS)[0] || 'qari');
+
   useEffect(() => {
     checkAccess();
     fetchCourses();
+    fetchTestSettings();
   }, []);
 
   useEffect(() => {
@@ -152,6 +162,19 @@ const ResearchAdmin = () => {
     } catch (error) {
       console.error('Error fetching chapters:', error);
       toast.error('Failed to load chapters');
+    }
+  };
+
+  const fetchTestSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('program_test_settings')
+        .select('*')
+        .order('program_id');
+      if (error) throw error;
+      setTestSettings(data || []);
+    } catch (error) {
+      console.error('Error fetching test settings:', error);
     }
   };
 
@@ -628,9 +651,101 @@ const ResearchAdmin = () => {
               </button>
             </div>
           </div>
+          {/* Tab Navigation */}
+          <div className="flex gap-1 mt-4">
+            <button
+              onClick={() => setActiveTab('courses')}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeTab === 'courses'
+                  ? 'bg-slate-800 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <Book className="h-4 w-4" />
+              Courses & Lessons
+            </button>
+            <button
+              onClick={() => setActiveTab('tests')}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeTab === 'tests'
+                  ? 'bg-slate-800 text-white'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <ClipboardCheck className="h-4 w-4" />
+              Tests & Exams
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Tests & Exams Tab */}
+      {activeTab === 'tests' && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          {/* Sub-tab navigation */}
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setTestSubTab('questions')}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  testSubTab === 'questions' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <HelpCircle className="h-3.5 w-3.5" />
+                Question Bank
+              </button>
+              <button
+                onClick={() => setTestSubTab('settings')}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  testSubTab === 'settings' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Settings className="h-3.5 w-3.5" />
+                Settings
+              </button>
+              <button
+                onClick={() => setTestSubTab('results')}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  testSubTab === 'results' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <BarChart3 className="h-3.5 w-3.5" />
+                Results
+              </button>
+            </div>
+            {testSubTab === 'questions' && (
+              <select
+                value={selectedTestProgram}
+                onChange={(e) => setSelectedTestProgram(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium"
+              >
+                {Object.values(PROGRAMS).map(p => (
+                  <option key={p.id} value={p.id}>{p.shortName} — {p.name}</option>
+                ))}
+              </select>
+            )}
+          </div>
+
+          {testSubTab === 'settings' && (
+            <TestSettingsPanel
+              settings={testSettings}
+              onSettingsUpdate={setTestSettings}
+            />
+          )}
+          {testSubTab === 'questions' && (
+            <TestQuestionManager
+              selectedProgram={selectedTestProgram}
+              settings={testSettings}
+            />
+          )}
+          {testSubTab === 'results' && (
+            <TestResultsDashboard />
+          )}
+        </div>
+      )}
+
+      {/* Courses & Lessons Tab */}
+      {activeTab === 'courses' && (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-12 gap-6">
           {/* Left Sidebar - Courses */}
@@ -1102,6 +1217,7 @@ const ResearchAdmin = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Create/Edit Course Modal */}
       {showCourseModal && (

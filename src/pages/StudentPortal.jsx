@@ -10,6 +10,7 @@ import {
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import StudentClassEtiquette from '../components/student/StudentClassEtiquette';
+import TestProgressCard from '../components/student/TestProgressCard';
 import {
   PROGRAMS,
   PROGRAM_IDS,
@@ -892,6 +893,12 @@ const StudentPortal = () => {
                 )}
 
                 {/* Progress Tracker */}
+                {/* Test & Exam Progress */}
+                <div className="mt-6">
+                  <TestProgressCard programId={enrollment.program} currentWeek={currentActive.week} />
+                </div>
+
+                {/* Overall Progress */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   {(() => {
                     const completedClasses = programSchedules.filter(s => s.status === 'completed').length;

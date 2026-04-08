@@ -31,6 +31,7 @@ import ResearchAdmin from './pages/ResearchAdmin';
 import Resources from './pages/Resources';
 import LessonNotes from './pages/LessonNotes';
 import ChapterQuiz from './pages/ChapterQuiz';
+import MilestoneTest from './pages/MilestoneTest';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -60,6 +61,7 @@ function App() {
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
             <Route path="/payment-cancel" element={<PaymentCancelPage />} />
             <Route path="/student" element={<StudentPortal />} />
+            <Route path="/student/test/:programId/:type/:milestoneIndex?" element={<MilestoneTest />} />
             <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
             <Route path="/vacancies" element={<VacanciesPage />} />
             <Route path="/teacher" element={<TeacherPortal />} />
