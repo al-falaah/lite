@@ -88,14 +88,14 @@ export default function TestProgressCard({ programId, currentWeek }) {
   const canRetakeExam = examAttempts.length < maxExamAttempts && results?.status === 'failed';
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-2">
-          <Award className="h-4 w-4 text-amber-500" />
+    <div className="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 shadow-sm">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <h3 className="text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5 sm:gap-2">
+          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 flex-shrink-0" />
           Tests & Exam Progress
         </h3>
         {results && (
-          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${
+          <span className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold whitespace-nowrap ${
             results.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
             results.status === 'failed' ? 'bg-red-100 text-red-700' :
             'bg-amber-100 text-amber-700'
@@ -127,7 +127,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
       )}
 
       {/* Milestone tests */}
-      <div className="space-y-2 mb-4">
+      <div className="space-y-1.5 sm:space-y-2 mb-3 sm:mb-4">
         {milestones.map((m, idx) => {
           const test = milestoneTestMap[idx];
           const unlocked = isMilestoneUnlocked(m);
@@ -136,38 +136,38 @@ export default function TestProgressCard({ programId, currentWeek }) {
           const isOral = testModes[String(idx)] === 'oral';
 
           return (
-            <div key={idx} className="flex items-center justify-between p-2.5 rounded-lg border border-gray-100 hover:border-gray-200 transition-all">
-              <div className="flex items-center gap-2.5">
+            <div key={idx} className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg border border-gray-100 hover:border-gray-200 transition-all gap-2">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {completed ? (
-                  <CheckCircle className="h-4 w-4 text-emerald-500" />
+                  <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                 ) : unlocked ? (
-                  isOral ? <Mic className="h-4 w-4 text-orange-500" /> : <Clock className="h-4 w-4 text-amber-500" />
+                  isOral ? <Mic className="h-4 w-4 text-orange-500 flex-shrink-0" /> : <Clock className="h-4 w-4 text-amber-500 flex-shrink-0" />
                 ) : (
-                  <Lock className="h-4 w-4 text-gray-300" />
+                  <Lock className="h-4 w-4 text-gray-300 flex-shrink-0" />
                 )}
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
+                <div className="min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-gray-900 leading-snug">
                     Milestone {idx + 1}: {m.name}
-                    {isOral && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium align-middle">ORAL</span>}
+                    {isOral && <span className="ml-1 sm:ml-1.5 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium align-middle">ORAL</span>}
                   </p>
                   {completed && (
-                    <p className="text-xs text-emerald-600 font-medium">{Number(test.percentage).toFixed(1)}%</p>
+                    <p className="text-[11px] sm:text-xs text-emerald-600 font-medium">{Number(test.percentage).toFixed(1)}%</p>
                   )}
                 </div>
               </div>
               {unlocked && !completed && !isOral && (
                 <Link
                   to={`/student/test/${programId}/milestone/${idx}`}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-600 text-white rounded-lg text-xs font-semibold hover:bg-amber-700 transition-all"
+                  className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-amber-600 text-white rounded-lg text-[11px] sm:text-xs font-semibold hover:bg-amber-700 transition-all whitespace-nowrap flex-shrink-0"
                 >
                   Take Test <ChevronRight className="h-3 w-3" />
                 </Link>
               )}
               {unlocked && !completed && isOral && (
-                <span className="text-xs text-orange-600 font-medium">Awaiting teacher</span>
+                <span className="text-[11px] sm:text-xs text-orange-600 font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
               )}
               {!unlocked && !completed && (
-                <span className="text-xs text-gray-400">Week {m.weekEnd}+</span>
+                <span className="text-[11px] sm:text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
               )}
             </div>
           );
@@ -180,24 +180,24 @@ export default function TestProgressCard({ programId, currentWeek }) {
         const isExamOral = testModes['final_exam'] === 'oral';
 
         return (
-          <div className={`p-3 rounded-lg border-2 ${
+          <div className={`p-2.5 sm:p-3 rounded-lg border-2 ${
             bestExam ? 'border-emerald-200 bg-emerald-50' :
             isFinalExamUnlocked() ? 'border-amber-200 bg-amber-50' :
             'border-gray-200 bg-gray-50'
           }`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {bestExam ? (
-                  <CheckCircle className="h-5 w-5 text-emerald-500" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500 flex-shrink-0" />
                 ) : isFinalExamUnlocked() ? (
-                  isExamOral ? <Mic className="h-5 w-5 text-orange-500" /> : <Award className="h-5 w-5 text-amber-500" />
+                  isExamOral ? <Mic className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0" /> : <Award className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" />
                 ) : (
-                  <Lock className="h-5 w-5 text-gray-300" />
+                  <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300 flex-shrink-0" />
                 )}
-                <div>
-                  <p className="text-sm font-bold text-gray-900">
+                <div className="min-w-0">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900">
                     Final Exam
-                    {isExamOral && <span className="ml-1.5 text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium align-middle">ORAL</span>}
+                    {isExamOral && <span className="ml-1 sm:ml-1.5 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium align-middle">ORAL</span>}
                   </p>
                   {bestExam && (
                     <p className="text-xs text-emerald-600 font-medium">
@@ -206,25 +206,25 @@ export default function TestProgressCard({ programId, currentWeek }) {
                     </p>
                   )}
                   {!isFinalExamUnlocked() && (
-                    <p className="text-xs text-gray-400">Complete all milestone tests first</p>
+                    <p className="text-[11px] sm:text-xs text-gray-400">Complete all milestone tests first</p>
                   )}
                 </div>
               </div>
               {isFinalExamUnlocked() && !bestExam && !isExamOral && (
                 <Link
                   to={`/student/test/${programId}/final_exam`}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-all"
+                  className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-emerald-600 text-white rounded-lg text-[11px] sm:text-xs font-semibold hover:bg-emerald-700 transition-all whitespace-nowrap flex-shrink-0"
                 >
                   Start Exam <ChevronRight className="h-3 w-3" />
                 </Link>
               )}
               {isFinalExamUnlocked() && !bestExam && isExamOral && (
-                <span className="text-xs text-orange-600 font-medium">Awaiting teacher</span>
+                <span className="text-[11px] sm:text-xs text-orange-600 font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
               )}
               {canRetakeExam && !isExamOral && (
                 <Link
                   to={`/student/test/${programId}/final_exam`}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-600 text-white rounded-lg text-xs font-semibold hover:bg-amber-700 transition-all"
+                  className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-amber-600 text-white rounded-lg text-[11px] sm:text-xs font-semibold hover:bg-amber-700 transition-all whitespace-nowrap flex-shrink-0"
                 >
                   Retake <ChevronRight className="h-3 w-3" />
                 </Link>
