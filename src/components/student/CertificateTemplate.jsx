@@ -161,15 +161,17 @@ export default function CertificateTemplate({ certificate, onDownload }) {
           </div>
 
           {/* Signatures */}
-          <div style={{ display: 'flex', gap: '80px', marginTop: '20px' }}>
+          <div style={{ display: 'flex', gap: '100px', marginTop: '20px' }}>
             {[
-              { name: 'Program Director', title: 'The FastTrack Madrasah' },
+              { name: 'Dr Abdulquadri Alaka', title: 'Program Director' },
               { name: certificate.teacher_name || 'Assigned Teacher', title: 'Instructor' },
             ].map(sig => (
-              <div key={sig.name} style={{ textAlign: 'center', minWidth: '140px' }}>
-                <div style={{ width: '140px', borderBottom: '1px solid rgba(0,0,0,0.3)', marginBottom: '6px', height: '30px' }} />
-                <div style={{ fontSize: '12px', fontWeight: 600 }}>{sig.name}</div>
-                <div style={{ fontSize: '10px', opacity: 0.5 }}>{sig.title}</div>
+              <div key={sig.title} style={{ textAlign: 'center', minWidth: '160px' }}>
+                <div style={{ fontFamily: "'Great Vibes', cursive", fontSize: '24px', color: '#065f46', lineHeight: 1.2, marginBottom: '2px' }}>
+                  {sig.name}
+                </div>
+                <div style={{ width: '160px', borderBottom: '1px solid rgba(0,0,0,0.3)', marginBottom: '6px' }} />
+                <div style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.04em' }}>{sig.title}</div>
               </div>
             ))}
           </div>
