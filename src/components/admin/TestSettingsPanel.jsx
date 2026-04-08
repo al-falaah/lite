@@ -83,8 +83,8 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
         if (!program) return null;
 
         return (
-          <div key={setting.program_id} className="bg-white border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-5">
+          <div key={setting.program_id} className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">{program.name}</h3>
                 <p className="text-sm text-gray-500">{program.shortName} · {program.milestones.length} milestones</p>
@@ -100,7 +100,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
             </div>
 
             {/* Weights & Pass Mark */}
-            <div className="grid grid-cols-3 gap-4 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-1">
                   <Award className="h-3.5 w-3.5" /> Milestone Weight (%)
@@ -145,7 +145,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
             </div>
 
             {/* Question Counts & Time Limits */}
-            <div className="grid grid-cols-2 gap-4 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm font-semibold text-gray-900 mb-3">Milestone Tests</p>
                 <div className="grid grid-cols-2 gap-3">
@@ -199,7 +199,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
             </div>
 
             {/* Retake & Review Settings */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-1.5">
                   <RotateCcw className="h-3.5 w-3.5" /> Retake Policy

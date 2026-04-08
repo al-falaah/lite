@@ -252,7 +252,7 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
       )}
 
       {/* Status bar */}
-      <div className={`flex items-center justify-between p-3 rounded-lg ${
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg ${
         hasEnoughQuestions ? 'bg-emerald-50 border border-emerald-200' : 'bg-amber-50 border border-amber-200'
       }`}>
         <div className="flex items-center gap-2">
@@ -279,8 +279,8 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
 
       {/* Question editor */}
       {editingQuestion && (
-        <div className="bg-gray-50 rounded-xl border border-gray-200 p-5 space-y-4">
-          <div className="flex items-center justify-between">
+        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 sm:p-5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h4 className="font-bold text-gray-900">
               {editingQuestion.id ? 'Edit Question' : 'New Question'}
             </h4>
@@ -299,7 +299,7 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
           {/* Question Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Question Type</label>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {QUESTION_TYPES.map(qt => (
                 <button
                   key={qt.value}

@@ -213,8 +213,8 @@ export default function OralTestGrading({ student, program, currentWeek }) {
           <span className="text-[10px] px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium">ORAL</span>
         </div>
 
-        <div className="flex items-end gap-2">
-          <div className="flex-1">
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2 sm:items-end">
+          <div>
             <label className="text-xs text-gray-500 block mb-1">Score (%)</label>
             <input
               type="number"
@@ -227,7 +227,7 @@ export default function OralTestGrading({ student, program, currentWeek }) {
               className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
             />
           </div>
-          <div className="flex-1">
+          <div>
             <label className="text-xs text-gray-500 block mb-1">Notes (optional)</label>
             <input
               type="text"
@@ -240,7 +240,7 @@ export default function OralTestGrading({ student, program, currentWeek }) {
           <button
             onClick={() => handleSubmitScore(key, type, milestoneIndex)}
             disabled={saving === key || (!draft.percentage && draft.percentage !== 0)}
-            className="inline-flex items-center gap-1 px-3 py-1.5 bg-orange-600 text-white rounded text-sm hover:bg-orange-700 disabled:opacity-50 whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-1 px-3 py-1.5 bg-orange-600 text-white rounded text-sm hover:bg-orange-700 disabled:opacity-50 whitespace-nowrap"
           >
             <Save className="h-3 w-3" />
             {saving === key ? '...' : 'Submit'}

@@ -119,7 +119,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
               {Number(results.weighted_total).toFixed(1)}%
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs text-gray-500 mt-1">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 mt-1 gap-0.5">
             <span>Milestones ({settings?.milestone_test_weight || 50}%): {results.milestone_average != null ? `${Number(results.milestone_average).toFixed(1)}%` : '—'}</span>
             <span>Exam ({settings?.final_exam_weight || 50}%): {results.final_exam_score != null ? `${Number(results.final_exam_score).toFixed(1)}%` : '—'}</span>
           </div>

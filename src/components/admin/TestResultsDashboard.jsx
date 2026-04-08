@@ -106,7 +106,7 @@ export default function TestResultsDashboard() {
   return (
     <div className="space-y-6">
       {/* Stats row */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
           <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
           <p className="text-xs text-gray-500 mt-0.5">Total Students</p>
@@ -126,37 +126,39 @@ export default function TestResultsDashboard() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div className="relative flex-1">
           <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by student name or email..."
+            placeholder="Search by name or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm"
           />
         </div>
-        <select
-          value={filterProgram}
-          onChange={(e) => setFilterProgram(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-        >
-          <option value="all">All Programs</option>
-          {Object.values(PROGRAMS).map(p => (
-            <option key={p.id} value={p.id}>{p.shortName}</option>
-          ))}
-        </select>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
-        >
-          <option value="all">All Status</option>
-          <option value="passed">Passed</option>
-          <option value="failed">Failed</option>
-          <option value="in_progress">In Progress</option>
-        </select>
+        <div className="flex gap-2">
+          <select
+            value={filterProgram}
+            onChange={(e) => setFilterProgram(e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm"
+          >
+            <option value="all">All Programs</option>
+            {Object.values(PROGRAMS).map(p => (
+              <option key={p.id} value={p.id}>{p.shortName}</option>
+            ))}
+          </select>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="flex-1 sm:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm"
+          >
+            <option value="all">All Status</option>
+            <option value="passed">Passed</option>
+            <option value="failed">Failed</option>
+            <option value="in_progress">In Progress</option>
+          </select>
+        </div>
       </div>
 
       {/* Results table */}
@@ -167,118 +169,211 @@ export default function TestResultsDashboard() {
           <p className="text-sm mt-1">Results will appear once students take tests</p>
         </div>
       ) : (
-        <div className="border border-gray-200 rounded-xl overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left text-xs font-semibold text-gray-600 px-4 py-3">Student</th>
-                <th className="text-left text-xs font-semibold text-gray-600 px-4 py-3">Program</th>
-                <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Milestone Avg</th>
-                <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Final Exam</th>
-                <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Weighted Total</th>
-                <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Status</th>
-                <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {filteredResults.map((r) => {
-                const key = `${r.student_id}_${r.program_id}`;
-                const isExpanded = expandedStudent === key;
-                const program = PROGRAMS[r.program_id];
+        <>
+          {/* Desktop table — hidden on mobile */}
+          <div className="hidden md:block border border-gray-200 rounded-xl overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left text-xs font-semibold text-gray-600 px-4 py-3">Student</th>
+                  <th className="text-left text-xs font-semibold text-gray-600 px-4 py-3">Program</th>
+                  <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Milestone Avg</th>
+                  <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Final Exam</th>
+                  <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Weighted Total</th>
+                  <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3">Status</th>
+                  <th className="text-center text-xs font-semibold text-gray-600 px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {filteredResults.map((r) => {
+                  const key = `${r.student_id}_${r.program_id}`;
+                  const isExpanded = expandedStudent === key;
+                  const program = PROGRAMS[r.program_id];
 
-                return (
-                  <> 
-                    <tr key={r.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-gray-900">{r.student_name}</p>
-                        <p className="text-xs text-gray-500">{r.student_email}</p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-bold text-indigo-600">{program?.shortName || r.program_id}</span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className="text-sm font-semibold text-gray-900">
-                          {r.milestone_average != null ? `${Number(r.milestone_average).toFixed(1)}%` : '—'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className="text-sm font-semibold text-gray-900">
-                          {r.final_exam_score != null ? `${Number(r.final_exam_score).toFixed(1)}%` : '—'}
-                        </span>
-                        {r.final_exam_attempts > 1 && (
-                          <span className="text-xs text-gray-400 ml-1">({r.final_exam_attempts} attempts)</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className="text-sm font-bold text-gray-900">
-                          {r.weighted_total != null ? `${Number(r.weighted_total).toFixed(1)}%` : '—'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
-                          r.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
-                          r.status === 'failed' ? 'bg-red-100 text-red-700' :
-                          'bg-amber-100 text-amber-700'
-                        }`}>
-                          {r.status === 'passed' && <CheckCircle className="h-3 w-3" />}
-                          {r.status === 'failed' && <XCircle className="h-3 w-3" />}
-                          {r.status === 'in_progress' && <Clock className="h-3 w-3" />}
-                          {r.status.replace('_', ' ')}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() => fetchStudentAttempts(r.student_id, r.program_id)}
-                          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
-                        >
-                          {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                        </button>
-                      </td>
-                    </tr>
-                    {isExpanded && studentAttempts[key] && (
-                      <tr key={`${r.id}-details`}>
-                        <td colSpan={7} className="px-4 py-3 bg-gray-50">
-                          <div className="space-y-2">
-                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Test History</p>
-                            {studentAttempts[key].map((a) => {
-                              const milestoneName = a.type === 'milestone' && program
-                                ? program.milestones[a.milestone_index]?.name || `Milestone ${a.milestone_index + 1}`
-                                : 'Final Exam';
-                              return (
-                                <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200">
-                                  <div className="flex items-center gap-3">
-                                    <span className={`w-2 h-2 rounded-full ${
-                                      a.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'
-                                    }`} />
-                                    <div>
-                                      <p className="text-sm font-medium text-gray-900">{milestoneName}</p>
-                                      <p className="text-xs text-gray-500">
-                                        {new Date(a.completed_at).toLocaleDateString()} · {a.status}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <div className="text-right">
-                                    <p className="text-sm font-bold text-gray-900">{a.score}/{a.total_questions}</p>
-                                    <p className={`text-xs font-medium ${
-                                      a.percentage >= 50 ? 'text-emerald-600' : 'text-red-600'
-                                    }`}>{Number(a.percentage).toFixed(1)}%</p>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                            {studentAttempts[key].length === 0 && (
-                              <p className="text-sm text-gray-500 text-center py-3">No completed attempts</p>
-                            )}
-                          </div>
+                  return (
+                    <> 
+                      <tr key={r.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3">
+                          <p className="text-sm font-medium text-gray-900">{r.student_name}</p>
+                          <p className="text-xs text-gray-500">{r.student_email}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="text-xs font-bold text-indigo-600">{program?.shortName || r.program_id}</span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="text-sm font-semibold text-gray-900">
+                            {r.milestone_average != null ? `${Number(r.milestone_average).toFixed(1)}%` : '—'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="text-sm font-semibold text-gray-900">
+                            {r.final_exam_score != null ? `${Number(r.final_exam_score).toFixed(1)}%` : '—'}
+                          </span>
+                          {r.final_exam_attempts > 1 && (
+                            <span className="text-xs text-gray-400 ml-1">({r.final_exam_attempts} attempts)</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="text-sm font-bold text-gray-900">
+                            {r.weighted_total != null ? `${Number(r.weighted_total).toFixed(1)}%` : '—'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
+                            r.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
+                            r.status === 'failed' ? 'bg-red-100 text-red-700' :
+                            'bg-amber-100 text-amber-700'
+                          }`}>
+                            {r.status === 'passed' && <CheckCircle className="h-3 w-3" />}
+                            {r.status === 'failed' && <XCircle className="h-3 w-3" />}
+                            {r.status === 'in_progress' && <Clock className="h-3 w-3" />}
+                            {r.status.replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <button
+                            onClick={() => fetchStudentAttempts(r.student_id, r.program_id)}
+                            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
+                          >
+                            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </button>
                         </td>
                       </tr>
-                    )}
-                  </>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                      {isExpanded && studentAttempts[key] && (
+                        <tr key={`${r.id}-details`}>
+                          <td colSpan={7} className="px-4 py-3 bg-gray-50">
+                            <div className="space-y-2">
+                              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Test History</p>
+                              {studentAttempts[key].map((a) => {
+                                const milestoneName = a.type === 'milestone' && program
+                                  ? program.milestones[a.milestone_index]?.name || `Milestone ${a.milestone_index + 1}`
+                                  : 'Final Exam';
+                                return (
+                                  <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200">
+                                    <div className="flex items-center gap-3">
+                                      <span className={`w-2 h-2 rounded-full ${
+                                        a.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'
+                                      }`} />
+                                      <div>
+                                        <p className="text-sm font-medium text-gray-900">{milestoneName}</p>
+                                        <p className="text-xs text-gray-500">
+                                          {new Date(a.completed_at).toLocaleDateString()} · {a.status}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="text-sm font-bold text-gray-900">{a.score}/{a.total_questions}</p>
+                                      <p className={`text-xs font-medium ${
+                                        a.percentage >= 50 ? 'text-emerald-600' : 'text-red-600'
+                                      }`}>{Number(a.percentage).toFixed(1)}%</p>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              {studentAttempts[key].length === 0 && (
+                                <p className="text-sm text-gray-500 text-center py-3">No completed attempts</p>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile card layout — hidden on desktop */}
+          <div className="md:hidden space-y-3">
+            {filteredResults.map((r) => {
+              const key = `${r.student_id}_${r.program_id}`;
+              const isExpanded = expandedStudent === key;
+              const program = PROGRAMS[r.program_id];
+
+              return (
+                <div key={r.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                  <button
+                    onClick={() => fetchStudentAttempts(r.student_id, r.program_id)}
+                    className="w-full text-left p-4"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{r.student_name}</p>
+                        <p className="text-xs text-gray-500">{r.student_email}</p>
+                      </div>
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
+                        r.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
+                        r.status === 'failed' ? 'bg-red-100 text-red-700' :
+                        'bg-amber-100 text-amber-700'
+                      }`}>
+                        {r.status === 'passed' && <CheckCircle className="h-3 w-3" />}
+                        {r.status === 'failed' && <XCircle className="h-3 w-3" />}
+                        {r.status === 'in_progress' && <Clock className="h-3 w-3" />}
+                        {r.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 text-center mt-3">
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">Program</p>
+                        <p className="text-xs font-bold text-indigo-600">{program?.shortName || r.program_id}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">Milestones</p>
+                        <p className="text-xs font-semibold text-gray-900">{r.milestone_average != null ? `${Number(r.milestone_average).toFixed(1)}%` : '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">Exam</p>
+                        <p className="text-xs font-semibold text-gray-900">{r.final_exam_score != null ? `${Number(r.final_exam_score).toFixed(1)}%` : '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">Total</p>
+                        <p className="text-xs font-bold text-gray-900">{r.weighted_total != null ? `${Number(r.weighted_total).toFixed(1)}%` : '—'}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center mt-2">
+                      {isExpanded ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  </button>
+                  {isExpanded && studentAttempts[key] && (
+                    <div className="border-t border-gray-100 bg-gray-50 px-4 py-3 space-y-2">
+                      <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Test History</p>
+                      {studentAttempts[key].map((a) => {
+                        const milestoneName = a.type === 'milestone' && program
+                          ? program.milestones[a.milestone_index]?.name || `Milestone ${a.milestone_index + 1}`
+                          : 'Final Exam';
+                        return (
+                          <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200">
+                            <div className="flex items-center gap-3">
+                              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                                a.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'
+                              }`} />
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">{milestoneName}</p>
+                                <p className="text-xs text-gray-500">
+                                  {new Date(a.completed_at).toLocaleDateString()} · {a.status}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-bold text-gray-900">{a.score}/{a.total_questions}</p>
+                              <p className={`text-xs font-medium ${
+                                a.percentage >= 50 ? 'text-emerald-600' : 'text-red-600'
+                              }`}>{Number(a.percentage).toFixed(1)}%</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {studentAttempts[key].length === 0 && (
+                        <p className="text-sm text-gray-500 text-center py-3">No completed attempts</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );
