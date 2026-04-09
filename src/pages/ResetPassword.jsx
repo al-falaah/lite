@@ -63,14 +63,10 @@ export default function ResetPassword() {
 
           if (role === 'director') {
             navigate('/director', { replace: true });
-          } else if (role === 'madrasah_admin') {
+          } else if (role === 'registrar') {
             navigate('/admin', { replace: true });
-          } else if (role === 'blog_admin') {
+          } else if (role === 'academic_dean') {
             navigate('/blog/admin', { replace: true });
-          } else if (role === 'store_admin') {
-            navigate('/store/admin', { replace: true });
-          } else if (role === 'research_admin') {
-            navigate('/research', { replace: true });
           } else if (role === 'teacher') {
             navigate('/teacher', { replace: true });
           } else if (role === 'student') {

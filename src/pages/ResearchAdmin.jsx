@@ -87,7 +87,7 @@ const ResearchAdmin = () => {
       .eq('id', user.id)
       .single();
 
-    const hasAccess = profile?.role && ['director', 'research_admin'].includes(profile.role);
+    const hasAccess = profile?.role && ['director', 'academic_dean'].includes(profile.role);
     if (!hasAccess) {
       toast.error('Access denied');
       navigate('/');

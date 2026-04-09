@@ -19,23 +19,16 @@ const ROLES = [
     isAdmin: true
   },
   {
-    value: 'madrasah_admin',
-    label: 'Madrasah Admin',
-    description: 'Manage students, teachers, and applications',
+    value: 'registrar',
+    label: 'Registrar',
+    description: 'Manage students, teachers, applications, and store',
     color: 'bg-blue-100 text-blue-800',
     isAdmin: true
   },
   {
-    value: 'store_admin',
-    label: 'Store Admin',
-    description: 'Manage store products and orders',
-    color: 'bg-emerald-100 text-emerald-800',
-    isAdmin: true
-  },
-  {
-    value: 'blog_admin',
-    label: 'Blog Admin',
-    description: 'Manage blog posts and content',
+    value: 'academic_dean',
+    label: 'Academic Dean',
+    description: 'Manage blog, research, lesson notes, and analytics',
     color: 'bg-orange-100 text-orange-800',
     isAdmin: true
   },
@@ -147,12 +140,15 @@ const AdminRoles = () => {
         'Prefer': 'return=representation'
       };
 
+      const roleConfig = ROLES.find(r => r.value === newRole);
+      const newIsAdmin = roleConfig ? roleConfig.isAdmin : false;
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/profiles?id=eq.${adminId}`,
         {
           method: 'PATCH',
           headers,
-          body: JSON.stringify({ role: newRole })
+          body: JSON.stringify({ role: newRole, is_admin: newIsAdmin })
         }
       );
 
@@ -172,7 +168,7 @@ const AdminRoles = () => {
   };
 
   const getRoleConfig = (roleValue) => {
-    return ROLES.find(r => r.value === roleValue) || ROLES[1]; // Default to madrasah_admin
+    return ROLES.find(r => r.value === roleValue) || ROLES[1]; // Default to registrar
   };
 
   // Filter users based on selected filter
@@ -285,9 +281,8 @@ const AdminRoles = () => {
                   <option value="admin_only">Admin Users Only</option>
                   <option value="all">All Users</option>
                   <option value="director">Directors Only</option>
-                  <option value="madrasah_admin">Madrasah Admins Only</option>
-                  <option value="store_admin">Store Admins Only</option>
-                  <option value="blog_admin">Blog Admins Only</option>
+                  <option value="registrar">Registrars Only</option>
+                  <option value="academic_dean">Academic Deans Only</option>
                   <option value="teacher">Teachers Only</option>
                   <option value="student">Students Only</option>
                 </select>
@@ -323,7 +318,7 @@ const AdminRoles = () => {
                           </label>
                           <div className="flex gap-2">
                             <select
-                              value={user.role || 'madrasah_admin'}
+                              value={user.role || 'registrar'}
                               onChange={(e) => handleUpdateRole(user.id, e.target.value)}
                               disabled={isUpdating}
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"

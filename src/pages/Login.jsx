@@ -117,7 +117,7 @@ export default function Login() {
       const profile = profileData[0];
 
       // Check admin roles
-      const validAdminRoles = ['director', 'madrasah_admin', 'blog_admin', 'store_admin', 'research_admin'];
+      const validAdminRoles = ['director', 'registrar', 'academic_dean'];
       const isValidAdmin = profile.is_admin && validAdminRoles.includes(profile.role);
 
       if (!isValidAdmin) {
@@ -132,12 +132,10 @@ export default function Login() {
 
       if (profile.role === 'director') {
         navigate('/director');
-      } else if (profile.role === 'madrasah_admin') {
+      } else if (profile.role === 'registrar') {
         navigate('/admin');
-      } else if (profile.role === 'blog_admin') {
+      } else if (profile.role === 'academic_dean') {
         navigate('/blog/admin');
-      } else if (profile.role === 'store_admin') {
-        navigate('/store/admin');
       } else {
         navigate('/admin');
       }

@@ -87,11 +87,11 @@ function App() {
             <Route path="/student-portal" element={<Navigate to="/login" replace />} />
             <Route path="/teacher-portal" element={<Navigate to="/login" replace />} />
 
-            {/* Protected Blog Admin Route - blog_admin or director */}
+            {/* Protected Blog Admin Route - academic_dean or director */}
             <Route
               path="/blog/admin"
               element={
-                <RoleRoute allowedRoles={['blog_admin', 'director']}>
+                <RoleRoute allowedRoles={['academic_dean', 'director']}>
                   <BlogAdmin />
                 </RoleRoute>
               }
@@ -107,21 +107,21 @@ function App() {
               }
             />
 
-            {/* Admin Route - madrasah_admin or director */}
+            {/* Admin Route - registrar or director */}
             <Route
               path="/admin"
               element={
-                <RoleRoute allowedRoles={['madrasah_admin', 'director']}>
+                <RoleRoute allowedRoles={['registrar', 'director']}>
                   <AdminDashboard />
                 </RoleRoute>
               }
             />
 
-            {/* Store Admin Route - store_admin or director */}
+            {/* Store Admin Route - registrar or director */}
             <Route
               path="/store/admin"
               element={
-                <RoleRoute allowedRoles={['store_admin', 'director']}>
+                <RoleRoute allowedRoles={['registrar', 'director']}>
                   <StoreAdmin />
                 </RoleRoute>
               }
@@ -137,11 +137,11 @@ function App() {
               }
             />
 
-            {/* Research Admin Route - director only */}
+            {/* Research Admin Route - academic_dean or director */}
             <Route
               path="/research/admin"
               element={
-                <RoleRoute allowedRoles={['director']}>
+                <RoleRoute allowedRoles={['academic_dean', 'director']}>
                   <ResearchAdmin />
                 </RoleRoute>
               }

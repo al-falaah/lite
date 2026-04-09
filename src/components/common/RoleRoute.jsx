@@ -8,9 +8,8 @@ import { useAuth } from '../../context/AuthContext';
  * - director: Full access to everything (founder)
  * - teacher: Teacher portal access
  * - student: Student portal access
- * - madrasah_admin: Madrasah management (students/teachers/applications)
- * - blog_admin: Blog management only
- * - store_admin: Store management only
+ * - registrar: Enrollment, students, teachers, store management
+ * - academic_dean: Blog, research, lesson notes, analytics
  *
  * Director role has access to all admin routes
  * This component is used for ADMIN routes only (not student/teacher portals)

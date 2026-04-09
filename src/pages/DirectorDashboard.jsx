@@ -44,7 +44,7 @@ const DirectorDashboard = () => {
   const { profile, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [showInviteForm, setShowInviteForm] = useState(false);
-  const [inviteForm, setInviteForm] = useState({ full_name: '', email: '', role: 'madrasah_admin' });
+  const [inviteForm, setInviteForm] = useState({ full_name: '', email: '', role: 'registrar' });
   const [inviting, setInviting] = useState(false);
   const [stats, setStats] = useState({
     // Student stats
@@ -428,7 +428,7 @@ const DirectorDashboard = () => {
       if (!response.ok) throw new Error(result.error || 'Failed to invite admin');
       toast.success(`Invitation sent to ${inviteForm.email}`);
       setShowInviteForm(false);
-      setInviteForm({ full_name: '', email: '', role: 'madrasah_admin' });
+      setInviteForm({ full_name: '', email: '', role: 'registrar' });
     } catch (error) {
       console.error('Error inviting admin:', error);
       toast.error(error.message || 'Failed to send invitation');
@@ -439,16 +439,16 @@ const DirectorDashboard = () => {
 
   const adminAreas = [
     {
-      title: 'Madrasah Administration',
-      description: 'Manage students, teachers, and applications',
+      title: 'Registrar',
+      description: 'Manage students, teachers, applications, and store',
       icon: GraduationCap,
       href: '/admin',
       iconBg: 'bg-blue-50',
       iconColor: 'text-blue-600'
     },
     {
-      title: 'Blog Administration',
-      description: 'Create and manage blog posts',
+      title: 'Academic Dean',
+      description: 'Blog, research, lesson notes, and analytics',
       icon: BookOpen,
       href: '/blog/admin',
       iconBg: 'bg-orange-50',
@@ -993,10 +993,8 @@ const DirectorDashboard = () => {
                         onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                       >
-                        <option value="madrasah_admin">Madrasah Administrator</option>
-                        <option value="blog_admin">Blog Administrator</option>
-                        <option value="store_admin">Store Administrator</option>
-                        <option value="research_admin">Research Administrator</option>
+                        <option value="registrar">Registrar</option>
+                        <option value="academic_dean">Academic Dean</option>
                       </select>
                     </div>
                     <div className="flex gap-2 pt-1">
@@ -1009,7 +1007,7 @@ const DirectorDashboard = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => { setShowInviteForm(false); setInviteForm({ full_name: '', email: '', role: 'madrasah_admin' }); }}
+                        onClick={() => { setShowInviteForm(false); setInviteForm({ full_name: '', email: '', role: 'registrar' }); }}
                         className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
                       >
                         Cancel

@@ -58,7 +58,7 @@ serve(async (req) => {
       .eq('id', user.id)
       .single()
 
-    if (!adminProfile || !['madrasah_admin', 'director'].includes(adminProfile.role)) {
+    if (!adminProfile || !['registrar', 'director'].includes(adminProfile.role)) {
       return new Response(
         JSON.stringify({ error: 'Only admins can issue certificates' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

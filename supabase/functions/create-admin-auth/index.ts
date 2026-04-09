@@ -1,6 +1,6 @@
 // @ts-nocheck — Deno edge function (URL imports + Deno global are valid)
 // Edge Function: Create Admin Auth User
-// Called by director to invite a new admin (madrasah_admin, blog_admin, store_admin, research_admin)
+// Called by director to invite a new admin (registrar, academic_dean)
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -12,20 +12,16 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const VALID_ADMIN_ROLES = ['madrasah_admin', 'blog_admin', 'store_admin', 'research_admin']
+const VALID_ADMIN_ROLES = ['registrar', 'academic_dean']
 
 const ROLE_LABELS: Record<string, string> = {
-  madrasah_admin: 'Madrasah Administrator',
-  blog_admin: 'Blog Administrator',
-  store_admin: 'Store Administrator',
-  research_admin: 'Research Administrator',
+  registrar: 'Registrar',
+  academic_dean: 'Academic Dean',
 }
 
 const ROLE_DASHBOARDS: Record<string, string> = {
-  madrasah_admin: '/admin',
-  blog_admin: '/blog/admin',
-  store_admin: '/store/admin',
-  research_admin: '/research',
+  registrar: '/admin',
+  academic_dean: '/blog/admin',
 }
 
 function generateEmailHTML(adminData: { full_name: string; email: string; role: string }, inviteLink: string): string {
