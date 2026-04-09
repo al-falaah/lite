@@ -97,8 +97,24 @@ export default function TeacherPortal() {
   useEffect(() => {
     let mounted = true;
 
-    const loadTeacher = async (session) => {
+    const restoreSession = async () => {
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          if (mounted) setShouldRedirect(true);
+          return;
+        }
+
+        const role = session.user.user_metadata?.role;
+        if (role !== 'teacher') {
+          // Double-check teachers table before redirecting
+          const { data: byAuthId } = await teachers.getByAuthUserId(session.user.id);
+          if (!byAuthId) {
+            if (mounted) setShouldRedirect(true);
+            return;
+          }
+        }
+
         // Look up teacher by auth_user_id, fall back to email
         let teacherRecord = null;
         const { data: byAuthId } = await teachers.getByAuthUserId(session.user.id);
@@ -134,47 +150,20 @@ export default function TeacherPortal() {
           await loadTeacherData(teacherRecord.id);
         }
       } catch (error) {
-        console.error('Teacher load error:', error);
+        console.error('Session restore error:', error);
         if (mounted) setShouldRedirect(true);
       } finally {
         if (mounted) setInitialLoading(false);
       }
     };
 
-    const restoreSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        if (mounted) setShouldRedirect(true);
-        return;
-      }
-      const role = session.user.user_metadata?.role;
-      if (role !== 'teacher') {
-        // Double-check teachers table before redirecting
-        const { data: byAuthId } = await teachers.getByAuthUserId(session.user.id);
-        if (!byAuthId) {
-          if (mounted) setShouldRedirect(true);
-          return;
-        }
-      }
-      await loadTeacher(session);
-    };
-
     restoreSession();
 
-    // Also listen for auth state changes (handles navigation from Login page)
-    let teacherLoaded = false;
+    // Listen for auth state changes (handles navigation from Login page only)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event) => {
         if (!mounted) return;
-        if (event === 'SIGNED_IN' && session?.user && !teacherLoaded) {
-          teacherLoaded = true;
-          const role = session.user.user_metadata?.role;
-          if (role === 'teacher') {
-            await loadTeacher(session);
-          }
-        }
         if (event === 'SIGNED_OUT') {
-          teacherLoaded = false;
           setShouldRedirect(true);
         }
       }
