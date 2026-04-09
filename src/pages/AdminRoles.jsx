@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Shield, UserCog, Save, Home } from 'lucide-react';
+import { Shield, UserCog, Home, Ban, Trash2, RotateCcw, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabase';
@@ -55,6 +55,7 @@ const AdminRoles = () => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [updating, setUpdating] = useState(null);
   const [roleFilter, setRoleFilter] = useState('admin_only'); // 'all', 'admin_only', or specific role
+  const [confirmAction, setConfirmAction] = useState(null); // { userId, action, userName }
 
   // Determine back link based on user role
   const backLink = profile?.role === 'director' ? '/director' : '/registrar';
@@ -97,7 +98,7 @@ const AdminRoles = () => {
 
       // Fetch all users with profiles (not just admins)
       const response = await fetch(
-        `${supabaseUrl}/rest/v1/profiles?select=id,email,role,full_name,is_admin&order=email.asc`,
+        `${supabaseUrl}/rest/v1/profiles?select=id,email,role,full_name,is_admin,suspended_at&order=email.asc`,
         { headers }
       );
 
@@ -171,6 +172,53 @@ const AdminRoles = () => {
     return ROLES.find(r => r.value === roleValue) || ROLES[1]; // Default to registrar
   };
 
+  const handleManageUser = async (userId, action) => {
+    setConfirmAction(null);
+    setUpdating(userId);
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      const accessToken = session?.session?.access_token;
+      if (!accessToken) {
+        toast.error('Authentication required. Please log in again.');
+        setUpdating(null);
+        return;
+      }
+
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/manage-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ action, userId })
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Operation failed');
+      }
+
+      if (action === 'delete') {
+        toast.success('User deleted');
+      } else if (action === 'suspend') {
+        toast.success('User suspended');
+      } else if (action === 'unsuspend') {
+        toast.success('User reactivated');
+      }
+
+      fetchUsers();
+    } catch (error) {
+      console.error(`Error (${action}):`, error);
+      toast.error(error.message || `Failed to ${action} user`);
+    } finally {
+      setUpdating(null);
+    }
+  };
+
   // Filter users based on selected filter
   const filteredUsers = users.filter(user => {
     if (roleFilter === 'all') return true;
@@ -227,7 +275,7 @@ const AdminRoles = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Admin Roles | The FastTrack Madrasah</title>
+        <title>User Control | The FastTrack Madrasah</title>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -243,10 +291,10 @@ const AdminRoles = () => {
             </Link>
             <div className="flex items-center gap-3 mb-2">
               <Shield className="h-8 w-8 text-emerald-600" />
-              <h1 className="text-3xl font-bold text-gray-900">User Roles Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900">User Control</h1>
             </div>
             <p className="text-gray-600">
-              Manage roles and permissions for all users. Director role has full access to everything.
+              Manage roles, suspend, or delete users. Director role has full access to everything.
             </p>
           </div>
 
@@ -298,30 +346,41 @@ const AdminRoles = () => {
                 filteredUsers.map(user => {
                   const roleConfig = getRoleConfig(user.role);
                   const isUpdating = updating === user.id;
+                  const isSuspended = !!user.suspended_at;
+                  const isDirector = user.role === 'director';
 
                   return (
-                    <div key={user.id} className="p-6">
+                    <div key={user.id} className={`p-6 ${isSuspended ? 'bg-red-50/50' : ''}`}>
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-gray-900 mb-1">
-                            {user.full_name || user.email}
-                          </h3>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className={`font-medium ${isSuspended ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                              {user.full_name || user.email}
+                            </h3>
+                            {isSuspended && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                <Ban className="h-3 w-3" />
+                                Suspended
+                              </span>
+                            )}
+                          </div>
                           <p className="text-sm text-gray-600 mb-3">{user.email}</p>
                           <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${roleConfig.color}`}>
                             {roleConfig.label}
                           </span>
                         </div>
 
-                        <div className="flex-shrink-0 w-64">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Change Role
-                          </label>
-                          <div className="flex gap-2">
+                        <div className="flex-shrink-0 space-y-3">
+                          {/* Role changer */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Role
+                            </label>
                             <select
                               value={user.role || 'registrar'}
                               onChange={(e) => handleUpdateRole(user.id, e.target.value)}
-                              disabled={isUpdating}
-                              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={isUpdating || isSuspended}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                             >
                               {ROLES.map(role => (
                                 <option key={role.value} value={role.value}>
@@ -329,15 +388,46 @@ const AdminRoles = () => {
                                 </option>
                               ))}
                             </select>
-                            {isUpdating && (
-                              <div className="flex items-center">
-                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
-                              </div>
-                            )}
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {getRoleConfig(user.role).description}
-                          </p>
+
+                          {/* Actions — don't show for directors */}
+                          {!isDirector && (
+                            <div className="flex gap-2">
+                              {isSuspended ? (
+                                <button
+                                  onClick={() => setConfirmAction({ userId: user.id, action: 'unsuspend', userName: user.full_name || user.email })}
+                                  disabled={isUpdating}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 disabled:opacity-50 transition-colors"
+                                >
+                                  <RotateCcw className="h-3 w-3" />
+                                  Reactivate
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => setConfirmAction({ userId: user.id, action: 'suspend', userName: user.full_name || user.email })}
+                                  disabled={isUpdating}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-lg hover:bg-amber-100 disabled:opacity-50 transition-colors"
+                                >
+                                  <Ban className="h-3 w-3" />
+                                  Suspend
+                                </button>
+                              )}
+                              <button
+                                onClick={() => setConfirmAction({ userId: user.id, action: 'delete', userName: user.full_name || user.email })}
+                                disabled={isUpdating}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50 transition-colors"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                                Delete
+                              </button>
+                            </div>
+                          )}
+
+                          {isUpdating && (
+                            <div className="flex items-center justify-center">
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -354,17 +444,63 @@ const AdminRoles = () => {
               <div className="text-sm text-yellow-800">
                 <p className="font-semibold mb-1">Important Notes:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Director/Founder role has unrestricted access to all admin areas</li>
-                  <li>Teacher and Student roles are for portal access only (not admin)</li>
-                  <li>Admin roles: Director, Madrasah Admin, Store Admin, Blog Admin</li>
+                  <li>Director/Founder role has unrestricted access to all areas</li>
+                  <li>Suspended users cannot log in until reactivated</li>
+                  <li>Deleting a user is permanent and cannot be undone</li>
                   <li>Role changes take effect immediately on next page load</li>
-                  <li>Be careful when changing roles - users will lose access to restricted areas</li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {confirmAction && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setConfirmAction(null)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`p-2 rounded-full ${confirmAction.action === 'delete' ? 'bg-red-100' : confirmAction.action === 'suspend' ? 'bg-amber-100' : 'bg-emerald-100'}`}>
+                <AlertTriangle className={`h-5 w-5 ${confirmAction.action === 'delete' ? 'text-red-600' : confirmAction.action === 'suspend' ? 'text-amber-600' : 'text-emerald-600'}`} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">
+                {confirmAction.action === 'delete' ? 'Delete User' : confirmAction.action === 'suspend' ? 'Suspend User' : 'Reactivate User'}
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600 mb-6">
+              {confirmAction.action === 'delete' && (
+                <>Are you sure you want to permanently delete <strong>{confirmAction.userName}</strong>? This action cannot be undone.</>
+              )}
+              {confirmAction.action === 'suspend' && (
+                <>Are you sure you want to suspend <strong>{confirmAction.userName}</strong>? They will not be able to log in until reactivated.</>
+              )}
+              {confirmAction.action === 'unsuspend' && (
+                <>Reactivate <strong>{confirmAction.userName}</strong>? They will be able to log in again.</>
+              )}
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setConfirmAction(null)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleManageUser(confirmAction.userId, confirmAction.action)}
+                className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors ${
+                  confirmAction.action === 'delete'
+                    ? 'bg-red-600 hover:bg-red-700'
+                    : confirmAction.action === 'suspend'
+                    ? 'bg-amber-600 hover:bg-amber-700'
+                    : 'bg-emerald-600 hover:bg-emerald-700'
+                }`}
+              >
+                {confirmAction.action === 'delete' ? 'Delete' : confirmAction.action === 'suspend' ? 'Suspend' : 'Reactivate'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

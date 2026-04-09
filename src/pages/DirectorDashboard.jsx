@@ -440,9 +440,9 @@ const DirectorDashboard = () => {
   const adminAreas = [
     {
       title: 'Registrar',
-      description: 'Manage students, teachers, applications, and store',
+      description: 'Students, teachers, applications, store, and schedules',
       icon: GraduationCap,
-      href: '/admin',
+      href: '/registrar',
       iconBg: 'bg-blue-50',
       iconColor: 'text-blue-600'
     },
@@ -450,29 +450,13 @@ const DirectorDashboard = () => {
       title: 'Academic Dean',
       description: 'Blog, research, lesson notes, and analytics',
       icon: BookOpen,
-      href: '/blog/admin',
+      href: '/academic-dean',
       iconBg: 'bg-orange-50',
       iconColor: 'text-orange-600'
     },
     {
-      title: 'Research Administration',
-      description: 'Manage lesson notes and study materials',
-      icon: FileText,
-      href: '/research/admin',
-      iconBg: 'bg-teal-50',
-      iconColor: 'text-teal-600'
-    },
-    {
-      title: 'Store Administration',
-      description: 'Manage products and orders',
-      icon: ShoppingBag,
-      href: '/store/admin',
-      iconBg: 'bg-emerald-50',
-      iconColor: 'text-emerald-600'
-    },
-    {
-      title: 'User Roles',
-      description: 'Manage user roles and permissions',
+      title: 'User Control',
+      description: 'Manage roles, suspend, or delete users',
       icon: Shield,
       href: '/admin/roles',
       iconBg: 'bg-purple-50',
@@ -620,7 +604,7 @@ const DirectorDashboard = () => {
               {[
                 { key: 'overview', label: 'Overview', icon: BarChart3 },
                 { key: 'calendar', label: 'Calendar', icon: Calendar },
-                { key: 'links', label: 'Admin', icon: Shield },
+                { key: 'links', label: 'Manage', icon: Shield },
                 { key: 'planner', label: 'Planner', icon: ClipboardList }
               ].map(tab => {
                 const TabIcon = tab.icon;
