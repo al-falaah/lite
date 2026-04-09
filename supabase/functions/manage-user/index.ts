@@ -128,28 +128,12 @@ serve(async (req) => {
     }
 
     if (action === 'delete') {
-      // Clean up dependent rows that block auth.users deletion (NO ACTION FKs)
-      // Order matters: children before parents
-      await supabaseClient.from('test_attempts').delete().or(`student_id.eq.${userId},graded_by.eq.${userId}`)
-      await supabaseClient.from('student_program_results').delete().eq('student_id', userId)
-      await supabaseClient.from('certificates').delete().eq('student_id', userId)
-      await supabaseClient.from('test_questions').delete().eq('created_by', userId)
-      await supabaseClient.from('lesson_quizzes').delete().eq('created_by', userId)
-      await supabaseClient.from('lesson_chapters').delete().eq('created_by', userId)
-      await supabaseClient.from('lesson_courses').delete().eq('created_by', userId)
-      await supabaseClient.from('director_plans').delete().eq('created_by', userId)
-      // Clean up recitations (uses student/teacher table IDs, not auth user ID)
-      const { data: studentRows } = await supabaseClient.from('students').select('id').eq('auth_user_id', userId)
-      const { data: teacherRows } = await supabaseClient.from('teachers').select('id').eq('auth_user_id', userId)
-      const studentIds = (studentRows || []).map((r: any) => r.id)
-      const teacherIds = (teacherRows || []).map((r: any) => r.id)
-      if (studentIds.length > 0) {
-        await supabaseClient.from('recitations').delete().in('student_id', studentIds)
+      // Use raw SQL via service role to bypass RLS and handle all FK dependencies
+      const { error: cleanupError } = await supabaseClient.rpc('admin_delete_user_data', { target_user_id: userId })
+      if (cleanupError) {
+        console.error('Cleanup error:', cleanupError)
+        // Fall back: try deleting auth user anyway (may still fail if FKs remain)
       }
-      if (teacherIds.length > 0) {
-        await supabaseClient.from('recitations').delete().in('teacher_id', teacherIds)
-      }
-      // profiles, students, teachers cascade from auth.users deletion
 
       const { error } = await supabaseClient.auth.admin.deleteUser(userId)
       if (error) throw error
