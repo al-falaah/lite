@@ -733,15 +733,13 @@ const BlogAdmin = () => {
               </div>
             </Link>
             <div className="flex items-center gap-4">
-              {profile?.role === 'director' && (
-                <Link
-                  to={backLink}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-                >
-                  <Home className="h-4 w-4" />
-                  <span className="hidden sm:inline">Dashboard</span>
-                </Link>
-              )}
+              <Link
+                to={backLink}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
               <Link
                 to="/blog"
                 className="text-sm text-gray-600 hover:text-emerald-600 transition-colors hidden sm:inline"

@@ -21,7 +21,8 @@ import {
   FileText,
   RefreshCw,
   ClipboardList,
-  Calendar
+  Calendar,
+  Home
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DirectorPlanner from '../components/director/DirectorPlanner';
@@ -583,7 +584,7 @@ const DirectorDashboard = () => {
               <h1 className="text-base font-semibold text-gray-900">Director Dashboard</h1>
               <div className="flex items-center gap-4">
                 <Link to="/" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-                  Site
+                  <Home className="h-4 w-4" />
                 </Link>
                 <button
                   onClick={handleLogout}
