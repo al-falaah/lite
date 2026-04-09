@@ -70,6 +70,9 @@ export default function TeacherPortal() {
   // Pending recitation submissions (student_id → true)
   const [pendingRecitations, setPendingRecitations] = useState({});
 
+  // Student modal loading (separate from global page loading)
+  const [loadingStudent, setLoadingStudent] = useState(false);
+
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailRecipient, setEmailRecipient] = useState(null);
@@ -245,9 +248,10 @@ export default function TeacherPortal() {
 
   const handleViewStudent = async (assignment) => {
     if (!assignment.student) return;
-    setLoading(true);
     setSelectedStudent(assignment.student);
     setCurrentAssignmentProgram(assignment.program); // Save the program for filtering
+    setLoadingStudent(true);
+    setShowStudentModal(true);
 
     try {
       // Load student schedules - filter by the program the teacher is assigned to teach
@@ -275,14 +279,12 @@ export default function TeacherPortal() {
         );
         setStudentEnrollments(filteredEnrollments);
       }
-
-      setShowStudentModal(true);
     } catch (err) {
       console.error('Error loading student details:', err);
       toast.error('Failed to load student details');
+    } finally {
+      setLoadingStudent(false);
     }
-
-    setLoading(false);
   };
 
   // Get current active week for the student (program-aware)
@@ -854,6 +856,12 @@ export default function TeacherPortal() {
             </div>
 
             <div className="p-4 sm:p-6">
+              {loadingStudent && (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto" />
+                  <p className="text-sm text-gray-500 mt-3">Loading student details...</p>
+                </div>
+              )}
 
               {/* Student Info */}
               <div className="mb-4 sm:mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
