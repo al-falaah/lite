@@ -73,6 +73,11 @@ export default function TeacherPortal() {
   // Student modal loading (separate from global page loading)
   const [loadingStudent, setLoadingStudent] = useState(false);
 
+  // Scoped action loading states (to avoid hijacking the global page spinner)
+  const [saving, setSaving] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [updatingProfile, setUpdatingProfile] = useState(false);
+
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailRecipient, setEmailRecipient] = useState(null);
@@ -157,16 +162,19 @@ export default function TeacherPortal() {
     restoreSession();
 
     // Also listen for auth state changes (handles navigation from Login page)
+    let teacherLoaded = false;
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
-        if (event === 'SIGNED_IN' && session?.user) {
+        if (event === 'SIGNED_IN' && session?.user && !teacherLoaded) {
+          teacherLoaded = true;
           const role = session.user.user_metadata?.role;
           if (role === 'teacher') {
             await loadTeacher(session);
           }
         }
         if (event === 'SIGNED_OUT') {
+          teacherLoaded = false;
           setShouldRedirect(true);
         }
       }
@@ -362,7 +370,7 @@ export default function TeacherPortal() {
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
     try {
       const { error } = await classSchedules.update(scheduleId, editedScheduleData);
 
@@ -388,7 +396,7 @@ export default function TeacherPortal() {
       console.error('Error updating schedule:', err);
       toast.error('An error occurred');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -399,7 +407,7 @@ export default function TeacherPortal() {
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
     try {
       const { error } = await classSchedules.update(scheduleId, {
         status: 'completed',
@@ -426,7 +434,7 @@ export default function TeacherPortal() {
       console.error('Error marking schedule as complete:', err);
       toast.error('An error occurred');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -479,7 +487,7 @@ export default function TeacherPortal() {
       return;
     }
 
-    setLoading(true);
+    setSendingEmail(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-message-email`,
@@ -517,7 +525,7 @@ export default function TeacherPortal() {
       console.error('Error sending message:', error);
       toast.error('Failed to send message');
     } finally {
-      setLoading(false);
+      setSendingEmail(false);
     }
   };
 
@@ -535,7 +543,7 @@ export default function TeacherPortal() {
       return;
     }
 
-    setLoading(true);
+    setUpdatingProfile(true);
     try {
       const { error } = await teachers.update(teacher.id, {
         full_name: settingsFormData.full_name,
@@ -562,7 +570,7 @@ export default function TeacherPortal() {
       console.error('Error updating profile:', err);
       toast.error('An error occurred');
     } finally {
-      setLoading(false);
+      setUpdatingProfile(false);
     }
   };
 
@@ -695,11 +703,32 @@ export default function TeacherPortal() {
               <UserX className="h-4 w-4 inline mr-2 -mt-0.5" />
               Removed ({removedStudents.length})
             </button>
+            <button
+              onClick={() => setActiveView('calendar')}
+              className={`px-1 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeView === 'calendar'
+                  ? 'border-emerald-600 text-emerald-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+              }`}
+            >
+              <Calendar className="h-4 w-4 inline mr-2 -mt-0.5" />
+              Calendar
+            </button>
           </div>
         </div>
 
-        {/* Students List */}
-        {loading ? (
+        {/* Tab Content */}
+        {activeView === 'calendar' ? (
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <iframe
+              src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
+              className="w-full border-0"
+              height="600"
+              scrolling="no"
+              title="Class Calendar"
+            />
+          </div>
+        ) : loading ? (
           <div className="text-center py-12">
             <div className="relative w-24 h-24 inline-block">
               <svg className="w-24 h-24" viewBox="0 0 80 80">
@@ -818,22 +847,6 @@ export default function TeacherPortal() {
           </div>
         )}
 
-        {/* Google Calendar */}
-        <div className="mt-8 border-t border-gray-200 pt-6">
-          <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-gray-500" />
-            Class Calendar
-          </h2>
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <iframe
-              src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
-              className="w-full border-0"
-              height="600"
-              scrolling="no"
-              title="Class Calendar"
-            />
-          </div>
-        </div>
       </div>
 
       {/* Student Details Modal */}
@@ -1084,7 +1097,7 @@ export default function TeacherPortal() {
                                 {mainClass.status === 'scheduled' && (
                                   <button
                                     onClick={() => handleMarkAsComplete(mainClass.id)}
-                                    disabled={loading || (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active')}
+                                    disabled={saving || (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active')}
                                     className={`text-sm flex items-center font-medium ${
                                       studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active'
                                         ? 'text-gray-400 cursor-not-allowed'
@@ -1140,7 +1153,7 @@ export default function TeacherPortal() {
                                 {shortClass.status === 'scheduled' && (
                                   <button
                                     onClick={() => handleMarkAsComplete(shortClass.id)}
-                                    disabled={loading || (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active')}
+                                    disabled={saving || (studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active')}
                                     className={`text-sm flex items-center font-medium ${
                                       studentEnrollments.length > 0 && studentEnrollments[0].status !== 'active'
                                         ? 'text-gray-400 cursor-not-allowed'
@@ -1358,16 +1371,16 @@ export default function TeacherPortal() {
                     setEmailMessage('');
                     setEmailRecipient(null);
                   }}
-                  disabled={loading}
+                  disabled={sendingEmail}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSendEmail}
-                  disabled={loading || !emailMessage.trim()}
+                  disabled={sendingEmail || !emailMessage.trim()}
                   className="inline-flex items-center"
                 >
-                  {loading ? (
+                  {sendingEmail ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Sending...
@@ -1439,10 +1452,10 @@ export default function TeacherPortal() {
 
                 <Button
                   onClick={handleUpdateProfile}
-                  disabled={loading}
+                  disabled={updatingProfile}
                   className="w-full"
                 >
-                  {loading ? (
+                  {updatingProfile ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Updating Profile...
