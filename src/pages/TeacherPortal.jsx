@@ -2,11 +2,12 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings } from 'lucide-react';
+import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
 import OralTestGrading from '../components/admin/OralTestGrading';
+import RecitationAssignments from '../components/admin/RecitationAssignments';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 // Get milestones from centralized config
@@ -65,6 +66,9 @@ export default function TeacherPortal() {
 
   // Current assignment program (for filtering)
   const [currentAssignmentProgram, setCurrentAssignmentProgram] = useState(null);
+
+  // Pending recitation submissions (student_id → true)
+  const [pendingRecitations, setPendingRecitations] = useState({});
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -216,6 +220,18 @@ export default function TeacherPortal() {
         console.error('Error loading removed students:', removedError);
       } else {
         setRemovedStudents((removed || []).filter(a => a.student));
+      }
+
+      // Load pending recitation submissions for badge display
+      const { data: pendingRecs } = await supabase
+        .from('recitations')
+        .select('student_id')
+        .eq('teacher_id', teacherId)
+        .eq('status', 'submitted');
+      if (pendingRecs) {
+        const map = {};
+        pendingRecs.forEach(r => { map[r.student_id] = true; });
+        setPendingRecitations(map);
       }
     } catch (err) {
       console.error('Error loading teacher data:', err);
@@ -750,6 +766,11 @@ export default function TeacherPortal() {
                     <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
                       {PROGRAMS[assignment.program]?.shortName || assignment.program}
                     </span>
+                    {pendingRecitations[assignment.student?.id] && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700">
+                        <Mic className="h-2.5 w-2.5" /> Review
+                      </span>
+                    )}
                   </div>
                   <div className="flex gap-1 flex-shrink-0">
                     <button
@@ -796,7 +817,7 @@ export default function TeacherPortal() {
         )}
 
         {/* Google Calendar */}
-        <div className="mt-8">
+        <div className="mt-8 border-t border-gray-200 pt-6">
           <h2 className="text-base font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gray-500" />
             Class Calendar
@@ -1232,6 +1253,15 @@ export default function TeacherPortal() {
                   />
                 );
               })()}
+
+              {/* Recitation Practice */}
+              {currentAssignmentProgram && selectedStudent && teacher && (
+                <RecitationAssignments
+                  student={selectedStudent}
+                  program={currentAssignmentProgram}
+                  teacherId={teacher.id}
+                />
+              )}
 
               <div className="mt-6">
                 <Button

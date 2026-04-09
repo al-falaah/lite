@@ -13,6 +13,7 @@ import Card from '../components/common/Card';
 import StudentClassEtiquette from '../components/student/StudentClassEtiquette';
 import TestProgressCard from '../components/student/TestProgressCard';
 import StudentCertificateCard from '../components/student/StudentCertificateCard';
+import RecitationPractice from '../components/student/RecitationPractice';
 import {
   PROGRAMS,
   PROGRAM_IDS,
@@ -900,6 +901,15 @@ const StudentPortal = () => {
                 <div className="mt-6">
                   <TestProgressCard programId={enrollment.program} currentWeek={currentActive.week} />
                 </div>
+
+                {/* Recitation Practice */}
+                {student?.id && (
+                  <RecitationPractice
+                    studentId={student.id}
+                    programId={enrollment.program}
+                    teacherId={assignedTeachers[enrollment.program]?.id}
+                  />
+                )}
 
                 {/* Completion Certificate */}
                 <StudentCertificateCard programId={enrollment.program} />
