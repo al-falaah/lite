@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3 } from 'lucide-react';
+import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3, Upload, FileText, Type } from 'lucide-react';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
@@ -286,6 +286,7 @@ const ResearchAdmin = () => {
           title: editingChapter.title,
           slug: generateSlug(editingChapter.title),
           content: editingChapter.content,
+          content_type: editingChapter.content_type || 'rich_text',
           is_published: editingChapter.is_published
         })
         .eq('id', editingChapter.id);
@@ -871,14 +872,85 @@ const ResearchAdmin = () => {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">
-                          Content
-                        </label>
-                        <RichTextEditor
-                          value={editingChapter.content}
-                          onChange={(newContent) => setEditingChapter({ ...editingChapter, content: newContent })}
-                          placeholder="Write your lesson content here... Use the formatting buttons above to style your content."
-                        />
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Content</label>
+                        {/* Content type toggle */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <button
+                            type="button"
+                            onClick={() => setEditingChapter({ ...editingChapter, content_type: 'rich_text' })}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                              (!editingChapter.content_type || editingChapter.content_type === 'rich_text')
+                                ? 'bg-indigo-100 text-indigo-700 ring-1 ring-indigo-300'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                          >
+                            <Type className="h-3.5 w-3.5" />
+                            Rich Text
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditingChapter({ ...editingChapter, content_type: 'full_html' })}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                              editingChapter.content_type === 'full_html'
+                                ? 'bg-amber-100 text-amber-700 ring-1 ring-amber-300'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            }`}
+                          >
+                            <FileText className="h-3.5 w-3.5" />
+                            HTML File
+                          </button>
+                        </div>
+
+                        {(!editingChapter.content_type || editingChapter.content_type === 'rich_text') ? (
+                          <RichTextEditor
+                            value={editingChapter.content}
+                            onChange={(newContent) => setEditingChapter({ ...editingChapter, content: newContent })}
+                            placeholder="Write your lesson content here... Use the formatting buttons above to style your content."
+                          />
+                        ) : (
+                          <div className="space-y-3">
+                            <div className="border-2 border-dashed border-amber-300 rounded-lg p-6 bg-amber-50 text-center">
+                              <Upload className="h-8 w-8 text-amber-500 mx-auto mb-2" />
+                              <p className="text-sm text-amber-700 font-medium mb-1">Upload an HTML file</p>
+                              <p className="text-xs text-amber-600 mb-3">The file should be self-contained (inline CSS, no external resources)</p>
+                              <label className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 cursor-pointer text-sm font-medium transition-colors">
+                                <Upload className="h-4 w-4" />
+                                Choose File
+                                <input
+                                  type="file"
+                                  accept=".html,.htm"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    const reader = new FileReader();
+                                    reader.onload = (ev) => {
+                                      setEditingChapter({ ...editingChapter, content: ev.target.result, content_type: 'full_html' });
+                                      toast.success(`Loaded: ${file.name}`);
+                                    };
+                                    reader.readAsText(file);
+                                  }}
+                                />
+                              </label>
+                            </div>
+                            {editingChapter.content && editingChapter.content_type === 'full_html' && (
+                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-xs font-medium text-gray-500">HTML Preview</span>
+                                  <span className="text-xs text-gray-400">{(editingChapter.content.length / 1024).toFixed(1)} KB</span>
+                                </div>
+                                <div className="bg-white border rounded overflow-hidden" style={{ height: '300px' }}>
+                                  <iframe
+                                    srcDoc={editingChapter.content}
+                                    title="HTML Preview"
+                                    className="w-full h-full border-0"
+                                    sandbox="allow-same-origin"
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -905,11 +977,16 @@ const ResearchAdmin = () => {
                             <span className="text-sm font-bold text-gray-500">#{chapter.chapter_number}</span>
                             <div>
                               <p className="font-semibold text-gray-900">{chapter.title}</p>
-                              <p className="text-xs text-gray-500 mt-0.5">
+                              <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
                                 {chapter.is_published ? (
                                   <span className="text-indigo-600 font-semibold">Published</span>
                                 ) : (
                                   <span className="text-gray-500">Draft</span>
+                                )}
+                                {chapter.content_type === 'full_html' && (
+                                  <span className="inline-flex items-center gap-0.5 text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded text-[10px] font-semibold">
+                                    <FileText className="h-2.5 w-2.5" /> HTML
+                                  </span>
                                 )}
                               </p>
                             </div>
