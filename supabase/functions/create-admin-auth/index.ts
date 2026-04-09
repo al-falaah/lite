@@ -20,8 +20,8 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 const ROLE_DASHBOARDS: Record<string, string> = {
-  registrar: '/admin',
-  academic_dean: '/blog/admin',
+  registrar: '/registrar',
+  academic_dean: '/academic-dean',
 }
 
 function generateEmailHTML(adminData: { full_name: string; email: string; role: string }, inviteLink: string): string {

@@ -133,11 +133,11 @@ export default function Login() {
       if (profile.role === 'director') {
         navigate('/director');
       } else if (profile.role === 'registrar') {
-        navigate('/admin');
+        navigate('/registrar');
       } else if (profile.role === 'academic_dean') {
-        navigate('/blog/admin');
+        navigate('/academic-dean');
       } else {
-        navigate('/admin');
+        navigate('/registrar');
       }
 
     } catch (err) {

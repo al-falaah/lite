@@ -64,9 +64,9 @@ export default function ResetPassword() {
           if (role === 'director') {
             navigate('/director', { replace: true });
           } else if (role === 'registrar') {
-            navigate('/admin', { replace: true });
+            navigate('/registrar', { replace: true });
           } else if (role === 'academic_dean') {
-            navigate('/blog/admin', { replace: true });
+            navigate('/academic-dean', { replace: true });
           } else if (role === 'teacher') {
             navigate('/teacher', { replace: true });
           } else if (role === 'student') {

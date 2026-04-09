@@ -48,7 +48,7 @@ const StoreAdmin = () => {
   const activeTab = searchParams.get('tab') || 'products';
 
   // Determine back link based on user role
-  const backLink = profile?.role === 'director' ? '/director' : '/admin';
+  const backLink = profile?.role === 'director' ? '/director' : '/registrar';
 
   // Helper function to get authenticated headers
   const getAuthHeaders = async () => {

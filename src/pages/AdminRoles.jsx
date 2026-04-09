@@ -57,7 +57,7 @@ const AdminRoles = () => {
   const [roleFilter, setRoleFilter] = useState('admin_only'); // 'all', 'admin_only', or specific role
 
   // Determine back link based on user role
-  const backLink = profile?.role === 'director' ? '/director' : '/admin';
+  const backLink = profile?.role === 'director' ? '/director' : '/registrar';
 
   useEffect(() => {
     fetchUsers();

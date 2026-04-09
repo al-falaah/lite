@@ -637,14 +637,21 @@ const ResearchAdmin = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {profile?.role === 'director' && (
+              {profile?.role === 'director' ? (
                 <button
                   onClick={() => navigate('/director')}
                   className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Dashboard
                 </button>
-              )}
+              ) : profile?.role === 'academic_dean' ? (
+                <button
+                  onClick={() => navigate('/academic-dean')}
+                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Back to Hub
+                </button>
+              ) : null}
               <button
                 onClick={handleLogout}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"

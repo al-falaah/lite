@@ -27,7 +27,7 @@ const BlogAdmin = () => {
   const { user, profile, loading: authLoading, signIn, signOut } = useAuth();
 
   // Determine back link based on user role
-  const backLink = profile?.role === 'director' ? '/director' : '/admin';
+  const backLink = profile?.role === 'director' ? '/director' : '/academic-dean';
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);

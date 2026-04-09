@@ -36,6 +36,8 @@ import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyCertificate from './pages/VerifyCertificate';
+import RegistrarHub from './pages/RegistrarHub';
+import AcademicDeanHub from './pages/AcademicDeanHub';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -86,6 +88,26 @@ function App() {
             {/* Legacy route redirects */}
             <Route path="/student-portal" element={<Navigate to="/login" replace />} />
             <Route path="/teacher-portal" element={<Navigate to="/login" replace />} />
+
+            {/* Registrar Hub - registrar or director */}
+            <Route
+              path="/registrar"
+              element={
+                <RoleRoute allowedRoles={['registrar', 'director']}>
+                  <RegistrarHub />
+                </RoleRoute>
+              }
+            />
+
+            {/* Academic Dean Hub - academic_dean or director */}
+            <Route
+              path="/academic-dean"
+              element={
+                <RoleRoute allowedRoles={['academic_dean', 'director']}>
+                  <AcademicDeanHub />
+                </RoleRoute>
+              }
+            />
 
             {/* Protected Blog Admin Route - academic_dean or director */}
             <Route

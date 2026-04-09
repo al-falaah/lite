@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   const { user, profile, signIn, signOut } = useAuth();
 
   // Determine back link based on user role
-  const backLink = profile?.role === 'director' ? '/director' : '/';
+  const backLink = profile?.role === 'director' ? '/director' : '/registrar';
   const [activeTab, setActiveTab] = useState('applications');
   const [loading, setLoading] = useState(false);
   const [applicationsData, setApplicationsData] = useState([]);
