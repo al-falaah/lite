@@ -1105,7 +1105,8 @@ const AdminStudentsList = () => {
 
       {/* Student Details Modal */}
       {showModal && selectedStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-end sm:items-center justify-center p-2 sm:p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-4 sm:px-6 py-3 sm:py-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
@@ -1388,13 +1389,13 @@ const AdminStudentsList = () => {
                 </div>
               )}
 
-              {/* Close Button */}
               <div className="flex justify-end">
                 <Button variant="secondary" onClick={closeModal}>
                   Close
                 </Button>
               </div>
             </div>
+          </div>
           </div>
         </div>
       )}
