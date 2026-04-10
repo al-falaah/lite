@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ArrowRight, X } from 'lucide-react';
+import { Heart, ArrowRight, ArrowLeft, X } from 'lucide-react';
 
 const OurMission = () => {
   const [founderBioExpanded, setFounderBioExpanded] = useState(false);
@@ -12,14 +12,21 @@ const OurMission = () => {
     <div className="min-h-screen bg-white">
       <Helmet><title>Our Mission | The FastTrack Madrasah</title></Helmet>
 
-      <section className="bg-white py-20 sm:py-28">
+      {/* Header */}
+      <div className="bg-gray-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900">
-              Our Mission
-            </h2>
-          </div>
+          <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors text-sm">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            Our Mission
+          </h1>
+        </div>
+      </div>
+
+      <section className="bg-white py-10 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Main Content Grid - Two Column Layout */}
           <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 mb-12 sm:mb-16">
