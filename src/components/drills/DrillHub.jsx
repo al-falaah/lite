@@ -5,7 +5,7 @@ import { supabase } from '../../services/supabase';
 import {
   getLevel, getLevelTitle, levelProgress, xpToNextLevel,
 } from '../../utils/drillHelpers';
-import { usePullToRefresh, PullIndicator } from '../../hooks/usePullToRefresh';
+import { usePullToRefresh, PullIndicator } from '../../hooks/usePullToRefresh.jsx';
 
 export default function DrillHub() {
   const navigate = useNavigate();

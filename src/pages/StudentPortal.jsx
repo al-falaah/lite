@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
-import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh';
+import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh.jsx';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   User, LogOut, ExternalLink, CreditCard,
