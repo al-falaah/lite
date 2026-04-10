@@ -120,7 +120,7 @@ export default function DrillHub() {
             {/* Level Bar */}
             <div className="bg-white/10 backdrop-blur rounded-xl px-4 py-3">
               <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="font-semibold">{getLevelTitle(level)}</span>
+                <span className="font-semibold">{getLevelTitle(level).en} ({getLevelTitle(level).ar})</span>
                 <span className="text-emerald-200">Level {level} · {remaining} XP to next</span>
               </div>
               <div className="h-2 bg-white/10 rounded-full overflow-hidden">
