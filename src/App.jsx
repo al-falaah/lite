@@ -39,6 +39,9 @@ import VerifyCertificate from './pages/VerifyCertificate';
 import RegistrarHub from './pages/RegistrarHub';
 import AcademicDeanHub from './pages/AcademicDeanHub';
 import NotFoundPage from './pages/NotFoundPage';
+import DrillManager from './components/drills/DrillManager';
+import DrillHub from './components/drills/DrillHub';
+import DrillPlayer from './components/drills/DrillPlayer';
 
 // Components
 import CountdownBanner from './components/CountdownBanner';
@@ -65,6 +68,8 @@ function App() {
             <Route path="/payment-cancel" element={<PaymentCancelPage />} />
             <Route path="/student" element={<StudentPortal />} />
             <Route path="/student/test/:programId/:type/:milestoneIndex?" element={<MilestoneTest />} />
+            <Route path="/drills" element={<DrillHub />} />
+            <Route path="/drills/play/:deckId" element={<DrillPlayer />} />
             <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
             <Route path="/vacancies" element={<VacanciesPage />} />
             <Route path="/teacher" element={<TeacherPortal />} />
@@ -165,6 +170,16 @@ function App() {
               element={
                 <RoleRoute allowedRoles={['academic_dean', 'director']}>
                   <ResearchAdmin />
+                </RoleRoute>
+              }
+            />
+
+            {/* Drill Manager - academic_dean or director */}
+            <Route
+              path="/drills/manage"
+              element={
+                <RoleRoute allowedRoles={['academic_dean', 'director']}>
+                  <DrillManager />
                 </RoleRoute>
               }
             />

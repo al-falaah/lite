@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   User, LogOut, ExternalLink, CreditCard,
-  DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings
+  DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings, Gamepad2
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -949,6 +949,24 @@ const StudentPortal = () => {
               </Card>
             );
           })}
+
+          {/* Practice Drills */}
+          <Card className="border border-purple-200 bg-gradient-to-r from-purple-50 to-white">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-100 rounded-xl flex-shrink-0">
+                <Gamepad2 className="h-6 w-6 text-purple-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900">Practice Drills</h3>
+                <p className="text-sm text-gray-600">Level up with interactive quizzes — earn XP, build streaks, and climb the leaderboard</p>
+              </div>
+              <Link to="/drills">
+                <Button variant="primary" className="bg-purple-600 hover:bg-purple-700 whitespace-nowrap">
+                  Start Drilling
+                </Button>
+              </Link>
+            </div>
+          </Card>
 
           {/* Apply for Another Program */}
           {!isEnrolledInAllPrograms() && (
