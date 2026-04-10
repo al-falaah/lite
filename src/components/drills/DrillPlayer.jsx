@@ -227,11 +227,11 @@ export default function DrillPlayer() {
 
             <div className="flex gap-3">
               <button onClick={startGame}
-                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-xl transition-colors">
                 Retry
               </button>
               <button onClick={() => navigate('/drills')}
-                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-lg transition-colors">
+                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors">
                 All Drills
               </button>
             </div>
@@ -285,8 +285,8 @@ export default function DrillPlayer() {
 
           {/* Arabic Text */}
           {currentCard.arabic_text && (
-            <div className="mb-6 p-5 bg-gray-800/60 rounded-xl border border-gray-700/40">
-              <p dir="rtl" className="text-2xl sm:text-3xl leading-loose text-white text-center" style={{ fontFamily: "'Amiri', 'Scheherazade New', serif" }}>
+            <div className="mb-6 p-5 bg-gray-800/60 rounded-2xl border border-gray-700/40">
+              <p dir="rtl" className="text-2xl sm:text-3xl leading-loose font-arabic text-white text-center">
                 {segmentHighlights(currentCard.arabic_text, currentCard.highlight_ranges).map((seg, j) =>
                   seg.highlighted
                     ? <span key={j} className="bg-amber-500/30 text-amber-300 px-1 rounded-md border-b-2 border-amber-500/60">{seg.text}</span>
@@ -304,10 +304,10 @@ export default function DrillPlayer() {
           {/* Options */}
           <div className="space-y-3 mb-6">
             {currentCard.options.map((opt, i) => {
-              let style = 'border-gray-700/60 bg-gray-800/40 text-gray-200 active:bg-gray-800';
+              let style = 'border-gray-700 bg-gray-800/40 text-gray-200 active:bg-gray-800';
               if (isResult) {
-                if (i === currentCard.correct_index) style = 'border-emerald-500/60 bg-emerald-500/15 text-emerald-300';
-                else if (i === selected && !isCorrect) style = 'border-red-500/60 bg-red-500/15 text-red-300';
+                if (i === currentCard.correct_index) style = 'border-emerald-500 bg-emerald-500/20 text-emerald-300';
+                else if (i === selected && !isCorrect) style = 'border-red-500 bg-red-500/20 text-red-300';
                 else style = 'border-gray-800 bg-gray-800/20 text-gray-600';
               }
 
@@ -316,7 +316,7 @@ export default function DrillPlayer() {
                   key={i}
                   onClick={() => !isResult && handleAnswer(i)}
                   disabled={isResult}
-                  className={`w-full py-4 px-5 rounded-lg border text-left text-sm font-medium transition-colors ${style}`}
+                  className={`w-full py-4 px-5 rounded-xl border-2 text-left text-sm font-medium transition-colors ${style}`}
                 >
                   {opt}
                 </button>
@@ -339,7 +339,7 @@ export default function DrillPlayer() {
 
           {/* Result Feedback */}
           {isResult && (
-            <div className={`rounded-lg px-5 py-4 mb-4 border ${
+            <div className={`rounded-xl px-5 py-4 mb-4 border ${
               isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'
             }`}>
               <div className="flex items-center justify-between mb-1">
@@ -357,7 +357,7 @@ export default function DrillPlayer() {
           {/* Next Button */}
           {isResult && (
             <button onClick={nextCard}
-              className="w-full py-4 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-lg transition-colors">
+              className="w-full py-4 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-xl transition-colors">
               {index + 1 >= cards.length ? 'See Results' : 'Next Question →'}
             </button>
           )}
