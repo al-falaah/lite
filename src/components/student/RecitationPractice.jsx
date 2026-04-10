@@ -132,12 +132,12 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const startRec = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { channelCount: 1, sampleRate: 16000, echoCancellation: true, noiseSuppression: true },
+        audio: { channelCount: 1, sampleRate: 48000, echoCancellation: true, noiseSuppression: true, autoGainControl: true },
       });
       const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
         ? 'audio/webm;codecs=opus'
         : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
-      const mr = new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 24000 });
+      const mr = new MediaRecorder(stream, { mimeType: mime, audioBitsPerSecond: 48000 });
       chunks.current = [];
       mr.ondataavailable = (e) => { if (e.data.size > 0) chunks.current.push(e.data); };
       mr.onstop = () => {
