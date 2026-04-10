@@ -36,6 +36,7 @@ import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyCertificate from './pages/VerifyCertificate';
+import OurMission from './pages/OurMission';
 import RegistrarHub from './pages/RegistrarHub';
 import AcademicDeanHub from './pages/AcademicDeanHub';
 import NotFoundPage from './pages/NotFoundPage';
@@ -61,6 +62,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
+            <Route path="/mission" element={<OurMission />} />
             <Route path="/programs" element={<Programs />} />
             <Route path="/apply" element={<ApplicationPage />} />
             <Route path="/payment" element={<StripePaymentPage />} />
