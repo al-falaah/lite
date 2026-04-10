@@ -20,7 +20,7 @@ export default {
         brand: ['Space Grotesk', 'Inter', '-apple-system', 'sans-serif'],
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         serif: ['Lora', 'Georgia', 'Cambria', 'serif'],
-        arabic: ['Amiri Quran', 'serif'],
+        arabic: ['Amiri Quran', 'Amiri', 'serif'],
       }
     },
   },

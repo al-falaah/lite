@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { RotateCcw, ArrowRight, Play, X } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import {
   segmentHighlights, calcXP, getComboMultiplier, getComboLabel,
@@ -32,6 +33,8 @@ export default function DrillPlayer() {
   const [maxCombo, setMaxCombo] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [lastXP, setLastXP] = useState(0);
+  const [resultAnim, setResultAnim] = useState(null);
+  const [floatingXP, setFloatingXP] = useState(null);
 
   // Timer
   const startRef = useRef(null);
@@ -88,6 +91,35 @@ export default function DrillPlayer() {
     setShowHint(false);
   };
 
+  // ── Sound helper ───────────────────────────────────────
+  const playSound = (type) => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      if (type === 'correct') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523, ctx.currentTime);
+        osc.frequency.setValueAtTime(659, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.35);
+      } else {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(185, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.25);
+      }
+      setTimeout(() => ctx.close(), 600);
+    } catch (e) { /* Audio not supported */ }
+  };
+
   // ── Answer ─────────────────────────────────────────────
   const handleAnswer = (optionIndex) => {
     if (selected !== null) return; // already answered
@@ -104,6 +136,16 @@ export default function DrillPlayer() {
     }
     setLastXP(earned);
     setAnswers(prev => [...prev, { cardId: currentCard.id, selected: optionIndex, correct: currentCard.correct_index, isCorrect, xp: earned }]);
+
+    // Sound + haptic + animation
+    playSound(isCorrect ? 'correct' : 'wrong');
+    if (navigator.vibrate) navigator.vibrate(isCorrect ? [10] : [40, 20, 40]);
+    setResultAnim(isCorrect ? 'correct' : 'wrong');
+    if (isCorrect && earned > 0) {
+      setFloatingXP(earned);
+      setTimeout(() => setFloatingXP(null), 1200);
+    }
+
     setPhase(PHASES.RESULT);
   };
 
@@ -130,6 +172,7 @@ export default function DrillPlayer() {
       setSelected(null);
       setUsedHint(false);
       setShowHint(false);
+      setResultAnim(null);
       setPhase(PHASES.PLAYING);
     }
   };
@@ -175,8 +218,8 @@ export default function DrillPlayer() {
           </div>
 
           <button onClick={startGame}
-            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-bold rounded-xl transition-colors">
-            Start Drill
+            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
+            <Play className="h-5 w-5" /> Start Drill
           </button>
 
           <button onClick={() => navigate(-1)}
@@ -227,12 +270,12 @@ export default function DrillPlayer() {
 
             <div className="flex gap-3">
               <button onClick={startGame}
-                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-xl transition-colors">
-                Retry
+                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                <RotateCcw className="h-3.5 w-3.5" /> Retry
               </button>
               <button onClick={() => navigate('/drills')}
-                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors">
-                All Drills
+                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                All Drills <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
@@ -252,11 +295,25 @@ export default function DrillPlayer() {
       <Helmet><title>{`Q${index + 1} | ${deck.title}`}</title></Helmet>
       <div className="min-h-screen bg-gray-950 flex flex-col">
 
+        {/* Screen flash on answer */}
+        {resultAnim && (
+          <div className={`fixed inset-0 pointer-events-none z-40 animate-drill-flash ${
+            resultAnim === 'correct' ? 'bg-emerald-500/15' : 'bg-red-500/15'
+          }`} />
+        )}
+
+        {/* Floating XP */}
+        {floatingXP && (
+          <div className="fixed top-1/3 left-1/2 pointer-events-none z-50 animate-xp-float">
+            <span className="text-4xl font-black text-amber-400 drop-shadow-lg">+{floatingXP}</span>
+          </div>
+        )}
+
         {/* Top Bar */}
         <div className="px-4 pt-4 pb-2 safe-top">
           <div className="flex items-center justify-between mb-3">
             <button onClick={() => navigate(-1)}
-              className="text-gray-500 hover:text-white text-xs">Quit</button>
+              className="text-gray-500 hover:text-white text-xs flex items-center gap-1"><X className="h-3 w-3" /> Quit</button>
             <div className="flex items-center gap-3 text-sm">
               {combo >= 3 && (
                 <span className="text-orange-400 font-bold text-xs">
@@ -289,8 +346,8 @@ export default function DrillPlayer() {
               <p dir="rtl" className="text-2xl sm:text-3xl leading-loose font-arabic text-white text-center">
                 {segmentHighlights(currentCard.arabic_text, currentCard.highlight_ranges).map((seg, j) =>
                   seg.highlighted
-                    ? <span key={j} className="bg-amber-500/30 text-amber-300 px-1 rounded-md border-b-2 border-amber-500/60">{seg.text}</span>
-                    : <span key={j}>{seg.text}</span>
+                    ? <span key={j} className="font-arabic bg-amber-500/30 text-amber-300 px-1 rounded-md border-b-2 border-amber-500/60">{seg.text}</span>
+                    : <span key={j} className="font-arabic">{seg.text}</span>
                 )}
               </p>
             </div>
@@ -302,7 +359,7 @@ export default function DrillPlayer() {
           </h2>
 
           {/* Options */}
-          <div className="space-y-3 mb-6">
+          <div className={`space-y-3 mb-6 ${resultAnim === 'wrong' ? 'animate-drill-wrong' : ''}`}>
             {currentCard.options.map((opt, i) => {
               let style = 'border-gray-700 bg-gray-800/40 text-gray-200 active:bg-gray-800';
               if (isResult) {
@@ -311,14 +368,21 @@ export default function DrillPlayer() {
                 else style = 'border-gray-800 bg-gray-800/20 text-gray-600';
               }
 
+              const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
               return (
                 <button
                   key={i}
                   onClick={() => !isResult && handleAnswer(i)}
                   disabled={isResult}
-                  className={`w-full py-4 px-5 rounded-xl border-2 text-left text-sm font-medium transition-colors ${style}`}
+                  className={`w-full py-4 px-5 rounded-xl border-2 text-left text-sm font-medium transition-colors flex items-center gap-3 ${style}`}
                 >
-                  {opt}
+                  <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                    isResult && i === currentCard.correct_index ? 'bg-emerald-500/30 text-emerald-300'
+                    : isResult && i === selected && !isCorrect ? 'bg-red-500/30 text-red-300'
+                    : isResult ? 'bg-gray-800/30 text-gray-600'
+                    : 'bg-gray-700/50 text-gray-400'
+                  }`}>{LETTERS[i]}</span>
+                  <span className="flex-1">{opt}</span>
                 </button>
               );
             })}
@@ -340,7 +404,7 @@ export default function DrillPlayer() {
           {/* Result Feedback */}
           {isResult && (
             <div className={`rounded-xl px-5 py-4 mb-4 border ${
-              isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'
+              isCorrect ? 'bg-emerald-500/10 border-emerald-500/30 animate-drill-correct' : 'bg-red-500/10 border-red-500/30'
             }`}>
               <div className="flex items-center justify-between mb-1">
                 <span className={`text-sm font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -357,8 +421,8 @@ export default function DrillPlayer() {
           {/* Next Button */}
           {isResult && (
             <button onClick={nextCard}
-              className="w-full py-4 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-xl transition-colors">
-              {index + 1 >= cards.length ? 'See Results' : 'Next Question →'}
+              className="w-full py-4 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
+              {index + 1 >= cards.length ? 'See Results' : 'Next Question'} <ArrowRight className="h-4 w-4" />
             </button>
           )}
         </div>
