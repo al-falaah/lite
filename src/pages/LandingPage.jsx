@@ -17,6 +17,7 @@ const LandingPage = () => {
   const [founderBioExpanded, setFounderBioExpanded] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [drillPreviewStep, setDrillPreviewStep] = useState(0);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -97,6 +98,12 @@ const LandingPage = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Drill preview animation cycle
+  useEffect(() => {
+    const t = setInterval(() => setDrillPreviewStep(s => (s + 1) % 3), 2000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -714,6 +721,170 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Student Experience Preview Section */}
+      <section className="bg-white py-10 sm:py-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+              Your Student Experience
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              A modern platform with everything you need to master the Qur'an
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+
+            {/* 1. Interactive Drills */}
+            <div>
+              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px]">
+                {/* Flash overlay */}
+                {drillPreviewStep === 1 && (
+                  <div className="absolute inset-0 bg-emerald-500/10 animate-drill-flash z-10 pointer-events-none rounded-2xl" />
+                )}
+                {/* Arabic Text */}
+                <div className="bg-gray-800/60 rounded-xl p-3 mb-3">
+                  <p dir="rtl" className="text-base sm:text-lg font-arabic text-white text-center leading-relaxed">
+                    بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                  </p>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-300 text-center mb-3">What rule applies to the ب here?</p>
+                {/* Options */}
+                <div className="space-y-2">
+                  {['Idghaam', 'Ikhfa', 'Iqlab', 'Izhar'].map((opt, i) => {
+                    const LETTERS = ['A', 'B', 'C', 'D'];
+                    const isCorrectOpt = i === 2;
+                    let optStyle = 'border-gray-700 text-gray-400';
+                    if (drillPreviewStep >= 1 && isCorrectOpt) optStyle = 'border-emerald-500 bg-emerald-500/20 text-emerald-300';
+                    else if (drillPreviewStep >= 1) optStyle = 'border-gray-800 text-gray-600';
+                    return (
+                      <div key={i} className={`py-2 px-3 rounded-lg border text-xs flex items-center gap-2 transition-all duration-300 ${optStyle}`}>
+                        <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
+                          drillPreviewStep >= 1 && isCorrectOpt ? 'bg-emerald-500/30 text-emerald-300'
+                          : drillPreviewStep >= 1 ? 'bg-gray-800/30 text-gray-600'
+                          : 'bg-gray-700/50 text-gray-500'
+                        }`}>{LETTERS[i]}</span>
+                        <span>{opt}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Floating XP */}
+                {drillPreviewStep === 2 && (
+                  <div className="absolute top-1/4 left-1/2 -translate-x-1/2 animate-xp-float pointer-events-none z-20">
+                    <span className="text-2xl font-black text-amber-400">+10 XP</span>
+                  </div>
+                )}
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Interactive Drills</h3>
+              <p className="text-sm text-gray-600">Test your knowledge with gamified quizzes. Earn XP, build combos, and compete on the leaderboard.</p>
+            </div>
+
+            {/* 2. Recitation Practice */}
+            <div>
+              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] flex flex-col items-center justify-center">
+                <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Recording</p>
+                <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-6 leading-relaxed px-2">
+                  ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
+                </p>
+                {/* Waveform bars */}
+                <div className="flex items-center justify-center gap-[3px] mb-6 h-10">
+                  {Array.from({ length: 16 }).map((_, i) => (
+                    <div key={i} className="w-[3px] bg-emerald-500 rounded-full h-full"
+                      style={{ animation: `waveform-bar ${0.8 + (i % 4) * 0.2}s ease-in-out ${i * 0.08}s infinite`, transformOrigin: 'center' }} />
+                  ))}
+                </div>
+                {/* Record button */}
+                <div className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center"
+                  style={{ animation: 'record-pulse 2s ease-in-out infinite' }}>
+                  <div className="w-5 h-5 bg-white rounded-sm" />
+                </div>
+                <p className="text-gray-500 text-xs mt-3 font-mono">0:12 / 5:00</p>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Recitation Practice</h3>
+              <p className="text-sm text-gray-600">Record yourself reciting, get teacher feedback, and track your improvement over time.</p>
+            </div>
+
+            {/* 3. Certificates */}
+            <div>
+              <div className="bg-amber-50 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] flex flex-col items-center justify-center border border-amber-200">
+                {/* Shine sweep */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  <div className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                    style={{ animation: 'cert-shine 5s ease-in-out infinite' }} />
+                </div>
+                {/* Certificate content */}
+                <div className="text-center relative z-10">
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-amber-700 mb-2">The FastTrack Madrasah</p>
+                  <div className="w-16 h-px bg-amber-400 mx-auto mb-3" />
+                  <h4 className="text-lg sm:text-xl font-serif text-gray-900 mb-1">Certificate of Completion</h4>
+                  <p className="text-xs text-gray-500 mb-4">This is to certify that</p>
+                  <p className="text-base font-serif font-semibold text-gray-800 mb-1 border-b border-amber-300 pb-1 px-8">Aminah Rahman</p>
+                  <p className="text-xs text-gray-500 mt-3 mb-2">has successfully completed</p>
+                  <p className="text-sm font-semibold text-emerald-700">Tajweed Mastery Program (TMP)</p>
+                  <div className="flex justify-center gap-8 mt-5">
+                    <div className="text-center">
+                      <div className="w-12 h-px bg-gray-400 mb-1" />
+                      <p className="text-[8px] text-gray-400">Director</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg">🏅</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-12 h-px bg-gray-400 mb-1" />
+                      <p className="text-[8px] text-gray-400">Date</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Program Certificates</h3>
+              <p className="text-sm text-gray-600">Graduate with a recognized Certificate of Completion for each program you finish.</p>
+            </div>
+
+            {/* 4. Leaderboard & Progress */}
+            <div>
+              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] border border-gray-200">
+                {/* Stats row */}
+                <div className="flex items-center gap-4 mb-4 text-sm">
+                  <div><span className="font-bold text-gray-900">1,250</span> <span className="text-gray-500 text-xs">XP</span></div>
+                  <div><span className="font-bold text-gray-900">🔥 12</span> <span className="text-gray-500 text-xs">streak</span></div>
+                  <div><span className="font-bold text-gray-900">8</span> <span className="text-gray-500 text-xs">completed</span></div>
+                </div>
+                {/* Level bar */}
+                <div className="mb-5">
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-gray-600 font-medium">Seeker · Level 3</span>
+                    <span className="text-gray-400">250 XP to next</span>
+                  </div>
+                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-emerald-500 rounded-full" style={{ animation: 'lp-progress-fill 3s ease-out infinite alternate' }} />
+                  </div>
+                </div>
+                {/* Mini leaderboard */}
+                <div className="bg-gray-50 rounded-xl border border-gray-100 divide-y divide-gray-100">
+                  {[
+                    { rank: '🥇', name: 'Yusuf A.', xp: '2,840', streak: 15 },
+                    { rank: '🥈', name: 'Khadijah M.', xp: '2,210', streak: 8 },
+                    { rank: '🥉', name: 'Ahmad R.', xp: '1,950', streak: 12 },
+                    { rank: '4', name: 'You', xp: '1,250', streak: 12, isMe: true },
+                  ].map((row, i) => (
+                    <div key={i} className={`flex items-center px-3 py-2.5 text-xs ${row.isMe ? 'bg-emerald-50' : ''}`}>
+                      <span className={`w-6 text-center font-bold ${i < 3 ? 'text-amber-500' : 'text-gray-400'}`}>{row.rank}</span>
+                      <span className={`flex-1 font-medium ${row.isMe ? 'text-emerald-700' : 'text-gray-700'}`}>{row.name}</span>
+                      <span className="text-amber-600 font-bold">{row.xp} XP</span>
+                      {row.streak >= 3 && <span className="ml-1.5 text-orange-500">🔥{row.streak}</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Leaderboard & Progress</h3>
+              <p className="text-sm text-gray-600">Track your growth with XP, streaks, and levels. See how you rank among fellow students.</p>
+            </div>
+
           </div>
         </div>
       </section>

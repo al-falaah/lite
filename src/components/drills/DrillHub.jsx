@@ -5,6 +5,7 @@ import { supabase } from '../../services/supabase';
 import {
   getLevel, getLevelTitle, levelProgress, xpToNextLevel,
 } from '../../utils/drillHelpers';
+import { usePullToRefresh, PullIndicator } from '../../hooks/usePullToRefresh';
 
 export default function DrillHub() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function DrillHub() {
   const [loading, setLoading] = useState(true);
   const [activeProgram, setActiveProgram] = useState('all');
   const [tab, setTab] = useState('decks'); // decks | leaderboard
+  const { pullDistance, isPulling } = usePullToRefresh();
 
   useEffect(() => {
     const load = async () => {
@@ -45,8 +47,7 @@ export default function DrillHub() {
       const [{ data: dks }, { data: st }, { data: lb }] = await Promise.all([
         supabase.from('drill_decks').select('*').eq('is_published', true).order('created_at', { ascending: false }),
         supabase.from('student_drill_stats').select('*').eq('student_id', stu.id),
-        supabase.from('student_drill_stats').select('student_id, program, total_xp, current_streak, best_streak')
-          .order('total_xp', { ascending: false }).limit(50),
+        supabase.rpc('get_drill_leaderboard', { p_limit: 50 }),
       ]);
 
       setDecks(dks || []);
@@ -87,6 +88,7 @@ export default function DrillHub() {
   return (
     <>
       <Helmet><title>Practice Drills | Al-Falaah</title></Helmet>
+      <PullIndicator pullDistance={pullDistance} isPulling={isPulling} />
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white border-b border-gray-200">
@@ -184,11 +186,11 @@ export default function DrillHub() {
                     {rows.slice(0, 10).map((row, i) => {
                       const isMe = row.student_id === studentId;
                       return (
-                        <div key={row.student_id} className={`flex items-center px-4 py-3 text-sm ${isMe ? 'bg-emerald-50' : ''}`}>
+                        <div key={row.student_id} className={`flex items-center px-4 py-3 text-sm ${isMe ? 'bg-emerald-50 border-l-2 border-emerald-500' : ''}`}>
                           <span className={`w-7 text-center font-bold ${i < 3 ? 'text-amber-500' : 'text-gray-400'}`}>
                             {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
                           </span>
-                          <span className="flex-1 font-medium text-gray-700">{isMe ? 'You' : `Student`}</span>
+                          <span className={`flex-1 font-medium ${isMe ? 'text-emerald-700' : 'text-gray-700'}`}>{isMe ? 'You' : (row.display_name || 'Student')}</span>
                           <span className="text-amber-600 font-bold">{row.total_xp} XP</span>
                           {row.current_streak >= 3 && (
                             <span className="ml-2 text-orange-500 text-xs">🔥{row.current_streak}</span>
