@@ -14,7 +14,7 @@ const areas = [
     borderColor: 'hover:border-orange-300'
   },
   {
-    title: 'Research Administration',
+    title: 'Study Administration',
     description: 'Manage lesson notes, study materials, and assessments',
     icon: FileText,
     href: '/research/admin',
