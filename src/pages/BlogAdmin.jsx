@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
-import { Save, Eye, Trash2, Edit2, Home } from 'lucide-react';
+import { Save, Eye, Trash2, Edit2, Home, ArrowLeft } from 'lucide-react';
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/common/Card';
@@ -735,10 +735,10 @@ const BlogAdmin = () => {
             <div className="flex items-center gap-4">
               <Link
                 to={backLink}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
               >
-                <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">Dashboard</span>
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Back</span>
               </Link>
               <Link
                 to="/blog"

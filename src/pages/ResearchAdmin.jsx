@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3, Upload } from 'lucide-react';
+import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3, Upload, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
@@ -638,19 +638,21 @@ const ResearchAdmin = () => {
             </div>
             <div className="flex items-center gap-3">
               {profile?.role === 'director' ? (
-                <button
-                  onClick={() => navigate('/director')}
-                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                <Link
+                  to="/director"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
                 >
-                  Dashboard
-                </button>
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Back</span>
+                </Link>
               ) : profile?.role === 'academic_dean' ? (
-                <button
-                  onClick={() => navigate('/academic-dean')}
-                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                <Link
+                  to="/academic-dean"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
                 >
-                  Back to Hub
-                </button>
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Back</span>
+                </Link>
               ) : null}
               <button
                 onClick={handleLogout}

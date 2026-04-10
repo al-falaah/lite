@@ -22,7 +22,8 @@ import {
   RefreshCw,
   ClipboardList,
   Calendar,
-  Home
+  Home,
+  ArrowLeft
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DirectorPlanner from '../components/director/DirectorPlanner';
@@ -581,11 +582,14 @@ const DirectorDashboard = () => {
         <div className="border-b border-gray-200 sticky top-0 z-50 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex items-center justify-between h-14">
-              <h1 className="text-base font-semibold text-gray-900">Director Dashboard</h1>
-              <div className="flex items-center gap-4">
-                <Link to="/" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-                  <Home className="h-4 w-4" />
+              <div className="flex items-center gap-3">
+                <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-emerald-600 transition-colors">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Home</span>
                 </Link>
+                <h1 className="text-base font-semibold text-gray-900">Director Dashboard</h1>
+              </div>
+              <div className="flex items-center gap-4">
                 <button
                   onClick={handleLogout}
                   className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
