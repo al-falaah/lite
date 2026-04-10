@@ -162,7 +162,7 @@ export default function DrillPlayer() {
   // ═══════════════════════════════════════════════════════
   if (phase === PHASES.READY) return (
     <>
-      <Helmet><title>{deck.title} | Drills</title></Helmet>
+      <Helmet><title>{`${deck.title} | Drills`}</title></Helmet>
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-sm">
           <p className="text-6xl mb-4">{deck.cover_emoji}</p>
@@ -197,7 +197,7 @@ export default function DrillPlayer() {
     const isPerfect = score === cards.length;
     return (
       <>
-        <Helmet><title>Results | {deck.title}</title></Helmet>
+        <Helmet><title>{`Results | ${deck.title}`}</title></Helmet>
         <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col items-center justify-center px-4">
           <div className="text-center max-w-sm w-full">
             {isPerfect && <p className="text-4xl mb-2 animate-bounce">🎉</p>}
@@ -251,7 +251,7 @@ export default function DrillPlayer() {
 
   return (
     <>
-      <Helmet><title>Q{index + 1} | {deck.title}</title></Helmet>
+      <Helmet><title>{`Q${index + 1} | ${deck.title}`}</title></Helmet>
       <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col">
 
         {/* Top Bar */}

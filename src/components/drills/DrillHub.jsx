@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, Flame, Zap, Trophy, BookOpen, ChevronRight } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import {
   getLevel, getLevelTitle, levelProgress, xpToNextLevel,
-  LEVEL_TITLES, DECK_EMOJIS,
 } from '../../utils/drillHelpers';
 
 export default function DrillHub() {
@@ -91,54 +89,51 @@ export default function DrillHub() {
       <Helmet><title>Practice Drills | Al-Falaah</title></Helmet>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-600 text-white">
-          <div className="max-w-3xl mx-auto px-4 pt-6 pb-8">
-            <button onClick={() => navigate('/student')} className="flex items-center gap-1 text-emerald-200 hover:text-white text-sm mb-4">
-              <ArrowLeft className="h-4 w-4" /> Back to Portal
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-3xl mx-auto px-4 pt-5 pb-5">
+            <button onClick={() => navigate('/student')} className="text-emerald-600 hover:text-emerald-700 text-sm font-medium mb-3 block">
+              ← Back to Portal
             </button>
-            <h1 className="text-2xl font-bold mb-4">Practice Drills</h1>
+            <h1 className="text-xl font-bold text-gray-900 mb-4">Practice Drills</h1>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
-                <Zap className="h-5 w-5 text-amber-300 mx-auto mb-1" />
-                <p className="text-xl font-bold">{totalXP}</p>
-                <p className="text-[10px] text-emerald-200">Total XP</p>
+            {/* Stats row */}
+            <div className="flex items-center gap-6 text-sm mb-4">
+              <div>
+                <span className="font-bold text-gray-900">{totalXP}</span>
+                <span className="text-gray-500 ml-1">XP</span>
               </div>
-              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
-                <Flame className="h-5 w-5 text-orange-400 mx-auto mb-1" />
-                <p className="text-xl font-bold">{bestStreak}</p>
-                <p className="text-[10px] text-emerald-200">Day Streak</p>
+              <div>
+                <span className="font-bold text-gray-900">{bestStreak}</span>
+                <span className="text-gray-500 ml-1">day streak</span>
               </div>
-              <div className="bg-white/10 backdrop-blur rounded-xl p-3 text-center">
-                <BookOpen className="h-5 w-5 text-cyan-300 mx-auto mb-1" />
-                <p className="text-xl font-bold">{totalDrills}</p>
-                <p className="text-[10px] text-emerald-200">Completed</p>
+              <div>
+                <span className="font-bold text-gray-900">{totalDrills}</span>
+                <span className="text-gray-500 ml-1">completed</span>
               </div>
             </div>
 
             {/* Level Bar */}
-            <div className="bg-white/10 backdrop-blur rounded-xl px-4 py-3">
-              <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="font-semibold">{getLevelTitle(level).en} ({getLevelTitle(level).ar})</span>
-                <span className="text-emerald-200">Level {level} · {remaining} XP to next</span>
+            <div>
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="text-gray-700 font-medium">{getLevelTitle(level).en} · Level {level}</span>
+                <span className="text-gray-400">{remaining} XP to next</span>
               </div>
-              <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                <div className="h-full bg-amber-400 rounded-full transition-all duration-500" style={{ width: `${progress * 100}%` }} />
+              <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${progress * 100}%` }} />
               </div>
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="max-w-3xl mx-auto px-4 -mt-4">
-          <div className="flex gap-2 mb-4">
+        <div className="max-w-3xl mx-auto px-4 pt-4">
+          <div className="flex gap-4 mb-4 border-b border-gray-200">
             {['decks', 'leaderboard'].map(t => (
               <button key={t} onClick={() => setTab(t)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm ${
-                  tab === t ? 'bg-white text-gray-900' : 'bg-white/60 text-gray-500 hover:bg-white/80'
+                className={`pb-2 text-sm font-medium transition-colors ${
+                  tab === t ? 'text-gray-900 border-b-2 border-emerald-600' : 'text-gray-400 hover:text-gray-600'
                 }`}>
-                {t === 'decks' ? '📝 Decks' : '🏆 Leaderboard'}
+                {t === 'decks' ? 'Decks' : 'Leaderboard'}
               </button>
             ))}
           </div>
@@ -165,13 +160,13 @@ export default function DrillHub() {
                 <div className="space-y-3">
                   {filteredDecks.map(d => (
                     <button key={d.id} onClick={() => navigate(`/drills/play/${d.id}`)}
-                      className="w-full bg-white rounded-xl p-4 border border-gray-200 hover:shadow-md hover:border-emerald-300 transition-all text-left flex items-center gap-4 group">
-                      <span className="text-3xl flex-shrink-0">{d.cover_emoji}</span>
+                      className="w-full bg-white rounded-xl p-4 border border-gray-200 hover:shadow-md hover:border-emerald-300 transition-all text-left flex items-center gap-4">
+                      <span className="text-2xl flex-shrink-0">{d.cover_emoji}</span>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-gray-900 text-sm truncate">{d.title}</h3>
                         <p className="text-xs text-gray-500 truncate">{d.topic} · {PROGRAM_LABELS[d.program] || d.program}</p>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-emerald-500 transition-colors" />
+                      <span className="text-gray-300 text-sm">→</span>
                     </button>
                   ))}
                 </div>
@@ -194,7 +189,7 @@ export default function DrillHub() {
                             {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}
                           </span>
                           <span className="flex-1 font-medium text-gray-700">{isMe ? 'You' : `Student`}</span>
-                          <span className="text-amber-600 font-bold">⚡ {row.total_xp}</span>
+                          <span className="text-amber-600 font-bold">{row.total_xp} XP</span>
                           {row.current_streak >= 3 && (
                             <span className="ml-2 text-orange-500 text-xs">🔥{row.current_streak}</span>
                           )}
