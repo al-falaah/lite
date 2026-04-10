@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DirectorPlanner from '../components/director/DirectorPlanner';
+import PricingSettings from '../components/director/PricingSettings';
 import { toast } from 'sonner';
 import {
   LineChart,
@@ -1005,6 +1006,9 @@ const DirectorDashboard = () => {
                   </form>
                 )}
               </div>
+
+              {/* Pricing Settings */}
+              <PricingSettings />
             </div>
           )}
 

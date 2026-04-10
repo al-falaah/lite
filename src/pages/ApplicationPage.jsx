@@ -11,12 +11,14 @@ import Card from '../components/common/Card';
 import Input from '../components/common/Input';
 import Textarea from '../components/common/Textarea';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
+import usePricing from '../hooks/usePricing';
 
 const ApplicationPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const { pricing } = usePricing();
 
   const [formData, setFormData] = useState({
     // Program Selection
@@ -392,8 +394,8 @@ const ApplicationPage = () => {
     const program = PROGRAMS[formData.program];
     const programName = program?.name || formData.program;
     const paymentInfo = program?.pricing.type === 'one-time'
-      ? `One-time payment of ${program.pricing.displayPrice}`
-      : `Monthly (${program.pricing.displayPriceMonthly}) or Annual (${program.pricing.displayPriceAnnual}) payment options`;
+      ? `One-time payment of $${pricing?.[formData.program]?.current_price ?? program.pricing.oneTime} NZD`
+      : `Monthly ($${pricing?.essentials?.current_price_monthly ?? program.pricing.monthly}/month) or Annual ($${pricing?.essentials?.current_price_annual ?? program.pricing.annual}/year) payment options`;
 
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -502,7 +504,7 @@ const ApplicationPage = () => {
                           <span className="text-sm text-gray-500">{PROGRAMS[PROGRAM_IDS.QARI].name}</span>
                         </div>
                         <p className="text-sm text-gray-600 mt-0.5">
-                          {PROGRAMS[PROGRAM_IDS.QARI].duration.display} · {PROGRAMS[PROGRAM_IDS.QARI].pricing.displayPrice}
+                          {PROGRAMS[PROGRAM_IDS.QARI].duration.display} · ${pricing?.qari?.current_price ?? PROGRAMS[PROGRAM_IDS.QARI].pricing.oneTime} NZD
                         </p>
                       </div>
                     </label>
@@ -538,7 +540,7 @@ const ApplicationPage = () => {
                           <span className="text-sm text-gray-500">{PROGRAMS[PROGRAM_IDS.TAJWEED].name}</span>
                         </div>
                         <p className="text-sm text-gray-600 mt-0.5">
-                          {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} · {PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.displayPrice}
+                          {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display} · ${pricing?.tajweed?.current_price ?? PROGRAMS[PROGRAM_IDS.TAJWEED].pricing.oneTime} NZD
                         </p>
                       </div>
                     </label>
@@ -574,7 +576,7 @@ const ApplicationPage = () => {
                           <span className="text-sm text-gray-500">{PROGRAMS[PROGRAM_IDS.ESSENTIALS].name}</span>
                         </div>
                         <p className="text-sm text-gray-600 mt-0.5">
-                          {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} · ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly}/month or ${PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual}/year
+                          {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display} · ${pricing?.essentials?.current_price_monthly ?? PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.monthly}/month or ${pricing?.essentials?.current_price_annual ?? PROGRAMS[PROGRAM_IDS.ESSENTIALS].pricing.annual}/year
                         </p>
                       </div>
                     </label>

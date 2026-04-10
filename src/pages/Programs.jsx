@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, CheckCircle, ChevronDown, Mail, Phone, MessageCircle, Heart } from 'lucide-react';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
+import usePricing from '../hooks/usePricing';
+import SubsidizedPrice from '../components/common/SubsidizedPrice';
 
 const Programs = () => {
   const [expandedProgram, setExpandedProgram] = useState(null);
@@ -11,6 +13,12 @@ const Programs = () => {
   const qari = PROGRAMS[PROGRAM_IDS.QARI];
   const tajweed = PROGRAMS[PROGRAM_IDS.TAJWEED];
   const essentials = PROGRAMS[PROGRAM_IDS.ESSENTIALS];
+
+  // Live pricing from DB (falls back to static config)
+  const { pricing } = usePricing();
+  const qariP = pricing?.qari;
+  const tmpP = pricing?.tajweed;
+  const easiP = pricing?.essentials;
 
   // Stripe donation link from environment variable
   const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/dRm28t3WQ4Jacmj6gocAo00.com';
@@ -81,7 +89,9 @@ const Programs = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Investment</span>
-                    <span className="text-sm font-semibold text-gray-900">{qari.pricing.displayPrice}</span>
+                    <span className="text-sm font-semibold text-gray-900">
+                      <SubsidizedPrice fullPrice={qariP?.full_price} price={qariP?.current_price ?? qari.pricing.oneTime} suffix=" NZD" />
+                    </span>
                   </div>
                   <div className="flex justify-between items-start">
                     <span className="text-sm text-gray-600">Focus</span>
@@ -202,7 +212,9 @@ const Programs = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Investment</span>
-                    <span className="text-sm font-semibold text-gray-900">{tajweed.pricing.displayPrice}</span>
+                    <span className="text-sm font-semibold text-gray-900">
+                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} suffix=" NZD" />
+                    </span>
                   </div>
                   <div className="flex justify-between items-start">
                     <span className="text-sm text-gray-600">Focus</span>
@@ -328,8 +340,10 @@ const Programs = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Investment</span>
                     <div className="text-right">
-                      <span className="text-sm font-semibold text-gray-900">{essentials.pricing.displayPriceMonthly}</span>
-                      <span className="text-xs text-gray-500 block">{essentials.pricing.displayPriceAnnual}</span>
+                      <span className="text-sm font-semibold text-gray-900">
+                        <SubsidizedPrice fullPrice={easiP?.full_monthly} price={easiP?.current_price_monthly ?? essentials.pricing.monthly} suffix="/month" />
+                      </span>
+                      <span className="text-xs text-gray-500 block">${easiP?.current_price_annual ?? essentials.pricing.annual}/year</span>
                     </div>
                   </div>
                   <div className="flex justify-between items-start">
@@ -503,20 +517,26 @@ const Programs = () => {
                 </div>
                 <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-xl font-bold text-gray-900">{qari.pricing.displayPrice}</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      <SubsidizedPrice fullPrice={qariP?.full_price} price={qariP?.current_price ?? qari.pricing.oneTime} suffix=" NZD" />
+                    </p>
                     <p className="text-sm text-gray-500 mt-1">{qari.pricing.displayNote}</p>
                   </div>
                 </div>
                 <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-xl font-bold text-gray-900">{tajweed.pricing.displayPrice}</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} suffix=" NZD" />
+                    </p>
                     <p className="text-sm text-gray-500 mt-1">{tajweed.pricing.displayNote}</p>
                   </div>
                 </div>
                 <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
-                    <p className="text-xl font-bold text-gray-900">{essentials.pricing.displayPriceMonthly}</p>
-                    <p className="text-sm text-gray-500 mt-1">{essentials.pricing.displayPriceAnnual}</p>
+                    <p className="text-xl font-bold text-gray-900">
+                      <SubsidizedPrice fullPrice={easiP?.full_monthly} price={easiP?.current_price_monthly ?? essentials.pricing.monthly} suffix="/month" />
+                    </p>
+                    <p className="text-sm text-gray-500 mt-1">${easiP?.current_price_annual ?? essentials.pricing.annual}/year</p>
                   </div>
                 </div>
               </div>
@@ -584,7 +604,9 @@ const Programs = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Investment</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{qari.pricing.displayPrice}</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">
+                      <SubsidizedPrice fullPrice={qariP?.full_price} price={qariP?.current_price ?? qari.pricing.oneTime} suffix=" NZD" />
+                    </p>
                   </div>
                 </div>
 
@@ -679,7 +701,9 @@ const Programs = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Investment</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{tajweed.pricing.displayPrice}</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">
+                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} suffix=" NZD" />
+                    </p>
                   </div>
                 </div>
 
@@ -773,7 +797,9 @@ const Programs = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Investment</p>
-                    <p className="text-sm font-semibold text-gray-900 mt-0.5">{essentials.pricing.displayPriceMonthly}</p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">
+                      <SubsidizedPrice fullPrice={easiP?.full_monthly} price={easiP?.current_price_monthly ?? essentials.pricing.monthly} suffix="/month" />
+                    </p>
                   </div>
                 </div>
 

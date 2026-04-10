@@ -7,6 +7,7 @@ import { GraduationCap, User, Mail, Phone, MapPin, Calendar, DollarSign } from '
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { PROGRAMS, PROGRAM_IDS, getAllPrograms } from '../config/programs';
+import usePricing from '../hooks/usePricing';
 
 const EnrollAdditionalProgram = () => {
   const [searchParams] = useSearchParams();
@@ -23,6 +24,7 @@ const EnrollAdditionalProgram = () => {
 
   // Get available programs from centralized config
   const availablePrograms = getAllPrograms();
+  const { pricing } = usePricing();
 
   useEffect(() => {
     if (!email) {
@@ -367,7 +369,7 @@ const EnrollAdditionalProgram = () => {
                               onChange={() => setPaymentType('monthly')}
                               className="text-emerald-600"
                             />
-                            <span className="text-sm">Monthly: ${program.pricing.monthly}/month</span>
+                            <span className="text-sm">Monthly: ${pricing?.[program.id]?.current_price_monthly ?? program.pricing.monthly}/month</span>
                           </label>
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -378,14 +380,14 @@ const EnrollAdditionalProgram = () => {
                               onChange={() => setPaymentType('annual')}
                               className="text-emerald-600"
                             />
-                            <span className="text-sm">Annual: ${program.pricing.annual}/year</span>
+                            <span className="text-sm">Annual: ${pricing?.[program.id]?.current_price_annual ?? program.pricing.annual}/year</span>
                           </label>
                         </div>
                       )}
 
                       {program.pricing.type === 'one-time' && (
                         <p className="text-sm text-gray-600 mt-2">
-                          One-time payment: ${program.pricing.oneTime}
+                          One-time payment: ${pricing?.[program.id]?.current_price ?? program.pricing.oneTime}
                         </p>
                       )}
                     </div>
@@ -430,10 +432,10 @@ const EnrollAdditionalProgram = () => {
                   <span>Amount Due Today:</span>
                   <span className="text-emerald-600">
                     ${selectedProgramDetails?.pricing.type === 'one-time'
-                      ? selectedProgramDetails.pricing.oneTime
+                      ? (pricing?.[selectedProgram]?.current_price ?? selectedProgramDetails.pricing.oneTime)
                       : paymentType === 'monthly'
-                        ? selectedProgramDetails?.pricing.monthly
-                        : selectedProgramDetails?.pricing.annual
+                        ? (pricing?.[selectedProgram]?.current_price_monthly ?? selectedProgramDetails?.pricing.monthly)
+                        : (pricing?.[selectedProgram]?.current_price_annual ?? selectedProgramDetails?.pricing.annual)
                     }
                   </span>
                 </div>

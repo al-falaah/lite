@@ -7,6 +7,8 @@ import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
+import usePricing from '../hooks/usePricing';
+import SubsidizedPrice from '../components/common/SubsidizedPrice';
 
 const StripePaymentPage = () => {
   const [searchParams] = useSearchParams();
@@ -23,11 +25,21 @@ const StripePaymentPage = () => {
   const [email, setEmail] = useState(emailFromUrl || '');
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
+  const { pricing } = usePricing();
 
   const programConfig = PROGRAMS[programFromUrl];
+  const liveP = pricing?.[programFromUrl];
   const isOneTimePayment = programConfig?.pricing.type === 'one-time';
   const programName = programConfig?.name || 'Program';
   const programDuration = programConfig?.duration.display || '1 year';
+
+  // Use live DB prices with static fallback
+  const oneTimePrice = liveP?.current_price ?? programConfig?.pricing.oneTime ?? 300;
+  const monthlyPrice = liveP?.current_price_monthly ?? programConfig?.pricing.monthly ?? 35;
+  const annualPrice = liveP?.current_price_annual ?? programConfig?.pricing.annual ?? 375;
+  const fullPrice = liveP?.full_price;
+  const fullMonthly = liveP?.full_monthly;
+  const fullAnnual = liveP?.full_annual;
 
   const handlePayment = async (planType) => {
     if (!email) {
@@ -144,7 +156,9 @@ const StripePaymentPage = () => {
                 <div className="mb-6">
                   <div className="text-sm font-semibold text-emerald-600 uppercase tracking-wide mb-3">{programConfig?.shortName || programConfig?.name} Program</div>
                   <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-5xl font-bold text-gray-900">${programConfig?.pricing.oneTime || 300}</span>
+                    <span className="text-5xl font-bold text-gray-900">
+                      <SubsidizedPrice fullPrice={fullPrice} price={oneTimePrice} />
+                    </span>
                     <span className="text-gray-500 text-lg">one-time</span>
                   </div>
                 </div>
@@ -179,7 +193,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Pay ${programConfig?.pricing.oneTime || 300} Now
+                      Pay ${oneTimePrice} Now
                     </>
                   )}
                 </Button>
@@ -195,7 +209,9 @@ const StripePaymentPage = () => {
                 <div className="mb-6">
                   <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Monthly Plan</div>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-5xl font-bold text-gray-900">${programConfig?.pricing.monthly || 35}</span>
+                    <span className="text-5xl font-bold text-gray-900">
+                      <SubsidizedPrice fullPrice={fullMonthly} price={monthlyPrice} />
+                    </span>
                     <span className="text-gray-500 text-lg">/month</span>
                   </div>
                 </div>
@@ -213,7 +229,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700 leading-relaxed">Total: ${(programConfig?.pricing.monthly || 35) * (programConfig?.duration.months || 24)} over {programConfig?.duration.months || 24} months</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Total: ${monthlyPrice * (programConfig?.duration.months || 24)} over {programConfig?.duration.months || 24} months</span>
                   </li>
                 </ul>
                 <Button
@@ -230,7 +246,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5 mr-2" />
-                      Pay ${programConfig?.pricing.monthly || 35}/month
+                      Pay ${monthlyPrice}/month
                     </>
                   )}
                 </Button>
@@ -240,13 +256,15 @@ const StripePaymentPage = () => {
             {/* Annual Plan */}
             <div className="bg-white border-2 border-emerald-600 rounded-2xl p-8 hover:shadow-lg transition-all relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-md">
-                Save ${((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)}
+                Save ${(monthlyPrice * 12) - annualPrice}
               </div>
               <div className="text-center">
                 <div className="mb-6 pt-2">
                   <div className="text-sm font-semibold text-emerald-600 uppercase tracking-wide mb-3">Annual Plan</div>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-5xl font-bold text-gray-900">${programConfig?.pricing.annual || 375}</span>
+                    <span className="text-5xl font-bold text-gray-900">
+                      <SubsidizedPrice fullPrice={fullAnnual} price={annualPrice} />
+                    </span>
                     <span className="text-gray-500 text-lg">/year</span>
                   </div>
                 </div>
@@ -264,7 +282,7 @@ const StripePaymentPage = () => {
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700 leading-relaxed">Total: ${(programConfig?.pricing.annual || 375) * (programConfig?.duration.years || 2)} over {programConfig?.duration.display || '2 years'} (save ${(((programConfig?.pricing.monthly || 35) * 12) - (programConfig?.pricing.annual || 375)) * (programConfig?.duration.years || 2)}!)</span>
+                    <span className="text-sm text-gray-700 leading-relaxed">Total: ${annualPrice * (programConfig?.duration.years || 2)} over {programConfig?.duration.display || '2 years'} (save ${((monthlyPrice * 12) - annualPrice) * (programConfig?.duration.years || 2)}!)</span>
                   </li>
                 </ul>
                 <Button
@@ -280,7 +298,7 @@ const StripePaymentPage = () => {
                   ) : (
                     <>
                       <DollarSign className="h-5 w-5 mr-2" />
-                      Pay ${programConfig?.pricing.annual || 375}/year
+                      Pay ${annualPrice}/year
                     </>
                   )}
                 </Button>

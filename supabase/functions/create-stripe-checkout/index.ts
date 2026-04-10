@@ -2,7 +2,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.21.0'
-import { PROGRAMS, PROGRAM_IDS, getProgram, isValidProgram, getPriceCents } from '../_shared/programs.ts'
+import { PROGRAMS, PROGRAM_IDS, getProgram, isValidProgram } from '../_shared/programs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -97,7 +97,38 @@ serve(async (req) => {
 
     // Get program config
     const programConfig = getProgram(currentProgram)!
-    const priceCents = getPriceCents(currentProgram, planType)
+
+    // Fetch live pricing from program_pricing table
+    const { data: livePricing, error: pricingError } = await supabaseClient
+      .from('program_pricing')
+      .select('*')
+      .eq('program_id', currentProgram)
+      .single()
+
+    if (pricingError || !livePricing) {
+      console.warn('No live pricing found, using static config fallback for', currentProgram)
+    }
+
+    // Calculate price in cents from live DB pricing (fallback to static config)
+    let priceCents: number
+    if (livePricing) {
+      if (livePricing.pricing_type === 'one-time') {
+        priceCents = Math.round(livePricing.current_price * 100)
+      } else {
+        priceCents = planType === 'monthly'
+          ? Math.round(livePricing.current_price_monthly * 100)
+          : Math.round(livePricing.current_price_annual * 100)
+      }
+    } else {
+      // Static fallback
+      if (programConfig.pricing.type === 'one-time') {
+        priceCents = programConfig.pricing.oneTimeCents || 0
+      } else {
+        priceCents = planType === 'monthly'
+          ? (programConfig.pricing.monthlyCents || 0)
+          : (programConfig.pricing.annualCents || 0)
+      }
+    }
 
     // Create checkout session based on plan type and program
     const sessionConfig: any = {

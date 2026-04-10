@@ -2,7 +2,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Stripe from 'https://esm.sh/stripe@14.21.0'
-import { getProgram, getTotalFees, getPaymentAmount, PROGRAM_IDS } from '../_shared/programs.ts'
+import { getProgram, PROGRAM_IDS } from '../_shared/programs.ts'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
   apiVersion: '2023-10-16',
@@ -146,9 +146,43 @@ serve(async (req) => {
 
       const applicationId = application?.id || null
 
-      // Create enrollment for this program - using centralized config
-      const totalFees = getTotalFees(program, planType)
+      // Create enrollment for this program - using live DB pricing
+      const { data: livePricing } = await supabaseClient
+        .from('program_pricing')
+        .select('*')
+        .eq('program_id', program)
+        .single()
+
+      let totalFees: number
+      let paymentAmount: number
       const duration = programConfig.duration.months
+
+      if (livePricing) {
+        const durationMonths = Math.max(1, Math.round(livePricing.total_weeks / 4.33))
+        const durationYears = Math.max(1, Math.round(livePricing.total_weeks / 52))
+        if (livePricing.pricing_type === 'one-time') {
+          totalFees = livePricing.current_price
+          paymentAmount = livePricing.current_price
+        } else if (planType === 'monthly') {
+          totalFees = livePricing.current_price_monthly * durationMonths
+          paymentAmount = livePricing.current_price_monthly
+        } else {
+          totalFees = livePricing.current_price_annual * durationYears
+          paymentAmount = livePricing.current_price_annual
+        }
+      } else {
+        // Fallback to static config
+        if (programConfig.pricing.type === 'one-time') {
+          totalFees = programConfig.pricing.oneTime || 0
+          paymentAmount = programConfig.pricing.oneTime || 0
+        } else if (planType === 'monthly') {
+          totalFees = (programConfig.pricing.monthly || 0) * programConfig.duration.months
+          paymentAmount = programConfig.pricing.monthly || 0
+        } else {
+          totalFees = (programConfig.pricing.annual || 0) * programConfig.duration.years
+          paymentAmount = programConfig.pricing.annual || 0
+        }
+      }
 
       const { data: enrollmentData, error: enrollmentError } = await supabaseClient
         .from('enrollments')
@@ -187,8 +221,8 @@ serve(async (req) => {
         }
       }
 
-      // Determine payment amount using centralized config
-      const amount = getPaymentAmount(program, planType)
+      // Determine payment amount (already computed above from DB pricing)
+      const amount = paymentAmount
 
       // Create payment record linked to enrollment
       const { error: paymentError } = await supabaseClient
