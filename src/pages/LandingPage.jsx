@@ -18,6 +18,7 @@ const LandingPage = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [drillPreviewStep, setDrillPreviewStep] = useState(0);
+  const [showCertPreview, setShowCertPreview] = useState(false);
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
@@ -749,10 +750,10 @@ const LandingPage = () => {
                 {/* Arabic Text */}
                 <div className="bg-gray-800/60 rounded-xl p-3 mb-3">
                   <p dir="rtl" className="text-base sm:text-lg font-arabic text-white text-center leading-relaxed">
-                    بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                    سَمِيعٌۢ <span className="bg-amber-500/30 text-amber-300 px-1 rounded border-b-2 border-amber-500/60">بَ</span>صِيرٌ
                   </p>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-300 text-center mb-3">What rule applies to the ب here?</p>
+                <p className="text-xs sm:text-sm text-gray-300 text-center mb-3">What rule applies to the tanween before ب?</p>
                 {/* Options */}
                 <div className="space-y-2">
                   {['Idghaam', 'Ikhfa', 'Iqlab', 'Izhar'].map((opt, i) => {
@@ -811,38 +812,57 @@ const LandingPage = () => {
 
             {/* 3. Certificates */}
             <div>
-              <div className="bg-amber-50 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] flex flex-col items-center justify-center border border-amber-200">
-                {/* Shine sweep */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <div className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent"
-                    style={{ animation: 'cert-shine 5s ease-in-out infinite' }} />
-                </div>
-                {/* Certificate content */}
-                <div className="text-center relative z-10">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-amber-700 mb-2">The FastTrack Madrasah</p>
-                  <div className="w-16 h-px bg-amber-400 mx-auto mb-3" />
-                  <h4 className="text-lg sm:text-xl font-serif text-gray-900 mb-1">Certificate of Completion</h4>
-                  <p className="text-xs text-gray-500 mb-4">This is to certify that</p>
-                  <p className="text-base font-serif font-semibold text-gray-800 mb-1 border-b border-amber-300 pb-1 px-8">Aminah Rahman</p>
-                  <p className="text-xs text-gray-500 mt-3 mb-2">has successfully completed</p>
-                  <p className="text-sm font-semibold text-emerald-700">Tajweed Mastery Program (TMP)</p>
-                  <div className="flex justify-center gap-8 mt-5">
-                    <div className="text-center">
-                      <div className="w-12 h-px bg-gray-400 mb-1" />
-                      <p className="text-[8px] text-gray-400">Director</p>
+              <button onClick={() => setShowCertPreview(true)} className="w-full text-left group">
+                <div className="rounded-2xl relative overflow-hidden mb-4 min-h-[280px] flex items-center justify-center cursor-pointer" style={{ background: '#fffdf7', border: '1px solid #d4a574' }}>
+                  {/* Shine sweep */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                      style={{ animation: 'cert-shine 5s ease-in-out infinite' }} />
+                  </div>
+                  {/* SAMPLE watermark */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                    <span className="text-5xl sm:text-6xl font-black text-gray-300/20 uppercase tracking-[0.2em] -rotate-12 select-none">SAMPLE</span>
+                  </div>
+                  {/* Borders matching real template */}
+                  <div className="absolute" style={{ inset: '6px', border: '2px solid #059669', borderRadius: '2px' }} />
+                  <div className="absolute" style={{ inset: '10px', border: '1px solid #a7f3d0', borderRadius: '2px' }} />
+                  {/* Certificate content matching real template */}
+                  <div className="text-center relative z-20 py-4 px-3">
+                    <img src="/favicon.svg" alt="" className="w-8 h-8 mx-auto mb-1" />
+                    <p className="text-[9px] font-brand font-semibold text-emerald-800" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
+                    <p className="text-[7px] text-gray-400 uppercase tracking-[0.15em] mb-2">New Zealand</p>
+                    <h4 className="text-sm sm:text-base font-serif font-bold uppercase text-emerald-800 tracking-wide mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
+                    <p className="text-[8px] uppercase tracking-[0.12em] text-gray-400 mb-3">Tajweed Mastery Program</p>
+                    <p className="text-[8px] uppercase tracking-wider text-gray-400 mb-1">This is to certify that</p>
+                    <p className="text-sm font-serif font-semibold italic text-emerald-800 mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
+                    <p className="text-[8px] text-gray-500 mb-2">has successfully completed the</p>
+                    <p className="text-[9px] font-serif font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>TMP — Tajweed Mastery Program</p>
+                    <p dir="rtl" className="text-[10px] font-arabic text-gray-400 mt-0.5 mb-2">برنامج إتقان التجويد</p>
+                    {/* Scores */}
+                    <div className="flex justify-center gap-4 mb-2">
+                      {[{ l: 'Milestones', v: '82.5%' }, { l: 'Final Exam', v: '88.0%' }, { l: 'Total', v: '85.3%' }].map(s => (
+                        <div key={s.l} className="text-center">
+                          <p className="text-[6px] uppercase tracking-wide text-gray-400">{s.l}</p>
+                          <p className="text-xs font-serif font-bold text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
+                        </div>
+                      ))}
                     </div>
-                    <div className="text-center">
-                      <p className="text-lg">🏅</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-12 h-px bg-gray-400 mb-1" />
-                      <p className="text-[8px] text-gray-400">Date</p>
+                    {/* Signatures */}
+                    <div className="flex justify-center gap-8">
+                      {['Program Director', 'Instructor'].map(t => (
+                        <div key={t} className="text-center">
+                          <div className="w-12 border-b border-gray-300 mb-0.5 mx-auto" />
+                          <p className="text-[6px] text-gray-400">{t}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
+                  {/* Click hint */}
+                  <div className="absolute bottom-2 right-2 bg-gray-900/70 text-white text-[8px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-30">Click to preview</div>
                 </div>
-              </div>
+              </button>
               <h3 className="text-lg font-semibold text-gray-900 mb-1">Program Certificates</h3>
-              <p className="text-sm text-gray-600">Graduate with a recognized Certificate of Completion for each program you finish.</p>
+              <p className="text-sm text-gray-600">Graduate with a verifiable Certificate of Completion for each program you finish.</p>
             </div>
 
             {/* 4. Leaderboard & Progress */}
@@ -885,9 +905,129 @@ const LandingPage = () => {
               <p className="text-sm text-gray-600">Track your growth with XP, streaks, and levels. See how you rank among fellow students.</p>
             </div>
 
+            {/* 5. Tests & Exams */}
+            <div className="md:col-span-2">
+              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 border border-gray-200">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+                    <span className="text-amber-500">🏆</span> Tests & Exam Progress
+                  </h4>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">IN PROGRESS</span>
+                </div>
+                {/* Score summary */}
+                <div className="bg-gray-50 rounded-lg p-2.5 sm:p-3 mb-3 flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Weighted Total</span>
+                  <span className="text-base font-bold text-emerald-600">74.8%</span>
+                </div>
+                {/* Milestones */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-2">
+                  {[
+                    { name: 'Arabic Letters', score: '85.0%', done: true },
+                    { name: 'Vowel Marks', score: '72.5%', done: true },
+                    { name: 'Connected Letters', score: null, done: false, unlocked: true },
+                    { name: 'Word Reading', score: null, done: false, unlocked: false, week: '8+' },
+                  ].map((m, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 rounded-lg border border-gray-100 gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {m.done ? (
+                          <span className="text-emerald-500 text-xs">✓</span>
+                        ) : m.unlocked ? (
+                          <span className="text-amber-500 text-xs">⏱</span>
+                        ) : (
+                          <span className="text-gray-300 text-xs">🔒</span>
+                        )}
+                        <span className="text-xs font-medium text-gray-900">Milestone {i + 1}: {m.name}</span>
+                      </div>
+                      {m.done && <span className="text-[11px] text-emerald-600 font-medium">{m.score}</span>}
+                      {!m.done && m.unlocked && <span className="text-[10px] px-2 py-0.5 bg-amber-600 text-white rounded-lg font-semibold">Take Test →</span>}
+                      {!m.done && !m.unlocked && <span className="text-[10px] text-gray-400">Week {m.week}</span>}
+                    </div>
+                  ))}
+                </div>
+                {/* Final exam */}
+                <div className="p-2.5 rounded-lg border-2 border-gray-200 bg-gray-50 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-300 text-xs">🔒</span>
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">Final Exam</p>
+                      <p className="text-[10px] text-gray-400">Complete all milestone tests first</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Milestone Tests & Final Exams</h3>
+              <p className="text-sm text-gray-600">Regular assessments track your progress. Pass all milestones and the final exam to earn your certificate.</p>
+            </div>
+
           </div>
         </div>
       </section>
+
+      {/* Certificate Full Preview Modal */}
+      {showCertPreview && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowCertPreview(false)}>
+          <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-[900px] w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Sample Certificate Preview</h3>
+              <button onClick={() => setShowCertPreview(false)} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {/* Full certificate matching CertificateTemplate */}
+            <div className="relative overflow-hidden mx-auto" style={{ background: '#fffdf7', maxWidth: '800px', aspectRatio: '1122/793' }}>
+              {/* SAMPLE watermark */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                <span className="text-7xl sm:text-8xl font-black text-red-400/15 uppercase tracking-[0.25em] -rotate-12 select-none">SAMPLE</span>
+              </div>
+              {/* Borders */}
+              <div className="absolute" style={{ inset: '8px', border: '2px solid #059669', borderRadius: '2px' }} />
+              <div className="absolute" style={{ inset: '14px', border: '1px solid #a7f3d0', borderRadius: '2px' }} />
+              {/* Watermark logo */}
+              <div className="absolute" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.03 }}>
+                <img src="/favicon.svg" alt="" className="w-48 h-48" />
+              </div>
+              {/* Content */}
+              <div className="absolute flex flex-col items-center justify-center text-center p-8" style={{ inset: '30px' }}>
+                <img src="/favicon.svg" alt="" className="w-10 h-10 mb-1" />
+                <p className="text-xs font-brand font-semibold text-emerald-800 mb-0.5" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
+                <p className="text-[8px] text-gray-400 uppercase tracking-[0.15em] mb-4">New Zealand</p>
+                <h4 className="text-xl sm:text-2xl font-bold uppercase text-emerald-800 tracking-wider mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-gray-400 mb-5">Tajweed Mastery Program</p>
+                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">This is to certify that</p>
+                <p className="text-2xl font-semibold italic text-emerald-800 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
+                <p className="text-xs text-gray-500 mb-1">has successfully completed the</p>
+                <p className="text-sm font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>TMP — Tajweed Mastery Program</p>
+                <p dir="rtl" className="text-base font-arabic text-gray-400 mt-1 mb-4">برنامج إتقان التجويد</p>
+                {/* Scores */}
+                <div className="flex gap-8 mb-5">
+                  {[{ l: 'Milestone Average', v: '82.5%' }, { l: 'Final Exam', v: '88.0%' }, { l: 'Weighted Total', v: '85.3%' }].map(s => (
+                    <div key={s.l} className="text-center">
+                      <p className="text-[7px] uppercase tracking-wider text-gray-400">{s.l}</p>
+                      <p className="text-lg font-bold text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* Signatures */}
+                <div className="flex gap-16">
+                  {[{ name: 'Dr Abdulquadri Alaka', title: 'Program Director' }, { name: 'Ustadh Ibrahim', title: 'Instructor' }].map(sig => (
+                    <div key={sig.title} className="text-center min-w-[120px]">
+                      <p className="text-lg text-emerald-800" style={{ fontFamily: "'Great Vibes', cursive" }}>{sig.name}</p>
+                      <div className="w-28 border-b border-gray-300 mb-1 mx-auto" />
+                      <p className="text-[9px] font-semibold tracking-wider">{sig.title}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Footer */}
+              <div className="absolute bottom-3 left-0 right-0 text-center">
+                <p className="text-[8px] text-gray-400">Issued: 15 March 2026</p>
+                <p className="text-[7px] text-gray-300">Verification ID: TMP-2026-00042 · Verify at thefasttrackmadrasah.com/verify</p>
+              </div>
+            </div>
+            <p className="text-center text-xs text-gray-400 mt-4">This is a sample certificate. Actual certificates are issued upon program completion.</p>
+          </div>
+        </div>
+      )}
 
       {/* Our Approach Section */}
       <section className="bg-white py-10 sm:py-24">
@@ -1041,7 +1181,7 @@ const LandingPage = () => {
 
                   <div className={`${openApproachCard === 4 ? 'block' : 'hidden'} md:block`}>
                     <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      Regular assessments ensure you truly understand what you're learning - not just surface familiarity. We catch gaps early and help you solidify your knowledge before moving forward.
+                      Regular milestone tests and a final exam ensure you truly grasp what you're learning. Our platform tracks your scores, weighted totals, and progress — giving you and your teacher clear visibility. Pass all assessments to earn a verifiable program certificate.
                     </p>
                   </div>
                 </div>
