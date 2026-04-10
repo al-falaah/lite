@@ -39,6 +39,21 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
     return () => stopRec();
   }, [studentId, programId]);
 
+  // Realtime: auto-refresh when teacher updates this student's recitation
+  useEffect(() => {
+    if (!studentId || !programId) return;
+    const channel = supabase
+      .channel(`rec-student-${studentId}-${programId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'recitations',
+        filter: `student_id=eq.${studentId}`,
+      }, () => { load(); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [studentId, programId]);
+
   const load = async () => {
     try {
       const { data, error } = await supabase

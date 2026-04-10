@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic } from 'lucide-react';
@@ -242,6 +242,32 @@ export default function TeacherPortal() {
       setLoading(false);
     }
   };
+
+  // Realtime: update pending recitation badges when students submit
+  useEffect(() => {
+    if (!teacher?.id) return;
+    const channel = supabase
+      .channel(`rec-pending-${teacher.id}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'recitations',
+        filter: `teacher_id=eq.${teacher.id}`,
+      }, async () => {
+        const { data: pendingRecs } = await supabase
+          .from('recitations')
+          .select('student_id')
+          .eq('teacher_id', teacher.id)
+          .eq('status', 'submitted');
+        if (pendingRecs) {
+          const map = {};
+          pendingRecs.forEach(r => { map[r.student_id] = true; });
+          setPendingRecitations(map);
+        }
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [teacher?.id]);
 
   const handleViewStudent = async (assignment) => {
     if (!assignment.student) return;
