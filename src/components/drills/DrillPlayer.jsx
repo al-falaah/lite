@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, Lightbulb, Zap, Trophy, ArrowRight, RotateCcw, Home } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import {
   segmentHighlights, calcXP, getComboMultiplier, getComboLabel,
@@ -163,7 +162,7 @@ export default function DrillPlayer() {
   if (phase === PHASES.READY) return (
     <>
       <Helmet><title>{`${deck.title} | Drills`}</title></Helmet>
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-sm">
           <p className="text-6xl mb-4">{deck.cover_emoji}</p>
           <h1 className="text-2xl font-bold text-white mb-2">{deck.title}</h1>
@@ -171,12 +170,12 @@ export default function DrillPlayer() {
           {deck.description && <p className="text-gray-500 text-xs mb-6">{deck.description}</p>}
 
           <div className="flex justify-center gap-6 mb-8 text-gray-400 text-sm">
-            <span>📝 {cards.length} questions</span>
-            <span>⚡ {cards.reduce((s, c) => s + c.points, 0)} XP max</span>
+            <span>{cards.length} questions</span>
+            <span>{cards.reduce((s, c) => s + c.points, 0)} XP possible</span>
           </div>
 
           <button onClick={startGame}
-            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-bold rounded-2xl transition-colors shadow-lg shadow-emerald-600/30">
+            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-bold rounded-xl transition-colors">
             Start Drill
           </button>
 
@@ -198,9 +197,8 @@ export default function DrillPlayer() {
     return (
       <>
         <Helmet><title>{`Results | ${deck.title}`}</title></Helmet>
-        <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col items-center justify-center px-4">
+        <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
           <div className="text-center max-w-sm w-full">
-            {isPerfect && <p className="text-4xl mb-2 animate-bounce">🎉</p>}
             <p className="text-5xl mb-3">{isPerfect ? '💯' : percent >= 70 ? '🌟' : '📖'}</p>
             <h2 className="text-2xl font-bold text-white mb-1">
               {isPerfect ? 'PERFECT!' : percent >= 70 ? 'Great job!' : 'Keep practicing!'}
@@ -208,33 +206,33 @@ export default function DrillPlayer() {
             <p className="text-gray-400 text-sm mb-6">{deck.title}</p>
 
             {/* Score Breakdown */}
-            <div className="bg-gray-800/50 rounded-2xl p-6 mb-6 space-y-3 border border-gray-700/50">
+            <div className="bg-gray-800/50 rounded-xl p-5 mb-6 space-y-3 border border-gray-700/50">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">Score</span>
                 <span className="text-white font-bold">{score}/{cards.length} ({percent}%)</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-400">⚡ XP Earned</span>
+                <span className="text-gray-400">XP Earned</span>
                 <span className="text-amber-400 font-bold">+{xp}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-400">🔥 Best Combo</span>
+                <span className="text-gray-400">Best Combo</span>
                 <span className="text-orange-400 font-bold">x{maxCombo}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-400">⏱ Time</span>
+                <span className="text-gray-400">Time</span>
                 <span className="text-gray-300 font-mono">{formatTime(elapsed)}</span>
               </div>
             </div>
 
             <div className="flex gap-3">
               <button onClick={startGame}
-                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors">
-                <RotateCcw className="h-4 w-4" /> Retry
+                className="flex-1 py-3 bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                Retry
               </button>
               <button onClick={() => navigate('/drills')}
-                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors">
-                <Home className="h-4 w-4" /> Drills
+                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-lg transition-colors">
+                All Drills
               </button>
             </div>
           </div>
@@ -252,20 +250,20 @@ export default function DrillPlayer() {
   return (
     <>
       <Helmet><title>{`Q${index + 1} | ${deck.title}`}</title></Helmet>
-      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col">
+      <div className="min-h-screen bg-gray-950 flex flex-col">
 
         {/* Top Bar */}
-        <div className="px-4 pt-4 pb-2">
+        <div className="px-4 pt-4 pb-2 safe-top">
           <div className="flex items-center justify-between mb-3">
-            <button onClick={() => { if (confirm('Quit this drill?')) navigate(-1); }}
+            <button onClick={() => navigate(-1)}
               className="text-gray-500 hover:text-white text-xs">Quit</button>
             <div className="flex items-center gap-3 text-sm">
               {combo >= 3 && (
-                <span className="text-orange-400 font-bold text-xs animate-pulse">
+                <span className="text-orange-400 font-bold text-xs">
                   {getComboLabel(combo)}
                 </span>
               )}
-              <span className="text-amber-400 font-mono font-bold">⚡ {xp}</span>
+              <span className="text-amber-400 font-mono font-bold">{xp} XP</span>
               <span className="text-gray-500 font-mono">{formatTime(elapsed)}</span>
             </div>
           </div>
@@ -287,8 +285,8 @@ export default function DrillPlayer() {
 
           {/* Arabic Text */}
           {currentCard.arabic_text && (
-            <div className="mb-6 p-5 bg-gray-800/60 rounded-2xl border border-gray-700/40">
-              <p dir="rtl" className="text-2xl sm:text-3xl leading-loose font-arabic text-white text-center">
+            <div className="mb-6 p-5 bg-gray-800/60 rounded-xl border border-gray-700/40">
+              <p dir="rtl" className="text-2xl sm:text-3xl leading-loose text-white text-center" style={{ fontFamily: "'Amiri', 'Scheherazade New', serif" }}>
                 {segmentHighlights(currentCard.arabic_text, currentCard.highlight_ranges).map((seg, j) =>
                   seg.highlighted
                     ? <span key={j} className="bg-amber-500/30 text-amber-300 px-1 rounded-md border-b-2 border-amber-500/60">{seg.text}</span>
@@ -306,13 +304,11 @@ export default function DrillPlayer() {
           {/* Options */}
           <div className="space-y-3 mb-6">
             {currentCard.options.map((opt, i) => {
-              let style = 'border-gray-700 bg-gray-800/40 text-gray-200 hover:border-gray-500 hover:bg-gray-800';
+              let style = 'border-gray-700/60 bg-gray-800/40 text-gray-200 active:bg-gray-800';
               if (isResult) {
-                if (i === currentCard.correct_index) style = 'border-emerald-500 bg-emerald-500/20 text-emerald-300';
-                else if (i === selected && !isCorrect) style = 'border-red-500 bg-red-500/20 text-red-300';
+                if (i === currentCard.correct_index) style = 'border-emerald-500/60 bg-emerald-500/15 text-emerald-300';
+                else if (i === selected && !isCorrect) style = 'border-red-500/60 bg-red-500/15 text-red-300';
                 else style = 'border-gray-800 bg-gray-800/20 text-gray-600';
-              } else if (selected === i) {
-                style = 'border-blue-500 bg-blue-500/20 text-blue-300';
               }
 
               return (
@@ -320,9 +316,8 @@ export default function DrillPlayer() {
                   key={i}
                   onClick={() => !isResult && handleAnswer(i)}
                   disabled={isResult}
-                  className={`w-full py-3.5 px-5 rounded-xl border-2 text-left text-sm font-medium transition-all ${style}`}
+                  className={`w-full py-4 px-5 rounded-lg border text-left text-sm font-medium transition-colors ${style}`}
                 >
-                  <span className="inline-block w-6 text-center mr-2 opacity-50">{String.fromCharCode(65 + i)}</span>
                   {opt}
                 </button>
               );
@@ -332,8 +327,8 @@ export default function DrillPlayer() {
           {/* Hint */}
           {!isResult && currentCard.hint && !showHint && (
             <button onClick={revealHint}
-              className="self-center text-xs text-gray-500 hover:text-amber-400 flex items-center gap-1 mb-4">
-              <Lightbulb className="h-3 w-3" /> Use hint (−50% XP)
+              className="self-center text-xs text-gray-500 hover:text-amber-400 mb-4">
+              Use hint (−50% XP)
             </button>
           )}
           {showHint && !isResult && (
@@ -344,14 +339,14 @@ export default function DrillPlayer() {
 
           {/* Result Feedback */}
           {isResult && (
-            <div className={`rounded-2xl px-5 py-4 mb-4 border ${
+            <div className={`rounded-lg px-5 py-4 mb-4 border ${
               isCorrect ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'
             }`}>
               <div className="flex items-center justify-between mb-1">
                 <span className={`text-sm font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
-                  {isCorrect ? '✅ Correct!' : '❌ Not quite!'}
+                  {isCorrect ? 'Correct!' : 'Not quite'}
                 </span>
-                {isCorrect && <span className="text-amber-400 text-sm font-bold animate-bounce">+{lastXP} XP</span>}
+                {isCorrect && <span className="text-amber-400 text-sm font-bold">+{lastXP} XP</span>}
               </div>
               {currentCard.explanation && (
                 <p className="text-xs text-gray-400 mt-1 leading-relaxed">{currentCard.explanation}</p>
@@ -362,12 +357,8 @@ export default function DrillPlayer() {
           {/* Next Button */}
           {isResult && (
             <button onClick={nextCard}
-              className="w-full py-3.5 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-colors">
-              {index + 1 >= cards.length ? (
-                <><Trophy className="h-4 w-4 text-amber-400" /> See Results</>
-              ) : (
-                <><ArrowRight className="h-4 w-4" /> Next Question</>
-              )}
+              className="w-full py-4 bg-white/10 hover:bg-white/15 text-white text-sm font-semibold rounded-lg transition-colors">
+              {index + 1 >= cards.length ? 'See Results' : 'Next Question →'}
             </button>
           )}
         </div>
