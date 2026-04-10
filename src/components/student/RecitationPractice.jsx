@@ -30,9 +30,12 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const [teacherUrl, setTeacherUrl] = useState(null);
   const [feedbackSeen, setFeedbackSeen] = useState(false);
 
+  const [teacherRecording, setTeacherRecording] = useState(false);
+
   const mrRef = useRef(null);
   const chunks = useRef([]);
   const timer = useRef(null);
+  const broadcastRef = useRef(null);
 
   useEffect(() => {
     if (studentId && programId) load();
@@ -52,6 +55,17 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       }, () => { load(); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
+  }, [studentId, programId]);
+
+  // Broadcast channel for recording indicators
+  useEffect(() => {
+    if (!studentId || !programId) return;
+    const ch = supabase.channel(`rec-live-${studentId}-${programId}`);
+    ch.on('broadcast', { event: 'recording' }, ({ payload }) => {
+      if (payload?.role === 'teacher') setTeacherRecording(payload.active);
+    }).subscribe();
+    broadcastRef.current = ch;
+    return () => { supabase.removeChannel(ch); broadcastRef.current = null; };
   }, [studentId, programId]);
 
   const load = async () => {
@@ -138,6 +152,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       setElapsed(0);
       setBlob(null);
       setBlobUrl(null);
+      broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'student', active: true } });
       timer.current = setInterval(() => {
         setElapsed(p => { if (p >= MAX_SECONDS - 1) { stopRec(); return MAX_SECONDS; } return p + 1; });
       }, 1000);
@@ -151,6 +166,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
     if (mrRef.current?.state === 'recording') mrRef.current.stop();
     setRecording(false);
+    broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'student', active: false } });
   };
 
   const discard = () => {
@@ -159,6 +175,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
     setBlobUrl(null);
     setElapsed(0);
     chunks.current = [];
+    broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'student', active: false } });
   };
 
   const submit = async () => {
@@ -334,6 +351,12 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
             Sent {rec.submitted_at ? new Date(rec.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
           </p>
           {studentUrl && <VoiceNote audioUrl={studentUrl} color="emerald" onDelete={deleteMyAudio} />}
+          {teacherRecording && (
+            <div className="flex items-center gap-2 mt-2 text-xs text-blue-600 animate-pulse">
+              <Mic className="h-3 w-3" />
+              Teacher is recording feedback...
+            </div>
+          )}
         </div>
       )}
 

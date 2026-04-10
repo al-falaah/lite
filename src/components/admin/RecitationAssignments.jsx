@@ -34,10 +34,12 @@ export default function RecitationAssignments({ student, program, teacherId }) {
   // Audio URLs
   const [studentUrl, setStudentUrl] = useState(null);
   const [teacherUrl, setTeacherUrl] = useState(null);
+  const [studentRecording, setStudentRecording] = useState(false);
 
   const mrRef = useRef(null);
   const chunks = useRef([]);
   const timer = useRef(null);
+  const broadcastRef = useRef(null);
 
   useEffect(() => {
     if (student?.id && program) load();
@@ -57,6 +59,17 @@ export default function RecitationAssignments({ student, program, teacherId }) {
       }, () => { load(); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
+  }, [student?.id, program]);
+
+  // Broadcast channel for recording indicators
+  useEffect(() => {
+    if (!student?.id || !program) return;
+    const ch = supabase.channel(`rec-live-${student.id}-${program}`);
+    ch.on('broadcast', { event: 'recording' }, ({ payload }) => {
+      if (payload?.role === 'student') setStudentRecording(payload.active);
+    }).subscribe();
+    broadcastRef.current = ch;
+    return () => { supabase.removeChannel(ch); broadcastRef.current = null; };
   }, [student?.id, program]);
 
   const load = async () => {
@@ -143,6 +156,7 @@ export default function RecitationAssignments({ student, program, teacherId }) {
       setElapsed(0);
       setBlob(null);
       setBlobUrl(null);
+      broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'teacher', active: true } });
       timer.current = setInterval(() => {
         setElapsed(p => { if (p >= MAX_SECONDS - 1) { stopRec(); return MAX_SECONDS; } return p + 1; });
       }, 1000);
@@ -156,6 +170,7 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
     if (mrRef.current?.state === 'recording') mrRef.current.stop();
     setRecording(false);
+    broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'teacher', active: false } });
   };
 
   const discardAudio = () => {
@@ -164,6 +179,7 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     setBlobUrl(null);
     setElapsed(0);
     chunks.current = [];
+    broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'teacher', active: false } });
   };
 
   // --- Submit review ---
@@ -245,6 +261,10 @@ export default function RecitationAssignments({ student, program, teacherId }) {
           {needsReview ? (
             <span className="text-xs px-1.5 py-0.5 bg-red-100 text-red-700 rounded-full font-medium">
               1 to review
+            </span>
+          ) : status === 'assigned' && studentRecording ? (
+            <span className="text-xs px-1.5 py-0.5 bg-emerald-100 text-emerald-700 rounded-full font-medium animate-pulse">
+              Recording...
             </span>
           ) : status === 'assigned' ? (
             <span className="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded-full font-medium">
