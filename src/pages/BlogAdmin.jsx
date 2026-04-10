@@ -733,13 +733,13 @@ const BlogAdmin = () => {
               </div>
             </Link>
             <div className="flex items-center gap-4">
-              <Link
-                to={backLink}
+              <button
+                onClick={() => navigate(-1)}
                 className="flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">Back</span>
-              </Link>
+              </button>
               <Link
                 to="/blog"
                 className="text-sm text-gray-600 hover:text-emerald-600 transition-colors hidden sm:inline"

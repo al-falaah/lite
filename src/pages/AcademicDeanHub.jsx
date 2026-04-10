@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { BookOpen, FileText, LogOut, ArrowRight, Home } from 'lucide-react';
+import { BookOpen, FileText, LogOut, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const areas = [
@@ -25,6 +25,7 @@ const areas = [
 ];
 
 export default function AcademicDeanHub() {
+  const navigate = useNavigate();
   const { profile, signOut } = useAuth();
 
   return (
@@ -39,13 +40,16 @@ export default function AcademicDeanHub() {
           <div className="max-w-2xl mx-auto px-4 sm:px-6">
             <div className="flex items-center justify-between h-14">
               <div className="flex items-center gap-3">
-                <img src="/favicon.svg" alt="TFT Madrasah" className="h-7 w-7" />
+                <button
+                  onClick={() => navigate(-1)}
+                  className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Back</span>
+                </button>
                 <h1 className="text-base font-semibold text-gray-900">Academic Dean</h1>
               </div>
               <div className="flex items-center gap-4">
-                <Link to="/" className="text-sm text-gray-500 hover:text-gray-900 transition-colors">
-                  <Home className="h-4 w-4" />
-                </Link>
                 <button
                   onClick={() => signOut()}
                   className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"

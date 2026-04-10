@@ -453,13 +453,13 @@ const StoreAdmin = () => {
                   <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600" />
                   <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Store Admin</h1>
                 </div>
-                <Link
-                  to={backLink}
+                <button
+                  onClick={() => navigate(-1)}
                   className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
                 >
                   <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Back</span>
-                </Link>
+                </button>
               </div>
               <button
                 onClick={handleLogout}

@@ -637,23 +637,13 @@ const ResearchAdmin = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {profile?.role === 'director' ? (
-                <Link
-                  to="/director"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Back</span>
-                </Link>
-              ) : profile?.role === 'academic_dean' ? (
-                <Link
-                  to="/academic-dean"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Back</span>
-                </Link>
-              ) : null}
+              <button
+                onClick={() => navigate(-1)}
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Back</span>
+              </button>
               <button
                 onClick={handleLogout}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all"

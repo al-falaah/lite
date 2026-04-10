@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Shield, UserCog, Home, Ban, Trash2, RotateCcw, AlertTriangle } from 'lucide-react';
+import { Shield, UserCog, ArrowLeft, Ban, Trash2, RotateCcw, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabase';
@@ -49,6 +49,7 @@ const ROLES = [
 ];
 
 const AdminRoles = () => {
+  const navigate = useNavigate();
   const { profile } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -282,13 +283,13 @@ const AdminRoles = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <Link
-              to={backLink}
-              className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors mb-4"
+            <button
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium mb-4"
             >
-              <Home className="h-4 w-4" />
-              Back to Dashboard
-            </Link>
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </button>
             <div className="flex items-center gap-3 mb-2">
               <Shield className="h-8 w-8 text-emerald-600" />
               <h1 className="text-3xl font-bold text-gray-900">User Control</h1>
