@@ -8,7 +8,7 @@ import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   User, LogOut, ExternalLink, CreditCard,
   DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings, Gamepad2,
-  Home, Trophy
+  Home, Trophy, Smartphone, Share, MoreVertical, PlusSquare
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -701,6 +701,39 @@ const StudentPortal = () => {
             </Card>
           )}
           </div>
+
+          {/* Install App Guide */}
+          <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-emerald-100 rounded-lg shrink-0">
+                <Smartphone className="h-5 w-5 text-emerald-700" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-emerald-900 mb-2">Install the App on Your Phone</h3>
+                <p className="text-xs text-emerald-800 mb-3">Get quick access from your home screen — no app store needed!</p>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs font-medium text-emerald-900 mb-1">iPhone (Safari):</p>
+                    <ol className="text-xs text-emerald-800 space-y-0.5 list-decimal list-inside">
+                      <li>Open this site in <strong>Safari</strong></li>
+                      <li>Tap the <Share className="inline h-3 w-3" /> <strong>Share</strong> button at the bottom</li>
+                      <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                      <li>Tap <strong>"Add"</strong> — done!</li>
+                    </ol>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-emerald-900 mb-1">Android (Chrome):</p>
+                    <ol className="text-xs text-emerald-800 space-y-0.5 list-decimal list-inside">
+                      <li>Open this site in <strong>Chrome</strong></li>
+                      <li>Tap the <MoreVertical className="inline h-3 w-3" /> <strong>three-dot menu</strong> at the top right</li>
+                      <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></li>
+                      <li>Tap <strong>"Install"</strong> — done!</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
           </div>
 
           {/* === CLASSES TAB === */}
