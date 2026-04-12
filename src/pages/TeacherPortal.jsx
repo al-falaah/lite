@@ -720,15 +720,15 @@ export default function TeacherPortal() {
         </div>
 
         {/* Install App Guide */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5">
+        <div className="bg-emerald-950 rounded-xl p-4 sm:p-5">
           <div className="flex items-start gap-3">
-            <Smartphone className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+            <Smartphone className="h-5 w-5 text-emerald-300 shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Add to Home Screen</h3>
-              <p className="text-xs text-gray-500 mt-1">Access the madrasah instantly from your phone — no app store needed.</p>
-              <div className="mt-3 space-y-2 text-xs text-gray-600">
-                <p><span className="font-medium text-gray-900">iPhone:</span> Open in Safari → tap <span className="inline-block px-1 border border-gray-300 rounded text-[10px] align-middle">⎙</span> Share → "Add to Home Screen"</p>
-                <p><span className="font-medium text-gray-900">Android:</span> Open in Chrome → tap <span className="inline-block px-1 border border-gray-300 rounded text-[10px] align-middle">⋮</span> Menu → "Install app"</p>
+              <h3 className="text-sm font-semibold text-white">Add to Home Screen</h3>
+              <p className="text-xs text-emerald-300 mt-1">Access the madrasah instantly from your phone — no app store needed.</p>
+              <div className="mt-3 space-y-1.5 text-xs text-emerald-100">
+                <p><span className="font-semibold text-white">iPhone</span> <span className="text-emerald-400 mx-1">·</span> Safari → tap <span className="inline-block px-1 py-px bg-emerald-900 border border-emerald-700 rounded text-[10px] font-mono">↑</span> Share → "Add to Home Screen"</p>
+                <p><span className="font-semibold text-white">Android</span> <span className="text-emerald-400 mx-1">·</span> Chrome → tap <span className="inline-block px-1 py-px bg-emerald-900 border border-emerald-700 rounded text-[10px] font-mono">⋮</span> Menu → "Install app"</p>
               </div>
             </div>
           </div>
