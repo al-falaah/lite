@@ -8,7 +8,7 @@ import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   User, LogOut, ExternalLink, CreditCard,
   DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings, Gamepad2,
-  Home, Trophy, Smartphone, Share, MoreVertical, PlusSquare
+  Home, Trophy, Smartphone
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -703,33 +703,15 @@ const StudentPortal = () => {
           </div>
 
           {/* Install App Guide */}
-          <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200">
+          <Card>
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-emerald-100 rounded-lg shrink-0">
-                <Smartphone className="h-5 w-5 text-emerald-700" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-emerald-900 mb-2">Install the App on Your Phone</h3>
-                <p className="text-xs text-emerald-800 mb-3">Get quick access from your home screen — no app store needed!</p>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs font-medium text-emerald-900 mb-1">iPhone (Safari):</p>
-                    <ol className="text-xs text-emerald-800 space-y-0.5 list-decimal list-inside">
-                      <li>Open this site in <strong>Safari</strong></li>
-                      <li>Tap the <Share className="inline h-3 w-3" /> <strong>Share</strong> button at the bottom</li>
-                      <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
-                      <li>Tap <strong>"Add"</strong> — done!</li>
-                    </ol>
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-emerald-900 mb-1">Android (Chrome):</p>
-                    <ol className="text-xs text-emerald-800 space-y-0.5 list-decimal list-inside">
-                      <li>Open this site in <strong>Chrome</strong></li>
-                      <li>Tap the <MoreVertical className="inline h-3 w-3" /> <strong>three-dot menu</strong> at the top right</li>
-                      <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></li>
-                      <li>Tap <strong>"Install"</strong> — done!</li>
-                    </ol>
-                  </div>
+              <Smartphone className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900">Add to Home Screen</h3>
+                <p className="text-xs text-gray-500 mt-1">Access the madrasah instantly from your phone — no app store needed.</p>
+                <div className="mt-3 space-y-2 text-xs text-gray-600">
+                  <p><span className="font-medium text-gray-900">iPhone:</span> Open in Safari → tap <span className="inline-block px-1 border border-gray-300 rounded text-[10px] align-middle">⎙</span> Share → "Add to Home Screen"</p>
+                  <p><span className="font-medium text-gray-900">Android:</span> Open in Chrome → tap <span className="inline-block px-1 border border-gray-300 rounded text-[10px] align-middle">⋮</span> Menu → "Install app"</p>
                 </div>
               </div>
             </div>
