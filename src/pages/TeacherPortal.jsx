@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic, Home, Smartphone } from 'lucide-react';
+import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic, Home } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
@@ -720,17 +720,15 @@ export default function TeacherPortal() {
         </div>
 
         {/* Install App Guide */}
-        <div className="bg-emerald-950 rounded-xl p-4 sm:p-5">
-          <div className="flex items-start gap-3">
-            <Smartphone className="h-5 w-5 text-emerald-300 shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-semibold text-white">Add to Home Screen</h3>
-              <p className="text-xs text-emerald-300 mt-1">Access the madrasah instantly from your phone — no app store needed.</p>
-              <div className="mt-3 space-y-1.5 text-xs text-emerald-100">
-                <p><span className="font-semibold text-white">iPhone</span> <span className="text-emerald-400 mx-1">·</span> Safari → tap <span className="inline-block px-1 py-px bg-emerald-900 border border-emerald-700 rounded text-[10px] font-mono">↑</span> Share → "Add to Home Screen"</p>
-                <p><span className="font-semibold text-white">Android</span> <span className="text-emerald-400 mx-1">·</span> Chrome → tap <span className="inline-block px-1 py-px bg-emerald-900 border border-emerald-700 rounded text-[10px] font-mono">⋮</span> Menu → "Install app"</p>
-              </div>
-            </div>
+        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 sm:p-5">
+          <div className="flex items-center gap-2 mb-1">
+            <svg className="h-4 w-4 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            <p className="text-sm font-semibold text-gray-900">Get the Mobile App</p>
+          </div>
+          <p className="text-xs text-gray-500 mb-3">Runs like a native app on your phone — add it to your home screen in seconds.</p>
+          <div className="text-sm text-gray-700 space-y-1">
+            <p><strong>iPhone:</strong> Safari → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share → <strong>Add to Home Screen</strong></p>
+            <p><strong>Android:</strong> Chrome → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg> → <strong>Install app</strong></p>
           </div>
         </div>
         </div>
