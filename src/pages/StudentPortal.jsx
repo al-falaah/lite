@@ -554,17 +554,29 @@ const StudentPortal = () => {
           <StudentClassEtiquette />
 
           {/* Enrollments */}
-          <h2 className="text-lg font-semibold text-gray-900">Enrolment & Billing</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">Enrolment & Billing</h2>
+            {!isEnrolledInAllPrograms() && (
+              <Link
+                to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-emerald-700 hover:text-emerald-800 transition-colors"
+              >
+                + Add another program
+              </Link>
+            )}
+          </div>
           {enrollments.length === 0 ? (
             <Card>
-              <div className="text-center py-12 text-gray-500">
-                <AlertCircle className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                <p className="text-lg font-medium mb-2">No enrollments found</p>
-                <p className="text-sm">Please contact support if you believe this is an error.</p>
+              <div className="text-center py-8 text-gray-500">
+                <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <p className="text-sm font-medium mb-1">No enrollments found</p>
+                <p className="text-xs">Please contact support if you believe this is an error.</p>
               </div>
             </Card>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {enrollments.map((enrollment) => {
                 const programName = getProgramName(enrollment.program);
                 const programDuration = getProgramDuration(enrollment.program);
@@ -572,37 +584,33 @@ const StudentPortal = () => {
                 const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
 
                 return (
-                  <Card key={enrollment.id}>
+                  <Card key={enrollment.id} className="p-4 sm:p-5">
                     {/* Enrollment Header */}
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="flex items-start gap-3 md:gap-4 flex-1 min-w-0">
-                        <div className="flex-1 min-w-0">
-                          <h2 className="text-xl md:text-2xl font-semibold text-gray-900 break-words">{programName}</h2>
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs md:text-sm text-gray-600 mt-1">
-                            <span className="whitespace-nowrap">Duration: {programDuration}</span>
-                            <span className="hidden sm:inline">•</span>
-                            <span className="whitespace-nowrap">Enrolled: {new Date(enrollment.enrolled_date).toLocaleDateString()}</span>
-                          </div>
-                          <div className="mt-2">
-                            {getStatusBadge(enrollment.status)}
-                          </div>
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h2 className="text-base sm:text-lg font-semibold text-gray-900">{programName}</h2>
+                          {getStatusBadge(enrollment.status)}
                         </div>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {programDuration} · Enrolled {new Date(enrollment.enrolled_date).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
 
                     {/* Payment Status */}
-                    <div className="grid md:grid-cols-3 gap-4 mb-6">
-                      <div className="bg-white p-4 rounded-lg border border-gray-200">
-                        <p className="text-sm text-gray-600 mb-1">Total Fees</p>
-                        <p className="text-2xl font-semibold text-gray-900">${enrollment.total_fees?.toFixed(2)}</p>
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3">
+                      <div className="bg-white p-2.5 sm:p-3 rounded-lg border border-gray-200">
+                        <p className="text-[10px] sm:text-xs text-gray-500">Total Fees</p>
+                        <p className="text-base sm:text-lg font-semibold text-gray-900">${enrollment.total_fees?.toFixed(2)}</p>
                       </div>
-                      <div className="bg-white p-4 rounded-lg border border-gray-200">
-                        <p className="text-sm text-gray-600 mb-1">Paid</p>
-                        <p className="text-2xl font-semibold text-emerald-600">${enrollment.total_paid?.toFixed(2)}</p>
+                      <div className="bg-white p-2.5 sm:p-3 rounded-lg border border-gray-200">
+                        <p className="text-[10px] sm:text-xs text-gray-500">Paid</p>
+                        <p className="text-base sm:text-lg font-semibold text-emerald-600">${enrollment.total_paid?.toFixed(2)}</p>
                       </div>
-                      <div className={`bg-white p-4 rounded-lg border ${hasPendingPayment ? 'border-amber-300' : 'border-gray-200'}`}>
-                        <p className="text-sm text-gray-600 mb-1">Balance</p>
-                        <p className={`text-2xl font-semibold ${hasPendingPayment ? 'text-amber-600' : 'text-emerald-600'}`}>
+                      <div className={`bg-white p-2.5 sm:p-3 rounded-lg border ${hasPendingPayment ? 'border-amber-300' : 'border-gray-200'}`}>
+                        <p className="text-[10px] sm:text-xs text-gray-500">Balance</p>
+                        <p className={`text-base sm:text-lg font-semibold ${hasPendingPayment ? 'text-amber-600' : 'text-emerald-600'}`}>
                           ${enrollment.balance_remaining?.toFixed(2)}
                         </p>
                       </div>
@@ -610,63 +618,40 @@ const StudentPortal = () => {
 
                     {/* Assigned Teacher */}
                     {assignedTeachers[enrollment.program] && (
-                      <div className="border-t border-gray-200 pt-6 mt-6">
-                        <h3 className="text-sm font-medium text-gray-900 mb-3">
-                          Your Teacher
-                        </h3>
-                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                          <div className="flex items-start gap-3">
-                            <div className="flex-1">
-                              <p className="font-medium text-gray-900">
-                                {assignedTeachers[enrollment.program].full_name}
-                              </p>
-                              <p className="text-sm text-gray-600 mt-1">
-                                Staff ID: {assignedTeachers[enrollment.program].staff_id}
-                              </p>
-                              {assignedTeachers[enrollment.program].email && (
-                                <div className="flex items-center gap-1 mt-2 text-sm text-gray-600">
-                                  <a
-                                    href={`mailto:${assignedTeachers[enrollment.program].email}`}
-                                    className="text-emerald-600 hover:text-emerald-700 transition-colors"
-                                  >
-                                    {assignedTeachers[enrollment.program].email}
-                                  </a>
-                                </div>
-                              )}
-                              <div className="mt-3">
-                                <Button
-                                  onClick={() => handleOpenEmailModal(assignedTeachers[enrollment.program], enrollment.program)}
-                                  className="inline-flex items-center text-sm"
-                                  variant="secondary"
-                                >
-                                  <Mail className="h-4 w-4 mr-2" />
-                                  Send Message
-                                </Button>
-                              </div>
-                            </div>
+                      <div className="border-t border-gray-100 pt-3 mt-3">
+                        <div className="flex items-center justify-between">
+                          <div className="min-w-0">
+                            <p className="text-xs text-gray-500">Your Teacher</p>
+                            <p className="text-sm font-medium text-gray-900">{assignedTeachers[enrollment.program].full_name}</p>
                           </div>
+                          <Button
+                            onClick={() => handleOpenEmailModal(assignedTeachers[enrollment.program], enrollment.program)}
+                            className="inline-flex items-center text-xs shrink-0"
+                            variant="secondary"
+                          >
+                            <Mail className="h-3.5 w-3.5 mr-1.5" />
+                            Message
+                          </Button>
                         </div>
                       </div>
                     )}
 
                     {/* Billing Portal Link */}
                     {student?.stripe_customer_id && (
-                      <div className="border-t border-gray-200 pt-6 mt-6">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="border-t border-gray-100 pt-3 mt-3">
+                        <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900">Manage Billing</h3>
-                            <p className="text-sm text-gray-600 mt-1">
-                              Update payment methods, view invoices, and manage your subscription
-                            </p>
+                            <p className="text-sm font-medium text-gray-900">Manage Billing</p>
+                            <p className="text-xs text-gray-500">Payment methods, invoices & subscription</p>
                           </div>
                           <Button
                             onClick={handleBillingPortal}
                             variant="outline"
-                            size="md"
-                            className="w-full sm:w-auto"
+                            size="sm"
+                            className="shrink-0"
                             disabled={loading}
                           >
-                            <ExternalLink className="h-4 w-4 mr-2" />
+                            <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                             Billing Portal
                           </Button>
                         </div>
@@ -677,30 +662,6 @@ const StudentPortal = () => {
               })}
             </div>
           )}
-
-          {/* Apply for Another Program (in Home tab) */}
-          {!isEnrolledInAllPrograms() && (
-            <Card className="border border-gray-200 bg-white">
-              <div className="flex flex-col sm:flex-row items-start gap-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Expand Your Learning</h3>
-                  <p className="text-gray-600 mb-4">
-                    Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
-                  </p>
-                  <Link
-                    to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="primary" className="bg-emerald-950 hover:bg-emerald-900 w-full sm:w-auto">
-                      Apply for Another Program
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </Card>
-          )}
-          </div>
 
           {/* Install App Guide */}
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 sm:p-5">
@@ -713,6 +674,7 @@ const StudentPortal = () => {
               <p><strong>iPhone:</strong> Safari → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share → <strong>Add to Home Screen</strong></p>
               <p><strong>Android:</strong> Chrome → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg> → <strong>Install app</strong></p>
             </div>
+          </div>
           </div>
           </div>
 
