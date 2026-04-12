@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic } from 'lucide-react';
+import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic, Home } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
@@ -59,6 +59,7 @@ export default function TeacherPortal() {
   const [studentEnrollments, setStudentEnrollments] = useState([]);
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [activeView, setActiveView] = useState('assigned'); // assigned or removed
+  const [teacherTab, setTeacherTab] = useState('home'); // home, students, calendar
 
   // Schedule editing
   const [editingSchedule, setEditingSchedule] = useState(null);
@@ -613,16 +614,13 @@ export default function TeacherPortal() {
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
-            <div className="flex items-center gap-1.5 sm:gap-3">
+            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity">
               <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-8 sm:w-8" />
-              <div className="flex flex-col">
-                <div className="text-sm sm:text-xl font-bold text-emerald-600">Teacher Portal</div>
-                <div className="text-[10px] sm:text-xs text-gray-600 hidden sm:flex sm:flex-col leading-tight">
-                  <span style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span style={{letterSpacing: "0.28em"}}>Madrasah</span>
-                </div>
+              <div className="flex flex-col leading-none -space-y-1">
+                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
-            </div>
+            </Link>
             <div className="flex items-center gap-1.5 sm:gap-4">
               <div className="text-right">
                 <p className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{teacher.full_name}</p>
@@ -641,8 +639,36 @@ export default function TeacherPortal() {
         </div>
       </nav>
 
+      {/* Desktop Tab Bar */}
+      <div className="hidden sm:block bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex gap-1">
+            {[
+              { id: 'home', label: 'Home', icon: Home },
+              { id: 'students', label: 'Students', icon: Users },
+              { id: 'calendar', label: 'Calendar', icon: Calendar },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setTeacherTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  teacherTab === tab.id
+                    ? 'border-emerald-600 text-emerald-700'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8">
+        {/* === HOME TAB === */}
+        <div className={teacherTab !== 'home' ? 'hidden' : ''}>
         {/* Welcome Message */}
         <div className="mb-5 sm:mb-8">
           <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">Welcome, {teacher.full_name.split(' ')[0]}!</h1>
@@ -692,7 +718,10 @@ export default function TeacherPortal() {
             </div>
           </div>
         </div>
+        </div>
 
+        {/* === STUDENTS TAB === */}
+        <div className={teacherTab !== 'students' ? 'hidden' : ''}>
         {/* View Toggle */}
         <div className="border-b border-gray-200 mb-6">
           <div className="flex gap-6">
@@ -718,32 +747,11 @@ export default function TeacherPortal() {
               <UserX className="h-4 w-4 inline mr-2 -mt-0.5" />
               Removed ({removedStudents.length})
             </button>
-            <button
-              onClick={() => setActiveView('calendar')}
-              className={`px-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeView === 'calendar'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
-              }`}
-            >
-              <Calendar className="h-4 w-4 inline mr-2 -mt-0.5" />
-              Calendar
-            </button>
           </div>
         </div>
 
-        {/* Tab Content */}
-        {activeView === 'calendar' ? (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <iframe
-              src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
-              className="w-full border-0"
-              height="600"
-              scrolling="no"
-              title="Class Calendar"
-            />
-          </div>
-        ) : loading ? (
+        {/* Student List Content */}
+        {loading ? (
           <div className="text-center py-12">
             <div className="relative w-24 h-24 inline-block">
               <svg className="w-24 h-24" viewBox="0 0 80 80">
@@ -861,7 +869,43 @@ export default function TeacherPortal() {
             ))}
           </div>
         )}
+        </div>
 
+        {/* === CALENDAR TAB === */}
+        <div className={teacherTab !== 'calendar' ? 'hidden' : ''}>
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <iframe
+              src="https://calendar.google.com/calendar/embed?showTitle=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
+              className="w-full border-0 h-[calc(100vh-13rem)] sm:h-[600px]"
+              title="School Calendar"
+            />
+          </div>
+        </div>
+
+      </div>
+
+      {/* Mobile Bottom Tab Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 sm:hidden">
+        <div className="flex justify-around items-center h-16 px-2">
+          {[
+            { id: 'home', label: 'Home', icon: Home },
+            { id: 'students', label: 'Students', icon: Users },
+            { id: 'calendar', label: 'Calendar', icon: Calendar },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setTeacherTab(tab.id)}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-colors ${
+                teacherTab === tab.id
+                  ? 'text-emerald-700'
+                  : 'text-gray-400'
+              }`}
+            >
+              <tab.icon className={`h-5 w-5 ${teacherTab === tab.id ? 'text-emerald-600' : ''}`} />
+              <span className="text-[10px] font-medium">{tab.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Student Details Modal */}

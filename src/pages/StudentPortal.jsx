@@ -7,7 +7,8 @@ import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh.jsx';
 import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   User, LogOut, ExternalLink, CreditCard,
-  DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings, Gamepad2
+  DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings, Gamepad2,
+  Home, Trophy
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
@@ -70,6 +71,9 @@ const StudentPortal = () => {
   const [progress, setProgress] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(null);
   const [assignedTeachers, setAssignedTeachers] = useState({});
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState('home');
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -393,6 +397,39 @@ const StudentPortal = () => {
   const getProgramName = (program) => getConfigProgramName(program);
   const getProgramDuration = (program) => getConfigProgramDuration(program);
 
+  // Compute active week for a given enrollment (reused across tabs)
+  const getActiveWeekForEnrollment = (enrollment) => {
+    const programSchedules = schedules.filter(s => s.program === enrollment.program);
+    const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
+    const programConfig = PROGRAMS[enrollment.program];
+    const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+    const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+    const weeksPerYear = Math.ceil(totalWeeks / totalYears);
+
+    if (programSchedules.length === 0) return { year: 1, week: 1, weeksPerYear, totalWeeks, totalYears, programSchedules };
+
+    const weekMap = {};
+    programSchedules.forEach(schedule => {
+      const key = `${schedule.academic_year}-${schedule.week_number}`;
+      if (!weekMap[key]) weekMap[key] = [];
+      weekMap[key].push(schedule);
+    });
+
+    for (let year = 1; year <= totalYears; year++) {
+      for (let weekNum = 1; weekNum <= weeksPerYear; weekNum++) {
+        const weekClasses = weekMap[`${year}-${weekNum}`];
+        if (!weekClasses || weekClasses.length === 0) {
+          return { year, week: weekNum, weeksPerYear, totalWeeks, totalYears, programSchedules };
+        }
+        if (!weekClasses.every(c => c.status === 'completed')) {
+          return { year, week: weekNum, weeksPerYear, totalWeeks, totalYears, programSchedules };
+        }
+      }
+    }
+
+    return { year: totalYears, week: weeksPerYear, weeksPerYear, totalWeeks, totalYears, programSchedules };
+  };
+
   const getStatusBadge = (status) => {
     const badges = {
       active: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Active' },
@@ -472,9 +509,39 @@ const StudentPortal = () => {
         </div>
       </nav>
 
+      {/* Desktop Tab Bar */}
+      <div className="hidden sm:block bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex gap-1">
+            {[
+              { id: 'home', label: 'Home', icon: Home },
+              { id: 'classes', label: 'Classes', icon: Calendar },
+              { id: 'practice', label: 'Practice', icon: Gamepad2 },
+              { id: 'results', label: 'Results', icon: Trophy },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? 'border-emerald-600 text-emerald-700'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 sm:pb-8">
         <div className="space-y-6">
+          {/* === HOME TAB === */}
+          <div className={activeTab !== 'home' ? 'hidden' : ''}>
+          <div className="space-y-6">
           {/* Welcome Header */}
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Welcome back, {student?.full_name}!</h1>
@@ -611,7 +678,35 @@ const StudentPortal = () => {
             </div>
           )}
 
-          <h2 className="text-lg font-semibold text-gray-900 mt-2">Class Schedule & Progress</h2>
+          {/* Apply for Another Program (in Home tab) */}
+          {!isEnrolledInAllPrograms() && (
+            <Card className="border border-gray-200 bg-white">
+              <div className="flex flex-col sm:flex-row items-start gap-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Expand Your Learning</h3>
+                  <p className="text-gray-600 mb-4">
+                    Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
+                  </p>
+                  <Link
+                    to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="primary" className="bg-emerald-950 hover:bg-emerald-900 w-full sm:w-auto">
+                      Apply for Another Program
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+          )}
+          </div>
+          </div>
+
+          {/* === CLASSES TAB === */}
+          <div className={activeTab !== 'classes' ? 'hidden' : ''}>
+          <div className="space-y-6">
+          <h2 className="text-lg font-semibold text-gray-900">Class Schedule & Progress</h2>
 
           {/* Class Schedules - Per Program */}
           {enrollments.map((enrollment) => {
@@ -899,24 +994,6 @@ const StudentPortal = () => {
                   </div>
                 )}
 
-                {/* Progress Tracker */}
-                {/* Test & Exam Progress */}
-                <div className="mt-6">
-                  <TestProgressCard programId={enrollment.program} currentWeek={currentActive.week} />
-                </div>
-
-                {/* Recitation Practice */}
-                {student?.id && (
-                  <RecitationPractice
-                    studentId={student.id}
-                    programId={enrollment.program}
-                    teacherId={assignedTeachers[enrollment.program]?.id}
-                  />
-                )}
-
-                {/* Completion Certificate */}
-                <StudentCertificateCard programId={enrollment.program} />
-
                 {/* Overall Progress */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
                   {(() => {
@@ -952,7 +1029,12 @@ const StudentPortal = () => {
               </Card>
             );
           })}
+          </div>
+          </div>
 
+          {/* === PRACTICE TAB === */}
+          <div className={activeTab !== 'practice' ? 'hidden' : ''}>
+          <div className="space-y-6">
           {/* Practice Drills */}
           <Card className="border border-purple-200 bg-gradient-to-r from-purple-50 to-white">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
@@ -973,28 +1055,66 @@ const StudentPortal = () => {
             </div>
           </Card>
 
-          {/* Apply for Another Program */}
-          {!isEnrolledInAllPrograms() && (
-            <Card className="border border-gray-200 bg-white">
-              <div className="flex flex-col sm:flex-row items-start gap-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Expand Your Learning</h3>
-                  <p className="text-gray-600 mb-4">
-                    Interested in enrolling in additional programs? We offer specialized courses to enhance your Islamic education.
-                  </p>
-                  <Link
-                    to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="primary" className="bg-emerald-950 hover:bg-emerald-900 w-full sm:w-auto">
-                      Apply for Another Program
-                    </Button>
-                  </Link>
-                </div>
+          {/* Recitation Practice - Per Program */}
+          {enrollments.filter(e => e.status === 'active').map(enrollment => (
+            student?.id && (
+              <div key={enrollment.id}>
+                {enrollments.filter(e => e.status === 'active').length > 1 && (
+                  <h3 className="text-md font-semibold text-gray-700 mb-3">{getProgramName(enrollment.program)}</h3>
+                )}
+                <RecitationPractice
+                  studentId={student.id}
+                  programId={enrollment.program}
+                  teacherId={assignedTeachers[enrollment.program]?.id}
+                />
               </div>
-            </Card>
-          )}
+            )
+          ))}
+          </div>
+          </div>
+
+          {/* === RESULTS TAB === */}
+          <div className={activeTab !== 'results' ? 'hidden' : ''}>
+          <div className="space-y-6">
+          {enrollments.filter(e => e.status === 'active').map(enrollment => {
+            const activeWeek = getActiveWeekForEnrollment(enrollment);
+            return (
+              <div key={enrollment.id} className="space-y-4">
+                {enrollments.filter(e => e.status === 'active').length > 1 && (
+                  <h3 className="text-lg font-semibold text-gray-900">{getProgramName(enrollment.program)}</h3>
+                )}
+                <TestProgressCard programId={enrollment.program} currentWeek={activeWeek.week} />
+                <StudentCertificateCard programId={enrollment.program} />
+              </div>
+            );
+          })}
+          </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Bottom Tab Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 sm:hidden">
+        <div className="flex justify-around items-center h-16 px-2">
+          {[
+            { id: 'home', label: 'Home', icon: Home },
+            { id: 'classes', label: 'Classes', icon: Calendar },
+            { id: 'practice', label: 'Practice', icon: Gamepad2 },
+            { id: 'results', label: 'Results', icon: Trophy },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-colors ${
+                activeTab === tab.id
+                  ? 'text-emerald-700'
+                  : 'text-gray-400'
+              }`}
+            >
+              <tab.icon className={`h-5 w-5 ${activeTab === tab.id ? 'text-emerald-600' : ''}`} />
+              <span className="text-[10px] font-medium">{tab.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 

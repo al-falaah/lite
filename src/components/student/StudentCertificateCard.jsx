@@ -22,7 +22,7 @@ export default function StudentCertificateCard({ programId }) {
         .select('*')
         .eq('student_id', user.id)
         .eq('program_id', programId)
-        .single();
+        .maybeSingle();
 
       setCertificate(data);
     } catch {
