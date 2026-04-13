@@ -42,7 +42,7 @@ export default function SplashScreen({ onFinish }) {
           phase === 'tagline' || phase === 'exit' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}
       >
-        Sacred knowledge, made accessible.
+        Islamic knowledge, made accessible.
       </p>
     </div>
   );
