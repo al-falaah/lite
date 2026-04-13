@@ -158,7 +158,7 @@ export default function ChapterQuiz() {
           <BookOpen className="h-12 w-12 text-gray-300 mx-auto mb-4" />
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Quiz Not Available</h2>
           <p className="text-gray-500 text-sm mb-6">There's no quiz for this chapter yet.</p>
-          <Link to={`/resources/${courseSlug}`} className="text-amber-600 hover:text-amber-700 text-sm font-medium">
+          <Link to={`/student`} className="text-amber-600 hover:text-amber-700 text-sm font-medium">
             ← Back to chapter
           </Link>
         </div>
@@ -222,7 +222,7 @@ export default function ChapterQuiz() {
                   className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-all">
                   <RotateCcw className="h-4 w-4" /> Try Again
                 </button>
-                <Link to={`/resources/${courseSlug}`}
+                <Link to={`/student`}
                   className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-amber-600 text-white rounded-xl font-medium hover:bg-amber-700 transition-all">
                   <BookOpen className="h-4 w-4" /> Back to Chapter
                 </Link>
@@ -247,7 +247,7 @@ export default function ChapterQuiz() {
         {/* Header */}
         <div className="bg-white/80 backdrop-blur-sm border-b border-amber-200 sticky top-0 z-10">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-            <Link to={`/resources/${courseSlug}`} className="text-gray-500 hover:text-gray-700 flex items-center gap-1 text-sm">
+            <Link to={`/student`} className="text-gray-500 hover:text-gray-700 flex items-center gap-1 text-sm">
               <ChevronLeft className="h-4 w-4" /> Back
             </Link>
             <span className="text-sm font-medium text-gray-900">{quiz.title}</span>

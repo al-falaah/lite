@@ -29,8 +29,6 @@ import StoreAdmin from './pages/StoreAdmin';
 import AdminRoles from './pages/AdminRoles';
 import DirectorDashboard from './pages/DirectorDashboard';
 import ResearchAdmin from './pages/ResearchAdmin';
-import Resources from './pages/Resources';
-import LessonNotes from './pages/LessonNotes';
 import ChapterQuiz from './pages/ChapterQuiz';
 import MilestoneTest from './pages/MilestoneTest';
 import Login from './pages/Login';
@@ -96,9 +94,9 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/faqs" element={<FAQs />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/resources/:courseSlug" element={<LessonNotes />} />
-            <Route path="/resources/:courseSlug/:chapterSlug/quiz" element={<ChapterQuiz />} />
+            <Route path="/resources" element={<Navigate to="/blog" replace />} />
+            <Route path="/resources/*" element={<Navigate to="/blog" replace />} />
+            <Route path="/student/quiz/:courseSlug/:chapterSlug" element={<ChapterQuiz />} />
             <Route path="/store" element={<StorePage />} />
             <Route path="/store/order" element={<StoreOrderPage />} />
             <Route path="/store/order-confirmation" element={<StoreOrderConfirmation />} />

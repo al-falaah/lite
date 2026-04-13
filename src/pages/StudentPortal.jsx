@@ -13,6 +13,7 @@ import {
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import StudentClassEtiquette from '../components/student/StudentClassEtiquette';
+import StudentLessons from '../components/student/StudentLessons';
 import TestProgressCard from '../components/student/TestProgressCard';
 import StudentCertificateCard from '../components/student/StudentCertificateCard';
 import RecitationPractice from '../components/student/RecitationPractice';
@@ -516,6 +517,7 @@ const StudentPortal = () => {
             {[
               { id: 'home', label: 'Home', icon: Home },
               { id: 'classes', label: 'Classes', icon: Calendar },
+              { id: 'lessons', label: 'Lessons', icon: BookOpen },
               { id: 'practice', label: 'Practice', icon: Gamepad2 },
               { id: 'results', label: 'Results', icon: Trophy },
             ].map(tab => (
@@ -1007,6 +1009,11 @@ const StudentPortal = () => {
           </div>
           </div>
 
+          {/* === LESSONS TAB === */}
+          <div className={activeTab !== 'lessons' ? 'hidden' : ''}>
+            <StudentLessons enrollments={enrollments} />
+          </div>
+
           {/* === PRACTICE TAB === */}
           <div className={activeTab !== 'practice' ? 'hidden' : ''}>
           <div className="space-y-6">
@@ -1074,6 +1081,7 @@ const StudentPortal = () => {
           {[
             { id: 'home', label: 'Home', icon: Home },
             { id: 'classes', label: 'Classes', icon: Calendar },
+            { id: 'lessons', label: 'Lessons', icon: BookOpen },
             { id: 'practice', label: 'Practice', icon: Gamepad2 },
             { id: 'results', label: 'Results', icon: Trophy },
           ].map(tab => (

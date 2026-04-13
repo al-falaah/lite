@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3, Upload, ArrowLeft } from 'lucide-react';
+import { Book, Plus, Edit, Trash2, Eye, EyeOff, ChevronRight, Save, X, LogOut, HelpCircle, CheckCircle, XCircle, ChevronDown, ChevronUp, ClipboardCheck, Settings, BarChart3, Upload, ArrowLeft, Video } from 'lucide-react';
 import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
@@ -287,6 +287,7 @@ const ResearchAdmin = () => {
           slug: generateSlug(editingChapter.title),
           content: editingChapter.content,
           content_type: editingChapter.content_type || 'rich_text',
+          video_url: editingChapter.video_url || null,
           is_published: editingChapter.is_published
         })
         .eq('id', editingChapter.id);
@@ -929,6 +930,17 @@ const ResearchAdmin = () => {
                         )}
                       </div>
 
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Video (YouTube)</label>
+                        <input
+                          type="url"
+                          value={editingChapter.video_url || ''}
+                          onChange={(e) => setEditingChapter({ ...editingChapter, video_url: e.target.value })}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow text-sm"
+                          placeholder="https://www.youtube.com/watch?v=..."
+                        />
+                      </div>
+
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
@@ -938,7 +950,7 @@ const ResearchAdmin = () => {
                           className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                         />
                         <label htmlFor="published" className="text-sm text-gray-700">
-                          Publish this chapter (make it publicly visible)
+                          Publish this chapter (visible to enrolled students)
                         </label>
                       </div>
                     </div>
@@ -961,6 +973,9 @@ const ResearchAdmin = () => {
                                 )}
                                 {chapter.content_type === 'full_html' && (
                                   <span className="text-gray-400 ml-2">· HTML</span>
+                                )}
+                                {chapter.video_url && (
+                                  <span className="text-gray-400 ml-1">· Video</span>
                                 )}
                               </p>
                             </div>

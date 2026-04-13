@@ -15,7 +15,7 @@ const areas = [
   },
   {
     title: 'Study Administration',
-    description: 'Manage lesson notes, study materials, and assessments',
+    description: 'Manage lesson notes, videos, and assessments for enrolled students',
     icon: FileText,
     href: '/research/admin',
     iconBg: 'bg-teal-50',
