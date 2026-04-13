@@ -539,15 +539,15 @@ const StudentPortal = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 sm:pb-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-28 sm:pb-8">
         <div className="space-y-6">
           {/* === HOME TAB === */}
           <div className={activeTab !== 'home' ? 'hidden' : ''}>
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
           {/* Welcome Header */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {student?.full_name}!</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-lg sm:text-3xl font-bold text-gray-900">Welcome back, {student?.full_name?.split(' ')[0]}!</h1>
+            <p className="text-xs sm:text-base text-gray-500 mt-0.5">
               {student?.student_id ? `Student ID: ${student.student_id}` : 'Complete payment to receive your Student ID'}
             </p>
           </div>
@@ -1076,8 +1076,8 @@ const StudentPortal = () => {
       </div>
 
       {/* Mobile Bottom Tab Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 sm:hidden">
-        <div className="flex justify-around items-center h-16 px-2">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 z-50 sm:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+        <div className="flex justify-around items-center h-14 px-1">
           {[
             { id: 'home', label: 'Home', icon: Home },
             { id: 'classes', label: 'Classes', icon: Calendar },
@@ -1088,14 +1088,14 @@ const StudentPortal = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-colors ${
+              className={`flex flex-col items-center justify-center flex-1 py-1.5 rounded-lg transition-colors ${
                 activeTab === tab.id
                   ? 'text-emerald-700'
-                  : 'text-gray-400'
+                  : 'text-gray-400 active:bg-gray-100'
               }`}
             >
-              <tab.icon className={`h-5 w-5 ${activeTab === tab.id ? 'text-emerald-600' : ''}`} />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <tab.icon className={`h-5 w-5 ${activeTab === tab.id ? 'text-emerald-600' : ''}`} strokeWidth={activeTab === tab.id ? 2.5 : 1.5} />
+              <span className={`text-[10px] ${activeTab === tab.id ? 'font-semibold' : 'font-medium'}`}>{tab.label}</span>
             </button>
           ))}
         </div>

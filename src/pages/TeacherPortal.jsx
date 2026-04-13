@@ -666,13 +666,13 @@ export default function TeacherPortal() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-28 sm:pb-8">
         {/* === HOME TAB === */}
         <div className={teacherTab !== 'home' ? 'hidden' : ''}>
         {/* Welcome Message */}
         <div className="mb-5 sm:mb-8">
-          <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">Welcome, {teacher.full_name.split(' ')[0]}!</h1>
-          <p className="text-xs sm:text-base text-gray-600">Manage students and track progress</p>
+          <h1 className="text-lg sm:text-3xl font-bold text-gray-900 mb-0.5">Welcome, {teacher.full_name.split(' ')[0]}!</h1>
+          <p className="text-xs sm:text-base text-gray-500">Manage students and track progress</p>
         </div>
 
         {/* Teaching Guidelines */}
@@ -898,8 +898,8 @@ export default function TeacherPortal() {
       </div>
 
       {/* Mobile Bottom Tab Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 sm:hidden">
-        <div className="flex justify-around items-center h-16 px-2">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 z-50 sm:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+        <div className="flex justify-around items-center h-14 px-1">
           {[
             { id: 'home', label: 'Home', icon: Home },
             { id: 'students', label: 'Students', icon: Users },
@@ -908,14 +908,14 @@ export default function TeacherPortal() {
             <button
               key={tab.id}
               onClick={() => setTeacherTab(tab.id)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 transition-colors ${
+              className={`flex flex-col items-center justify-center flex-1 py-1.5 rounded-lg transition-colors ${
                 teacherTab === tab.id
                   ? 'text-emerald-700'
-                  : 'text-gray-400'
+                  : 'text-gray-400 active:bg-gray-100'
               }`}
             >
-              <tab.icon className={`h-5 w-5 ${teacherTab === tab.id ? 'text-emerald-600' : ''}`} />
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <tab.icon className={`h-5 w-5 ${teacherTab === tab.id ? 'text-emerald-600' : ''}`} strokeWidth={teacherTab === tab.id ? 2.5 : 1.5} />
+              <span className={`text-[10px] ${teacherTab === tab.id ? 'font-semibold' : 'font-medium'}`}>{tab.label}</span>
             </button>
           ))}
         </div>
