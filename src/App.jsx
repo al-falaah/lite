@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
@@ -47,16 +48,33 @@ import DrillPlayer from './components/drills/DrillPlayer';
 // Components
 import CountdownBanner from './components/CountdownBanner';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import SplashScreen from './components/SplashScreen';
 
 // Layout
 import AdminRoute from './components/common/AdminRoute';
 import RoleRoute from './components/common/RoleRoute';
 
+// Detect PWA standalone mode
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+  || window.navigator.standalone === true;
+
 function App() {
+  const [showSplash, setShowSplash] = useState(() => {
+    if (!isStandalone) return false;
+    const shown = sessionStorage.getItem('splashShown');
+    return !shown;
+  });
+
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+    sessionStorage.setItem('splashShown', '1');
+  }, []);
+
   return (
     <HelmetProvider>
       <AuthProvider>
         <Router>
+          {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
           <div className="min-h-screen bg-gray-50">
           <CountdownBanner />
           <Routes>
