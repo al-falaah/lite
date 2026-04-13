@@ -143,6 +143,18 @@
     <meta http-equiv="Expires" content="0" />
   </head>
   <body>
+    <!-- PWA Splash: shows instantly before JS loads, hidden by React SplashScreen -->
+    <div id="html-splash" style="display:none;position:fixed;inset:0;z-index:99999;background:#fff;flex-direction:column;align-items:center;justify-content:center">
+      <img src="/favicon.svg" alt="" width="80" height="80" style="opacity:0.9" />
+      <p style="margin-top:16px;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;color:#111827;letter-spacing:0.02em">The FastTrack Madrasah</p>
+      <p style="margin-top:12px;font-size:14px;color:#6b7280">Islamic knowledge, made accessible.</p>
+    </div>
+    <script>
+      // Only show HTML splash in standalone (PWA) mode
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        document.getElementById('html-splash').style.display = 'flex';
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
