@@ -77,6 +77,10 @@ PASSWORD-HASHING-MIGRATION.md
 # Supabase CLI internals
 supabase/.temp/
 
+# Quran data downloads (large JSON files, loaded into Supabase)
+scripts/data/
+
+
 # OS files
 Thumbs.db
 .vercel
