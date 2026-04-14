@@ -16,7 +16,10 @@ export default function DrillHub() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeProgram, setActiveProgram] = useState('all');
-  const [tab, setTab] = useState('decks'); // decks | leaderboard
+  const [tab, setTab] = useState('decks'); // decks | endless | leaderboard
+  const [endlessLength, setEndlessLength] = useState(10);
+  const [endlessRule, setEndlessRule] = useState('');
+  const [endlessRules, setEndlessRules] = useState([]); // loaded lazily
   const { pullDistance, isPulling } = usePullToRefresh();
 
   useEffect(() => {
@@ -57,6 +60,28 @@ export default function DrillHub() {
     };
     load();
   }, []);
+
+  // Lazy-load tajweed drill data for the Endless tab (just for the rule list)
+  useEffect(() => {
+    if (tab !== 'endless' || endlessRules.length > 0) return;
+    fetch('/content/tajweed_drills.json')
+      .then(r => r.json())
+      .then(data => {
+        const list = Object.values(data.rules)
+          .filter(r => r.examples?.length >= 4)
+          .map(r => ({ id: r.id, name_en: r.name_en, name_ar: r.name_ar, category: r.category, count: r.examples.length }))
+          .sort((a, b) => a.category.localeCompare(b.category) || a.name_en.localeCompare(b.name_en));
+        setEndlessRules(list);
+      })
+      .catch(() => {});
+  }, [tab, endlessRules.length]);
+
+  const startEndless = () => {
+    const id = `endless-tajweed-${Date.now()}`;
+    const params = new URLSearchParams({ n: String(endlessLength) });
+    if (endlessRule) params.set('rule', endlessRule);
+    navigate(`/drills/play/${id}?${params.toString()}`);
+  };
 
   // Aggregate stats
   const totalXP = stats.reduce((s, r) => s + r.total_xp, 0);
@@ -130,12 +155,12 @@ export default function DrillHub() {
         {/* Tabs */}
         <div className="max-w-3xl mx-auto px-4 pt-4">
           <div className="flex gap-4 mb-4 border-b border-gray-200">
-            {['decks', 'leaderboard'].map(t => (
+            {['decks', 'endless', 'leaderboard'].map(t => (
               <button key={t} onClick={() => setTab(t)}
                 className={`pb-2 text-sm font-medium transition-colors ${
                   tab === t ? 'text-gray-900 border-b-2 border-emerald-600' : 'text-gray-400 hover:text-gray-600'
                 }`}>
-                {t === 'decks' ? 'Decks' : 'Leaderboard'}
+                {t === 'decks' ? 'Decks' : t === 'endless' ? 'Endless' : 'Leaderboard'}
               </button>
             ))}
           </div>
@@ -174,6 +199,56 @@ export default function DrillHub() {
                 </div>
               )}
             </>
+          )}
+
+          {/* ── ENDLESS TAB ────────────────────────────── */}
+          {tab === 'endless' && (
+            <div className="space-y-5">
+              <div className="bg-white rounded-xl p-5 border border-gray-200">
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="text-3xl">♾️</span>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Endless Tajweed</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">Unlimited mixed questions drawn from the Qur'an, powered by scholar-annotated data.</p>
+                  </div>
+                </div>
+
+                {/* Length picker */}
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Session length</label>
+                  <div className="flex gap-2">
+                    {[10, 20, 50].map(n => (
+                      <button key={n} onClick={() => setEndlessLength(n)}
+                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          endlessLength === n ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}>
+                        {n} questions
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Rule filter */}
+                <div className="mb-4">
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Focus on a rule (optional)</label>
+                  <select value={endlessRule} onChange={(e) => setEndlessRule(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <option value="">All rules (mixed)</option>
+                    {endlessRules.map(r => (
+                      <option key={r.id} value={r.id}>{r.category} — {r.name_en}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <button onClick={startEndless}
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-xl transition-colors">
+                  Start Endless Session
+                </button>
+                <p className="text-[10px] text-gray-400 mt-3 text-center">
+                  Source: Ahkam at-Tajweed fi Kalimat al-Aziz al-Hameed — Ahmad At-Taweel
+                </p>
+              </div>
+            </div>
           )}
 
           {/* ── LEADERBOARD TAB ────────────────────────── */}

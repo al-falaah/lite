@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { RotateCcw, ArrowRight, Play, X } from 'lucide-react';
 import { supabase } from '../../services/supabase';
@@ -7,12 +7,20 @@ import {
   segmentHighlights, calcXP, getComboMultiplier, getComboLabel,
   getLevel, getLevelTitle, levelProgress,
 } from '../../utils/drillHelpers';
+import { loadTajweedDrillData, generateSession } from '../../utils/tajweedDrillGenerator';
 
 const PHASES = { READY: 'ready', PLAYING: 'playing', RESULT: 'result', SUMMARY: 'summary' };
+
+// Matches seed row in migration 20260416000003_seed_endless_tajweed_deck.sql
+const ENDLESS_TAJWEED_DECK_ID = '00000000-0000-0000-0000-00000000e4d1';
 
 export default function DrillPlayer() {
   const { deckId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isEndless = deckId?.startsWith('endless-');
+  const endlessLength = parseInt(searchParams.get('n') || '10', 10);
+  const endlessRule = searchParams.get('rule') || null;
 
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -43,12 +51,31 @@ export default function DrillPlayer() {
   // ── Load deck + cards + student ────────────────────────
   useEffect(() => {
     const load = async () => {
-      const [{ data: d }, { data: c }] = await Promise.all([
-        supabase.from('drill_decks').select('*').eq('id', deckId).single(),
-        supabase.from('drill_cards').select('*').eq('deck_id', deckId).order('sort_order'),
-      ]);
-      setDeck(d);
-      setCards(c || []);
+      if (isEndless) {
+        // Just preload the data + deck metadata; cards are generated in startGame()
+        // so the READY screen's "questions" count reflects the chosen length but
+        // we avoid showing stale cards that a later regenerate would overwrite.
+        const data = await loadTajweedDrillData();
+        const ruleLabel = endlessRule ? data.rules[endlessRule]?.name_en : null;
+        setDeck({
+          id: ENDLESS_TAJWEED_DECK_ID,
+          title: ruleLabel ? `Endless: ${ruleLabel}` : 'Endless Tajweed',
+          topic: 'Tajweed',
+          program: 'tajweed',
+          cover_emoji: ruleLabel ? '🎯' : '♾️',
+          description: `${endlessLength} mixed questions from the Qur'an`,
+        });
+        // Placeholder with the right length so READY screen stats are accurate.
+        // Real cards are generated on Start.
+        setCards(new Array(endlessLength).fill(null));
+      } else {
+        const [{ data: d }, { data: c }] = await Promise.all([
+          supabase.from('drill_decks').select('*').eq('id', deckId).single(),
+          supabase.from('drill_cards').select('*').eq('deck_id', deckId).order('sort_order'),
+        ]);
+        setDeck(d);
+        setCards(c || []);
+      }
 
       // Get student ID
       const { data: { session } } = await supabase.auth.getSession();
@@ -63,7 +90,7 @@ export default function DrillPlayer() {
       setLoading(false);
     };
     load();
-  }, [deckId]);
+  }, [deckId, isEndless, endlessLength, endlessRule]);
 
   // Timer
   useEffect(() => {
@@ -77,7 +104,12 @@ export default function DrillPlayer() {
   const currentCard = cards[index];
 
   // ── Start ──────────────────────────────────────────────
-  const startGame = () => {
+  const startGame = async () => {
+    // For endless mode, regenerate a fresh set of cards each run
+    if (isEndless) {
+      const data = await loadTajweedDrillData();
+      setCards(generateSession(data, endlessLength, endlessRule));
+    }
     setPhase(PHASES.PLAYING);
     startRef.current = Date.now();
     setIndex(0);
@@ -214,7 +246,7 @@ export default function DrillPlayer() {
 
           <div className="flex justify-center gap-6 mb-8 text-gray-400 text-sm">
             <span>{cards.length} questions</span>
-            <span>{cards.reduce((s, c) => s + c.points, 0)} XP possible</span>
+            <span>{cards.reduce((s, c) => s + (c?.points || 10), 0)} XP possible</span>
           </div>
 
           <button onClick={startGame}
