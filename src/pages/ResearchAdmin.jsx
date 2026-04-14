@@ -166,6 +166,18 @@ const ResearchAdmin = () => {
     }
   };
 
+  const swapChapterOrder = async (index, direction) => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= chapters.length) return;
+    const a = chapters[index];
+    const b = chapters[targetIndex];
+    // Swap chapter_number values
+    const { error: e1 } = await supabase.from('lesson_chapters').update({ chapter_number: b.chapter_number }).eq('id', a.id);
+    const { error: e2 } = await supabase.from('lesson_chapters').update({ chapter_number: a.chapter_number }).eq('id', b.id);
+    if (e1 || e2) { toast.error('Failed to reorder'); return; }
+    fetchChapters(selectedCourse.id);
+  };
+
   const fetchTestSettings = async () => {
     try {
       const { data, error } = await supabase
@@ -988,13 +1000,31 @@ const ResearchAdmin = () => {
                     </div>
                   ) : (
                     <div className="space-y-2.5">
-                      {chapters.map((chapter) => (
+                      {chapters.map((chapter, idx) => (
                         <div
                           key={chapter.id}
                           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-gray-500">#{chapter.chapter_number}</span>
+                            <div className="flex flex-col items-center gap-0.5">
+                              <button
+                                onClick={() => swapChapterOrder(idx, 'up')}
+                                disabled={idx === 0}
+                                className={`p-0.5 rounded ${idx === 0 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+                                title="Move up"
+                              >
+                                <ChevronUp className="h-3.5 w-3.5" />
+                              </button>
+                              <span className="text-xs font-bold text-gray-400">{chapter.chapter_number}</span>
+                              <button
+                                onClick={() => swapChapterOrder(idx, 'down')}
+                                disabled={idx === chapters.length - 1}
+                                className={`p-0.5 rounded ${idx === chapters.length - 1 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+                                title="Move down"
+                              >
+                                <ChevronDown className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
                             <div>
                               <p className="font-semibold text-gray-900">{chapter.title}</p>
                               <p className="text-xs text-gray-500 mt-0.5">
