@@ -84,15 +84,34 @@ function genIdentifyRule(rule, rulesById, allRuleIds) {
   };
 }
 
+// Rules that commonly recur in an ayah beyond what the scholar flagged
+// (e.g. qalqalah letters, ghunnah, natural madd) — avoid the "which word"
+// question type for these to prevent ambiguous answers.
+const AMBIGUOUS_FOR_WHICH_WORD = new Set([
+  'qalqalah', 'ghunnah', 'madd-tabi3i', 'madd-aarid', 'madd-badal',
+  'tafkheem-ra', 'tarqeeq-ra', 'tafkheem-lam', 'tarqeeq-lam',
+  'lam-shamsiyyah', 'lam-qamariyyah',
+]);
+
 /** Type 2: Which word. Show ayah + rule name, ask which word has the rule. */
 function genWhichWord(rule, rulesById, allRuleIds) {
+  if (AMBIGUOUS_FOR_WHICH_WORD.has(rule.id)) return null;
   const ex = pick(rule.examples);
   const ayahWords = ex.ayahText.split(/\s+/).filter(Boolean);
   if (ayahWords.length < 4 || !ex.wordIndices?.length) return null;
 
+  // Find ALL indices where this rule applies in this ayah — same rule may
+  // recur multiple times, and we must not offer any such word as a distractor.
+  const sameRuleIndices = new Set();
+  for (const other of rule.examples) {
+    if (other.sura === ex.sura && other.aya === ex.aya) {
+      other.wordIndices.forEach(i => sameRuleIndices.add(i));
+    }
+  }
+
   const correctIdx = ex.wordIndices[0];
   const correctWord = ayahWords[correctIdx];
-  const otherIndices = ayahWords.map((_, i) => i).filter(i => !ex.wordIndices.includes(i));
+  const otherIndices = ayahWords.map((_, i) => i).filter(i => !sameRuleIndices.has(i));
   if (otherIndices.length < 3) return null;
   const distractorIdx = shuffle([...otherIndices]).slice(0, 3);
   const optionObjs = shuffle([
