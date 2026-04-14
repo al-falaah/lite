@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Disable native pull-to-refresh so custom one works */
+html, body {
+  overscroll-behavior-y: contain;
+}
+
 /* Custom keyframes for scroll indicator */
 @keyframes scroll-down {
   0% {

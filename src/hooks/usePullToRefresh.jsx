@@ -63,10 +63,10 @@ export function PullIndicator({ pullDistance, isPulling }) {
       style={{ paddingTop: `${Math.max(pullDistance * 0.4, 0)}px`, opacity: progress }}
     >
       <div className={`w-8 h-8 rounded-full shadow-lg flex items-center justify-center transition-colors ${
-        isPulling ? 'bg-emerald-500' : 'bg-white border border-gray-200'
+        isPulling ? 'bg-emerald-500' : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600'
       }`}>
         <span
-          className={`block text-xs leading-none transition-transform ${isPulling ? 'text-white' : 'text-gray-500'}`}
+          className={`block text-xs leading-none transition-transform ${isPulling ? 'text-white' : 'text-gray-500 dark:text-gray-300'}`}
           style={{ transform: `rotate(${isPulling ? 180 : Math.min(pullDistance * 2, 180)}deg)` }}
         >↓</span>
       </div>

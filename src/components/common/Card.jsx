@@ -7,7 +7,7 @@ const Card = ({ children, className = '', padding = 'default' }) => {
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-md ${paddings[padding]} ${className}`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/30 ${paddings[padding]} ${className}`}>
       {children}
     </div>
   );

@@ -11,10 +11,10 @@ const Button = ({
   const baseStyles = 'inline-flex items-center justify-center font-medium rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variants = {
-    primary: 'bg-gray-900 hover:bg-gray-800 text-white',
+    primary: 'bg-gray-900 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100',
     emerald: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-    secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-900',
-    outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50',
+    secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100',
+    outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700',
     danger: 'bg-red-600 hover:bg-red-700 text-white'
   };
 

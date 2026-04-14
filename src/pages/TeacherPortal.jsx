@@ -4,6 +4,7 @@ import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic, Home } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
+import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh.jsx';
 import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
 import OralTestGrading from '../components/admin/OralTestGrading';
@@ -94,6 +95,14 @@ export default function TeacherPortal() {
   // Session loading
   const [initialLoading, setInitialLoading] = useState(true);
   const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  // Pull-to-refresh: reload teacher data
+  const { pullDistance, isPulling } = usePullToRefresh(() => {
+    if (teacher?.id) {
+      loadTeacherData(teacher.id);
+      toast('Refreshed', { duration: 1500 });
+    }
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -610,6 +619,7 @@ export default function TeacherPortal() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet><title>Teacher Portal | The FastTrack Madrasah</title></Helmet>
+      <PullIndicator pullDistance={pullDistance} isPulling={isPulling} />
       {/* Navigation */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
