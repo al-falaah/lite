@@ -217,8 +217,8 @@ export default function StudentLessons({ enrollments }) {
   if (!uniquePrograms.length) {
     return (
       <div className="text-center py-16">
-        <BookOpen className="h-10 w-10 text-gray-300 mx-auto mb-3" />
-        <p className="text-gray-500 text-sm">No active enrollments</p>
+        <BookOpen className="h-10 w-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+        <p className="text-gray-500 dark:text-gray-400 text-sm">No active enrollments</p>
       </div>
     );
   }
@@ -229,21 +229,21 @@ export default function StudentLessons({ enrollments }) {
     return (
       <button
         onClick={() => openChapter(ch)}
-        className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
+        className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
       >
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">{ch.title}</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{ch.title}</p>
             <div className="flex items-center gap-2 mt-0.5">
-              {ch.week_number && <span className="text-xs text-gray-400">Week {ch.week_number}</span>}
+              {ch.week_number && <span className="text-xs text-gray-400 dark:text-gray-500">Week {ch.week_number}</span>}
               {courses.length > 1 && course && (
-                <span className="text-xs text-gray-400 truncate">{course.title}</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500 truncate">{course.title}</span>
               )}
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-300" />}
-            {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-300">HTML</span>}
+            {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-300 dark:text-gray-500" />}
+            {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-300 dark:text-gray-500">HTML</span>}
           </div>
         </div>
       </button>
@@ -260,7 +260,7 @@ export default function StudentLessons({ enrollments }) {
             {uniquePrograms.map(p => (
               <button key={p} onClick={() => setSelectedProgram(p)}
                 className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                  selectedProgram === p ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  selectedProgram === p ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
                 {PROGRAMS[p]?.shortName || p}
@@ -275,26 +275,26 @@ export default function StudentLessons({ enrollments }) {
           </div>
         ) : allChapters.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-sm">No lessons available yet</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">No lessons available yet</p>
           </div>
         ) : (
           <div className="space-y-3">
             {/* View toggle */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {PROGRAMS[selectedProgram]?.shortName || selectedProgram} Lessons
               </h2>
               {milestones.length > 0 && (
-                <div className="flex text-xs border border-gray-200 rounded-lg overflow-hidden">
+                <div className="flex text-xs border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
                   <button
                     onClick={() => setViewMode('milestones')}
-                    className={`px-3 py-1.5 transition-colors ${viewMode === 'milestones' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                    className={`px-3 py-1.5 transition-colors ${viewMode === 'milestones' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                   >
                     By Milestone
                   </button>
                   <button
                     onClick={() => setViewMode('courses')}
-                    className={`px-3 py-1.5 transition-colors ${viewMode === 'courses' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                    className={`px-3 py-1.5 transition-colors ${viewMode === 'courses' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                   >
                     By Course
                   </button>
@@ -309,30 +309,30 @@ export default function StudentLessons({ enrollments }) {
                   const chaps = milestoneGroups.groups[m.id] || [];
                   const isOpen = expandedMilestones[m.id];
                   return (
-                    <div key={m.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div key={m.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                       <button
                         onClick={() => toggleMilestone(m.id)}
-                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                       >
                         <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {m.name}
                           </p>
-                          <p className="text-xs text-gray-400 mt-0.5">
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                             Weeks {m.weekStart}–{m.weekEnd}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
                           {chaps.length > 0 ? (
-                            <span className="text-xs text-gray-400">{chaps.length}</span>
+                            <span className="text-xs text-gray-400 dark:text-gray-500">{chaps.length}</span>
                           ) : (
-                            <span className="text-xs text-gray-300">Coming soon</span>
+                            <span className="text-xs text-gray-300 dark:text-gray-600">Coming soon</span>
                           )}
-                          <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`h-4 w-4 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                         </div>
                       </button>
                       {isOpen && chaps.length > 0 && (
-                        <div className="border-t border-gray-100">
+                        <div className="border-t border-gray-100 dark:border-gray-700">
                           {chaps.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
                         </div>
                       )}
@@ -342,19 +342,19 @@ export default function StudentLessons({ enrollments }) {
 
                 {/* Ungrouped chapters */}
                 {milestoneGroups.ungrouped.length > 0 && (
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <button
                       onClick={() => toggleMilestone('general')}
-                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
-                      <p className="text-sm font-medium text-gray-900">General</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">General</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400">{milestoneGroups.ungrouped.length}</span>
-                        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
+                        <span className="text-xs text-gray-400 dark:text-gray-500">{milestoneGroups.ungrouped.length}</span>
+                        <ChevronDown className={`h-4 w-4 text-gray-400 dark:text-gray-500 transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
                       </div>
                     </button>
                     {expandedMilestones['general'] && (
-                      <div className="border-t border-gray-100">
+                      <div className="border-t border-gray-100 dark:border-gray-700">
                         {milestoneGroups.ungrouped.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
                       </div>
                     )}
@@ -368,11 +368,11 @@ export default function StudentLessons({ enrollments }) {
                   const chaps = courseGroups[course.id] || [];
                   if (chaps.length === 0) return null;
                   return (
-                    <div key={course.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900">{course.title}</p>
+                    <div key={course.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-100 dark:border-gray-600">
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{course.title}</p>
                         {course.description && (
-                          <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{course.description}</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 line-clamp-1">{course.description}</p>
                         )}
                       </div>
                       <div>
