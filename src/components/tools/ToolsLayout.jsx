@@ -50,7 +50,7 @@ function ToolsLayout() {
 
       {/* Footer */}
       <footer className="border-t border-gray-200 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
           <p className="text-sm text-gray-500">
             A sadaqah jaariyah from{' '}
             <a
@@ -60,6 +60,35 @@ function ToolsLayout() {
               className="text-emerald-600 hover:underline"
             >
               The FastTrack Madrasah
+            </a>
+          </p>
+          <p className="text-xs text-gray-400">
+            Quranic data provided by{' '}
+            <a
+              href="https://dev.surahapp.com/api/docs/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:underline"
+            >
+              Surah App API
+            </a>
+            {' '}by the{' '}
+            <a
+              href="https://tafsir.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:underline"
+            >
+              Tafsir Center for Qur'anic Studies
+            </a>
+            , discovered via{' '}
+            <a
+              href="https://itqan.dev/en/tools/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:underline"
+            >
+              Itqan.dev
             </a>
           </p>
         </div>
