@@ -240,7 +240,12 @@ export default function DrillPlayer() {
       <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-sm">
           <p className="text-6xl mb-4">{deck.cover_emoji}</p>
-          <h1 className="text-2xl font-bold text-white mb-2">{deck.title}</h1>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <h1 className="text-2xl font-bold text-white">{deck.title}</h1>
+            {isEndless && (
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 uppercase tracking-wide">Beta</span>
+            )}
+          </div>
           <p className="text-gray-400 text-sm mb-1">{deck.topic}</p>
           {deck.description && <p className="text-gray-500 text-xs mb-6">{deck.description}</p>}
 
@@ -374,11 +379,16 @@ export default function DrillPlayer() {
 
           {/* Arabic Text */}
           {currentCard.arabic_text && (
-            <div className="mb-6 p-5 bg-gray-800/60 rounded-2xl border border-gray-700/40">
-              <p dir="rtl" className="text-2xl sm:text-3xl leading-loose font-arabic text-white text-center">
+            <div className="mb-6 p-5 sm:p-6 bg-gray-800/60 rounded-2xl border border-gray-700/40">
+              <p
+                dir="rtl"
+                lang="ar"
+                className="text-2xl sm:text-3xl font-arabic text-white text-center"
+                style={{ lineHeight: 2.2, wordSpacing: '0.15em' }}
+              >
                 {segmentHighlights(currentCard.arabic_text, currentCard.highlight_ranges).map((seg, j) =>
                   seg.highlighted
-                    ? <span key={j} className="font-arabic bg-amber-500/30 text-amber-300 px-1 rounded-md border-b-2 border-amber-500/60">{seg.text}</span>
+                    ? <span key={j} className="font-arabic bg-amber-500/30 text-amber-300 px-1.5 rounded-md border-b-2 border-amber-500/60 mx-0.5">{seg.text}</span>
                     : <span key={j} className="font-arabic">{seg.text}</span>
                 )}
               </p>

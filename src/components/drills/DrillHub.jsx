@@ -157,10 +157,13 @@ export default function DrillHub() {
           <div className="flex gap-4 mb-4 border-b border-gray-200">
             {['decks', 'endless', 'leaderboard'].map(t => (
               <button key={t} onClick={() => setTab(t)}
-                className={`pb-2 text-sm font-medium transition-colors ${
+                className={`pb-2 text-sm font-medium transition-colors flex items-center gap-1.5 ${
                   tab === t ? 'text-gray-900 border-b-2 border-emerald-600' : 'text-gray-400 hover:text-gray-600'
                 }`}>
                 {t === 'decks' ? 'Decks' : t === 'endless' ? 'Endless' : 'Leaderboard'}
+                {t === 'endless' && (
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wide">Beta</span>
+                )}
               </button>
             ))}
           </div>
@@ -207,9 +210,15 @@ export default function DrillHub() {
               <div className="bg-white rounded-xl p-5 border border-gray-200">
                 <div className="flex items-start gap-3 mb-3">
                   <span className="text-3xl">♾️</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Endless Tajweed</h3>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-semibold text-gray-900">Endless Tajweed</h3>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wide">Beta</span>
+                    </div>
                     <p className="text-xs text-gray-500 mt-0.5">Unlimited mixed questions drawn from the Qur'an, powered by scholar-annotated data.</p>
+                    <p className="text-[11px] text-amber-700 mt-1.5 bg-amber-50 border border-amber-200 rounded px-2 py-1">
+                      Experimental — some questions may have imperfect rule-to-word matching. Please report issues.
+                    </p>
                   </div>
                 </div>
 
