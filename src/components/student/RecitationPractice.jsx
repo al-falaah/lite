@@ -231,10 +231,10 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
 
   if (loading) {
     return (
-      <div className="border-t border-gray-200 pt-5 mt-5">
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-5 mt-5">
         <div className="animate-pulse space-y-2.5">
-          <div className="h-4 bg-gray-200 rounded w-1/4" />
-          <div className="h-14 bg-gray-100 rounded-lg" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
+          <div className="h-14 bg-gray-100 dark:bg-gray-700 rounded-lg" />
         </div>
       </div>
     );
@@ -243,18 +243,18 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const status = rec?.status;
 
   return (
-    <div className="border-t border-gray-200 pt-5 mt-5">
+    <div className="border-t border-gray-200 dark:border-gray-700 pt-5 mt-5">
       <div className="flex items-center gap-2 mb-3">
         <BookOpen className="h-4 w-4 text-emerald-600" />
-        <h3 className="text-xs sm:text-sm font-semibold text-gray-900">Reading Practice</h3>
+        <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">Reading Practice</h3>
       </div>
 
       {(!rec || showStart) && !recording && !blob && (
         <div>
           {!showStart ? (
             <div className="text-center py-8">
-              <Mic className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-              <p className="text-sm text-gray-500 mb-4">No active reading practice</p>
+              <Mic className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No active reading practice</p>
               <button
                 onClick={() => setShowStart(true)}
                 className="inline-flex items-center gap-2 bg-emerald-600 text-white text-xs sm:text-sm font-medium px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
@@ -264,14 +264,14 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
               </button>
             </div>
           ) : (
-            <div className="p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5">What are you reading?</label>
+            <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">What are you reading?</label>
               <input
                 type="text"
                 value={passage}
                 onChange={(e) => setPassage(e.target.value)}
                 placeholder="e.g. Surah Al-Fatiha, Hadeeth 1, Page 12"
-                className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-800 dark:text-white"
                 onKeyDown={(e) => e.key === 'Enter' && handleStart()}
               />
               <div className="flex gap-2 mt-2.5">
@@ -282,7 +282,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
                 >
                   Start
                 </button>
-                <button onClick={() => { setShowStart(false); setPassage(''); }} className="text-xs text-gray-500 px-2 py-1.5 hover:text-gray-700">
+                <button onClick={() => { setShowStart(false); setPassage(''); }} className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1.5 hover:text-gray-700 dark:hover:text-gray-200">
                   Cancel
                 </button>
               </div>
@@ -292,13 +292,13 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       )}
 
       {status === 'assigned' && !showStart && (
-        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4">
           <div className="flex items-start justify-between mb-2.5">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{rec.passage}</p>
-              {rec.notes && <p className="text-xs text-gray-500 mt-0.5">{rec.notes}</p>}
+              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{rec.passage}</p>
+              {rec.notes && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{rec.notes}</p>}
             </div>
-            <button onClick={deleteAll} className="flex-shrink-0 text-xs text-gray-400 hover:text-red-500 ml-2">Cancel</button>
+            <button onClick={deleteAll} className="flex-shrink-0 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 ml-2">Cancel</button>
           </div>
 
           {!recording && !blob && (
@@ -312,10 +312,10 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
           )}
 
           {recording && (
-            <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5">
+            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded-lg px-3 py-2.5">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-xs font-mono text-gray-700 tabular-nums">{fmt(elapsed)}</span>
+                <span className="text-xs font-mono text-gray-700 dark:text-gray-200 tabular-nums">{fmt(elapsed)}</span>
               </div>
               <button onClick={stopRec} className="flex items-center gap-1 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-gray-800">
                 <Square className="h-2.5 w-2.5" /> Stop
@@ -340,9 +340,9 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       )}
 
       {status === 'submitted' && !showStart && (
-        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4">
           <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium text-gray-900 min-w-0 truncate">{rec.passage}</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-white min-w-0 truncate">{rec.passage}</p>
             <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
               <Clock className="h-3 w-3" /> Pending
             </span>
@@ -361,9 +361,9 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       )}
 
       {status === 'reviewed' && !showStart && (
-        <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 space-y-2.5">
+        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4 space-y-2.5">
           <div className="flex items-start justify-between">
-            <p className="text-sm font-medium text-gray-900 min-w-0 truncate">{rec.passage}</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-white min-w-0 truncate">{rec.passage}</p>
             <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-xs font-medium text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
               <CheckCircle className="h-3 w-3" /> Reviewed
             </span>
@@ -375,7 +375,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
             </span>
           )}
 
-          {rec.feedback && <p className="text-xs sm:text-sm text-gray-600 bg-gray-50 rounded-lg p-2.5">{rec.feedback}</p>}
+          {rec.feedback && <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-600 rounded-lg p-2.5">{rec.feedback}</p>}
 
           {studentUrl && (
             <div>

@@ -463,7 +463,8 @@ const StudentPortal = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4" />
+          <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4 dark:hidden" />
+          <img src="/favicon-white.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4 hidden dark:block" />
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Loading...</p>
         </div>
@@ -483,7 +484,12 @@ const StudentPortal = () => {
               <img
                 src="/favicon.svg"
                 alt="The FastTrack Madrasah"
-                className="h-6 w-6 sm:h-8 sm:w-8"
+                className="h-6 w-6 sm:h-8 sm:w-8 dark:hidden"
+              />
+              <img
+                src="/favicon-white.svg"
+                alt="The FastTrack Madrasah"
+                className="h-6 w-6 sm:h-8 sm:w-8 hidden dark:block"
               />
               <div className="flex flex-col leading-none -space-y-1">
                 <span className="text-xs sm:text-base font-brand font-semibold text-gray-900 dark:text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>

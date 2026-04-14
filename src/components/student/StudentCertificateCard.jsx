@@ -35,18 +35,18 @@ export default function StudentCertificateCard({ programId }) {
   if (loading || !certificate) return null;
 
   return (
-    <div className="mt-6 pt-6 border-t border-gray-200">
-      <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-xl p-4 sm:p-5">
+    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
             <Award className="h-5 w-5 text-emerald-600" />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-emerald-900">Program Completed!</h4>
-            <p className="text-xs text-emerald-700 mt-0.5">
+            <h4 className="text-sm font-semibold text-emerald-900 dark:text-emerald-300">Program Completed!</h4>
+            <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-0.5">
               Congratulations! Your certificate has been issued.
             </p>
-            <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-600">
+            <div className="mt-2 flex flex-wrap gap-3 text-xs text-emerald-600 dark:text-emerald-400">
               <span>Score: <strong>{Number(certificate.weighted_total).toFixed(1)}%</strong></span>
               <span>ID: <strong>{certificate.verification_code}</strong></span>
             </div>
@@ -75,12 +75,12 @@ export default function StudentCertificateCard({ programId }) {
       {/* Full Certificate Preview Modal */}
       {showPreview && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowPreview(false)}>
-          <div className="bg-white rounded-2xl p-4 max-w-[1200px] w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 max-w-[1200px] w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Your Certificate</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Your Certificate</h3>
               <button
                 onClick={() => setShowPreview(false)}
-                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl font-bold"
               >
                 ×
               </button>

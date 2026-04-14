@@ -88,17 +88,17 @@ export default function TestProgressCard({ programId, currentWeek }) {
   const canRetakeExam = examAttempts.length < maxExamAttempts && results?.status === 'failed';
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-3.5 sm:p-5 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3.5 sm:p-5 shadow-sm">
       <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h3 className="text-xs sm:text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5 sm:gap-2">
+        <h3 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide flex items-center gap-1.5 sm:gap-2">
           <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 flex-shrink-0" />
           Tests & Exam Progress
         </h3>
         {results && (
           <span className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold whitespace-nowrap ${
-            results.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
-            results.status === 'failed' ? 'bg-red-100 text-red-700' :
-            'bg-amber-100 text-amber-700'
+            results.status === 'passed' ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' :
+            results.status === 'failed' ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300' :
+            'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300'
           }`}>
             {results.status === 'passed' && <CheckCircle className="h-3 w-3" />}
             {results.status === 'failed' && <XCircle className="h-3 w-3" />}
@@ -110,16 +110,16 @@ export default function TestProgressCard({ programId, currentWeek }) {
 
       {/* Overall score */}
       {results?.weighted_total != null && (
-        <div className="bg-gray-50 rounded-lg p-3 mb-4">
+        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500">Weighted Total</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">Weighted Total</span>
             <span className={`text-lg font-bold ${
               results.weighted_total >= (settings?.pass_mark || 50) ? 'text-emerald-600' : 'text-red-600'
             }`}>
               {Number(results.weighted_total).toFixed(1)}%
             </span>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 mt-1 gap-0.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-1 gap-0.5">
             <span>Milestones ({settings?.milestone_test_weight || 50}%): {results.milestone_average != null ? `${Number(results.milestone_average).toFixed(1)}%` : '—'}</span>
             <span>Exam ({settings?.final_exam_weight || 50}%): {results.final_exam_score != null ? `${Number(results.final_exam_score).toFixed(1)}%` : '—'}</span>
           </div>
@@ -136,19 +136,19 @@ export default function TestProgressCard({ programId, currentWeek }) {
           const isOral = testModes[String(idx)] === 'oral';
 
           return (
-            <div key={idx} className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg border border-gray-100 hover:border-gray-200 transition-all gap-2">
+            <div key={idx} className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 transition-all gap-2">
               <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {completed ? (
                   <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                 ) : unlocked ? (
                   isOral ? <Mic className="h-4 w-4 text-orange-500 flex-shrink-0" /> : <Clock className="h-4 w-4 text-amber-500 flex-shrink-0" />
                 ) : (
-                  <Lock className="h-4 w-4 text-gray-300 flex-shrink-0" />
+                  <Lock className="h-4 w-4 text-gray-300 dark:text-gray-600 flex-shrink-0" />
                 )}
                 <div className="min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-gray-900 leading-snug">
+                  <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white leading-snug">
                     Milestone {idx + 1}: {m.name}
-                    {isOral && <span className="ml-1 sm:ml-1.5 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium align-middle">ORAL</span>}
+                    {isOral && <span className="ml-1 sm:ml-1.5 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 rounded font-medium align-middle">ORAL</span>}
                   </p>
                   {completed && (
                     <p className="text-[11px] sm:text-xs text-emerald-600 font-medium">{Number(test.percentage).toFixed(1)}%</p>
@@ -167,7 +167,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
                 <span className="text-[11px] sm:text-xs text-orange-600 font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
               )}
               {!unlocked && !completed && (
-                <span className="text-[11px] sm:text-xs text-gray-400 whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
+                <span className="text-[11px] sm:text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
               )}
             </div>
           );
@@ -181,9 +181,9 @@ export default function TestProgressCard({ programId, currentWeek }) {
 
         return (
           <div className={`p-2.5 sm:p-3 rounded-lg border-2 ${
-            bestExam ? 'border-emerald-200 bg-emerald-50' :
-            isFinalExamUnlocked() ? 'border-amber-200 bg-amber-50' :
-            'border-gray-200 bg-gray-50'
+            bestExam ? 'border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20' :
+            isFinalExamUnlocked() ? 'border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20' :
+            'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
           }`}>
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
@@ -192,12 +192,12 @@ export default function TestProgressCard({ programId, currentWeek }) {
                 ) : isFinalExamUnlocked() ? (
                   isExamOral ? <Mic className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0" /> : <Award className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" />
                 ) : (
-                  <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300 flex-shrink-0" />
+                  <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
                 )}
                 <div className="min-w-0">
-                  <p className="text-xs sm:text-sm font-bold text-gray-900">
+                  <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
                     Final Exam
-                    {isExamOral && <span className="ml-1 sm:ml-1.5 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded font-medium align-middle">ORAL</span>}
+                    {isExamOral && <span className="ml-1 sm:ml-1.5 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 rounded font-medium align-middle">ORAL</span>}
                   </p>
                   {bestExam && (
                     <p className="text-xs text-emerald-600 font-medium">
@@ -206,7 +206,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
                     </p>
                   )}
                   {!isFinalExamUnlocked() && (
-                    <p className="text-[11px] sm:text-xs text-gray-400">Complete all milestone tests first</p>
+                    <p className="text-[11px] sm:text-xs text-gray-400 dark:text-gray-500">Complete all milestone tests first</p>
                   )}
                 </div>
               </div>
