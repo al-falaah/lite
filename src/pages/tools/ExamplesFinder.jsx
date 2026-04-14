@@ -562,10 +562,10 @@ function ExamplesFinder() {
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
           <h1 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-            Quranic Examples Finder
+            Qur'anic Examples Finder
           </h1>
           <p className="text-sm sm:text-base text-gray-600 max-w-2xl">
-            Search for a tajweed or grammar topic to find real examples from the Quran.
+            Search for a tajweed or grammar topic to find real examples from the Qur'an.
           </p>
         </div>
       </div>
@@ -580,7 +580,7 @@ function ExamplesFinder() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search in English or Arabic — e.g. 'idgham', 'إخفاء', 'past tense', 'مبتدأ'..."
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
           dir="auto"
         />
         {query && (
@@ -813,7 +813,7 @@ function ExamplesFinder() {
             /* Empty state */
             <div className="text-center py-20">
               <p className="text-gray-500">
-                Search for a topic above or browse the categories to see examples from the Quran.
+                Search for a topic above or browse the categories to see examples from the Qur'an.
               </p>
             </div>
           )}
