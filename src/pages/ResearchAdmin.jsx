@@ -171,10 +171,13 @@ const ResearchAdmin = () => {
     if (targetIndex < 0 || targetIndex >= chapters.length) return;
     const a = chapters[index];
     const b = chapters[targetIndex];
-    // Swap chapter_number values
-    const { error: e1 } = await supabase.from('lesson_chapters').update({ chapter_number: b.chapter_number }).eq('id', a.id);
+    // Three-step swap to avoid UNIQUE(course_id, chapter_number) conflict
+    const { error: e1 } = await supabase.from('lesson_chapters').update({ chapter_number: -1 }).eq('id', a.id);
+    if (e1) { toast.error('Failed to reorder'); return; }
     const { error: e2 } = await supabase.from('lesson_chapters').update({ chapter_number: a.chapter_number }).eq('id', b.id);
-    if (e1 || e2) { toast.error('Failed to reorder'); return; }
+    if (e2) { toast.error('Failed to reorder'); return; }
+    const { error: e3 } = await supabase.from('lesson_chapters').update({ chapter_number: b.chapter_number }).eq('id', a.id);
+    if (e3) { toast.error('Failed to reorder'); return; }
     fetchChapters(selectedCourse.id);
   };
 
