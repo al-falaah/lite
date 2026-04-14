@@ -86,9 +86,33 @@ function ContentRenderer({ content }) {
   );
 }
 
+// Extract the most relevant portion of content for the searched topic
+function extractRelevantContent(content, topic) {
+  if (!content || !topic) return content;
+
+  // For nahw (grammar), try to extract only the relevant sentences
+  // instead of showing the entire i'rab analysis
+  if (topic.subject === 'nahw') {
+    const searchTerms = topic.search_ar;
+    const sentences = content.split(/\.\s*(?=[^}])|<br\s*\/?>/).filter(Boolean);
+    const relevant = sentences.filter((s) =>
+      searchTerms.some((t) => s.includes(t))
+    );
+    if (relevant.length > 0 && relevant.length < sentences.length) {
+      return relevant.join('. ').trim();
+    }
+  }
+
+  return content;
+}
+
 // Single result card
 function ResultCard({ result, topic }) {
   const surahName = SURAH_NAMES[result.sura_number] || `Surah ${result.sura_number}`;
+  const displayContent = useMemo(
+    () => extractRelevantContent(result.content, topic),
+    [result.content, topic]
+  );
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
@@ -112,7 +136,7 @@ function ResultCard({ result, topic }) {
 
       {/* Analysis content */}
       <div className="px-4 py-3" dir="rtl">
-        <ContentRenderer content={result.content} />
+        <ContentRenderer content={displayContent} />
       </div>
     </div>
   );
@@ -411,37 +435,48 @@ function ExamplesFinder() {
           {selectedTopic ? (
             <>
               {/* Active topic header */}
-              <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {selectedTopic.name_en}
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    {selectedTopic.description}
-                    {' '}&middot;{' '}
-                    {totalCount.toLocaleString()} examples
-                  </p>
+              <div className="mb-4">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      {selectedTopic.name_en}
+                      <span className="font-arabic text-base text-gray-400 ml-2" dir="rtl">
+                        {selectedTopic.name_ar}
+                      </span>
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                      {totalCount.toLocaleString()} examples found
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <select
+                      value={surahFilter || ''}
+                      onChange={handleSurahFilter}
+                      className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    >
+                      <option value="">All Surahs</option>
+                      {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
+                        <option key={n} value={n}>
+                          {n}. {SURAH_NAMES[n]}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={clearSelection}
+                      className="text-sm text-gray-400 hover:text-gray-600"
+                    >
+                      Clear
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <select
-                    value={surahFilter || ''}
-                    onChange={handleSurahFilter}
-                    className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  >
-                    <option value="">All Surahs</option>
-                    {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
-                      <option key={n} value={n}>
-                        {n}. {SURAH_NAMES[n]}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={clearSelection}
-                    className="text-sm text-gray-400 hover:text-gray-600"
-                  >
-                    Clear
-                  </button>
-                </div>
+                {/* English explanation banner */}
+                {selectedTopic.explanation_en && (
+                  <div className="mt-3 px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-lg">
+                    <p className="text-sm text-emerald-800 leading-relaxed">
+                      {selectedTopic.explanation_en}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Results */}
