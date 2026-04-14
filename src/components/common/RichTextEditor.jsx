@@ -192,6 +192,10 @@ const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) 
     insertBlock('<div class="verse">\n  Arabic text here (Quranic or otherwise)\n</div>');
   };
 
+  const formatArabicParagraph = () => {
+    insertBlock('<p dir="rtl" style="direction: rtl; text-align: right; font-family: \'Amiri Quran\', \'Traditional Arabic\', serif; font-size: 1.25rem; line-height: 2;">Arabic prose text here</p>');
+  };
+
   const formatTip = () => {
     insertBlock('<div class="tip">\n  Your helpful tip here\n</div>');
   };
@@ -362,7 +366,16 @@ const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) 
 
         {/* Special Blocks */}
         <div className="flex items-center gap-1 pr-2 border-r border-gray-300">
-          <FormatButton icon={BookOpen} onClick={formatArabicText} title="Arabic Text Block" />
+          <FormatButton icon={BookOpen} onClick={formatArabicText} title="Arabic Verse (centered)" />
+          <button
+            type="button"
+            onClick={formatArabicParagraph}
+            title="Arabic Paragraph (right-aligned prose)"
+            className="px-2 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all"
+            style={{ fontFamily: "'Amiri Quran', serif" }}
+          >
+            عربي
+          </button>
           <FormatButton icon={Lightbulb} onClick={formatTip} title="Tip Box" />
           <FormatButton icon={Table} onClick={formatTable} title="Insert Table" />
           <FormatButton icon={Superscript} onClick={formatFootnote} title="Add Footnote" />
@@ -451,6 +464,12 @@ const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) 
               font-style: normal !important;
               font-weight: normal !important;
             }
+            [dir="rtl"] {
+              font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+              line-height: 2 !important;
+              text-align: right;
+              direction: rtl;
+            }
             ${useBlogStyle ? `
               .blog-style-preview p {
                 font-family: Georgia, Cambria, "Times New Roman", Times, serif !important;
@@ -537,9 +556,8 @@ const RichTextEditor = ({ value, onChange, placeholder, useBlogStyle = false }) 
         <div className="flex items-start gap-2">
           <Code2 className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
           <div>
-            <span className="font-semibold">Special blocks:</span> 
-            <span className="ml-1">Use the toolbar buttons to insert Arabic text blocks, tip boxes, and tables.</span>
-            <span className="ml-2 text-gray-500">Arabic text uses Amiri font.</span>
+            <span className="font-semibold">Special blocks:</span>
+            <span className="ml-1">Use toolbar for Arabic verse (centered), <span style={{fontFamily: "'Amiri Quran', serif"}}>عربي</span> (right-aligned prose), tip boxes, and tables.</span>
           </div>
         </div>
       </div>

@@ -288,6 +288,8 @@ const ResearchAdmin = () => {
           content: editingChapter.content,
           content_type: editingChapter.content_type || 'rich_text',
           video_url: editingChapter.video_url || null,
+          milestone_index: editingChapter.milestone_index || null,
+          week_number: editingChapter.week_number || null,
           is_published: editingChapter.is_published
         })
         .eq('id', editingChapter.id);
@@ -941,6 +943,35 @@ const ResearchAdmin = () => {
                         />
                       </div>
 
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-900 mb-2">Milestone</label>
+                          <select
+                            value={editingChapter.milestone_index || ''}
+                            onChange={(e) => setEditingChapter({ ...editingChapter, milestone_index: e.target.value ? parseInt(e.target.value) : null })}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                          >
+                            <option value="">None</option>
+                            {(PROGRAMS[selectedCourse?.program_id]?.milestones || []).map(m => (
+                              <option key={m.id} value={m.id}>
+                                {m.id}. {m.name} (Wk {m.weekStart}–{m.weekEnd})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-900 mb-2">Week</label>
+                          <input
+                            type="number"
+                            min="1"
+                            value={editingChapter.week_number || ''}
+                            onChange={(e) => setEditingChapter({ ...editingChapter, week_number: e.target.value ? parseInt(e.target.value) : null })}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                            placeholder="e.g. 3"
+                          />
+                        </div>
+                      </div>
+
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
@@ -976,6 +1007,9 @@ const ResearchAdmin = () => {
                                 )}
                                 {chapter.video_url && (
                                   <span className="text-gray-400 ml-1">· Video</span>
+                                )}
+                                {chapter.week_number && (
+                                  <span className="text-gray-400 ml-1">· Wk {chapter.week_number}</span>
                                 )}
                               </p>
                             </div>

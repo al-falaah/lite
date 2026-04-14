@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { supabase } from '../../services/supabase';
 import { getYouTubeEmbedUrl } from '../../utils/youtube';
+import { processContentForRTL } from '../../utils/rtl';
 import { PROGRAMS } from '../../config/programs';
-import { ChevronLeft, ChevronRight, HelpCircle, BookOpen, Moon, Sun } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronRight, HelpCircle, BookOpen, Video } from 'lucide-react';
 import DOMPurify from 'dompurify';
 
 const sanitizeContent = (html) => {
@@ -13,7 +14,7 @@ const sanitizeContent = (html) => {
                    'style', 'section', 'header', 'footer', 'nav', 'article',
                    'svg', 'defs', 'linearGradient', 'stop', 'rect', 'circle', 'ellipse',
                    'line', 'polygon', 'text', 'tspan', 'path', 'g'],
-    ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'data-footnote',
+    ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'dir', 'data-footnote',
                    'viewBox', 'xmlns', 'fill', 'stroke', 'stroke-width', 'stroke-dasharray',
                    'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'x1', 'y1', 'x2', 'y2',
                    'width', 'height', 'opacity', 'transform', 'text-anchor', 'font-family',
@@ -24,46 +25,22 @@ const sanitizeContent = (html) => {
 
 const themeClasses = {
   light: {
-    bg: 'bg-white',
-    border: 'border-gray-200',
-    sidebar: 'bg-gray-50 border-gray-200',
-    heading: 'text-gray-900',
-    text: 'text-gray-700',
-    muted: 'text-gray-500',
-    faint: 'text-gray-400',
-    hover: 'hover:bg-gray-100',
-    active: 'bg-emerald-600 text-white',
-    navBg: 'bg-white border-gray-200',
-    divider: 'border-gray-200',
-    quizBg: 'bg-gray-50',
+    bg: 'bg-white', border: 'border-gray-200', sidebar: 'bg-gray-50 border-gray-200',
+    heading: 'text-gray-900', text: 'text-gray-700', muted: 'text-gray-500', faint: 'text-gray-400',
+    hover: 'hover:bg-gray-100', active: 'bg-emerald-600 text-white',
+    navBg: 'bg-white border-gray-200', divider: 'border-gray-200', quizBg: 'bg-gray-50',
   },
   sepia: {
-    bg: 'bg-[#f5f1e8]',
-    border: 'border-[#d4c9b8]',
-    sidebar: 'bg-[#ebe4d8] border-[#d4c9b8]',
-    heading: 'text-[#3d3229]',
-    text: 'text-[#3d3229]',
-    muted: 'text-[#5a4a3a]',
-    faint: 'text-[#8a7a6a]',
-    hover: 'hover:bg-[#dfd6c8]',
-    active: 'bg-emerald-600 text-white',
-    navBg: 'bg-[#f5f1e8] border-[#d4c9b8]',
-    divider: 'border-[#d4c9b8]',
-    quizBg: 'bg-[#ebe4d8]',
+    bg: 'bg-[#f5f1e8]', border: 'border-[#d4c9b8]', sidebar: 'bg-[#ebe4d8] border-[#d4c9b8]',
+    heading: 'text-[#3d3229]', text: 'text-[#3d3229]', muted: 'text-[#5a4a3a]', faint: 'text-[#8a7a6a]',
+    hover: 'hover:bg-[#dfd6c8]', active: 'bg-emerald-600 text-white',
+    navBg: 'bg-[#f5f1e8] border-[#d4c9b8]', divider: 'border-[#d4c9b8]', quizBg: 'bg-[#ebe4d8]',
   },
   dark: {
-    bg: 'bg-gray-900',
-    border: 'border-gray-700',
-    sidebar: 'bg-gray-800 border-gray-700',
-    heading: 'text-gray-100',
-    text: 'text-gray-300',
-    muted: 'text-gray-400',
-    faint: 'text-gray-500',
-    hover: 'hover:bg-gray-700',
-    active: 'bg-emerald-600 text-white',
-    navBg: 'bg-gray-900 border-gray-700',
-    divider: 'border-gray-700',
-    quizBg: 'bg-gray-800/50',
+    bg: 'bg-gray-900', border: 'border-gray-700', sidebar: 'bg-gray-800 border-gray-700',
+    heading: 'text-gray-100', text: 'text-gray-300', muted: 'text-gray-400', faint: 'text-gray-500',
+    hover: 'hover:bg-gray-700', active: 'bg-emerald-600 text-white',
+    navBg: 'bg-gray-900 border-gray-700', divider: 'border-gray-700', quizBg: 'bg-gray-800/50',
   },
 };
 
@@ -74,59 +51,105 @@ const proseTheme = {
 };
 
 export default function StudentLessons({ enrollments }) {
-  const programs = enrollments
-    .filter(e => e.status === 'active')
-    .map(e => e.program);
+  const programs = enrollments.filter(e => e.status === 'active').map(e => e.program);
   const uniquePrograms = [...new Set(programs)];
 
   const [selectedProgram, setSelectedProgram] = useState(uniquePrograms[0] || null);
   const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [chapters, setChapters] = useState([]);
+  const [allChapters, setAllChapters] = useState([]); // all chapters across all courses for this program
   const [selectedChapter, setSelectedChapter] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null); // course of the selected chapter
   const [chapterHasQuiz, setChapterHasQuiz] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [expandedMilestones, setExpandedMilestones] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'light');
+  const [viewMode, setViewMode] = useState('milestones'); // 'milestones' | 'courses'
   const contentRef = useRef(null);
 
   useEffect(() => { localStorage.setItem('lessonTheme', theme); }, [theme]);
 
-  // Fetch courses for selected program
+  const milestones = PROGRAMS[selectedProgram]?.milestones || [];
+
+  // Fetch courses + all chapters for selected program
   useEffect(() => {
     if (!selectedProgram) { setLoading(false); return; }
-    const fetchCourses = async () => {
+    const fetchAll = async () => {
       setLoading(true);
-      const { data } = await supabase
+      const { data: coursesData } = await supabase
         .from('lesson_courses')
         .select('*')
         .eq('program_id', selectedProgram)
         .order('display_order');
-      setCourses(data || []);
-      setSelectedCourse(null);
-      setChapters([]);
+      setCourses(coursesData || []);
+
+      if (coursesData?.length) {
+        const courseIds = coursesData.map(c => c.id);
+        const { data: chaptersData } = await supabase
+          .from('lesson_chapters')
+          .select('*')
+          .in('course_id', courseIds)
+          .eq('is_published', true)
+          .order('week_number', { ascending: true, nullsFirst: false });
+        setAllChapters(chaptersData || []);
+      } else {
+        setAllChapters([]);
+      }
+
       setSelectedChapter(null);
+      setSelectedCourse(null);
       setLoading(false);
+
+      // Auto-expand first milestone that has content
+      if (milestones.length) {
+        setExpandedMilestones({ [milestones[0].id]: true });
+      }
     };
-    fetchCourses();
+    fetchAll();
   }, [selectedProgram]);
 
-  // Fetch chapters for selected course
-  useEffect(() => {
-    if (!selectedCourse) return;
-    const fetchChapters = async () => {
-      const { data } = await supabase
-        .from('lesson_chapters')
-        .select('*')
-        .eq('course_id', selectedCourse.id)
-        .eq('is_published', true)
-        .order('chapter_number');
-      setChapters(data || []);
-      if (data?.length > 0) setSelectedChapter(data[0]);
-      else setSelectedChapter(null);
-    };
-    fetchChapters();
-  }, [selectedCourse]);
+  // Build course lookup
+  const courseMap = useMemo(() => {
+    const map = {};
+    courses.forEach(c => { map[c.id] = c; });
+    return map;
+  }, [courses]);
+
+  // Group chapters by milestone
+  const milestoneGroups = useMemo(() => {
+    const groups = {};
+    const ungrouped = [];
+
+    allChapters.forEach(ch => {
+      if (ch.milestone_index) {
+        if (!groups[ch.milestone_index]) groups[ch.milestone_index] = [];
+        groups[ch.milestone_index].push(ch);
+      } else {
+        ungrouped.push(ch);
+      }
+    });
+
+    // Sort within each group by week_number then chapter_number
+    Object.values(groups).forEach(arr => {
+      arr.sort((a, b) => (a.week_number || 999) - (b.week_number || 999) || a.chapter_number - b.chapter_number);
+    });
+    ungrouped.sort((a, b) => a.chapter_number - b.chapter_number);
+
+    return { groups, ungrouped };
+  }, [allChapters]);
+
+  // Group chapters by course (for course view)
+  const courseGroups = useMemo(() => {
+    const groups = {};
+    allChapters.forEach(ch => {
+      if (!groups[ch.course_id]) groups[ch.course_id] = [];
+      groups[ch.course_id].push(ch);
+    });
+    Object.values(groups).forEach(arr => {
+      arr.sort((a, b) => a.chapter_number - b.chapter_number);
+    });
+    return groups;
+  }, [allChapters]);
 
   // Default sepia for full HTML
   useEffect(() => {
@@ -140,28 +163,48 @@ export default function StudentLessons({ enrollments }) {
   useEffect(() => {
     if (!selectedChapter) { setChapterHasQuiz(false); return; }
     supabase
-      .from('lesson_quizzes')
-      .select('id')
-      .eq('chapter_id', selectedChapter.id)
-      .eq('is_published', true)
-      .single()
+      .from('lesson_quizzes').select('id')
+      .eq('chapter_id', selectedChapter.id).eq('is_published', true).single()
       .then(({ data }) => setChapterHasQuiz(!!data));
   }, [selectedChapter]);
 
-  // Scroll to top on chapter change
-  useEffect(() => {
-    contentRef.current?.scrollTo(0, 0);
-  }, [selectedChapter]);
+  useEffect(() => { contentRef.current?.scrollTo(0, 0); }, [selectedChapter]);
 
   const cycleTheme = () => setTheme(t => t === 'light' ? 'sepia' : t === 'sepia' ? 'dark' : 'light');
-
   const t = themeClasses[theme];
-  const currentIndex = chapters.findIndex(ch => ch.id === selectedChapter?.id);
 
+  const toggleMilestone = (id) => {
+    setExpandedMilestones(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const openChapter = (ch) => {
+    setSelectedChapter(ch);
+    setSelectedCourse(courseMap[ch.course_id] || null);
+  };
+
+  // All chapters flat for prev/next navigation
+  const flatChapters = useMemo(() => {
+    if (viewMode === 'milestones') {
+      const flat = [];
+      milestones.forEach(m => {
+        (milestoneGroups.groups[m.id] || []).forEach(ch => flat.push(ch));
+      });
+      milestoneGroups.ungrouped.forEach(ch => flat.push(ch));
+      return flat;
+    }
+    // course view: ordered by course then chapter_number
+    const flat = [];
+    courses.forEach(c => {
+      (courseGroups[c.id] || []).forEach(ch => flat.push(ch));
+    });
+    return flat;
+  }, [viewMode, milestoneGroups, courseGroups, milestones, courses]);
+
+  const currentIndex = flatChapters.findIndex(ch => ch.id === selectedChapter?.id);
   const navigateChapter = (dir) => {
     const next = dir === 'prev' ? currentIndex - 1 : currentIndex + 1;
-    if (next >= 0 && next < chapters.length) {
-      setSelectedChapter(chapters[next]);
+    if (next >= 0 && next < flatChapters.length) {
+      openChapter(flatChapters[next]);
       setShowSidebar(false);
     }
   };
@@ -169,7 +212,6 @@ export default function StudentLessons({ enrollments }) {
   const isFullHtml = selectedChapter?.content_type === 'full_html' ||
     selectedChapter?.content?.trim().startsWith('<!DOCTYPE') ||
     selectedChapter?.content?.trim().startsWith('<html');
-
   const videoUrl = getYouTubeEmbedUrl(selectedChapter?.video_url);
 
   if (!uniquePrograms.length) {
@@ -181,20 +223,44 @@ export default function StudentLessons({ enrollments }) {
     );
   }
 
-  // Course list view
-  if (!selectedCourse) {
+  // Chapter item renderer (shared between milestone and course views)
+  const ChapterItem = ({ ch }) => {
+    const course = courseMap[ch.course_id];
+    return (
+      <button
+        onClick={() => openChapter(ch)}
+        className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
+      >
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">{ch.title}</p>
+            <div className="flex items-center gap-2 mt-0.5">
+              {ch.week_number && <span className="text-xs text-gray-400">Week {ch.week_number}</span>}
+              {courses.length > 1 && course && (
+                <span className="text-xs text-gray-400 truncate">{course.title}</span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-300" />}
+            {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-300">HTML</span>}
+          </div>
+        </div>
+      </button>
+    );
+  };
+
+  // Browse view (milestone accordion or course list)
+  if (!selectedChapter) {
     return (
       <div className="space-y-4">
+        {/* Program selector */}
         {uniquePrograms.length > 1 && (
           <div className="flex gap-2">
             {uniquePrograms.map(p => (
-              <button
-                key={p}
-                onClick={() => setSelectedProgram(p)}
+              <button key={p} onClick={() => setSelectedProgram(p)}
                 className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                  selectedProgram === p
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  selectedProgram === p ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
                 {PROGRAMS[p]?.shortName || p}
@@ -207,95 +273,179 @@ export default function StudentLessons({ enrollments }) {
           <div className="text-center py-12">
             <div className="h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
-        ) : courses.length === 0 ? (
+        ) : allChapters.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-sm">No lessons available yet for {PROGRAMS[selectedProgram]?.shortName || selectedProgram}</p>
+            <p className="text-gray-500 text-sm">No lessons available yet</p>
           </div>
         ) : (
-          <div className="space-y-2">
-            {uniquePrograms.length <= 1 && (
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">
+          <div className="space-y-3">
+            {/* View toggle */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
                 {PROGRAMS[selectedProgram]?.shortName || selectedProgram} Lessons
               </h2>
-            )}
-            {courses.map(course => (
-              <button
-                key={course.id}
-                onClick={() => setSelectedCourse(course)}
-                className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all"
-              >
-                <h3 className="font-medium text-gray-900">{course.title}</h3>
-                {course.description && (
-                  <p className="text-sm text-gray-500 mt-1 line-clamp-2">{course.description}</p>
+              {milestones.length > 0 && (
+                <div className="flex text-xs border border-gray-200 rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setViewMode('milestones')}
+                    className={`px-3 py-1.5 transition-colors ${viewMode === 'milestones' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                  >
+                    By Milestone
+                  </button>
+                  <button
+                    onClick={() => setViewMode('courses')}
+                    className={`px-3 py-1.5 transition-colors ${viewMode === 'courses' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                  >
+                    By Course
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Milestone accordion view */}
+            {viewMode === 'milestones' && milestones.length > 0 ? (
+              <div className="space-y-2">
+                {milestones.map(m => {
+                  const chaps = milestoneGroups.groups[m.id] || [];
+                  const isOpen = expandedMilestones[m.id];
+                  return (
+                    <div key={m.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => toggleMilestone(m.id)}
+                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="text-left">
+                          <p className="text-sm font-medium text-gray-900">
+                            {m.name}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            Weeks {m.weekStart}–{m.weekEnd}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {chaps.length > 0 ? (
+                            <span className="text-xs text-gray-400">{chaps.length}</span>
+                          ) : (
+                            <span className="text-xs text-gray-300">Coming soon</span>
+                          )}
+                          <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                        </div>
+                      </button>
+                      {isOpen && chaps.length > 0 && (
+                        <div className="border-t border-gray-100">
+                          {chaps.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Ungrouped chapters */}
+                {milestoneGroups.ungrouped.length > 0 && (
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => toggleMilestone('general')}
+                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                    >
+                      <p className="text-sm font-medium text-gray-900">General</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">{milestoneGroups.ungrouped.length}</span>
+                        <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
+                      </div>
+                    </button>
+                    {expandedMilestones['general'] && (
+                      <div className="border-t border-gray-100">
+                        {milestoneGroups.ungrouped.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
+                      </div>
+                    )}
+                  </div>
                 )}
-              </button>
-            ))}
+              </div>
+            ) : (
+              /* Course list view */
+              <div className="space-y-3">
+                {courses.map(course => {
+                  const chaps = courseGroups[course.id] || [];
+                  if (chaps.length === 0) return null;
+                  return (
+                    <div key={course.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                      <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900">{course.title}</p>
+                        {course.description && (
+                          <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{course.description}</p>
+                        )}
+                      </div>
+                      <div>
+                        {chaps.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </div>
     );
   }
 
-  // Lesson reader view
+  // Reader view
   return (
     <div className={`-mx-4 sm:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 -mb-24 sm:-mb-8 min-h-screen ${t.bg} transition-colors`}>
       {/* Top bar */}
       <div className={`sticky top-0 z-40 border-b ${t.navBg} transition-colors`}>
         <div className="flex items-center justify-between h-12 px-3 sm:px-4">
           <button
-            onClick={() => { setSelectedCourse(null); setSelectedChapter(null); setChapters([]); }}
+            onClick={() => { setSelectedChapter(null); setSelectedCourse(null); }}
             className={`flex items-center gap-1 text-sm ${t.muted}`}
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="hidden sm:inline">Back</span>
           </button>
           <span className={`text-sm font-medium truncate max-w-[50%] ${t.heading}`}>
-            {selectedCourse.title}
+            {selectedCourse?.title || ''}
           </span>
           <div className="flex items-center gap-2">
-            <button
-              onClick={cycleTheme}
-              className={`px-2 py-1 text-xs rounded border ${t.border} ${t.muted}`}
-            >
+            <button onClick={cycleTheme} className={`px-2 py-1 text-xs rounded border ${t.border} ${t.muted}`}>
               {theme === 'light' ? 'Light' : theme === 'sepia' ? 'Sepia' : 'Dark'}
             </button>
             <button
               onClick={() => setShowSidebar(!showSidebar)}
               className={`px-2 py-1 text-xs rounded border lg:hidden ${t.border} ${t.muted}`}
             >
-              Ch. {selectedChapter?.chapter_number || '–'}/{chapters.length}
+              {currentIndex + 1}/{flatChapters.length}
             </button>
           </div>
         </div>
       </div>
 
       <div className="flex relative">
-        {/* Sidebar — always visible on desktop, slide-over on mobile */}
+        {/* Sidebar */}
         <aside className={`
           fixed lg:sticky lg:top-12 inset-y-0 left-0 z-30
           w-64 overflow-y-auto border-r ${t.sidebar}
           transition-transform lg:transition-none lg:translate-x-0
           ${showSidebar ? 'translate-x-0' : '-translate-x-full'}
-          ${/* height for sticky */ ''}
           lg:h-[calc(100vh-3rem)] lg:shrink-0
         `}>
-          {/* Mobile overlay dismiss */}
           {showSidebar && (
             <div className="fixed inset-0 bg-black/20 z-[-1] lg:hidden" onClick={() => setShowSidebar(false)} />
           )}
           <nav className="p-3 space-y-0.5">
-            {chapters.map(ch => (
+            {flatChapters.map(ch => (
               <button
                 key={ch.id}
-                onClick={() => { setSelectedChapter(ch); setShowSidebar(false); }}
+                onClick={() => { openChapter(ch); setShowSidebar(false); }}
                 className={`w-full text-left px-2.5 py-2 text-sm rounded transition-colors ${
                   selectedChapter?.id === ch.id ? t.active : `${t.text} ${t.hover}`
                 }`}
               >
-                <span className={`text-xs mr-2 ${selectedChapter?.id === ch.id ? 'opacity-70' : t.faint}`}>
-                  {ch.chapter_number}
-                </span>
-                {ch.title}
+                <span className="leading-snug">{ch.title}</span>
+                {ch.week_number && (
+                  <span className={`block text-xs mt-0.5 ${selectedChapter?.id === ch.id ? 'opacity-70' : t.faint}`}>
+                    Week {ch.week_number}{courses.length > 1 && courseMap[ch.course_id] ? ` · ${courseMap[ch.course_id].title}` : ''}
+                  </span>
+                )}
               </button>
             ))}
           </nav>
@@ -303,118 +453,112 @@ export default function StudentLessons({ enrollments }) {
 
         {/* Main content */}
         <main ref={contentRef} className="flex-1 min-w-0 overflow-y-auto">
-          {selectedChapter ? (
-            <div>
-              {/* Chapter header */}
-              <div className={`px-4 sm:px-8 pt-6 pb-4 border-b ${t.divider}`}>
-                <h1 className={`text-xl sm:text-2xl font-normal ${t.heading}`}>
-                  {selectedChapter.chapter_number}. {selectedChapter.title}
-                </h1>
-              </div>
-
-              {/* Video embed */}
-              {videoUrl && (
-                <div className="px-4 sm:px-8 pt-4">
-                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      src={videoUrl}
-                      title={selectedChapter.title}
-                      className="absolute inset-0 w-full h-full rounded-lg"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Content */}
-              <div className={`lesson-content-protected ${isFullHtml ? 'p-0' : 'px-4 sm:px-8 py-4'}`}>
-                {isFullHtml ? (
-                  <iframe
-                    srcDoc={selectedChapter.content}
-                    title={selectedChapter.title}
-                    className="w-full border-0 block"
-                    style={{ minHeight: '80vh' }}
-                    sandbox="allow-same-origin"
-                    onLoad={(e) => {
-                      const doc = e.target.contentDocument;
-                      if (doc) {
-                        e.target.style.height = doc.documentElement.scrollHeight + 'px';
-                        const observer = new ResizeObserver(() => {
-                          e.target.style.height = doc.documentElement.scrollHeight + 'px';
-                        });
-                        observer.observe(doc.documentElement);
-                      }
-                    }}
-                  />
-                ) : selectedChapter.content ? (
-                  <div
-                    className={`prose max-w-none ${proseTheme[theme]} prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm`}
-                    dangerouslySetInnerHTML={{ __html: sanitizeContent(selectedChapter.content) }}
-                  />
-                ) : !videoUrl ? (
-                  <div className="text-center py-12">
-                    <p className={`text-sm ${t.muted}`}>No content available yet</p>
-                  </div>
-                ) : null}
-              </div>
-
-              {/* Chapter navigation */}
-              <div className={`border-t px-4 sm:px-8 py-3 ${t.divider}`}>
-                <div className="flex items-center justify-between text-sm">
-                  <button
-                    onClick={() => navigateChapter('prev')}
-                    disabled={currentIndex <= 0}
-                    className={currentIndex > 0 ? 'text-emerald-600' : `${t.faint} cursor-not-allowed`}
-                  >
-                    ← Previous
-                  </button>
-                  <span className={t.muted}>
-                    {selectedChapter.chapter_number} / {chapters.length}
-                  </span>
-                  <button
-                    onClick={() => navigateChapter('next')}
-                    disabled={currentIndex >= chapters.length - 1}
-                    className={currentIndex < chapters.length - 1 ? 'text-emerald-600' : `${t.faint} cursor-not-allowed`}
-                  >
-                    Next →
-                  </button>
-                </div>
-              </div>
-
-              {/* Quiz link */}
-              {chapterHasQuiz && (
-                <div className={`border-t px-4 sm:px-8 py-4 text-center ${t.divider} ${t.quizBg}`}>
-                  <button
-                    onClick={() => {
-                      // Open quiz in a new route context (we'll use window.open for now since we're inside a tab)
-                      window.open(`/student/quiz/${selectedCourse.slug}/${selectedChapter.slug}`, '_blank');
-                    }}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-600 text-white text-sm font-medium hover:bg-amber-700 transition-colors"
-                  >
-                    <HelpCircle className="h-4 w-4" />
-                    Test Your Understanding
-                  </button>
-                </div>
-              )}
-
-              {/* Copyright */}
-              <div className={`border-t px-4 sm:px-8 py-3 text-center ${t.divider} ${t.quizBg}`}>
-                <p className={`text-xs ${t.muted}`}>
-                  &copy; {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
+          <div>
+            {/* Chapter header */}
+            <div className={`px-4 sm:px-8 pt-6 pb-4 border-b ${t.divider}`}>
+              <h1 className={`text-xl sm:text-2xl font-normal ${t.heading}`}>
+                {selectedChapter.title}
+              </h1>
+              {selectedChapter.week_number && (
+                <p className={`text-xs mt-1 ${t.faint}`}>
+                  Week {selectedChapter.week_number}
+                  {selectedCourse ? ` · ${selectedCourse.title}` : ''}
                 </p>
+              )}
+            </div>
+
+            {/* Video embed */}
+            {videoUrl && (
+              <div className="px-4 sm:px-8 pt-4">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={videoUrl}
+                    title={selectedChapter.title}
+                    className="absolute inset-0 w-full h-full rounded-lg"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Content */}
+            <div className={`lesson-content-protected ${isFullHtml ? 'p-0' : 'px-4 sm:px-8 py-4'}`}>
+              {isFullHtml ? (
+                <iframe
+                  srcDoc={selectedChapter.content}
+                  title={selectedChapter.title}
+                  className="w-full border-0 block"
+                  style={{ minHeight: '80vh' }}
+                  sandbox="allow-same-origin"
+                  onLoad={(e) => {
+                    const doc = e.target.contentDocument;
+                    if (doc) {
+                      e.target.style.height = doc.documentElement.scrollHeight + 'px';
+                      const observer = new ResizeObserver(() => {
+                        e.target.style.height = doc.documentElement.scrollHeight + 'px';
+                      });
+                      observer.observe(doc.documentElement);
+                    }
+                  }}
+                />
+              ) : selectedChapter.content ? (
+                <div
+                  className={`prose max-w-none ${proseTheme[theme]} prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm`}
+                  dangerouslySetInnerHTML={{ __html: sanitizeContent(processContentForRTL(selectedChapter.content)) }}
+                />
+              ) : !videoUrl ? (
+                <div className="text-center py-12">
+                  <p className={`text-sm ${t.muted}`}>No content available yet</p>
+                </div>
+              ) : null}
+            </div>
+
+            {/* Chapter navigation */}
+            <div className={`border-t px-4 sm:px-8 py-3 ${t.divider}`}>
+              <div className="flex items-center justify-between text-sm">
+                <button
+                  onClick={() => navigateChapter('prev')}
+                  disabled={currentIndex <= 0}
+                  className={currentIndex > 0 ? 'text-emerald-600' : `${t.faint} cursor-not-allowed`}
+                >
+                  ← Previous
+                </button>
+                <span className={t.muted}>{currentIndex + 1} / {flatChapters.length}</span>
+                <button
+                  onClick={() => navigateChapter('next')}
+                  disabled={currentIndex >= flatChapters.length - 1}
+                  className={currentIndex < flatChapters.length - 1 ? 'text-emerald-600' : `${t.faint} cursor-not-allowed`}
+                >
+                  Next →
+                </button>
               </div>
             </div>
-          ) : (
-            <div className="text-center py-20">
-              <BookOpen className={`h-10 w-10 mx-auto mb-3 ${t.faint}`} />
-              <p className={`text-sm ${t.muted}`}>Select a chapter</p>
+
+            {/* Quiz link */}
+            {chapterHasQuiz && selectedCourse && (
+              <div className={`border-t px-4 sm:px-8 py-4 text-center ${t.divider} ${t.quizBg}`}>
+                <button
+                  onClick={() => window.open(`/student/quiz/${selectedCourse.slug}/${selectedChapter.slug}`, '_blank')}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-600 text-white text-sm font-medium hover:bg-amber-700 transition-colors"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  Test Your Understanding
+                </button>
+              </div>
+            )}
+
+            {/* Copyright */}
+            <div className={`border-t px-4 sm:px-8 py-3 text-center ${t.divider} ${t.quizBg}`}>
+              <p className={`text-xs ${t.muted}`}>
+                &copy; {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
+              </p>
             </div>
-          )}
+          </div>
         </main>
       </div>
 
-      {/* Screen capture protection styles */}
+      {/* Screen capture protection + Arabic text styles */}
       <style>{`
         @media print { body { display: none !important; } }
         .lesson-content-protected * {
@@ -423,6 +567,20 @@ export default function StudentLessons({ enrollments }) {
           -webkit-touch-callout: none !important;
         }
         .lesson-content-protected *::selection { background: transparent !important; }
+        .verse {
+          font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+          font-size: 28px !important;
+          line-height: 2 !important;
+          text-align: center;
+          direction: rtl;
+        }
+        .arabic-prose {
+          font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+          font-size: 1.25rem !important;
+          line-height: 2 !important;
+          direction: rtl;
+          text-align: right;
+        }
       `}</style>
     </div>
   );
