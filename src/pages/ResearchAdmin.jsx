@@ -30,6 +30,7 @@ const ResearchAdmin = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [chapters, setChapters] = useState([]);
+  const [swapping, setSwapping] = useState(null); // { id, direction } for animation
   const [editingChapter, setEditingChapter] = useState(null);
   const [previewChapter, setPreviewChapter] = useState(null);
   const [showCourseModal, setShowCourseModal] = useState(false);
@@ -168,17 +169,25 @@ const ResearchAdmin = () => {
 
   const swapChapterOrder = async (index, direction) => {
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= chapters.length) return;
+    if (targetIndex < 0 || targetIndex >= chapters.length || swapping) return;
     const a = chapters[index];
     const b = chapters[targetIndex];
-    // Three-step swap to avoid UNIQUE(course_id, chapter_number) conflict
+    // Animate first, then persist
+    setSwapping({ id: a.id, targetId: b.id, direction });
+    await new Promise(r => setTimeout(r, 250));
+    // Optimistic local reorder
+    const updated = [...chapters];
+    updated[index] = { ...b, chapter_number: a.chapter_number };
+    updated[targetIndex] = { ...a, chapter_number: b.chapter_number };
+    setChapters(updated);
+    setSwapping(null);
+    // Persist: three-step swap to avoid UNIQUE(course_id, chapter_number) conflict
     const { error: e1 } = await supabase.from('lesson_chapters').update({ chapter_number: -1 }).eq('id', a.id);
-    if (e1) { toast.error('Failed to reorder'); return; }
+    if (e1) { toast.error('Failed to reorder'); fetchChapters(selectedCourse.id); return; }
     const { error: e2 } = await supabase.from('lesson_chapters').update({ chapter_number: a.chapter_number }).eq('id', b.id);
-    if (e2) { toast.error('Failed to reorder'); return; }
+    if (e2) { toast.error('Failed to reorder'); fetchChapters(selectedCourse.id); return; }
     const { error: e3 } = await supabase.from('lesson_chapters').update({ chapter_number: b.chapter_number }).eq('id', a.id);
-    if (e3) { toast.error('Failed to reorder'); return; }
-    fetchChapters(selectedCourse.id);
+    if (e3) { toast.error('Failed to reorder'); fetchChapters(selectedCourse.id); return; }
   };
 
   const fetchTestSettings = async () => {
@@ -1003,9 +1012,19 @@ const ResearchAdmin = () => {
                     </div>
                   ) : (
                     <div className="space-y-2.5">
-                      {chapters.map((chapter, idx) => (
+                      {chapters.map((chapter, idx) => {
+                        const isMoving = swapping?.id === chapter.id;
+                        const isTarget = swapping?.targetId === chapter.id;
+                        const slideDir = swapping?.direction === 'up' ? '-100%' : '100%';
+                        const slideStyle = isMoving
+                          ? { transform: `translateY(${slideDir})`, transition: 'transform 250ms ease-in-out' }
+                          : isTarget
+                          ? { transform: `translateY(${swapping?.direction === 'up' ? '100%' : '-100%'})`, transition: 'transform 250ms ease-in-out' }
+                          : {};
+                        return (
                         <div
                           key={chapter.id}
+                          style={slideStyle}
                           className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all"
                         >
                           <div className="flex items-center gap-3">
@@ -1093,7 +1112,7 @@ const ResearchAdmin = () => {
                             </button>
                           </div>
                         </div>
-                      ))}
+                      );})}
                       
                       {chapters.length === 0 && (
                         <p className="text-center text-gray-500 py-12">No chapters yet. Create one to get started.</p>
