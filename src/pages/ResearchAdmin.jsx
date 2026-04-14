@@ -874,6 +874,18 @@ const ResearchAdmin = () => {
                       </div>
 
                       <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Video (YouTube)</label>
+                        <input
+                          type="url"
+                          value={editingChapter.video_url || ''}
+                          onChange={(e) => setEditingChapter({ ...editingChapter, video_url: e.target.value })}
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow text-sm"
+                          placeholder="https://www.youtube.com/watch?v=..."
+                        />
+                        <p className="text-xs text-gray-400 mt-1">Short summary video shown to students before the lesson text</p>
+                      </div>
+
+                      <div>
                         <div className="flex items-center justify-between mb-2">
                           <label className="block text-sm font-semibold text-gray-900">Content</label>
                           <select
@@ -930,17 +942,6 @@ const ResearchAdmin = () => {
                             )}
                           </div>
                         )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-900 mb-2">Video (YouTube)</label>
-                        <input
-                          type="url"
-                          value={editingChapter.video_url || ''}
-                          onChange={(e) => setEditingChapter({ ...editingChapter, video_url: e.target.value })}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow text-sm"
-                          placeholder="https://www.youtube.com/watch?v=..."
-                        />
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
