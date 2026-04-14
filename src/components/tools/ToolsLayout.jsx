@@ -22,11 +22,11 @@ function ToolsLayout() {
                 <span className="text-xs sm:text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               {!isHome && (
                 <Link
                   to="/tools"
-                  className="text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+                  className="text-sm text-gray-600 hover:text-emerald-600 transition-colors py-1"
                 >
                   All Tools
                 </Link>
@@ -49,8 +49,8 @@ function ToolsLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+      <footer className="border-t border-gray-200 py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1.5 sm:space-y-2">
           <p className="text-sm text-gray-500">
             A sadaqah jaariyah from{' '}
             <a
