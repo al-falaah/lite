@@ -164,6 +164,15 @@ const LandingPage = () => {
                     Blog
                   </button>
                 </Link>
+                <Link to="/tools">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
+                    isScrolled
+                      ? 'text-gray-700 hover:text-emerald-600'
+                      : 'text-white/90 hover:text-emerald-600'
+                  }`}>
+                    Tools
+                  </button>
+                </Link>
                 <Link to="/store">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
@@ -237,6 +246,11 @@ const LandingPage = () => {
                   <Link to="/blog" onClick={() => setMobileMenuOpen(false)}>
                     <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
                       Blog
+                    </button>
+                  </Link>
+                  <Link to="/tools" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="w-full px-4 py-2.5 text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all text-left">
+                      Tools
                     </button>
                   </Link>
                   <Link to="/faqs" onClick={() => setMobileMenuOpen(false)}>

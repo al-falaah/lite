@@ -39,7 +39,6 @@ const SURAH_NAMES = {
 function parseContent(text) {
   if (!text) return [];
   const parts = [];
-  let i = 0;
 
   // Split on {curly braces} — these contain Quranic text references
   const regex = /\{([^}]+)\}/g;
@@ -71,7 +70,7 @@ function ContentRenderer({ content }) {
         part.type === 'quran' ? (
           <span
             key={i}
-            className="font-arabic text-emerald-700 font-semibold text-lg px-1"
+            className="font-arabic text-emerald-700 font-semibold text-base sm:text-lg px-1"
             dir="rtl"
           >
             ﴿{part.value}﴾
@@ -86,38 +85,254 @@ function ContentRenderer({ content }) {
   );
 }
 
-// Extract the most relevant portion of content for the searched topic
+// Extract the most relevant clause(s) from content for the searched topic.
+// For each match of the target term, we take a window extending back to the
+// previous clause boundary (. ، ؛ <br>) and forward to the next boundary or
+// next {quranic-ref} — whichever comes first. This isolates the specific rule
+// clause within an ayah's analysis, which often mixes many rules together.
 function extractRelevantContent(content, topic) {
   if (!content || !topic) return content;
 
-  // For nahw (grammar), try to extract only the relevant sentences
-  // instead of showing the entire i'rab analysis
-  if (topic.subject === 'nahw') {
-    const searchTerms = topic.search_ar;
-    const sentences = content.split(/\.\s*(?=[^}])|<br\s*\/?>/).filter(Boolean);
-    const relevant = sentences.filter((s) =>
-      searchTerms.some((t) => s.includes(t))
-    );
-    if (relevant.length > 0 && relevant.length < sentences.length) {
-      return relevant.join('. ').trim();
+  const searchTerms = topic.search_ar || [];
+  if (searchTerms.length === 0) return content;
+
+  const clauses = [];
+  const seen = new Set();
+
+  for (const term of searchTerms) {
+    let searchFrom = 0;
+    while (true) {
+      const idx = content.indexOf(term, searchFrom);
+      if (idx === -1) break;
+
+      // Extend backward to the last clause boundary
+      const before = content.substring(0, idx);
+      const boundaryRegex = /[.،؛]|<br\s*\/?>/g;
+      let lastBoundary = 0;
+      let bm;
+      while ((bm = boundaryRegex.exec(before)) !== null) {
+        lastBoundary = bm.index + bm[0].length;
+      }
+      const start = lastBoundary;
+
+      // Extend forward: stop at next boundary OR next { (new clause)
+      const after = content.substring(idx + term.length);
+      let endRel = after.length;
+      const termMatch = after.match(/[.،؛]|<br\s*\/?>/);
+      if (termMatch) endRel = termMatch.index + termMatch[0].length;
+      const nextBrace = after.indexOf('{');
+      if (nextBrace !== -1 && nextBrace < endRel) endRel = nextBrace;
+
+      const clause = content.substring(start, idx + term.length + endRel).trim();
+      if (clause && !seen.has(clause)) {
+        seen.add(clause);
+        clauses.push(clause);
+      }
+
+      searchFrom = idx + term.length;
     }
+  }
+
+  if (clauses.length > 0) {
+    return clauses.join(' ').replace(/<br\s*\/?>/g, ' ').trim();
   }
 
   return content;
 }
 
+// Strip Arabic diacritics and normalize alef/ya/ta-marbuta for matching.
+// Handles Uthmani script quirks: superscript alef (ٰ U+0670) is implicit alef
+// pronunciation, so we convert the preceding letter-sequence to include an
+// alef BEFORE stripping diacritics. Also normalizes alef wasla (ٱ).
+function normalizeArabic(text) {
+  if (!text) return '';
+  return text
+    // ى followed by superscript alef = alef sound (Uthmani: مَجْرىٰها → مجراها)
+    .replace(/ى\u0670/g, 'ا')
+    // Any other letter + superscript alef → letter + alef
+    .replace(/(.)\u0670/g, '$1ا')
+    // Strip all tashkeel and Quranic recitation marks
+    .replace(/[\u064B-\u065F\u06D6-\u06ED]/g, '')
+    .replace(/\u0640/g, '') // tatweel
+    .replace(/[ٱإأآ]/g, 'ا') // alef wasla + variants
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .trim();
+}
+
+// Extract Quranic word references from the relevant content
+// For tajweed: inline {curly braces} refs
+// For nahw: the format is "الكلمة: grammatical analysis." — the word before
+// the first colon in each line/segment is the Quranic word being analyzed.
+function extractQuranicRefs(content, subject) {
+  if (!content) return [];
+  const refs = [];
+
+  if (subject === 'nahw') {
+    // Split on newlines, </br>, or period+space (end of analysis for one word)
+    // Each segment starts with "word:" or "word :"
+    const segments = content
+      .split(/<br\s*\/?>|\n|(?<=\.)\s+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    for (const seg of segments) {
+      const colonIdx = seg.indexOf(':');
+      if (colonIdx > 0 && colonIdx < 40) {
+        const word = seg.substring(0, colonIdx).trim();
+        // Only Arabic words — skip the full-ayah {...} reference and numbers
+        if (word && /^[\u0600-\u06FF\s]+$/.test(word) && !word.includes('{')) {
+          refs.push(word);
+        }
+      }
+    }
+  } else {
+    // Tajweed: inline {ref} patterns
+    const regex = /\{([^}]+)\}/g;
+    let m;
+    while ((m = regex.exec(content)) !== null) {
+      refs.push(m[1].trim());
+    }
+  }
+
+  return refs;
+}
+
+// Detect if the content is a warning/disclaimer (rule does NOT apply) rather
+// than an actual application of the rule. Common in tajweed where warnings
+// like "لا إمالة" (no imalah) appear to caution against applying the rule.
+function isDisclaimerClause(clause, searchTerms) {
+  if (!clause) return false;
+  const negationPatterns = [
+    /لا\s+\S{0,15}$/, // "لا [term]"
+    /ليس\s/,
+    /عدم\s/,
+    /حتى\s+لا/, // "so that no..."
+    /دون\s/, // "without"
+    /بدون\s/,
+    /ولا\s/,
+    /غير\s/,
+  ];
+  for (const term of searchTerms) {
+    const idx = clause.indexOf(term);
+    if (idx === -1) continue;
+    // Look in the 25 chars before the term for negation
+    const before = clause.substring(Math.max(0, idx - 25), idx);
+    if (negationPatterns.some((p) => p.test(before))) return true;
+  }
+  return false;
+}
+
+// Render ayah text with specified references highlighted in yellow.
+// Matches are done after normalizing diacritics so the highlighted span
+// preserves the original (with tashkeel) text.
+function AyahWithHighlights({ ayahText, refs }) {
+  const segments = useMemo(() => {
+    if (!refs || refs.length === 0) return [{ type: 'plain', text: ayahText }];
+
+    // Build normalized ayah + original chars map (char-by-char, same length after regex replace)
+    const words = ayahText.split(/(\s+)/); // keep whitespace as separate segments
+    const refNorms = refs.map((r) => normalizeArabic(r)).filter(Boolean);
+
+    // Build a list of word-sequences that form each ref
+    // For each ref (which may be multi-word), we'll find a matching window in words
+    const highlightFlags = new Array(words.length).fill(false);
+
+    for (const refNorm of refNorms) {
+      const refWords = refNorm.split(/\s+/).filter(Boolean);
+      if (refWords.length === 0) continue;
+
+      for (let i = 0; i < words.length; i++) {
+        if (!words[i].trim()) continue;
+        // Try matching refWords starting at position i (skipping whitespace)
+        let wi = 0;
+        let matched = [];
+        let idx = i;
+        while (idx < words.length && wi < refWords.length) {
+          const w = words[idx];
+          if (!w.trim()) {
+            matched.push(idx);
+            idx++;
+            continue;
+          }
+          const wNorm = normalizeArabic(w);
+          if (wNorm === refWords[wi] || wNorm.replace(/^[وفبلك]/, '') === refWords[wi]) {
+            matched.push(idx);
+            wi++;
+            idx++;
+          } else {
+            break;
+          }
+        }
+        if (wi === refWords.length) {
+          matched.forEach((mi) => { highlightFlags[mi] = true; });
+        }
+      }
+    }
+
+    // Merge consecutive highlighted words into a single span
+    const result = [];
+    let buffer = '';
+    let bufferHighlight = null;
+    for (let i = 0; i < words.length; i++) {
+      const flag = highlightFlags[i];
+      if (bufferHighlight === null) {
+        bufferHighlight = flag;
+        buffer = words[i];
+      } else if (bufferHighlight === flag) {
+        buffer += words[i];
+      } else {
+        result.push({ type: bufferHighlight ? 'highlight' : 'plain', text: buffer });
+        buffer = words[i];
+        bufferHighlight = flag;
+      }
+    }
+    if (buffer) {
+      result.push({ type: bufferHighlight ? 'highlight' : 'plain', text: buffer });
+    }
+    return result;
+  }, [ayahText, refs]);
+
+  return (
+    <p className="font-arabic text-lg sm:text-xl text-gray-900 leading-loose text-right" dir="rtl">
+      {segments.map((seg, i) =>
+        seg.type === 'highlight' ? (
+          <mark key={i} className="bg-yellow-200 text-gray-900 rounded px-0.5">
+            {seg.text}
+          </mark>
+        ) : (
+          <span key={i}>{seg.text}</span>
+        )
+      )}
+    </p>
+  );
+}
+
 // Single result card
-function ResultCard({ result, topic }) {
+function ResultCard({ result, topic, isPrimary }) {
   const surahName = SURAH_NAMES[result.sura_number] || `Surah ${result.sura_number}`;
   const displayContent = useMemo(
     () => extractRelevantContent(result.content, topic),
     [result.content, topic]
   );
+  const quranicRefs = useMemo(
+    () => extractQuranicRefs(displayContent, topic?.subject),
+    [displayContent, topic]
+  );
+  const isDisclaimer = useMemo(
+    () => !isPrimary && isDisclaimerClause(displayContent, topic?.search_ar || []),
+    [displayContent, topic, isPrimary]
+  );
+
+  const borderClass = isPrimary
+    ? 'border-emerald-300 ring-1 ring-emerald-200'
+    : isDisclaimer
+    ? 'border-amber-200'
+    : 'border-gray-200';
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className={`bg-white border rounded-lg overflow-hidden ${borderClass}`}>
       {/* Ayah header */}
-      <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center gap-2">
+      <div className={`px-4 py-2 border-b border-gray-200 flex items-center gap-2 flex-wrap ${isPrimary ? 'bg-emerald-50' : 'bg-gray-50'}`}>
         <span className="text-sm font-medium text-gray-900">
           {result.sura_number}:{result.aya_number}
         </span>
@@ -125,13 +340,21 @@ function ResultCard({ result, topic }) {
         <span className="text-sm text-gray-400 font-arabic" dir="rtl">
           {result.sura_name}
         </span>
+        {isPrimary && (
+          <span className="ml-auto text-xs px-2 py-0.5 bg-emerald-600 text-white rounded-full font-medium">
+            ★ Key example
+          </span>
+        )}
+        {!isPrimary && isDisclaimer && (
+          <span className="ml-auto text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">
+            Not applied here (warning)
+          </span>
+        )}
       </div>
 
-      {/* Ayah text */}
+      {/* Ayah text with highlighted matches */}
       <div className="px-4 py-3 border-b border-gray-100">
-        <p className="font-arabic text-xl text-gray-900 leading-loose text-right" dir="rtl">
-          {result.aya_text}
-        </p>
+        <AyahWithHighlights ayahText={result.aya_text} refs={quranicRefs} />
       </div>
 
       {/* Analysis content */}
@@ -174,6 +397,7 @@ function ExamplesFinder() {
   const [subject, setSubject] = useState('tajweed'); // 'tajweed' or 'nahw'
   const [expandedCategories, setExpandedCategories] = useState({});
   const [surahFilter, setSurahFilter] = useState(null);
+  const [mobileBrowseOpen, setMobileBrowseOpen] = useState(false);
   const searchRef = useRef(null);
 
   const PAGE_SIZE = 20;
@@ -193,14 +417,34 @@ function ExamplesFinder() {
       setLoading(true);
 
       try {
+        const searchTerms = topic.search_ar;
+        const primaries = topic.primary_examples || [];
+
+        // On page 0 with no surah filter, fetch primary examples first
+        let primaryRows = [];
+        if (pageNum === 0 && !surah && primaries.length > 0) {
+          const orFilter = primaries
+            .map((p) => `and(sura_number.eq.${p.sura},aya_number.eq.${p.aya})`)
+            .join(',');
+          const { data: pData } = await supabase
+            .from(topic.table)
+            .select('*')
+            .or(orFilter);
+          if (pData) {
+            // Preserve the order defined in primary_examples
+            primaryRows = primaries
+              .map((p) =>
+                pData.find((r) => r.sura_number === p.sura && r.aya_number === p.aya)
+              )
+              .filter(Boolean);
+          }
+        }
+
         let q = supabase.from(topic.table).select('*', { count: 'exact' });
 
-        // Search using Arabic terms
-        const searchTerms = topic.search_ar;
         if (searchTerms.length === 1) {
           q = q.ilike('content', `%${searchTerms[0]}%`);
         } else {
-          // OR across multiple search terms
           q = q.or(searchTerms.map((t) => `content.ilike.%${t}%`).join(','));
         }
 
@@ -208,10 +452,14 @@ function ExamplesFinder() {
           q = q.eq('sura_number', surah);
         }
 
+        const adjustedPageSize = PAGE_SIZE - primaryRows.length;
+        const rangeStart = pageNum === 0 ? 0 : pageNum * PAGE_SIZE - primaryRows.length;
+        const rangeEnd = rangeStart + (pageNum === 0 ? adjustedPageSize : PAGE_SIZE) - 1;
+
         q = q
           .order('sura_number', { ascending: true })
           .order('aya_number', { ascending: true })
-          .range(pageNum * PAGE_SIZE, (pageNum + 1) * PAGE_SIZE - 1);
+          .range(rangeStart, rangeEnd);
 
         const { data, error, count } = await q;
 
@@ -220,7 +468,21 @@ function ExamplesFinder() {
           return;
         }
 
-        setResults(data || []);
+        // On page 0, prepend primary rows and dedupe
+        let finalRows = data || [];
+        if (pageNum === 0 && primaryRows.length > 0) {
+          const primaryKeys = new Set(
+            primaryRows.map((r) => `${r.sura_number}-${r.aya_number}`)
+          );
+          finalRows = [
+            ...primaryRows,
+            ...finalRows.filter(
+              (r) => !primaryKeys.has(`${r.sura_number}-${r.aya_number}`)
+            ),
+          ];
+        }
+
+        setResults(finalRows);
         setTotalCount(count || 0);
         setPage(pageNum);
       } catch (err) {
@@ -239,6 +501,7 @@ function ExamplesFinder() {
       setQuery('');
       setSurahFilter(null);
       setPage(0);
+      setMobileBrowseOpen(false);
       fetchExamples(topic, 0, null);
       // Scroll to results on mobile
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -297,11 +560,11 @@ function ExamplesFinder() {
     <>
       {/* Page header — matches Blog pattern */}
       <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+          <h1 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
             Quranic Examples Finder
           </h1>
-          <p className="text-base text-gray-600 max-w-2xl">
+          <p className="text-sm sm:text-base text-gray-600 max-w-2xl">
             Search for a tajweed or grammar topic to find real examples from the Quran.
           </p>
         </div>
@@ -356,9 +619,24 @@ function ExamplesFinder() {
         )}
       </div>
 
+      {/* Mobile browse toggle — only shown on mobile */}
+      <div className="lg:hidden mb-4">
+        <button
+          onClick={() => setMobileBrowseOpen(!mobileBrowseOpen)}
+          className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700"
+        >
+          <span>Browse topics{selectedTopic ? ` — ${selectedTopic.name_en}` : ''}</span>
+          {mobileBrowseOpen ? (
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          ) : (
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+          )}
+        </button>
+      </div>
+
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar: Topic browser */}
-        <div className="lg:w-72 flex-shrink-0">
+        {/* Sidebar: Topic browser — hidden on mobile unless toggled */}
+        <div className={`lg:w-72 flex-shrink-0 ${mobileBrowseOpen ? 'block' : 'hidden lg:block'}`}>
           {/* Subject tabs */}
           <div className="flex bg-gray-100 rounded-lg p-0.5 mb-4">
             <button
@@ -436,11 +714,11 @@ function ExamplesFinder() {
             <>
               {/* Active topic header */}
               <div className="mb-4">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="min-w-0">
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-900">
                       {selectedTopic.name_en}
-                      <span className="font-arabic text-base text-gray-400 ml-2" dir="rtl">
+                      <span className="font-arabic text-sm sm:text-base text-gray-400 ml-2" dir="rtl">
                         {selectedTopic.name_ar}
                       </span>
                     </h2>
@@ -448,11 +726,11 @@ function ExamplesFinder() {
                       {totalCount.toLocaleString()} examples found
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <select
                       value={surahFilter || ''}
                       onChange={handleSurahFilter}
-                      className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      className="flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 min-w-0"
                     >
                       <option value="">All Surahs</option>
                       {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
@@ -463,7 +741,7 @@ function ExamplesFinder() {
                     </select>
                     <button
                       onClick={clearSelection}
-                      className="text-sm text-gray-400 hover:text-gray-600"
+                      className="text-sm text-gray-400 hover:text-gray-600 px-2 whitespace-nowrap"
                     >
                       Clear
                     </button>
@@ -487,13 +765,19 @@ function ExamplesFinder() {
               ) : results.length > 0 ? (
                 <>
                   <div className="space-y-3">
-                    {results.map((r) => (
-                      <ResultCard
-                        key={`${r.sura_number}-${r.aya_number}`}
-                        result={r}
-                        topic={selectedTopic}
-                      />
-                    ))}
+                    {results.map((r) => {
+                      const isPrimary = page === 0 && (selectedTopic.primary_examples || []).some(
+                        (p) => p.sura === r.sura_number && p.aya === r.aya_number
+                      );
+                      return (
+                        <ResultCard
+                          key={`${r.sura_number}-${r.aya_number}`}
+                          result={r}
+                          topic={selectedTopic}
+                          isPrimary={isPrimary}
+                        />
+                      );
+                    })}
                   </div>
 
                   {/* Pagination */}
