@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Search, BookOpen, ChevronDown, ChevronRight, X, Filter, Loader2 } from 'lucide-react';
+import { useState, useMemo, useCallback, useRef } from 'react';
+import { ChevronDown, ChevronRight, X } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import {
   TAJWEED_CATEGORIES,
@@ -91,22 +91,20 @@ function ResultCard({ result, topic }) {
   const surahName = SURAH_NAMES[result.sura_number] || `Surah ${result.sura_number}`;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-emerald-200 transition-colors">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
       {/* Ayah header */}
-      <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-            {result.sura_number}:{result.aya_number}
-          </span>
-          <span className="text-sm text-gray-600">{surahName}</span>
-          <span className="text-sm text-gray-400 font-arabic" dir="rtl">
-            {result.sura_name}
-          </span>
-        </div>
+      <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-900">
+          {result.sura_number}:{result.aya_number}
+        </span>
+        <span className="text-sm text-gray-500">{surahName}</span>
+        <span className="text-sm text-gray-400 font-arabic" dir="rtl">
+          {result.sura_name}
+        </span>
       </div>
 
       {/* Ayah text */}
-      <div className="px-4 py-3 bg-emerald-50/30 border-b border-gray-100">
+      <div className="px-4 py-3 border-b border-gray-100">
         <p className="font-arabic text-xl text-gray-900 leading-loose text-right" dir="rtl">
           {result.aya_text}
         </p>
@@ -272,66 +270,62 @@ function ExamplesFinder() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      {/* Page header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Quranic Examples Finder</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Search for a tajweed or grammar topic to find real examples from the Quran
-        </p>
+    <>
+      {/* Page header — matches Blog pattern */}
+      <div className="border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
+            Quranic Examples Finder
+          </h1>
+          <p className="text-base text-gray-600 max-w-2xl">
+            Search for a tajweed or grammar topic to find real examples from the Quran.
+          </p>
+        </div>
       </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
       {/* Search bar */}
       <div className="relative mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            ref={searchRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search in English or Arabic — e.g. 'idgham', 'إخفاء', 'past tense', 'مبتدأ'..."
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
-            dir="auto"
-          />
-          {query && (
-            <button
-              onClick={() => setQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+        <input
+          ref={searchRef}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search in English or Arabic — e.g. 'idgham', 'إخفاء', 'past tense', 'مبتدأ'..."
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+          dir="auto"
+        />
+        {query && (
+          <button
+            onClick={() => setQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
 
         {/* Search suggestions dropdown */}
         {suggestions.length > 0 && (
-          <div className="absolute z-20 top-full mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-80 overflow-y-auto">
+          <div className="absolute z-20 top-full mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-y-auto">
             {suggestions.map((s) => (
               <button
                 key={`${s.subject}-${s.id}`}
                 onClick={() => selectSuggestion(s)}
-                className="w-full text-left px-4 py-2.5 hover:bg-emerald-50 transition-colors border-b border-gray-50 last:border-0"
+                className="w-full text-left px-4 py-2.5 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-sm font-medium text-gray-900">{s.name_en}</span>
-                    <span className="text-xs text-gray-400 ml-2">{s.category}</span>
+                    <span className="text-xs text-gray-400 ml-2">
+                      {s.subject === 'tajweed' ? 'Tajweed' : 'Nahw'} &middot; {s.category}
+                    </span>
                   </div>
                   <span className="font-arabic text-sm text-gray-500" dir="rtl">
                     {s.name_ar}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500 mt-0.5">{s.description}</p>
-                <span
-                  className={`text-[10px] font-medium px-1.5 py-0.5 rounded mt-1 inline-block ${
-                    s.subject === 'tajweed'
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'bg-amber-50 text-amber-600'
-                  }`}
-                >
-                  {s.subject === 'tajweed' ? 'Tajweed' : 'Nahw (Grammar)'}
-                </span>
               </button>
             ))}
           </div>
@@ -417,62 +411,43 @@ function ExamplesFinder() {
           {selectedTopic ? (
             <>
               {/* Active topic header */}
-              <div className="bg-white rounded-xl border border-gray-200 px-4 py-3 mb-4">
-                <div className="flex items-center justify-between flex-wrap gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
-                          selectedTopic.subject === 'tajweed'
-                            ? 'bg-blue-50 text-blue-600'
-                            : 'bg-amber-50 text-amber-600'
-                        }`}
-                      >
-                        {selectedTopic.subject === 'tajweed' ? 'Tajweed' : 'Nahw'}
-                      </span>
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        {selectedTopic.name_en}
-                      </h2>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-0.5">
-                      {selectedTopic.description}
-                      <span className="ml-2 text-gray-400">
-                        ({totalCount.toLocaleString()} examples found)
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {/* Surah filter */}
-                    <div className="relative">
-                      <Filter className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                      <select
-                        value={surahFilter || ''}
-                        onChange={handleSurahFilter}
-                        className="pl-7 pr-8 py-1.5 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 appearance-none"
-                      >
-                        <option value="">All Surahs</option>
-                        {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
-                          <option key={n} value={n}>
-                            {n}. {SURAH_NAMES[n]}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <button
-                      onClick={clearSelection}
-                      className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1"
-                    >
-                      Clear
-                    </button>
-                  </div>
+              <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    {selectedTopic.name_en}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {selectedTopic.description}
+                    {' '}&middot;{' '}
+                    {totalCount.toLocaleString()} examples
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <select
+                    value={surahFilter || ''}
+                    onChange={handleSurahFilter}
+                    className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  >
+                    <option value="">All Surahs</option>
+                    {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
+                      <option key={n} value={n}>
+                        {n}. {SURAH_NAMES[n]}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={clearSelection}
+                    className="text-sm text-gray-400 hover:text-gray-600"
+                  >
+                    Clear
+                  </button>
                 </div>
               </div>
 
               {/* Results */}
               {loading ? (
-                <div className="flex items-center justify-center py-20">
-                  <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
-                  <span className="ml-2 text-sm text-gray-500">Searching the Quran...</span>
+                <div className="text-center py-20 text-sm text-gray-500">
+                  Searching...
                 </div>
               ) : results.length > 0 ? (
                 <>
@@ -510,26 +485,23 @@ function ExamplesFinder() {
                   )}
                 </>
               ) : (
-                <div className="text-center py-20 text-gray-400">
-                  <BookOpen className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm">No examples found for this topic in the selected surah.</p>
-                </div>
+                <p className="text-center py-20 text-sm text-gray-500">
+                  No examples found for this topic in the selected surah.
+                </p>
               )}
             </>
           ) : (
             /* Empty state */
             <div className="text-center py-20">
-              <Search className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-              <h3 className="text-lg font-medium text-gray-700 mb-1">Find Quranic Examples</h3>
-              <p className="text-sm text-gray-500 max-w-md mx-auto">
-                Search for a topic above or browse the categories on the left.
-                Select a tajweed rule or grammar concept to see real examples from the Quran.
+              <p className="text-gray-500">
+                Search for a topic above or browse the categories to see examples from the Quran.
               </p>
             </div>
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

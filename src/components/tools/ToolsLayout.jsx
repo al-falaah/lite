@@ -1,52 +1,47 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { BookOpen, Home, Search } from 'lucide-react';
-
-const NAV_ITEMS = [
-  { path: '/tools', label: 'Home', icon: Home },
-  { path: '/tools/examples', label: 'Examples Finder', icon: Search },
-];
+import { Home } from 'lucide-react';
 
 function ToolsLayout() {
   const location = useLocation();
+  const isHome = location.pathname === '/tools';
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link to="/tools" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-white" />
-            </div>
-            <div className="leading-tight">
-              <span className="text-sm font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">
-                TFT Madrasah
-              </span>
-              <span className="text-[10px] text-gray-500 block -mt-0.5">Tools</span>
-            </div>
-          </Link>
-
-          <nav className="flex items-center gap-1">
-            {NAV_ITEMS.map(({ path, label, icon: Icon }) => {
-              const active = location.pathname === path;
-              return (
+      {/* Nav — matches Blog/main app pattern */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link to="/tools" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <img
+                src="/favicon.svg"
+                alt="The FastTrack Logo"
+                className="h-8 w-8"
+              />
+              <div className="flex flex-col leading-none -space-y-1">
+                <span className="text-xs sm:text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-xs sm:text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+              </div>
+            </Link>
+            <div className="flex items-center gap-4">
+              {!isHome && (
                 <Link
-                  key={path}
-                  to={path}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                    active
-                      ? 'bg-emerald-50 text-emerald-700 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                  to="/tools"
+                  className="text-sm text-gray-600 hover:text-emerald-600 transition-colors"
                 >
-                  <Icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{label}</span>
+                  All Tools
                 </Link>
-              );
-            })}
-          </nav>
+              )}
+              <Link
+                to="/"
+                className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                <span className="hidden sm:inline">Main Site</span>
+              </Link>
+            </div>
+          </div>
         </div>
-      </header>
+      </nav>
 
       {/* Main Content */}
       <main className="flex-1">
@@ -54,10 +49,10 @@ function ToolsLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-6">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-xs text-gray-500">
-            A <span className="font-arabic text-sm">صدقة جارية</span> (sadaqah jaariyah) from{' '}
+      <footer className="border-t border-gray-200 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm text-gray-500">
+            A sadaqah jaariyah from{' '}
             <a
               href="https://www.tftmadrasah.com"
               target="_blank"
@@ -66,9 +61,6 @@ function ToolsLayout() {
             >
               The FastTrack Madrasah
             </a>
-          </p>
-          <p className="text-[10px] text-gray-400 mt-1">
-            Quranic data sourced from Surah App. All tools are free to use.
           </p>
         </div>
       </footer>
