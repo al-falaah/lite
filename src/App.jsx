@@ -56,6 +56,7 @@ import SplashScreen from './components/SplashScreen';
 // Layout
 import AdminRoute from './components/common/AdminRoute';
 import RoleRoute from './components/common/RoleRoute';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Detect PWA standalone mode
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches
@@ -77,6 +78,7 @@ function App() {
     <HelmetProvider>
       <AuthProvider>
         <Router>
+          <ScrollToTop />
           {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
           <AppRoutes />
         </Router>

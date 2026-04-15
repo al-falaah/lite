@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
@@ -651,6 +651,73 @@ const LandingPage = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1">Milestone Tests & Final Exams</h3>
               <p className="text-sm text-gray-600">Regular assessments track your progress. Pass all milestones and the final exam to earn your certificate.</p>
+            </div>
+
+            {/* 6. Endless Drills */}
+            <div>
+              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] flex flex-col">
+                <div className="flex items-center gap-2 mb-3">
+                  <InfinityIcon className="w-6 h-6 text-emerald-400" strokeWidth={2} />
+                  <span className="text-xs font-bold text-white uppercase tracking-wide">Endless Drills</span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 uppercase tracking-wide">Beta</span>
+                </div>
+                <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-3 leading-loose">
+                  قُلْ <span className="bg-amber-500/30 text-amber-300 px-1.5 rounded border-b-2 border-amber-500/60">إِنَّ</span> صَلَاتِي وَنُسُكِي
+                </p>
+                <p className="text-xs text-gray-300 text-center mb-3">Which grammatical role applies to the highlighted word?</p>
+                <div className="space-y-1.5 mt-auto">
+                  {[
+                    { label: "Inna & its Sisters", correct: true },
+                    { label: "Ḥarf Jarr", correct: false },
+                    { label: "Mubtada’", correct: false },
+                  ].map((o, i) => (
+                    <div key={i} className={`py-1.5 px-3 rounded-lg border text-[11px] flex items-center gap-2 ${
+                      o.correct ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300' : 'border-gray-800 text-gray-500'
+                    }`}>
+                      <span className={`w-4 h-4 rounded flex items-center justify-center text-[9px] font-bold ${
+                        o.correct ? 'bg-emerald-500/30 text-emerald-300' : 'bg-gray-800/50 text-gray-600'
+                      }`}>{['A','B','C'][i]}</span>
+                      <span>{o.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Endless Drills — Tajweed & Arabiyyah</h3>
+              <p className="text-sm text-gray-600">Unlimited mixed questions auto-generated from scholar-annotated Qur'an data. Pick your length, focus on a rule or difficulty level, and climb the leaderboard.</p>
+            </div>
+
+            {/* 7. Free Study Tools — Quranic Examples Finder */}
+            <div>
+              <a href="/tools" className="block group">
+                <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Search className="w-5 h-5 text-emerald-600" strokeWidth={2} />
+                    <span className="text-xs font-bold text-gray-900 uppercase tracking-wide">Qur'anic Examples Finder</span>
+                  </div>
+                  {/* Mock search bar */}
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 mb-3">
+                    <Search className="w-3.5 h-3.5 text-gray-400" />
+                    <span className="text-xs text-gray-700 font-medium">qalqalah</span>
+                  </div>
+                  {/* Mock results */}
+                  <div className="space-y-2 mt-auto">
+                    {[
+                      { ref: '2:3', snippet: 'وَمِمَّا رَزَ', hl: 'قْ', tail: 'نَاهُمْ يُنفِقُونَ' },
+                      { ref: '4:22', snippet: 'إِنَّهُ كَانَ فَا', hl: 'حِ', tail: 'شَةً وَمَقْتًا' },
+                      { ref: '112:3', snippet: 'لَمْ يَلِدْ وَلَمْ يُو', hl: 'لَ', tail: 'دْ' },
+                    ].map((r, i) => (
+                      <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-100">
+                        <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded flex-shrink-0">{r.ref}</span>
+                        <p dir="rtl" className="text-sm font-arabic text-gray-800 flex-1 truncate leading-relaxed">
+                          {r.snippet}<span className="bg-amber-200 text-amber-900 px-0.5 rounded">{r.hl}</span>{r.tail}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </a>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Free Study Tools</h3>
+              <p className="text-sm text-gray-600">Open to everyone — search the Qur'an for tajweed and grammar examples with scholar-annotated references. More tools coming soon.</p>
             </div>
 
           </div>
@@ -1314,13 +1381,13 @@ const LandingPage = () => {
               </Button>
             </Link>
             <a href={donationLink} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 hover:text-emerald-950 w-full sm:w-auto flex items-center justify-center gap-2">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-emerald-800 hover:border-white w-full sm:w-auto flex items-center justify-center gap-2">
                 <Heart className="h-5 w-5" />
                 Support Us
               </Button>
             </a>
             <Link to="/login">
-              <Button variant="outline" size="lg" className="border-emerald-600 text-white hover:border-emerald-500 hover:bg-emerald-800 hover:text-emerald-950 w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-emerald-800 hover:border-white w-full sm:w-auto">
                 Sign In
               </Button>
             </Link>
