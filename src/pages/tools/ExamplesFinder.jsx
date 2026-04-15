@@ -70,7 +70,7 @@ function ContentRenderer({ content }) {
         part.type === 'quran' ? (
           <span
             key={i}
-            className="font-arabic text-emerald-700 font-semibold text-sm sm:text-lg px-1"
+            className="font-arabic text-emerald-700 font-semibold text-base sm:text-lg px-1"
             dir="rtl"
           >
             ﴿{part.value}﴾
@@ -293,7 +293,7 @@ function AyahWithHighlights({ ayahText, refs }) {
   }, [ayahText, refs]);
 
   return (
-    <p className="font-arabic text-base sm:text-xl text-gray-900 leading-loose text-right" dir="rtl">
+    <p className="font-arabic text-lg sm:text-xl text-gray-900 leading-loose text-right" dir="rtl">
       {segments.map((seg, i) =>
         seg.type === 'highlight' ? (
           <mark key={i} className="bg-yellow-200 text-gray-900 rounded px-0.5">
@@ -332,12 +332,12 @@ function ResultCard({ result, topic, isPrimary }) {
   return (
     <div className={`bg-white border rounded-lg overflow-hidden ${borderClass}`}>
       {/* Ayah header */}
-      <div className={`px-3 sm:px-4 py-2 border-b border-gray-200 flex items-center gap-1.5 sm:gap-2 flex-wrap ${isPrimary ? 'bg-emerald-50' : 'bg-gray-50'}`}>
-        <span className="text-xs sm:text-sm font-medium text-gray-900">
+      <div className={`px-4 py-2 border-b border-gray-200 flex items-center gap-2 flex-wrap ${isPrimary ? 'bg-emerald-50' : 'bg-gray-50'}`}>
+        <span className="text-sm font-medium text-gray-900">
           {result.sura_number}:{result.aya_number}
         </span>
-        <span className="text-xs sm:text-sm text-gray-500">{surahName}</span>
-        <span className="text-xs sm:text-sm text-gray-400 font-arabic" dir="rtl">
+        <span className="text-sm text-gray-500">{surahName}</span>
+        <span className="text-sm text-gray-400 font-arabic" dir="rtl">
           {result.sura_name}
         </span>
         {isPrimary && (
@@ -353,12 +353,12 @@ function ResultCard({ result, topic, isPrimary }) {
       </div>
 
       {/* Ayah text with highlighted matches */}
-      <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-gray-100">
+      <div className="px-4 py-3 border-b border-gray-100">
         <AyahWithHighlights ayahText={result.aya_text} refs={quranicRefs} />
       </div>
 
       {/* Analysis content */}
-      <div className="px-3 sm:px-4 py-2.5 sm:py-3" dir="rtl">
+      <div className="px-4 py-3" dir="rtl">
         <ContentRenderer content={displayContent} />
       </div>
     </div>
@@ -370,15 +370,15 @@ function TopicCard({ topic, onClick, isActive }) {
   return (
     <button
       onClick={() => onClick(topic)}
-      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${
+      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
         isActive
           ? 'bg-emerald-100 text-emerald-800 font-medium'
-          : 'hover:bg-gray-100 active:bg-gray-100 text-gray-700'
+          : 'hover:bg-gray-100 text-gray-700'
       }`}
     >
-      <div className="flex items-center justify-between gap-2">
-        <span className="truncate">{topic.name_en}</span>
-        <span className="font-arabic text-xs text-gray-500 flex-shrink-0" dir="rtl">
+      <div className="flex items-center justify-between">
+        <span>{topic.name_en}</span>
+        <span className="font-arabic text-xs text-gray-500" dir="rtl">
           {topic.name_ar}
         </span>
       </div>
@@ -570,7 +570,7 @@ function ExamplesFinder() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
       {/* Search bar */}
       <div className="relative mb-6">
@@ -579,8 +579,8 @@ function ExamplesFinder() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search e.g. 'idgham', 'إخفاء', 'past tense'..."
-          className="w-full px-3 sm:px-4 py-3 sm:py-2.5 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+          placeholder="Search in English or Arabic — e.g. 'idgham', 'إخفاء', 'past tense', 'مبتدأ'..."
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
           dir="auto"
         />
         {query && (
@@ -599,7 +599,7 @@ function ExamplesFinder() {
               <button
                 key={`${s.subject}-${s.id}`}
                 onClick={() => selectSuggestion(s)}
-                className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 active:bg-gray-100"
+                className="w-full text-left px-4 py-2.5 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -623,7 +623,7 @@ function ExamplesFinder() {
       <div className="lg:hidden mb-4">
         <button
           onClick={() => setMobileBrowseOpen(!mobileBrowseOpen)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 active:bg-gray-50"
+          className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700"
         >
           <span>Browse topics{selectedTopic ? ` — ${selectedTopic.name_en}` : ''}</span>
           {mobileBrowseOpen ? (
@@ -634,7 +634,7 @@ function ExamplesFinder() {
         </button>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Sidebar: Topic browser — hidden on mobile unless toggled */}
         <div className={`lg:w-72 flex-shrink-0 ${mobileBrowseOpen ? 'block' : 'hidden lg:block'}`}>
           {/* Subject tabs */}
@@ -669,9 +669,9 @@ function ExamplesFinder() {
                 <div key={cat.id}>
                   <button
                     onClick={() => toggleCategory(cat.id)}
-                    className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium text-gray-800 hover:bg-gray-50 active:bg-gray-100 rounded-lg"
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 rounded-lg"
                   >
-                    <div className="min-w-0">
+                    <div>
                       <span>{cat.name_en}</span>
                       <span className="font-arabic text-xs text-gray-400 ml-2" dir="rtl">
                         {cat.name_ar}
@@ -730,7 +730,7 @@ function ExamplesFinder() {
                     <select
                       value={surahFilter || ''}
                       onChange={handleSurahFilter}
-                      className="flex-1 sm:flex-none px-3 py-2 sm:py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 min-w-0"
+                      className="flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 min-w-0"
                     >
                       <option value="">All Surahs</option>
                       {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
@@ -764,7 +764,7 @@ function ExamplesFinder() {
                 </div>
               ) : results.length > 0 ? (
                 <>
-                  <div className="space-y-2 sm:space-y-3">
+                  <div className="space-y-3">
                     {results.map((r) => {
                       const isPrimary = page === 0 && (selectedTopic.primary_examples || []).some(
                         (p) => p.sura === r.sura_number && p.aya === r.aya_number
@@ -782,21 +782,21 @@ function ExamplesFinder() {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-2 mt-6 pb-2">
+                    <div className="flex items-center justify-center gap-2 mt-6">
                       <button
                         onClick={() => goToPage(page - 1)}
                         disabled={page === 0}
-                        className="px-4 py-2 sm:px-3 sm:py-1.5 text-sm border rounded-lg disabled:opacity-30 hover:bg-gray-50 active:bg-gray-100 min-h-[44px] sm:min-h-0"
+                        className="px-3 py-1.5 text-sm border rounded-lg disabled:opacity-30 hover:bg-gray-50"
                       >
                         Previous
                       </button>
-                      <span className="text-sm text-gray-500 px-2">
-                        {page + 1} / {totalPages}
+                      <span className="text-sm text-gray-500">
+                        Page {page + 1} of {totalPages}
                       </span>
                       <button
                         onClick={() => goToPage(page + 1)}
                         disabled={page >= totalPages - 1}
-                        className="px-4 py-2 sm:px-3 sm:py-1.5 text-sm border rounded-lg disabled:opacity-30 hover:bg-gray-50 active:bg-gray-100 min-h-[44px] sm:min-h-0"
+                        className="px-3 py-1.5 text-sm border rounded-lg disabled:opacity-30 hover:bg-gray-50"
                       >
                         Next
                       </button>
