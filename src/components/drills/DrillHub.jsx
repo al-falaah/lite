@@ -252,37 +252,34 @@ export default function DrillHub() {
               )}
 
               {(canTajweedEndless || canArabiyyahEndless) && (
-              <div className="bg-white rounded-xl p-5 border border-gray-200">
-                <div className="flex items-start gap-3 mb-3">
-                  <InfinityIcon className="w-7 h-7 text-emerald-600 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-semibold text-gray-900">
-                        {endlessGame === 'nahw' ? 'Endless Arabiyyah' : 'Endless Tajweed'}
-                      </h3>
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wide">Beta</span>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {endlessGame === 'nahw'
-                        ? "Unlimited mixed nahw & sarf questions from scholar-annotated Qur'an i'rab data."
-                        : "Unlimited mixed tajweed questions drawn from the Qur'an, powered by scholar-annotated data."}
-                    </p>
-                    <p className="text-[11px] text-amber-700 mt-1.5 bg-amber-50 border border-amber-200 rounded px-2 py-1">
-                      Experimental — some questions may have imperfect matching. Please report issues.
-                    </p>
-                  </div>
+              <div className="bg-white rounded-xl p-4 sm:p-5 border border-gray-200">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-1">
+                  <InfinityIcon className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+                  <h3 className="font-semibold text-gray-900 text-base">
+                    {endlessGame === 'nahw' ? 'Endless Arabiyyah' : 'Endless Tajweed'}
+                  </h3>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wide">Beta</span>
                 </div>
+                <p className="text-xs text-gray-500 mb-2 leading-relaxed">
+                  {endlessGame === 'nahw'
+                    ? "Unlimited mixed nahw & sarf questions from scholar-annotated Qur'an i'rab data."
+                    : "Unlimited mixed tajweed questions drawn from the Qur'an."}
+                </p>
+                <p className="text-[11px] text-amber-700 mb-4 bg-amber-50 border border-amber-200 rounded px-2 py-1 leading-snug">
+                  Experimental — some questions may have imperfect matching.
+                </p>
 
                 {/* Length picker */}
                 <div className="mb-4">
                   <label className="block text-xs font-medium text-gray-600 mb-1.5">Session length</label>
-                  <div className="flex gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {[10, 20, 50].map(n => (
                       <button key={n} onClick={() => setEndlessLength(n)}
-                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          endlessLength === n ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                          endlessLength === n ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 active:bg-gray-200'
                         }`}>
-                        {n} questions
+                        {n}
                       </button>
                     ))}
                   </div>
@@ -293,7 +290,7 @@ export default function DrillHub() {
                   <div className="mb-4">
                     <label className="block text-xs font-medium text-gray-600 mb-1.5">Focus on a rule (optional)</label>
                     <select value={endlessRule} onChange={(e) => setEndlessRule(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-base sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                       <option value="">All rules (mixed)</option>
                       {endlessRules.map(r => (
                         <option key={r.id} value={r.id}>{r.category} — {r.name_en}</option>
@@ -302,11 +299,11 @@ export default function DrillHub() {
                   </div>
                 )}
 
-                {/* Nahw: level filter */}
+                {/* Nahw: level filter — 2x2 grid on mobile so labels never wrap */}
                 {endlessGame === 'nahw' && (
                   <div className="mb-4">
                     <label className="block text-xs font-medium text-gray-600 mb-1.5">Difficulty (optional)</label>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {[
                         { v: '', label: 'All Levels' },
                         { v: '1', label: 'Foundations' },
@@ -314,8 +311,8 @@ export default function DrillHub() {
                         { v: '3', label: 'Advanced' },
                       ].map(o => (
                         <button key={o.v} onClick={() => setEndlessLevel(o.v)}
-                          className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${
-                            endlessLevel === o.v ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          className={`py-2 rounded-lg text-xs font-medium transition-colors ${
+                            endlessLevel === o.v ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-600 active:bg-gray-200'
                           }`}>
                           {o.label}
                         </button>
@@ -325,13 +322,13 @@ export default function DrillHub() {
                 )}
 
                 <button onClick={startEndless}
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-xl transition-colors">
+                  className="w-full py-3 bg-emerald-600 active:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors">
                   Start Endless Session
                 </button>
-                <p className="text-[10px] text-gray-400 mt-3 text-center">
+                <p className="text-[10px] text-gray-400 mt-3 text-center leading-relaxed">
                   {endlessGame === 'nahw'
                     ? "Source: Scholar-annotated Qur'an i'rab corpus"
-                    : 'Source: Ahkam at-Tajweed fi Kalimat al-Aziz al-Hameed — Ahmad At-Taweel'}
+                    : "Source: Ahmad At-Taweel — Ahkam at-Tajweed"}
                 </p>
               </div>
               )}
