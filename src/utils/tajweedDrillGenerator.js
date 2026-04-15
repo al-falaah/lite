@@ -179,7 +179,7 @@ function genCategory(rule, rulesById, allRuleIds) {
   };
 }
 
-const GENERATORS = [genIdentifyRule, genWhichWord, genTrueFalse, genCategory];
+const GENERATORS = [genIdentifyRule, genWhichWord, genTrueFalse];
 
 /**
  * Generate a session of N mixed-type drill cards.

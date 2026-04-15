@@ -7,20 +7,24 @@ import {
   segmentHighlights, calcXP, getComboMultiplier, getComboLabel,
   getLevel, getLevelTitle, levelProgress,
 } from '../../utils/drillHelpers';
-import { loadTajweedDrillData, generateSession } from '../../utils/tajweedDrillGenerator';
+import { loadTajweedDrillData, generateSession as generateTajweedSession } from '../../utils/tajweedDrillGenerator';
+import { loadNahwDrillData, generateSession as generateNahwSession } from '../../utils/nahwDrillGenerator';
 
 const PHASES = { READY: 'ready', PLAYING: 'playing', RESULT: 'result', SUMMARY: 'summary' };
 
-// Matches seed row in migration 20260416000003_seed_endless_tajweed_deck.sql
+// Matches seed rows in drill migrations
 const ENDLESS_TAJWEED_DECK_ID = '00000000-0000-0000-0000-00000000e4d1';
+const ENDLESS_NAHW_DECK_ID = '00000000-0000-0000-0000-00000000a4a1';
 
 export default function DrillPlayer() {
   const { deckId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isEndless = deckId?.startsWith('endless-');
+  const endlessKind = deckId?.startsWith('endless-nahw') ? 'nahw' : 'tajweed';
   const endlessLength = parseInt(searchParams.get('n') || '10', 10);
   const endlessRule = searchParams.get('rule') || null;
+  const endlessLevel = searchParams.get('level') ? parseInt(searchParams.get('level'), 10) : null;
 
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState([]);
@@ -52,21 +56,29 @@ export default function DrillPlayer() {
   useEffect(() => {
     const load = async () => {
       if (isEndless) {
-        // Just preload the data + deck metadata; cards are generated in startGame()
-        // so the READY screen's "questions" count reflects the chosen length but
-        // we avoid showing stale cards that a later regenerate would overwrite.
-        const data = await loadTajweedDrillData();
-        const ruleLabel = endlessRule ? data.rules[endlessRule]?.name_en : null;
-        setDeck({
-          id: ENDLESS_TAJWEED_DECK_ID,
-          title: ruleLabel ? `Endless: ${ruleLabel}` : 'Endless Tajweed',
-          topic: 'Tajweed',
-          program: 'tajweed',
-          cover_emoji: ruleLabel ? '🎯' : '♾️',
-          description: `${endlessLength} mixed questions from the Qur'an`,
-        });
-        // Placeholder with the right length so READY screen stats are accurate.
-        // Real cards are generated on Start.
+        if (endlessKind === 'nahw') {
+          const data = await loadNahwDrillData();
+          const levelLabel = endlessLevel ? ['', 'Foundations', 'Intermediate', 'Advanced'][endlessLevel] : null;
+          setDeck({
+            id: ENDLESS_NAHW_DECK_ID,
+            title: levelLabel ? `Endless Arabiyyah: ${levelLabel}` : 'Endless Arabiyyah',
+            topic: 'Nahw',
+            program: 'essentials',
+            cover_emoji: '♾️',
+            description: `${endlessLength} mixed grammar questions from the Qur'an`,
+          });
+        } else {
+          const data = await loadTajweedDrillData();
+          const ruleLabel = endlessRule ? data.rules[endlessRule]?.name_en : null;
+          setDeck({
+            id: ENDLESS_TAJWEED_DECK_ID,
+            title: ruleLabel ? `Endless: ${ruleLabel}` : 'Endless Tajweed',
+            topic: 'Tajweed',
+            program: 'tajweed',
+            cover_emoji: ruleLabel ? '🎯' : '♾️',
+            description: `${endlessLength} mixed questions from the Qur'an`,
+          });
+        }
         setCards(new Array(endlessLength).fill(null));
       } else {
         const [{ data: d }, { data: c }] = await Promise.all([
@@ -90,7 +102,7 @@ export default function DrillPlayer() {
       setLoading(false);
     };
     load();
-  }, [deckId, isEndless, endlessLength, endlessRule]);
+  }, [deckId, isEndless, endlessKind, endlessLength, endlessRule, endlessLevel]);
 
   // Timer
   useEffect(() => {
@@ -107,8 +119,13 @@ export default function DrillPlayer() {
   const startGame = async () => {
     // For endless mode, regenerate a fresh set of cards each run
     if (isEndless) {
-      const data = await loadTajweedDrillData();
-      setCards(generateSession(data, endlessLength, endlessRule));
+      if (endlessKind === 'nahw') {
+        const data = await loadNahwDrillData();
+        setCards(generateNahwSession(data, endlessLength, endlessLevel));
+      } else {
+        const data = await loadTajweedDrillData();
+        setCards(generateTajweedSession(data, endlessLength, endlessRule));
+      }
     }
     setPhase(PHASES.PLAYING);
     startRef.current = Date.now();
@@ -237,9 +254,8 @@ export default function DrillPlayer() {
   if (phase === PHASES.READY) return (
     <>
       <Helmet><title>{`${deck.title} | Drills`}</title></Helmet>
-      <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
+      <div className="fixed inset-0 bg-gray-950 flex flex-col items-center justify-center px-4">
         <div className="text-center max-w-sm">
-          <p className="text-6xl mb-4">{deck.cover_emoji}</p>
           <div className="flex items-center justify-center gap-2 mb-2">
             <h1 className="text-2xl font-bold text-white">{deck.title}</h1>
             {isEndless && (
@@ -277,7 +293,7 @@ export default function DrillPlayer() {
     return (
       <>
         <Helmet><title>{`Results | ${deck.title}`}</title></Helmet>
-        <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
+        <div className="fixed inset-0 bg-gray-950 flex flex-col items-center justify-center px-4 overflow-y-auto py-8">
           <div className="text-center max-w-sm w-full">
             <p className="text-5xl mb-3">{isPerfect ? '💯' : percent >= 70 ? '🌟' : '📖'}</p>
             <h2 className="text-2xl font-bold text-white mb-1">
@@ -439,7 +455,7 @@ export default function DrillPlayer() {
           )}
           {showHint && !isResult && (
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-2.5 mb-4">
-              <p className="text-xs text-amber-400">💡 {currentCard.hint}</p>
+              <p className="text-xs text-amber-400">{currentCard.hint}</p>
             </div>
           )}
 
