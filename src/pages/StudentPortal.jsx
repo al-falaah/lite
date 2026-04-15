@@ -497,15 +497,7 @@ const StudentPortal = () => {
               </div>
             </Link>
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex flex-col sm:flex-row items-end sm:items-center gap-0 sm:gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
-                <span className="font-medium truncate max-w-[120px] sm:max-w-none">{student?.full_name}</span>
-                {student?.student_id && (
-                  <span className="text-gray-500 dark:text-gray-400 text-[10px] sm:text-sm">
-                    <span className="hidden sm:inline">• </span>
-                    {student.student_id}
-                  </span>
-                )}
-              </div>
+              {/* Removed student name and ID from navbar */}
               <button
                 onClick={toggleTheme}
                 className="flex items-center justify-center p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
@@ -565,141 +557,97 @@ const StudentPortal = () => {
         <div className="space-y-6">
           {/* === HOME TAB === */}
           <div className={activeTab !== 'home' ? 'hidden' : ''}>
-          <div className="space-y-4 sm:space-y-6">
-          {/* Welcome Header */}
-          <div>
-            <h1 className="text-lg sm:text-3xl font-bold text-gray-900 dark:text-white">Welcome back, {student?.full_name?.split(' ')[0]}!</h1>
-            <p className="text-xs sm:text-base text-gray-500 dark:text-gray-400 mt-0.5">
-              {student?.student_id ? `Student ID: ${student.student_id}` : 'Complete payment to receive your Student ID'}
-            </p>
-          </div>
 
-          {/* Class Etiquette */}
-          <StudentClassEtiquette />
+            {/* Hero Section with Initials Avatar */}
+            {(() => {
+              // Get initials
+              const name = student?.full_name || '';
+              const initials = name.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
+              // Deterministic color palette
+              const colors = [
+                'bg-emerald-600', 'bg-blue-600', 'bg-purple-600', 'bg-pink-600', 'bg-yellow-500', 'bg-orange-500', 'bg-teal-600', 'bg-red-500', 'bg-indigo-600', 'bg-cyan-600',
+                'bg-lime-600', 'bg-fuchsia-600', 'bg-rose-600', 'bg-sky-600', 'bg-violet-600', 'bg-amber-600', 'bg-green-700', 'bg-gray-700', 'bg-blue-800', 'bg-emerald-800'
+              ];
+              // Hash initials to pick color
+              let hash = 0;
+              for (let i = 0; i < initials.length; i++) hash += initials.charCodeAt(i);
+              const color = colors[hash % colors.length];
+              return (
+                <div className="rounded-2xl bg-gradient-to-br from-emerald-100 to-white dark:from-emerald-900/30 dark:to-gray-900 p-5 mb-4 flex flex-col items-center text-center">
+                  <div className={`w-24 h-24 mb-2 rounded-full shadow-lg border-4 border-white dark:border-gray-800 flex items-center justify-center text-4xl font-bold text-white select-none ${color}`}>{initials}</div>
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome, {student?.full_name?.split(' ')[0]}!</h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{student?.student_id ? `Student ID: ${student.student_id}` : 'Complete payment to receive your Student ID'}</p>
+                  <div className="flex justify-center gap-2 mb-2">
+                    <span className="inline-block bg-emerald-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Active Student</span>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Next class: <span className="font-medium text-gray-900 dark:text-white">Check your Classes tab</span></p>
+                </div>
+              );
+            })()}
 
-          {/* Enrollments */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Enrolment & Billing</h2>
-            {!isEnrolledInAllPrograms() && (
-              <Link
-                to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium text-emerald-700 hover:text-emerald-800 transition-colors"
-              >
-                + Add another program
-              </Link>
-            )}
-          </div>
-          {enrollments.length === 0 ? (
-            <Card>
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
-                <p className="text-sm font-medium mb-1">No enrollments found</p>
-                <p className="text-xs">Please contact support if you believe this is an error.</p>
-              </div>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {enrollments.map((enrollment) => {
-                const programName = getProgramName(enrollment.program);
-                const programDuration = getProgramDuration(enrollment.program);
-                const hasPendingPayment = enrollment.balance_remaining > 0;
+            {/* Action Cards */}
+            <div className="grid grid-cols-2 gap-3 mb-5">
+              <button onClick={() => setActiveTab('classes')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
+                <Calendar className="h-6 w-6 text-emerald-600 mb-1" />
+                <span className="text-xs font-semibold text-gray-900 dark:text-white">My Classes</span>
+              </button>
+              <button onClick={() => setActiveTab('lessons')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
+                <BookOpen className="h-6 w-6 text-emerald-600 mb-1" />
+                <span className="text-xs font-semibold text-gray-900 dark:text-white">My Lessons</span>
+              </button>
+              <button onClick={() => setActiveTab('practice')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
+                <Gamepad2 className="h-6 w-6 text-purple-600 mb-1" />
+                <span className="text-xs font-semibold text-gray-900 dark:text-white">Practice</span>
+              </button>
+              <button onClick={() => setActiveTab('results')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
+                <Trophy className="h-6 w-6 text-yellow-500 mb-1" />
+                <span className="text-xs font-semibold text-gray-900 dark:text-white">Results</span>
+              </button>
+            </div>
+
+
+            {/* Progress Bar (matches Classes tab logic) */}
+            {(() => {
+              // Sum completed/total classes across all active enrollments
+              let completedClasses = 0;
+              let totalClasses = 0;
+              enrollments.filter(e => e.status === 'active').forEach(enrollment => {
+                const programSchedules = schedules.filter(s => s.program === enrollment.program);
+                const programConfig = PROGRAMS[enrollment.program];
                 const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
+                const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+                const classes = programSchedules.length;
+                // Each week has 2 classes (main + short)
+                const completed = programSchedules.filter(s => s.status === 'completed').length;
+                completedClasses += completed;
+                totalClasses += totalWeeks * 2;
+              });
+              const percent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
+              return (
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Overall Progress</span>
+                    <span className="text-xs font-semibold text-emerald-600">{percent}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-emerald-500 transition-all" style={{ width: `${percent}%` }} />
+                  </div>
+                </div>
+              );
+            })()}
 
-                return (
-                  <Card key={enrollment.id} className="p-4 sm:p-5">
-                    {/* Enrollment Header */}
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{programName}</h2>
-                          {getStatusBadge(enrollment.status)}
-                        </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                          {programDuration} · Enrolled {new Date(enrollment.enrolled_date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Payment Status */}
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3">
-                      <div className="bg-white dark:bg-gray-700 p-2.5 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-600">
-                        <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Total Fees</p>
-                        <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">${enrollment.total_fees?.toFixed(2)}</p>
-                      </div>
-                      <div className="bg-white dark:bg-gray-700 p-2.5 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-600">
-                        <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Paid</p>
-                        <p className="text-base sm:text-lg font-semibold text-emerald-600">${enrollment.total_paid?.toFixed(2)}</p>
-                      </div>
-                      <div className={`bg-white dark:bg-gray-700 p-2.5 sm:p-3 rounded-lg border ${hasPendingPayment ? 'border-amber-300 dark:border-amber-500/50' : 'border-gray-200 dark:border-gray-600'}`}>
-                        <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">Balance</p>
-                        <p className={`text-base sm:text-lg font-semibold ${hasPendingPayment ? 'text-amber-600' : 'text-emerald-600'}`}>
-                          ${enrollment.balance_remaining?.toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Assigned Teacher */}
-                    {assignedTeachers[enrollment.program] && (
-                      <div className="border-t border-gray-100 dark:border-gray-700 pt-3 mt-3">
-                        <div className="flex items-center justify-between">
-                          <div className="min-w-0">
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Your Teacher</p>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">{assignedTeachers[enrollment.program].full_name}</p>
-                          </div>
-                          <Button
-                            onClick={() => handleOpenEmailModal(assignedTeachers[enrollment.program], enrollment.program)}
-                            className="inline-flex items-center text-xs shrink-0"
-                            variant="secondary"
-                          >
-                            <Mail className="h-3.5 w-3.5 mr-1.5" />
-                            Message
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Billing Portal Link */}
-                    {student?.stripe_customer_id && (
-                      <div className="border-t border-gray-100 dark:border-gray-700 pt-3 mt-3">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">Manage Billing</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Payment methods, invoices & subscription</p>
-                          </div>
-                          <Button
-                            onClick={handleBillingPortal}
-                            variant="outline"
-                            size="sm"
-                            className="shrink-0"
-                            disabled={loading}
-                          >
-                            <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
-                            Billing Portal
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-                );
-              })}
+            {/* Install App Guide */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <svg className="h-4 w-4 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">Get the Mobile App</p>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Runs like a native app on your phone — add it to your home screen in seconds.</p>
+              <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                <p><strong>iPhone:</strong> Safari → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share → <strong>Add to Home Screen</strong></p>
+                <p><strong>Android:</strong> Chrome → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg> → <strong>Install app</strong></p>
+              </div>
             </div>
-          )}
-
-          {/* Install App Guide */}
-          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
-            <div className="flex items-center gap-2 mb-1">
-              <svg className="h-4 w-4 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-              <p className="text-sm font-semibold text-gray-900 dark:text-white">Get the Mobile App</p>
-            </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Runs like a native app on your phone — add it to your home screen in seconds.</p>
-            <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-              <p><strong>iPhone:</strong> Safari → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share → <strong>Add to Home Screen</strong></p>
-              <p><strong>Android:</strong> Chrome → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg> → <strong>Install app</strong></p>
-            </div>
-          </div>
-          </div>
           </div>
 
           {/* === CLASSES TAB === */}

@@ -4,7 +4,7 @@ const FloatingWhatsApp = () => {
   const { pathname } = useLocation();
 
   // Hide on student/teacher portals on mobile — overlaps bottom tab bar
-  const isPortal = pathname.startsWith('/student') || pathname.startsWith('/teacher');
+  const isPortal = pathname.startsWith('/student') || pathname.startsWith('/teacher') || pathname.startsWith('/drills');
 
   const whatsappNumber = '64224653509'; // +64 22 465 3509
   const message = encodeURIComponent('Assalamu alaykum! I have a question about The FastTrack Madrasah programs.');
