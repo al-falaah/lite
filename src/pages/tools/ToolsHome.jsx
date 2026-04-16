@@ -1,16 +1,23 @@
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 
 const TOOLS = [
   {
     path: '/tools/examples',
-    title: 'Quranic Examples Finder',
-    description: 'Search for tajweed and grammar topics and see real examples from the Quran with highlighted references.',
+    title: 'Shawaahid',
+    description: "Qur'anic Examples Finder — Search for any tajweed or grammar topic and see real Qur'anic examples with scholar-annotated references.",
     status: 'live',
   },
   {
     path: '/tools/roots',
-    title: 'Root Word Explorer',
-    description: 'Enter any Arabic word or root letters to explore its morphology — root, pattern, derived forms, and every Qur\'anic occurrence.',
+    title: 'Tasreef',
+    description: "Root Word Explorer — Enter any Arabic word or root letters to explore its morphology — root, pattern, derived forms, and every Qur'anic occurrence.",
+    status: 'live',
+  },
+  {
+    path: '/tools/pages',
+    title: 'Safha',
+    description: "Qur'an Page Insights — Scholar-curated benefits and lessons from every page of the Qur'an (604 pages), with English translation.",
     status: 'live',
   },
 ];
@@ -18,6 +25,10 @@ const TOOLS = [
 function ToolsHome() {
   return (
     <>
+      <Helmet>
+        <title>Free Qur'anic Learning Tools | The FastTrack Madrasah</title>
+        <meta name="description" content="Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), and Safha (page insights)." />
+      </Helmet>
       {/* Header — matches Blog page pattern */}
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -25,7 +36,7 @@ function ToolsHome() {
             Learning Tools
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl">
-            Free tools to help you study tajweed, Arabic grammar, and morphology through the Quran.
+            Free tools to help you study tajweed, Arabic grammar, and morphology through the Qur'an.
           </p>
         </div>
       </div>

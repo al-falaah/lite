@@ -26,6 +26,8 @@ Allow: /faqs
 Allow: /resources
 Allow: /store
 Allow: /vacancies
+Allow: /tools
+Allow: /tools/*
 
 # Sitemap location
 Sitemap: https://tftmadrasah.nz/sitemap.xml

@@ -63,7 +63,7 @@ function ToolsLayout() {
             </a>
           </p>
           <p className="text-xs text-gray-400">
-            Quranic data provided by{' '}
+            Qur'anic data provided by{' '}
             <a
               href="https://dev.surahapp.com/api/docs/"
               target="_blank"
@@ -88,7 +88,7 @@ function ToolsLayout() {
               rel="noopener noreferrer"
               className="text-gray-500 hover:underline"
             >
-              Quranic Arabic Corpus
+              Qur'anic Arabic Corpus
             </a>
             , discovered via{' '}
             <a

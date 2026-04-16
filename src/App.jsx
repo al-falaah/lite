@@ -48,6 +48,7 @@ import ToolsLayout from './components/tools/ToolsLayout';
 import ToolsHome from './pages/tools/ToolsHome';
 import ExamplesFinder from './pages/tools/ExamplesFinder';
 import RootExplorer from './pages/tools/RootExplorer';
+import PageInsights from './pages/tools/PageInsights';
 
 // Components
 import CountdownBanner from './components/CountdownBanner';
@@ -227,6 +228,7 @@ function AppRoutes() {
           <Route index element={<ToolsHome />} />
           <Route path="examples" element={<ExamplesFinder />} />
           <Route path="roots" element={<RootExplorer />} />
+          <Route path="pages" element={<PageInsights />} />
         </Route>
 
         {/* Fallback - 404 Page */}

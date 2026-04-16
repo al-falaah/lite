@@ -672,7 +672,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* 6. Free Study Tools — Quranic Examples Finder */}
+            {/* 6. Free Study Tools — Qur'anic Examples Finder */}
             <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
               <a href="/tools/examples" className="block group">
                 <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] h-full border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">

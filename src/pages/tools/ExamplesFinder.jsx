@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useMemo, useCallback, useRef } from 'react';
 import { ChevronDown, ChevronRight, X } from 'lucide-react';
 import { supabase } from '../../services/supabase';
@@ -558,14 +559,18 @@ function ExamplesFinder() {
 
   return (
     <>
+      <Helmet>
+        <title>Shawaahid — Qur'anic Examples Finder | The FastTrack Madrasah</title>
+        <meta name="description" content="Search for any tajweed or Arabic grammar topic and see real Qur'anic examples with scholar-annotated references. Free tool by The FastTrack Madrasah." />
+      </Helmet>
       {/* Page header — matches Blog pattern */}
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
           <h1 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-            Qur'anic Examples Finder
+            Shawaahid
           </h1>
           <p className="text-sm sm:text-base text-gray-600 max-w-2xl">
-            Search for a tajweed or grammar topic to find real examples from the Qur'an.
+            Qur'anic Examples Finder — Search for a tajweed or grammar topic to find real examples from the Qur'an.
           </p>
         </div>
       </div>

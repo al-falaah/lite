@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, BookOpen } from 'lucide-react';
 
@@ -159,14 +160,18 @@ function RootExplorer() {
 
   return (
     <>
+      <Helmet>
+        <title>Tasreef — Root Word Explorer | The FastTrack Madrasah</title>
+        <meta name="description" content="Enter any Arabic word to discover its root, derived forms, verb patterns, and every Qur'anic occurrence. Free morphology tool by The FastTrack Madrasah." />
+      </Helmet>
       {/* Header */}
       <div className="border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-            Root Word Explorer
+            Tasreef
           </h1>
           <p className="text-sm sm:text-base text-gray-600">
-            Enter any Arabic word or root letters to explore its Qur'anic morphology — root, pattern, derived forms, and every occurrence.
+            Root Word Explorer — Enter any Arabic word or root letters to explore its Qur'anic morphology — root, pattern, derived forms, and every occurrence.
           </p>
           {data && (
             <p className="text-xs text-gray-400 mt-2">

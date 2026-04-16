@@ -69,6 +69,32 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- Free Qur'anic Learning Tools -->
+  <url>
+    <loc>https://tftmadrasah.nz/tools</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/tools/examples</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/tools/roots</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/tools/pages</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Blog Posts -->
   <url>
     <loc>https://tftmadrasah.nz/blog/how-to-build-strong-muslim-character-in-youth</loc>
