@@ -7,6 +7,12 @@ const TOOLS = [
     description: 'Search for tajweed and grammar topics and see real examples from the Quran with highlighted references.',
     status: 'live',
   },
+  {
+    path: '/tools/roots',
+    title: 'Root Word Explorer',
+    description: 'Enter any Arabic word or root letters to explore its morphology — root, pattern, derived forms, and every Qur\'anic occurrence.',
+    status: 'live',
+  },
 ];
 
 function ToolsHome() {

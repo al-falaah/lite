@@ -4,7 +4,7 @@ Download Quran data from Surah App API and save as JSON files.
 Fetches 4 core datasets: tajweed-aya, eerab-aya, eerab-word, word-tasreef.
 
 Usage:
-  python3 scripts/download_quran_data.py [--ayah-only] [--word-only] [--resume]
+  python3 scripts/download_quran_data.py [--ayah-only] [--word-only] [--tasreef-only] [--eerab-word-only] [--resume]
 
 Output: scripts/data/ directory with one JSON file per dataset.
 
@@ -103,7 +103,12 @@ def fetch_word(slug, sura, aya, word_num):
 
 
 def download_word_dataset(slug, output_file, max_workers=5):
-    """Download word-level dataset with concurrent requests."""
+    """Download word-level dataset with concurrent requests.
+
+    Strategy per surah: submit all (ayah, word) pairs for words 1..probe_max
+    into ONE shared executor, then extend beyond probe_max only for ayahs
+    that had a hit at the boundary. This avoids the per-ayah pool overhead.
+    """
     print(f"\nDownloading {slug} (word-level, ~77k words)...")
     print(f"  Using {max_workers} concurrent workers")
 
@@ -120,42 +125,49 @@ def download_word_dataset(slug, output_file, max_workers=5):
             print(f"  Resuming from surah {start_sura} ({len(all_data)} words so far)")
 
     start = time.time()
+    PROBE_MAX = 20  # 99%+ of ayahs are <= 20 words; we extend for the rest
 
     for sura_idx in range(start_sura - 1, len(SURAH_AYAH_COUNTS)):
         sura = sura_idx + 1
         ayah_count = SURAH_AYAH_COUNTS[sura_idx]
-        sura_words = []
 
-        # Process ayah by ayah, but use concurrent workers for words within
-        for aya in range(1, ayah_count + 1):
-            # First, find how many words this ayah has by probing
-            # Most ayahs have 5-30 words; max ~128 for 2:282
-            # We'll submit word 1-40 concurrently and stop at first None
+        # Phase 1: fire words 1..PROBE_MAX for every ayah in the surah, one pool
+        results = {}  # (aya, w) -> data
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {}
+            for aya in range(1, ayah_count + 1):
+                for w in range(1, PROBE_MAX + 1):
+                    fut = executor.submit(fetch_word, slug, sura, aya, w)
+                    futures[fut] = (aya, w)
+            for fut in as_completed(futures):
+                aya, w = futures[fut]
+                res = fut.result()
+                if res:
+                    results[(aya, w)] = res
+
+        # Phase 2: for ayahs that had a word at PROBE_MAX, extend until we miss
+        extend_ayahs = [aya for aya in range(1, ayah_count + 1)
+                        if (aya, PROBE_MAX) in results]
+        if extend_ayahs:
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                for w in range(1, 51):
-                    futures[executor.submit(fetch_word, slug, sura, aya, w)] = w
+                futures = {}
+                for aya in extend_ayahs:
+                    for w in range(PROBE_MAX + 1, 130):  # 2:282 has ~128 words
+                        fut = executor.submit(fetch_word, slug, sura, aya, w)
+                        futures[fut] = (aya, w)
+                for fut in as_completed(futures):
+                    aya, w = futures[fut]
+                    res = fut.result()
+                    if res:
+                        results[(aya, w)] = res
 
-                aya_words = {}
-                for future in as_completed(futures):
-                    word_num = futures[future]
-                    result = future.result()
-                    if result:
-                        aya_words[word_num] = result
-
-            # Add words in order
-            for w in sorted(aya_words.keys()):
-                sura_words.append(aya_words[w])
-
-            # If the ayah had words at position 50, there might be more
-            if 50 in aya_words:
-                for w in range(51, 129):
-                    result = fetch_word(slug, sura, aya, w)
-                    if result:
-                        sura_words.append(result)
-                    else:
-                        break
-                    time.sleep(0.05)
+        # Assemble in order: by ayah, then by word. Stop per-ayah at first gap.
+        sura_words = []
+        for aya in range(1, ayah_count + 1):
+            w = 1
+            while (aya, w) in results:
+                sura_words.append(results[(aya, w)])
+                w += 1
 
         all_data.extend(sura_words)
 
@@ -186,13 +198,15 @@ def main():
 
     ayah_only = "--ayah-only" in sys.argv
     word_only = "--word-only" in sys.argv
+    tasreef_only = "--tasreef-only" in sys.argv
+    eerab_word_only = "--eerab-word-only" in sys.argv
 
     print("Quran Data Downloader — Surah App API")
     print(f"Output: {OUTPUT_DIR}\n")
 
     results = {}
 
-    if not word_only:
+    if not word_only and not tasreef_only and not eerab_word_only:
         # Ayah-level datasets (~2 min total)
         results["tajweed-aya"] = download_aya_dataset(
             "tajweed-aya", os.path.join(OUTPUT_DIR, "tajweed_aya.json")
@@ -201,8 +215,18 @@ def main():
             "eerab-aya", os.path.join(OUTPUT_DIR, "eerab_aya.json")
         )
 
-    if not ayah_only:
-        # Word-level datasets (longer, but concurrent)
+    if tasreef_only:
+        results["word-tasreef"] = download_word_dataset(
+            "word-tasreef", os.path.join(OUTPUT_DIR, "word_tasreef.json"),
+            max_workers=12
+        )
+    elif eerab_word_only:
+        results["eerab-word"] = download_word_dataset(
+            "eerab-word", os.path.join(OUTPUT_DIR, "eerab_word.json"),
+            max_workers=12
+        )
+    elif not ayah_only:
+        # Both word-level datasets
         results["eerab-word"] = download_word_dataset(
             "eerab-word", os.path.join(OUTPUT_DIR, "eerab_word.json")
         )

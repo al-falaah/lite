@@ -434,13 +434,22 @@ const LandingPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
 
-            {/* 1. Interactive Drills */}
-            <div>
-              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px]">
+            {/* 1. Practice Drills (merged Interactive + Endless) */}
+            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
+              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col">
                 {/* Flash overlay */}
                 {drillPreviewStep === 1 && (
                   <div className="absolute inset-0 bg-emerald-500/10 animate-drill-flash z-10 pointer-events-none rounded-2xl" />
                 )}
+                {/* Mode tabs */}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Tajweed</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-gray-500 border border-gray-700">Arabiyyah</span>
+                  <div className="ml-auto flex items-center gap-1">
+                    <InfinityIcon className="w-3.5 h-3.5 text-emerald-400" strokeWidth={2.5} />
+                    <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wide">Endless</span>
+                  </div>
+                </div>
                 {/* Arabic Text */}
                 <div className="bg-gray-800/60 rounded-xl p-3 mb-3">
                   <p dir="rtl" className="text-base sm:text-lg font-arabic text-white text-center leading-relaxed">
@@ -449,7 +458,7 @@ const LandingPage = () => {
                 </div>
                 <p className="text-xs sm:text-sm text-gray-300 text-center mb-3">What rule applies to the tanween before ب?</p>
                 {/* Options */}
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {['Idghaam', 'Ikhfa', 'Iqlab', 'Izhar'].map((opt, i) => {
                     const LETTERS = ['A', 'B', 'C', 'D'];
                     const isCorrectOpt = i === 2;
@@ -457,8 +466,8 @@ const LandingPage = () => {
                     if (drillPreviewStep >= 1 && isCorrectOpt) optStyle = 'border-emerald-500 bg-emerald-500/20 text-emerald-300';
                     else if (drillPreviewStep >= 1) optStyle = 'border-gray-800 text-gray-600';
                     return (
-                      <div key={i} className={`py-2 px-3 rounded-lg border text-xs flex items-center gap-2 transition-all duration-300 ${optStyle}`}>
-                        <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold flex-shrink-0 ${
+                      <div key={i} className={`py-1.5 px-3 rounded-lg border text-xs flex items-center gap-2 transition-all duration-300 ${optStyle}`}>
+                        <span className={`w-4 h-4 rounded flex items-center justify-center text-[9px] font-bold flex-shrink-0 ${
                           drillPreviewStep >= 1 && isCorrectOpt ? 'bg-emerald-500/30 text-emerald-300'
                           : drillPreviewStep >= 1 ? 'bg-gray-800/30 text-gray-600'
                           : 'bg-gray-700/50 text-gray-500'
@@ -475,13 +484,15 @@ const LandingPage = () => {
                   </div>
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Interactive Drills</h3>
-              <p className="text-sm text-gray-600">Test your knowledge with gamified quizzes. Earn XP, build combos, and compete on the leaderboard.</p>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Practice Drills</h3>
+                <p className="text-sm text-gray-600">Curated and endless auto-generated drills for Tajweed and Arabiyyah. Earn XP, build combos, and compete on the leaderboard.</p>
+              </div>
             </div>
 
             {/* 2. Recitation Practice */}
-            <div>
-              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] flex flex-col items-center justify-center">
+            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
+              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col items-center justify-center">
                 <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Recording</p>
                 <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-6 leading-relaxed px-2">
                   ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
@@ -500,14 +511,16 @@ const LandingPage = () => {
                 </div>
                 <p className="text-gray-500 text-xs mt-3 font-mono">0:12 / 5:00</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Recitation Practice</h3>
-              <p className="text-sm text-gray-600">Record yourself reciting, get teacher feedback, and track your improvement over time.</p>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Recitation Practice</h3>
+                <p className="text-sm text-gray-600">Record yourself reciting, get teacher feedback, and track your improvement over time.</p>
+              </div>
             </div>
 
             {/* 3. Certificates */}
-            <div>
+            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
               <button onClick={() => setShowCertPreview(true)} className="w-full text-left group">
-                <div className="rounded-2xl relative overflow-hidden mb-4 min-h-[280px] flex items-center justify-center cursor-pointer" style={{ background: '#fffdf7', border: '1px solid #d4a574' }}>
+                <div className="rounded-2xl relative overflow-hidden min-h-[280px] h-full flex items-center justify-center cursor-pointer" style={{ background: '#fffdf7', border: '1px solid #d4a574' }}>
                   {/* Shine sweep */}
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent"
@@ -555,13 +568,15 @@ const LandingPage = () => {
                   <div className="absolute bottom-2 right-2 bg-gray-900/70 text-white text-[8px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-30">Click to preview</div>
                 </div>
               </button>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Program Certificates</h3>
-              <p className="text-sm text-gray-600">Graduate with a verifiable Certificate of Completion for each program you finish.</p>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Program Certificates</h3>
+                <p className="text-sm text-gray-600">Graduate with a verifiable Certificate of Completion for each program you finish.</p>
+              </div>
             </div>
 
             {/* 4. Leaderboard & Progress */}
-            <div>
-              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] border border-gray-200">
+            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
+              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] border border-gray-200">
                 {/* Stats row */}
                 <div className="flex items-center gap-4 mb-4 text-sm">
                   <div><span className="font-bold text-gray-900">1,250</span> <span className="text-gray-500 text-xs">XP</span></div>
@@ -595,13 +610,15 @@ const LandingPage = () => {
                   ))}
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Leaderboard & Progress</h3>
-              <p className="text-sm text-gray-600">Track your growth with XP, streaks, and levels. See how you rank among fellow students.</p>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Leaderboard & Progress</h3>
+                <p className="text-sm text-gray-600">Track your growth with XP, streaks, and levels. See how you rank among fellow students.</p>
+              </div>
             </div>
 
             {/* 5. Tests & Exams */}
-            <div className="md:col-span-2">
-              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 border border-gray-200">
+            <div className="md:col-span-2 grid" style={{ gridTemplateRows: '1fr auto' }}>
+              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden border border-gray-200">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
                     <span className="text-amber-500">🏆</span> Tests & Exam Progress
@@ -649,50 +666,20 @@ const LandingPage = () => {
                   </div>
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Milestone Tests & Final Exams</h3>
-              <p className="text-sm text-gray-600">Regular assessments track your progress. Pass all milestones and the final exam to earn your certificate.</p>
-            </div>
-
-            {/* 6. Endless Drills */}
-            <div>
-              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] flex flex-col">
-                <div className="flex items-center gap-2 mb-3">
-                  <InfinityIcon className="w-6 h-6 text-emerald-400" strokeWidth={2} />
-                  <span className="text-xs font-bold text-white uppercase tracking-wide">Endless Drills</span>
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 uppercase tracking-wide">Beta</span>
-                </div>
-                <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-3 leading-loose">
-                  قُلْ <span className="bg-amber-500/30 text-amber-300 px-1.5 rounded border-b-2 border-amber-500/60">إِنَّ</span> صَلَاتِي وَنُسُكِي
-                </p>
-                <p className="text-xs text-gray-300 text-center mb-3">Which grammatical role applies to the highlighted word?</p>
-                <div className="space-y-1.5 mt-auto">
-                  {[
-                    { label: "Inna & its Sisters", correct: true },
-                    { label: "Ḥarf Jarr", correct: false },
-                    { label: "Mubtada’", correct: false },
-                  ].map((o, i) => (
-                    <div key={i} className={`py-1.5 px-3 rounded-lg border text-[11px] flex items-center gap-2 ${
-                      o.correct ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300' : 'border-gray-800 text-gray-500'
-                    }`}>
-                      <span className={`w-4 h-4 rounded flex items-center justify-center text-[9px] font-bold ${
-                        o.correct ? 'bg-emerald-500/30 text-emerald-300' : 'bg-gray-800/50 text-gray-600'
-                      }`}>{['A','B','C'][i]}</span>
-                      <span>{o.label}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Milestone Tests & Final Exams</h3>
+                <p className="text-sm text-gray-600">Regular assessments track your progress. Pass all milestones and the final exam to earn your certificate.</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Endless Drills — Tajweed & Arabiyyah</h3>
-              <p className="text-sm text-gray-600">Unlimited mixed questions auto-generated from scholar-annotated Qur'an data. Pick your length, focus on a rule or difficulty level, and climb the leaderboard.</p>
             </div>
 
-            {/* 7. Free Study Tools — Quranic Examples Finder */}
-            <div>
-              <a href="/tools" className="block group">
-                <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-4 min-h-[280px] border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">
+            {/* 6. Free Study Tools — Quranic Examples Finder */}
+            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
+              <a href="/tools/examples" className="block group">
+                <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] h-full border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">
                   <div className="flex items-center gap-2 mb-3">
                     <Search className="w-5 h-5 text-emerald-600" strokeWidth={2} />
                     <span className="text-xs font-bold text-gray-900 uppercase tracking-wide">Qur'anic Examples Finder</span>
+                    <span className="ml-auto text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
                   </div>
                   {/* Mock search bar */}
                   <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 mb-3">
@@ -716,8 +703,56 @@ const LandingPage = () => {
                   </div>
                 </div>
               </a>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">Free Study Tools</h3>
-              <p className="text-sm text-gray-600">Open to everyone — search the Qur'an for tajweed and grammar examples with scholar-annotated references. More tools coming soon.</p>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Qur'anic Examples Finder</h3>
+                <p className="text-sm text-gray-600">Search for any tajweed or grammar topic and see real Qur'anic examples with scholar-annotated references. Free and open to everyone.</p>
+              </div>
+            </div>
+
+            {/* 7. Free Study Tools — Root Word Explorer */}
+            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
+              <a href="/tools/roots" className="block group">
+                <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] h-full border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">
+                  <div className="flex items-center gap-2 mb-3">
+                    <BookOpen className="w-5 h-5 text-emerald-600" strokeWidth={2} />
+                    <span className="text-xs font-bold text-gray-900 uppercase tracking-wide">Root Word Explorer</span>
+                    <span className="ml-auto text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
+                  </div>
+                  {/* Mock search bar */}
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 mb-3" dir="rtl">
+                    <span className="text-sm font-arabic text-gray-700 font-medium">كتب</span>
+                    <Search className="w-3.5 h-3.5 text-gray-400 mr-auto" />
+                  </div>
+                  {/* Mock root result */}
+                  <div className="mb-3">
+                    <p dir="rtl" className="font-arabic text-2xl text-emerald-700 font-bold text-center tracking-widest mb-1">ك ت ب</p>
+                    <div className="flex justify-center gap-2">
+                      <span className="text-[10px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">319 occurrences</span>
+                      <span className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded-full text-gray-600">8 forms</span>
+                    </div>
+                  </div>
+                  {/* Mock derived forms */}
+                  <div className="space-y-1.5 mt-auto">
+                    {[
+                      { lem: 'كِتَاب', tag: 'Noun', count: '260x' },
+                      { lem: 'كَتَبَ', tag: 'Verb I', count: '49x' },
+                      { lem: 'كَاتِب', tag: 'Noun', count: '6x' },
+                    ].map((f, i) => (
+                      <div key={i} className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-100">
+                        <div className="flex items-center gap-2" dir="rtl">
+                          <span className="font-arabic text-sm text-gray-900">{f.lem}</span>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${f.tag.startsWith('Verb') ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'}`}>{f.tag}</span>
+                        </div>
+                        <span className="text-[10px] text-gray-400">{f.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </a>
+              <div className="pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Root Word Explorer</h3>
+                <p className="text-sm text-gray-600">Enter any Arabic word to discover its root, derived forms, verb patterns, and every occurrence across the Qur'an. Free and open to everyone.</p>
+              </div>
             </div>
 
           </div>

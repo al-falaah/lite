@@ -9,7 +9,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "update-sitemap": "node update-sitemap.js",
     "build-tajweed-drills": "node scripts/buildTajweedDrills.js",
-    "build-nahw-drills": "node scripts/buildNahwDrills.js"
+    "build-nahw-drills": "node scripts/buildNahwDrills.js",
+    "build-root-index": "node scripts/buildRootIndex.js"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

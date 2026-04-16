@@ -81,6 +81,15 @@ function ToolsLayout() {
             >
               Tafsir Center for Qur'anic Studies
             </a>
+            {' '}and the{' '}
+            <a
+              href="https://corpus.quran.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:underline"
+            >
+              Quranic Arabic Corpus
+            </a>
             , discovered via{' '}
             <a
               href="https://itqan.dev/en/tools/"

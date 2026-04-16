@@ -47,6 +47,7 @@ import DrillPlayer from './components/drills/DrillPlayer';
 import ToolsLayout from './components/tools/ToolsLayout';
 import ToolsHome from './pages/tools/ToolsHome';
 import ExamplesFinder from './pages/tools/ExamplesFinder';
+import RootExplorer from './pages/tools/RootExplorer';
 
 // Components
 import CountdownBanner from './components/CountdownBanner';
@@ -225,6 +226,7 @@ function AppRoutes() {
         <Route path="/tools" element={<ToolsLayout />}>
           <Route index element={<ToolsHome />} />
           <Route path="examples" element={<ExamplesFinder />} />
+          <Route path="roots" element={<RootExplorer />} />
         </Route>
 
         {/* Fallback - 404 Page */}
