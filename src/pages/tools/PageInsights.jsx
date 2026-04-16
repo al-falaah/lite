@@ -114,7 +114,7 @@ function PageInsights() {
       <div className="border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
           <h1 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-1.5 sm:mb-2 tracking-tight">
-            Safha
+            Safha (صفحة)
           </h1>
           <p className="text-xs sm:text-base text-gray-600">
             Qur'an Page Insights — Scholar-curated benefits and lessons from every page of the Qur'an (604 pages).

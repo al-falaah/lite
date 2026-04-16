@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom';
 const TOOLS = [
   {
     path: '/tools/examples',
-    title: 'Shawaahid',
+    title: 'Shawaahid (شواهد)',
     description: "Qur'anic Examples Finder — Search for any tajweed or grammar topic and see real Qur'anic examples with scholar-annotated references.",
     status: 'live',
   },
   {
     path: '/tools/roots',
-    title: 'Tasreef',
+    title: 'Tasreef (تصريف)',
     description: "Root Word Explorer — Enter any Arabic word or root letters to explore its morphology — root, pattern, derived forms, and every Qur'anic occurrence.",
     status: 'live',
   },
   {
     path: '/tools/pages',
-    title: 'Safha',
+    title: 'Safha (صفحة)',
     description: "Qur'an Page Insights — Scholar-curated benefits and lessons from every page of the Qur'an (604 pages), with English translation.",
     status: 'live',
   },

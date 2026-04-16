@@ -567,7 +567,7 @@ function ExamplesFinder() {
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
           <h1 className="text-xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-            Shawaahid
+            Shawaahid (شواهد)
           </h1>
           <p className="text-sm sm:text-base text-gray-600 max-w-2xl">
             Qur'anic Examples Finder — Search for a tajweed or grammar topic to find real examples from the Qur'an.

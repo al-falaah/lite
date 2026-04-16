@@ -168,7 +168,7 @@ function RootExplorer() {
       <div className="border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
           <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-            Tasreef
+            Tasreef (تصريف)
           </h1>
           <p className="text-sm sm:text-base text-gray-600">
             Root Word Explorer — Enter any Arabic word or root letters to explore its Qur'anic morphology — root, pattern, derived forms, and every occurrence.
