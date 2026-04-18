@@ -12,14 +12,29 @@ import TestSettingsPanel from '../components/admin/TestSettingsPanel';
 import TestQuestionManager from '../components/admin/TestQuestionManager';
 import TestResultsDashboard from '../components/admin/TestResultsDashboard';
 
-// Helper function to generate URL-friendly slugs
+// Helper function to generate URL-friendly slugs (supports Arabic via transliteration)
+const AR_TRANSLIT = {
+  'ا':'a','أ':'a','إ':'i','آ':'aa','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h',
+  'خ':'kh','د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d',
+  'ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m',
+  'ن':'n','ه':'h','و':'w','ي':'y','ى':'a','ة':'ah','ء':'','ؤ':'w','ئ':'y',
+  'ـ':'',
+  // strip harakat
+  'َ':'','ُ':'','ِ':'','ً':'','ٌ':'','ٍ':'','ْ':'','ّ':'',
+};
+
+const transliterateArabic = (text) =>
+  text.split('').map((ch) => (ch in AR_TRANSLIT ? AR_TRANSLIT[ch] : ch)).join('');
+
 const generateSlug = (text) => {
-  return text
+  const slug = transliterateArabic(text)
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+  return slug || `chapter-${Date.now()}`;
 };
 
 const ResearchAdmin = () => {
