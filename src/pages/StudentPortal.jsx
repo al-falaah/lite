@@ -636,6 +636,11 @@ const StudentPortal = () => {
               );
             })()}
 
+            {/* Class Etiquette / Rules */}
+            <div className="mb-5">
+              <StudentClassEtiquette />
+            </div>
+
             {/* Install App Guide */}
             <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-center gap-2 mb-1">
@@ -653,7 +658,19 @@ const StudentPortal = () => {
           {/* === CLASSES TAB === */}
           <div className={activeTab !== 'classes' ? 'hidden' : ''}>
           <div className="space-y-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Class Schedule & Progress</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Class Schedule & Progress</h2>
+            {!isEnrolledInAllPrograms() && student?.email && (
+              <Link
+                to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
+              >
+                + Add another program
+              </Link>
+            )}
+          </div>
 
           {/* Class Schedules - Per Program */}
           {enrollments.map((enrollment) => {
