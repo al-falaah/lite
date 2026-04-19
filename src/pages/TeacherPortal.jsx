@@ -9,6 +9,7 @@ import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
 import OralTestGrading from '../components/admin/OralTestGrading';
 import RecitationAssignments from '../components/admin/RecitationAssignments';
+import StudentLessons from '../components/student/StudentLessons';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 // Get milestones from centralized config
@@ -656,6 +657,7 @@ export default function TeacherPortal() {
             {[
               { id: 'home', label: 'Home', icon: Home },
               { id: 'students', label: 'Students', icon: Users },
+              { id: 'lessons', label: 'Lessons', icon: BookOpen },
               { id: 'calendar', label: 'Calendar', icon: Calendar },
             ].map(tab => (
               <button
@@ -894,6 +896,17 @@ export default function TeacherPortal() {
         )}
         </div>
 
+        {/* === LESSONS TAB === */}
+        <div className={teacherTab !== 'lessons' ? 'hidden' : ''}>
+          <div className="mb-5 sm:mb-8">
+            <h1 className="text-lg sm:text-3xl font-bold text-gray-900 mb-0.5">Lessons</h1>
+            <p className="text-xs sm:text-base text-gray-500">Review lesson content for the programs you teach</p>
+          </div>
+          <StudentLessons
+            programs={[...new Set(assignedStudents.map(a => a.program).filter(Boolean))]}
+          />
+        </div>
+
         {/* === CALENDAR TAB === */}
         <div className={teacherTab !== 'calendar' ? 'hidden' : ''}>
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -913,6 +926,7 @@ export default function TeacherPortal() {
           {[
             { id: 'home', label: 'Home', icon: Home },
             { id: 'students', label: 'Students', icon: Users },
+            { id: 'lessons', label: 'Lessons', icon: BookOpen },
             { id: 'calendar', label: 'Calendar', icon: Calendar },
           ].map(tab => (
             <button

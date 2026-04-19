@@ -50,9 +50,12 @@ const proseTheme = {
   dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border-gray-700 prose-td:border-gray-700',
 };
 
-export default function StudentLessons({ enrollments }) {
-  const programs = enrollments.filter(e => e.status === 'active').map(e => e.program);
-  const uniquePrograms = [...new Set(programs)];
+export default function StudentLessons({ enrollments, programs: programsProp }) {
+  // Accept either a direct programs array (teacher use) or derive from enrollments (student use)
+  const derivedPrograms = programsProp
+    ? programsProp
+    : (enrollments || []).filter(e => e.status === 'active').map(e => e.program);
+  const uniquePrograms = [...new Set(derivedPrograms.filter(Boolean))];
 
   const [selectedProgram, setSelectedProgram] = useState(uniquePrograms[0] || null);
   const [courses, setCourses] = useState([]);
@@ -218,7 +221,9 @@ export default function StudentLessons({ enrollments }) {
     return (
       <div className="text-center py-16">
         <BookOpen className="h-10 w-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-        <p className="text-gray-500 dark:text-gray-400 text-sm">No active enrollments</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
+          {programsProp ? 'No programs assigned' : 'No active enrollments'}
+        </p>
       </div>
     );
   }
