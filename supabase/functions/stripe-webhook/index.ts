@@ -24,12 +24,32 @@ serve(async (req) => {
       ? await stripe.webhooks.constructEventAsync(body, signature, webhookSecret)
       : JSON.parse(body)
 
-    console.log('Webhook event:', event.type)
+    console.log('Webhook event:', event.type, event.id)
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
+
+    // Idempotency guard: Stripe may redeliver the same event (automatic retries,
+    // or manual replays from the Stripe Dashboard). Inserting into stripe_events
+    // with event.id as the PK lets us dedupe — a unique_violation (23505) on the
+    // insert means we've already handled this event, so we short-circuit.
+    const { error: idempErr } = await supabaseClient
+      .from('stripe_events')
+      .insert({ event_id: event.id, event_type: event.type, payload: event })
+    if (idempErr) {
+      if (idempErr.code === '23505') {
+        console.log('Event already processed, skipping:', event.id)
+        return new Response(JSON.stringify({ received: true, duplicate: true }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      }
+      console.error('Failed to record stripe event, continuing anyway:', idempErr)
+      // Continue processing — better to double-process than miss an event entirely.
+      // If this error persists it should be investigated.
+    }
 
     // Handle successful payment
     if (event.type === 'checkout.session.completed') {
