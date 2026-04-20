@@ -45,9 +45,9 @@ const themeClasses = {
 };
 
 const proseTheme = {
-  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border-gray-300 prose-td:border-gray-300',
-  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border-[#d4c9b8] prose-td:border-[#d4c9b8]',
-  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border-gray-700 prose-td:border-gray-700',
+  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300',
+  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8]',
+  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700',
 };
 
 export default function StudentLessons({ enrollments, programs: programsProp }) {
@@ -215,9 +215,11 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
     }
   };
 
-  const isFullHtml = selectedChapter?.content_type === 'full_html' ||
-    selectedChapter?.content?.trim().startsWith('<!DOCTYPE') ||
+  const contentStartsAsFullDoc = selectedChapter?.content?.trim().startsWith('<!DOCTYPE') ||
     selectedChapter?.content?.trim().startsWith('<html');
+  const isFullHtml = selectedChapter?.content_type === 'full_html' || contentStartsAsFullDoc;
+  const hasTable = /<table[\s>]/i.test(selectedChapter?.content || '');
+  const useIframe = isFullHtml || hasTable;
   const videoUrl = getYouTubeEmbedUrl(selectedChapter?.video_url);
 
   if (!uniquePrograms.length) {
@@ -243,15 +245,15 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
           <div className="min-w-0">
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{ch.title}</p>
             <div className="flex items-center gap-2 mt-0.5">
-              {ch.week_number && <span className="text-xs text-gray-400 dark:text-gray-500">Week {ch.week_number}</span>}
+              {ch.week_number && <span className="text-xs text-gray-600 dark:text-gray-400">Week {ch.week_number}</span>}
               {courses.length > 1 && course && (
-                <span className="text-xs text-gray-400 dark:text-gray-500 truncate">{course.title}</span>
+                <span className="text-xs text-gray-600 dark:text-gray-400 truncate">{course.title}</span>
               )}
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-300 dark:text-gray-500" />}
-            {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-300 dark:text-gray-500">HTML</span>}
+            {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />}
+            {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-500 dark:text-gray-400">HTML</span>}
           </div>
         </div>
       </button>
@@ -326,17 +328,17 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
                           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {m.name}
                           </p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                             Weeks {m.weekStart}–{m.weekEnd}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
                           {chaps.length > 0 ? (
-                            <span className="text-xs text-gray-400 dark:text-gray-500">{chaps.length}</span>
+                            <span className="text-xs text-gray-600 dark:text-gray-400">{chaps.length}</span>
                           ) : (
-                            <span className="text-xs text-gray-300 dark:text-gray-600">Coming soon</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-500">Coming soon</span>
                           )}
-                          <ChevronDown className={`h-4 w-4 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`h-4 w-4 text-gray-600 dark:text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                         </div>
                       </button>
                       {isOpen && chaps.length > 0 && (
@@ -373,8 +375,8 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
                     >
                       <p className="text-sm font-medium text-gray-900 dark:text-gray-100">General</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400 dark:text-gray-500">{milestoneGroups.ungrouped.length}</span>
-                        <ChevronDown className={`h-4 w-4 text-gray-400 dark:text-gray-500 transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
+                        <span className="text-xs text-gray-600 dark:text-gray-400">{milestoneGroups.ungrouped.length}</span>
+                        <ChevronDown className={`h-4 w-4 text-gray-600 dark:text-gray-400 transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
                       </div>
                     </button>
                     {expandedMilestones['general'] && (
@@ -396,7 +398,7 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
                       <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-100 dark:border-gray-600">
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{course.title}</p>
                         {course.description && (
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 line-clamp-1">{course.description}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-1">{course.description}</p>
                         )}
                       </div>
                       <div>
@@ -507,10 +509,10 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
             )}
 
             {/* Content */}
-            <div className={`lesson-content-protected ${isFullHtml ? 'p-0' : 'px-4 sm:px-8 py-4'}`}>
-              {isFullHtml ? (
+            <div className={`lesson-content-protected ${useIframe ? 'p-0' : 'px-4 sm:px-8 py-4'}`}>
+              {useIframe ? (
                 <iframe
-                  srcDoc={selectedChapter.content}
+                  srcDoc={isFullHtml ? selectedChapter.content : `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding:24px;color:#111;line-height:1.7}.tip{background:#eff6ff;border-left:3px solid #60a5fa;padding:12px 16px;margin:16px 0;border-radius:6px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #d1d5db;padding:8px 12px;font-size:0.875rem}th{background:#f9fafb;text-align:left;font-weight:600}</style></head><body>${selectedChapter.content}</body></html>`}
                   title={selectedChapter.title}
                   className="w-full border-0 block"
                   style={{ minHeight: '80vh' }}
