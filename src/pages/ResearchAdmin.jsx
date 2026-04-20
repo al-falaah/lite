@@ -972,7 +972,7 @@ const ResearchAdmin = () => {
                             {editingChapter.content && editingChapter.content_type === 'full_html' && (
                               <div className="bg-white border border-gray-200 rounded-lg overflow-hidden" style={{ height: '300px' }}>
                                 <iframe
-                                  srcDoc={editingChapter.content}
+                                  srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding:24px;color:#111;line-height:1.7}.tip{background:#eff6ff;border-left:3px solid #60a5fa;padding:12px 16px;margin:16px 0;border-radius:6px}</style></head><body>${editingChapter.content}</body></html>`}
                                   title="Preview"
                                   className="w-full h-full border-0"
                                   sandbox="allow-same-origin"
@@ -1494,14 +1494,16 @@ const ResearchAdmin = () => {
               </button>
             </div>
             
-            <div className="flex-1 min-h-0 overflow-hidden">
-              {previewChapter.content_type === 'full_html' ? (
-                <iframe
-                  srcDoc={previewChapter.content}
-                  title="Preview"
-                  className="w-full h-full border-0 block"
-                  sandbox="allow-same-origin"
-                />
+            <div className="overflow-hidden" style={{ height: 'calc(90vh - 140px)' }}>
+              {(previewChapter.content_type === 'full_html' || /<table[\s>]/i.test(previewChapter.content || '')) ? (
+                <div className="bg-white w-full h-full overflow-hidden">
+                  <iframe
+                    srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding:24px;color:#111;line-height:1.7}.tip{background:#eff6ff;border-left:3px solid #60a5fa;padding:12px 16px;margin:16px 0;border-radius:6px}</style></head><body>${previewChapter.content}</body></html>`}
+                    title="Preview"
+                    className="w-full h-full border-0"
+                    sandbox="allow-same-origin"
+                  />
+                </div>
               ) : (
                 <div className="h-full overflow-y-auto px-8 py-6">
                   <div
