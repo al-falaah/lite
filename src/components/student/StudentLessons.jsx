@@ -185,8 +185,12 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
     setSelectedCourse(courseMap[ch.course_id] || null);
   };
 
-  // All chapters flat for prev/next navigation
+  // Reader sidebar: scope to the currently-open chapter's course so lessons from
+  // different courses don't mix in the list. Also used for prev/next navigation.
   const flatChapters = useMemo(() => {
+    if (selectedChapter) {
+      return (courseGroups[selectedChapter.course_id] || []);
+    }
     if (viewMode === 'milestones') {
       const flat = [];
       milestones.forEach(m => {
@@ -195,13 +199,12 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
       milestoneGroups.ungrouped.forEach(ch => flat.push(ch));
       return flat;
     }
-    // course view: ordered by course then chapter_number
     const flat = [];
     courses.forEach(c => {
       (courseGroups[c.id] || []).forEach(ch => flat.push(ch));
     });
     return flat;
-  }, [viewMode, milestoneGroups, courseGroups, milestones, courses]);
+  }, [selectedChapter, viewMode, milestoneGroups, courseGroups, milestones, courses]);
 
   const currentIndex = flatChapters.findIndex(ch => ch.id === selectedChapter?.id);
   const navigateChapter = (dir) => {
@@ -338,7 +341,23 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
                       </button>
                       {isOpen && chaps.length > 0 && (
                         <div className="border-t border-gray-100 dark:border-gray-700">
-                          {chaps.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
+                          {courses
+                            .filter(c => chaps.some(ch => ch.course_id === c.id))
+                            .map(c => {
+                              const courseChaps = chaps
+                                .filter(ch => ch.course_id === c.id)
+                                .sort((a, b) => a.chapter_number - b.chapter_number);
+                              return (
+                                <div key={c.id}>
+                                  {courses.length > 1 && (
+                                    <div className="px-4 py-2 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
+                                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{c.title}</p>
+                                    </div>
+                                  )}
+                                  {courseChaps.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
+                                </div>
+                              );
+                            })}
                         </div>
                       )}
                     </div>
@@ -448,7 +467,7 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
                 <span className="leading-snug">{ch.title}</span>
                 {ch.week_number && (
                   <span className={`block text-xs mt-0.5 ${selectedChapter?.id === ch.id ? 'opacity-70' : t.faint}`}>
-                    Week {ch.week_number}{courses.length > 1 && courseMap[ch.course_id] ? ` · ${courseMap[ch.course_id].title}` : ''}
+                    Week {ch.week_number}
                   </span>
                 )}
               </button>
