@@ -137,6 +137,7 @@ serve(async (req) => {
       mode: planType === 'monthly' ? 'subscription' : 'payment',
       success_url: `${appUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}&program=${currentProgram}`,
       cancel_url: `${appUrl}/payment-cancel?program=${currentProgram}&email=${encodeURIComponent(email)}`,
+      allow_promotion_codes: true,
       metadata: {
         student_id: student.id,
         plan_type: planType,

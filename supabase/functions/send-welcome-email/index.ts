@@ -8,7 +8,7 @@ import { EMAIL_STYLES, getHeaderHTML, getFooterHTML } from '../_shared/email-tem
 import { getProgram } from '../_shared/programs.ts';
 
 function generateEmailHTML(studentData: any, baseUrl: string, inviteLink: string): string {
-  const { full_name, email, student_id, program } = studentData;
+  const { full_name, email, student_id, program, referral_code } = studentData;
 
   // Get program details from centralized config
   const programConfig = getProgram(program);
@@ -89,6 +89,21 @@ function generateEmailHTML(studentData: any, baseUrl: string, inviteLink: string
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Join on time</strong> - Use the meeting links provided for each session</li>
               <li style="margin-bottom: 12px; line-height: 1.7;"><strong>Stay updated</strong> - Keep your contact information current in the portal</li>
             </ul>
+
+            ${referral_code ? `
+            <div class="info-box" style="margin-top: 36px; background: #ecfdf5; border-left: 4px solid #059669;">
+              <div class="info-box-title" style="color: #065f46;">Share the barakah — refer a friend</div>
+              <p style="margin: 12px 0; font-size: 15px; color: #065f46; line-height: 1.7;">
+                Your personal referral code is:
+              </p>
+              <p style="margin: 12px 0; text-align: center;">
+                <span style="display: inline-block; background: white; border: 2px dashed #059669; padding: 12px 20px; border-radius: 8px; font-family: monospace; font-size: 18px; font-weight: 700; color: #059669; letter-spacing: 1px;">${referral_code}</span>
+              </p>
+              <p style="margin: 12px 0 0 0; font-size: 14px; color: #065f46; line-height: 1.7;">
+                Share this code with friends and family. When they use it at checkout, they get <strong>25% off</strong> their enrollment — and for every <strong>3 friends</strong> who enroll with your code, we'll send you a <strong>$50 NZD</strong> transfer as a thank you.
+              </p>
+            </div>
+` : ''}
 
             <p class="paragraph" style="margin-top: 36px;">If you have any questions or need support, please don't hesitate to reach out to us at <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>
 

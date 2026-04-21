@@ -23,11 +23,13 @@ import {
   ClipboardList,
   Calendar,
   Home,
-  ArrowLeft
+  ArrowLeft,
+  Gift
 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import DirectorPlanner from '../components/director/DirectorPlanner';
 import PricingSettings from '../components/director/PricingSettings';
+import ReferralLeaderboard from '../components/director/ReferralLeaderboard';
 import { toast } from 'sonner';
 import {
   LineChart,
@@ -611,7 +613,8 @@ const DirectorDashboard = () => {
                 { key: 'overview', label: 'Overview', icon: BarChart3 },
                 { key: 'calendar', label: 'Calendar', icon: Calendar },
                 { key: 'links', label: 'Manage', icon: Shield },
-                { key: 'planner', label: 'Planner', icon: ClipboardList }
+                { key: 'planner', label: 'Planner', icon: ClipboardList },
+                { key: 'referrals', label: 'Referrals', icon: Gift }
               ].map(tab => {
                 const TabIcon = tab.icon;
                 return (
@@ -1027,6 +1030,9 @@ const DirectorDashboard = () => {
 
           {/* Planner Tab */}
           {activeTab === 'planner' && <DirectorPlanner />}
+
+          {/* Referrals Tab */}
+          {activeTab === 'referrals' && <ReferralLeaderboard />}
         </div>
       </div>
     </>
