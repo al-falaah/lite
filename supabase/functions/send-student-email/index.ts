@@ -9,6 +9,24 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+function substituteVariables(text: string, student: any): string {
+  return text
+    .replace(/\{\{full_name\}\}/g, student.full_name || '')
+    .replace(/\{\{referral_code\}\}/g, student.referral_code || '');
+}
+
+// Resolve templating placeholders in marketing templates (__EMAIL_STYLES__,
+// __HEADER__('title', 'subtitle'), __FOOTER__).
+function resolveTemplate(body: string): string {
+  let out = body.replace(/__EMAIL_STYLES__/g, EMAIL_STYLES);
+  out = out.replace(/__HEADER__\(\s*'([^']*)'\s*,\s*'([^']*)'\s*\)/g, (_, title, subtitle) => getHeaderHTML(title, subtitle));
+  out = out.replace(/__HEADER__\(\s*'([^']*)'\s*\)/g, (_, title) => getHeaderHTML(title));
+  out = out.replace(/__FOOTER__/g, getFooterHTML());
+  return out;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -31,15 +49,13 @@ serve(async (req) => {
       );
     }
 
-    // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch student emails
     const { data: students, error } = await supabase
       .from('students')
-      .select('email, full_name')
+      .select('id, email, full_name, referral_code')
       .in('id', studentIds);
 
     if (error) {
@@ -57,13 +73,16 @@ serve(async (req) => {
       );
     }
 
-    // Prepare email HTML with modern template
-    const getEmailHtml = (studentName: string) => {
+    const getEmailHtml = (student: any) => {
       if (isHtml) {
-        return message;
+        // Template path: resolve shared shell placeholders + substitute variables.
+        const resolved = resolveTemplate(message);
+        return substituteVariables(resolved, student);
       }
 
-      // Modern email template using shared styles
+      // Plain-text message — wrap in default shell.
+      const personalisedMessage = substituteVariables(message, student);
+      const personalisedSubject = substituteVariables(subject, student);
       return `
 <!DOCTYPE html>
 <html>
@@ -75,12 +94,12 @@ serve(async (req) => {
 <body>
   <div class="email-wrapper">
     <div class="container">
-      ${getHeaderHTML(subject)}
+      ${getHeaderHTML(personalisedSubject)}
 
       <div class="content">
-        <h2 class="greeting">As-salāmu ʿalaykum ${studentName},</h2>
+        <h2 class="greeting">As-salāmu ʿalaykum ${student.full_name},</h2>
 
-        <div style="color: #4a5568; font-size: 16px; line-height: 1.8; white-space: pre-wrap;">${message}</div>
+        <div style="color: #4a5568; font-size: 16px; line-height: 1.8; white-space: pre-wrap;">${personalisedMessage}</div>
 
         <p class="paragraph" style="margin-top: 36px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
           Jazaakumullaahu Khayran,<br>
@@ -96,27 +115,43 @@ serve(async (req) => {
       `;
     };
 
-    // Send emails to all students
-    const results = await Promise.all(
-      students.map(async (student) => {
+    // Sequential send with 100ms delay to stay under Resend's 10/sec rate limit.
+    // Previous Promise.all would 429 above ~10 recipients.
+    const results: any[] = [];
+    console.log(`Sending to ${students.length} students (sequential, 100ms spacing)...`);
+    for (let i = 0; i < students.length; i++) {
+      const student = students[i];
+      const personalisedSubject = substituteVariables(subject, student);
+      try {
         const result = await sendEmail({
           to: student.email,
-          subject: subject,
-          html: getEmailHtml(student.full_name),
+          subject: personalisedSubject,
+          html: getEmailHtml(student),
         });
-        return {
+        results.push({
           email: student.email,
           name: student.full_name,
           success: result.success,
           error: result.error,
-        };
-      })
-    );
+        });
+        if (result.success) {
+          console.log(`✅ ${i + 1}/${students.length} → ${student.email}`);
+        } else {
+          console.error(`❌ ${i + 1}/${students.length} → ${student.email}: ${result.error}`);
+        }
+      } catch (err: any) {
+        console.error(`❌ ${i + 1}/${students.length} → ${student.email}:`, err.message);
+        results.push({ email: student.email, name: student.full_name, success: false, error: err.message });
+      }
+      if (i < students.length - 1) {
+        await delay(100);
+      }
+    }
 
-    const successCount = results.filter(r => r.success).length;
-    const failureCount = results.filter(r => !r.success).length;
+    const successCount = results.filter((r) => r.success).length;
+    const failureCount = results.filter((r) => !r.success).length;
 
-    console.log(`Email sending completed: ${successCount} successful, ${failureCount} failed`);
+    console.log(`Done: ${successCount} successful, ${failureCount} failed`);
 
     return new Response(
       JSON.stringify({

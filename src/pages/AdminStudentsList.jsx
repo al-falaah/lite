@@ -25,6 +25,7 @@ import { students, teachers, teacherAssignments, supabase, supabaseUrl, supabase
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { PROGRAMS, PROGRAM_IDS, getProgramName as getConfigProgramName } from '../config/programs';
+import { MARKETING_TEMPLATES, getTemplate } from '../emails/marketingTemplates';
 
 const AdminStudentsList = () => {
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,8 @@ const AdminStudentsList = () => {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailMessage, setEmailMessage] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailTemplateKey, setEmailTemplateKey] = useState('');
+  const [showEmailPreview, setShowEmailPreview] = useState(false);
 
   // Teacher assignment state
   const [showAssignTeacherModal, setShowAssignTeacherModal] = useState(false);
@@ -340,6 +343,7 @@ const AdminStudentsList = () => {
             studentIds: selectedStudentIds,
             subject: emailSubject,
             message: emailMessage,
+            isHtml: !!emailTemplateKey,
           }),
         }
       );
@@ -362,6 +366,7 @@ const AdminStudentsList = () => {
       setShowEmailModal(false);
       setEmailSubject('');
       setEmailMessage('');
+      setEmailTemplateKey('');
       setSelectedStudentIds([]);
     } catch (error) {
       console.error('Error sending email:', error);
@@ -1400,6 +1405,59 @@ const AdminStudentsList = () => {
         </div>
       )}
 
+      {/* Email Preview Modal */}
+      {showEmailPreview && (() => {
+        const firstStudent = studentsData.find((s) => s.id === selectedStudentIds[0]) || { full_name: '(Recipient Name)', referral_code: '(code)' };
+        const substitute = (text) =>
+          (text || '')
+            .replace(/\{\{full_name\}\}/g, firstStudent.full_name || '')
+            .replace(/\{\{referral_code\}\}/g, firstStudent.referral_code || '');
+        const previewSubject = substitute(emailSubject);
+        const previewBody = substitute(emailMessage);
+        return (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-[60]">
+            <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+              <div className="p-4 sm:p-6 border-b flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Email preview</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Showing how <strong>{firstStudent.full_name}</strong> will see this email. Variables are substituted per recipient at send time.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowEmailPreview(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <XIcon2 className="h-6 w-6" />
+                </button>
+              </div>
+              <div className="px-4 sm:px-6 py-3 border-b bg-gray-50 text-sm">
+                <div><span className="text-gray-500">To:</span> <strong>{firstStudent.email || '(email)'}</strong></div>
+                <div className="mt-1"><span className="text-gray-500">Subject:</span> <strong>{previewSubject}</strong></div>
+              </div>
+              <div className="flex-1 overflow-auto bg-gray-100 p-4">
+                {emailTemplateKey ? (
+                  <iframe
+                    title="Email preview"
+                    srcDoc={previewBody}
+                    className="w-full min-h-[500px] bg-white rounded border border-gray-200"
+                  />
+                ) : (
+                  <div className="bg-white rounded border border-gray-200 p-6 whitespace-pre-wrap text-gray-800">
+                    {previewBody}
+                  </div>
+                )}
+              </div>
+              <div className="p-4 border-t flex justify-end gap-3">
+                <Button variant="secondary" onClick={() => setShowEmailPreview(false)}>
+                  Close preview
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Email Composition Modal */}
       {showEmailModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
@@ -1429,6 +1487,41 @@ const AdminStudentsList = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Template
+                  </label>
+                  <select
+                    value={emailTemplateKey}
+                    onChange={(e) => {
+                      const key = e.target.value;
+                      setEmailTemplateKey(key);
+                      if (key) {
+                        const tpl = getTemplate(key);
+                        if (tpl) {
+                          setEmailSubject(tpl.subject);
+                          setEmailMessage(tpl.body);
+                        }
+                      } else {
+                        setEmailSubject('');
+                        setEmailMessage('');
+                      }
+                    }}
+                    disabled={sendingEmail}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+                  >
+                    <option value="">— Custom (plain text) —</option>
+                    {MARKETING_TEMPLATES.map((t) => (
+                      <option key={t.key} value={t.key}>{t.label}</option>
+                    ))}
+                  </select>
+                  {emailTemplateKey && (
+                    <p className="mt-2 text-xs text-gray-500">
+                      {getTemplate(emailTemplateKey)?.description} — variables like <code className="bg-gray-100 px-1 rounded">{'{{full_name}}'}</code> and <code className="bg-gray-100 px-1 rounded">{'{{referral_code}}'}</code> are substituted per recipient.
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Subject
                   </label>
                   <input
@@ -1443,18 +1536,20 @@ const AdminStudentsList = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Message
+                    {emailTemplateKey ? 'HTML body (template)' : 'Message'}
                   </label>
                   <textarea
                     value={emailMessage}
                     onChange={(e) => setEmailMessage(e.target.value)}
-                    placeholder="Enter your message..."
+                    placeholder={emailTemplateKey ? 'Edit the HTML before sending...' : 'Enter your message...'}
                     rows={10}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none ${emailTemplateKey ? 'font-mono text-xs' : ''}`}
                     disabled={sendingEmail}
                   />
                   <p className="mt-2 text-sm text-gray-500">
-                    Your message will be automatically formatted with The FastTrack Madrasah branding.
+                    {emailTemplateKey
+                      ? 'Template HTML — preview before sending.'
+                      : 'Your message will be automatically formatted with The FastTrack Madrasah branding.'}
                   </p>
                 </div>
               </div>
@@ -1467,10 +1562,20 @@ const AdminStudentsList = () => {
                     setShowEmailModal(false);
                     setEmailSubject('');
                     setEmailMessage('');
+                    setEmailTemplateKey('');
                   }}
                   disabled={sendingEmail}
                 >
                   Cancel
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => setShowEmailPreview(true)}
+                  disabled={sendingEmail || !emailSubject.trim() || !emailMessage.trim() || selectedStudentIds.length === 0}
+                  className="flex items-center gap-2"
+                >
+                  <Eye className="h-4 w-4" />
+                  Preview
                 </Button>
                 <Button
                   variant="primary"
