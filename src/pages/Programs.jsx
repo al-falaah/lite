@@ -213,7 +213,7 @@ const Programs = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Investment</span>
                     <span className="text-sm font-semibold text-gray-900">
-                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} suffix=" NZD" />
+                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} previousPrice={tmpP?.previous_price} suffix=" NZD" />
                     </span>
                   </div>
                   <div className="flex justify-between items-start">
@@ -341,7 +341,7 @@ const Programs = () => {
                     <span className="text-sm text-gray-600">Investment</span>
                     <div className="text-right">
                       <span className="text-sm font-semibold text-gray-900">
-                        <SubsidizedPrice fullPrice={easiP?.full_monthly} price={easiP?.current_price_monthly ?? essentials.pricing.monthly} suffix="/month" />
+                        <SubsidizedPrice fullPrice={easiP?.full_monthly} price={easiP?.current_price_monthly ?? essentials.pricing.monthly} previousPrice={easiP?.previous_price_monthly} suffix="/month" />
                       </span>
                       <span className="text-xs text-gray-500 block">${easiP?.current_price_annual ?? essentials.pricing.annual}/year</span>
                     </div>
@@ -526,7 +526,7 @@ const Programs = () => {
                 <div className="p-5 text-center border-l border-gray-100 flex items-center justify-center">
                   <div>
                     <p className="text-xl font-bold text-gray-900">
-                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} suffix=" NZD" />
+                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} previousPrice={tmpP?.previous_price} suffix=" NZD" />
                     </p>
                     <p className="text-sm text-gray-500 mt-1">{tajweed.pricing.displayNote}</p>
                   </div>
@@ -702,7 +702,7 @@ const Programs = () => {
                   <div className="text-right">
                     <p className="text-xs text-gray-500">Investment</p>
                     <p className="text-sm font-semibold text-gray-900 mt-0.5">
-                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} suffix=" NZD" />
+                      <SubsidizedPrice fullPrice={tmpP?.full_price} price={tmpP?.current_price ?? tajweed.pricing.oneTime} previousPrice={tmpP?.previous_price} suffix=" NZD" />
                     </p>
                   </div>
                 </div>
