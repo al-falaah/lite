@@ -1163,7 +1163,7 @@ export default function TeacherPortal() {
                                     <span className="text-sm font-semibold text-gray-900">
                                       Main Class
                                     </span>
-                                    <span className="text-xs text-gray-500">2 hrs</span>
+                                    <span className="text-xs text-gray-500">{programConfig?.schedule?.session1?.duration || '1 hr'}</span>
                                   </div>
                                   <p className="text-sm text-gray-600">
                                     {mainClass.day_of_week} • {formatTime(mainClass.class_time) || 'Not set'}
@@ -1219,7 +1219,7 @@ export default function TeacherPortal() {
                                     <span className="text-sm font-semibold text-gray-900">
                                       Short Class
                                     </span>
-                                    <span className="text-xs text-gray-500">30 min</span>
+                                    <span className="text-xs text-gray-500">{programConfig?.schedule?.session2?.duration || '30 mins'}</span>
                                   </div>
                                   <p className="text-sm text-gray-600">
                                     {shortClass.day_of_week} • {formatTime(shortClass.class_time) || 'Not set'}
