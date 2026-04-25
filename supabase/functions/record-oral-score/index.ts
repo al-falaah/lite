@@ -37,12 +37,24 @@ serve(async (req) => {
       )
     }
 
-    const { student_id, program_id, type, milestone_index, percentage, notes } = await req.json()
+    const body = await req.json()
+    const {
+      student_id,
+      program_id,
+      type,
+      milestone_index,
+      // Legacy single-percentage payload (kept for backward compatibility)
+      percentage: legacyPercentage,
+      notes: legacyNotes,
+      // New rubric payload
+      rubric,
+      overall_notes,
+    } = body
 
-    // Validate required fields
-    if (!student_id || !program_id || !type || percentage === undefined || percentage === null) {
+    // Validate base required fields
+    if (!student_id || !program_id || !type) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: student_id, program_id, type, percentage' }),
+        JSON.stringify({ error: 'Missing required fields: student_id, program_id, type' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -61,11 +73,67 @@ serve(async (req) => {
       )
     }
 
-    if (percentage < 0 || percentage > 100) {
-      return new Response(
-        JSON.stringify({ error: 'Percentage must be between 0 and 100' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    // Resolve percentage + rubric. New flow: client sends rubric, server computes
+    // percentage. Legacy flow: client sends percentage directly.
+    let percentage: number | null = null
+    let storedRubric: any = null
+    let notes: string = ''
+    const usingRubric = Array.isArray(rubric) && rubric.length > 0
+
+    if (usingRubric) {
+      // Validate every rubric row, then compute the total weighted percentage.
+      let earnedW = 0
+      let possibleW = 0
+      for (const r of rubric) {
+        const score = Number(r.score)
+        const max = Number(r.max)
+        const weight = Number(r.weight) || 1
+        if (!Number.isFinite(score) || !Number.isFinite(max) || max <= 0) {
+          return new Response(
+            JSON.stringify({ error: 'Each rubric row needs a numeric score and max > 0' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+        if (score < 0 || score > max) {
+          return new Response(
+            JSON.stringify({ error: `Score out of range: ${score}/${max}` }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+        if (!['bank', 'ad_hoc', 'quick_mark'].includes(r.source)) {
+          return new Response(
+            JSON.stringify({ error: 'Each rubric row needs a valid source' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+        if (r.source !== 'bank' && !String(r.text || '').trim()) {
+          return new Response(
+            JSON.stringify({ error: 'Ad-hoc and quick-mark rows require text' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
+        }
+        earnedW += (score / max) * weight
+        possibleW += weight
+      }
+      percentage = possibleW === 0 ? 0 : Math.round((earnedW / possibleW) * 100 * 10) / 10
+      storedRubric = rubric
+      notes = overall_notes || ''
+    } else {
+      // Legacy flow
+      if (legacyPercentage === undefined || legacyPercentage === null) {
+        return new Response(
+          JSON.stringify({ error: 'Missing required fields: rubric or percentage' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      percentage = Number(legacyPercentage)
+      if (!Number.isFinite(percentage) || percentage < 0 || percentage > 100) {
+        return new Response(
+          JSON.stringify({ error: 'Percentage must be between 0 and 100' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      notes = legacyNotes || ''
     }
 
     // Verify the teacher is assigned to this student
@@ -165,6 +233,44 @@ serve(async (req) => {
       }
     }
 
+    // Persist any ad-hoc rows that the teacher chose to save back to the bank.
+    // We do this BEFORE the test_attempts insert so the new question_id can be
+    // referenced from the rubric. Failures here are non-fatal (teacher gets
+    // their grade saved either way); we log and move on.
+    if (usingRubric && storedRubric) {
+      for (let i = 0; i < storedRubric.length; i++) {
+        const row = storedRubric[i]
+        if (row.source === 'ad_hoc' && row.save_to_bank && String(row.text || '').trim()) {
+          try {
+            const { data: newQ } = await supabase
+              .from('test_questions')
+              .insert({
+                program_id,
+                type,
+                milestone_index: type === 'milestone' ? milestone_index : null,
+                question_text: row.text.trim(),
+                question_type: 'short_answer',
+                options: null,
+                difficulty: 'medium',
+                section_tag: 'oral',
+              })
+              .select('id')
+              .single()
+            if (newQ?.id) {
+              storedRubric[i] = { ...row, question_id: newQ.id, source: 'bank', save_to_bank: false }
+            }
+          } catch (bankErr) {
+            console.warn('Failed to persist ad-hoc question to bank (non-fatal):', bankErr)
+          }
+        }
+      }
+    }
+
+    // Build question_ids array for analytics later.
+    const questionIds = usingRubric && storedRubric
+      ? storedRubric.filter((r: any) => r.question_id).map((r: any) => r.question_id)
+      : []
+
     // Insert new oral attempt
     const now = new Date().toISOString()
     let attemptId: string
@@ -174,11 +280,11 @@ serve(async (req) => {
       program_id,
       type,
       milestone_index: type === 'milestone' ? milestone_index : null,
-      question_ids: [],
-      score: Math.round(percentage),
+      question_ids: questionIds,
+      score: Math.round(percentage!),
       total_questions: 100,
       percentage,
-      answers: {},
+      answers: usingRubric ? { rubric: storedRubric, computed_percentage: percentage } : {},
       status: 'completed',
       is_oral: true,
       graded_by: user.id,

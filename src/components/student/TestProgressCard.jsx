@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../services/supabase';
-import { CheckCircle, XCircle, Clock, Award, ChevronRight, Lock, Mic } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Award, ChevronRight, Lock, Mic, ChevronDown, ChevronUp } from 'lucide-react';
 import { PROGRAMS } from '../../config/programs';
 
 export default function TestProgressCard({ programId, currentWeek }) {
@@ -9,6 +9,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
   const [attempts, setAttempts] = useState([]);
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [expandedBreakdown, setExpandedBreakdown] = useState({}); // { [attemptId]: bool }
 
   const program = PROGRAMS[programId];
   const milestones = program?.milestones || [];
@@ -37,7 +38,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
           .single(),
         supabase
           .from('test_attempts')
-          .select('type, milestone_index, percentage, status')
+          .select('id, type, milestone_index, percentage, status, is_oral, answers, oral_notes, completed_at')
           .eq('student_id', user.id)
           .eq('program_id', programId)
           .in('status', ['completed', 'timed_out'])
@@ -86,6 +87,48 @@ export default function TestProgressCard({ programId, currentWeek }) {
 
   const maxExamAttempts = settings?.allow_exam_retake ? 1 + (settings?.max_exam_retakes || 1) : 1;
   const canRetakeExam = examAttempts.length < maxExamAttempts && results?.status === 'failed';
+
+  const toggleBreakdown = (attemptId) => {
+    setExpandedBreakdown((prev) => ({ ...prev, [attemptId]: !prev[attemptId] }));
+  };
+
+  const renderBreakdown = (attempt) => {
+    if (!attempt?.is_oral) return null;
+    const rubric = attempt?.answers?.rubric;
+    if (!Array.isArray(rubric) || rubric.length === 0) return null;
+    const isOpen = !!expandedBreakdown[attempt.id];
+    return (
+      <div className="mt-1.5 ml-6">
+        <button
+          onClick={() => toggleBreakdown(attempt.id)}
+          className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-orange-600 hover:text-orange-700 font-medium"
+        >
+          {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          {isOpen ? 'Hide' : 'View'} breakdown ({rubric.length} question{rubric.length === 1 ? '' : 's'})
+        </button>
+        {isOpen && (
+          <ul className="mt-1.5 space-y-1.5 border-l-2 border-orange-200 pl-2.5">
+            {rubric.map((r, i) => (
+              <li key={i} className="text-[11px] sm:text-xs">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-gray-700 dark:text-gray-300 flex-1">{r.text || '(no text)'}</span>
+                  <span className="font-mono text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                    {r.score}/{r.max}{r.weight > 1 ? ` ×${r.weight}` : ''}
+                  </span>
+                </div>
+                {r.notes && <div className="text-gray-500 dark:text-gray-400 italic mt-0.5">{r.notes}</div>}
+              </li>
+            ))}
+          </ul>
+        )}
+        {attempt.oral_notes && (
+          <p className="mt-1.5 text-[11px] sm:text-xs text-gray-600 dark:text-gray-400 italic">
+            Teacher: {attempt.oral_notes}
+          </p>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3.5 sm:p-5 shadow-sm">
@@ -136,7 +179,8 @@ export default function TestProgressCard({ programId, currentWeek }) {
           const isOral = testModes[String(idx)] === 'oral';
 
           return (
-            <div key={idx} className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 transition-all gap-2">
+            <div key={idx} className="p-2 sm:p-2.5 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 transition-all">
+              <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {completed ? (
                   <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
@@ -169,7 +213,9 @@ export default function TestProgressCard({ programId, currentWeek }) {
               {!unlocked && !completed && (
                 <span className="text-[11px] sm:text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
               )}
-            </div>
+              </div>
+              {completed && renderBreakdown(test)}
+              </div>
           );
         })}
       </div>
@@ -230,6 +276,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
                 </Link>
               )}
             </div>
+            {bestExam && renderBreakdown(bestExam)}
           </div>
         );
       })()}
