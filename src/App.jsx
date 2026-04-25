@@ -51,7 +51,6 @@ import RootExplorer from './pages/tools/RootExplorer';
 import PageInsights from './pages/tools/PageInsights';
 
 // Components
-import CountdownBanner from './components/CountdownBanner';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import SplashScreen from './components/SplashScreen';
 
@@ -95,7 +94,6 @@ function AppRoutes() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {!isToolsRoute && <CountdownBanner />}
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
