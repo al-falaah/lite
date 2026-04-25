@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
-import { Trophy, Crown, Medal } from 'lucide-react';
+import { Trophy, Crown, Medal, Zap } from 'lucide-react';
 
 /**
  * Per-quiz leaderboard. Reuses the get_quiz_leaderboard RPC.
@@ -112,8 +112,14 @@ export default function QuizLeaderboard({ quizId, program, darkMode = false, lim
                 {rankIcon(Number(r.rank)) || `#${r.rank}`}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-medium truncate ${t.name}`}>
-                  {r.is_self ? 'You' : r.full_name}
+                <p className={`text-sm font-medium truncate ${t.name} flex items-center gap-1`}>
+                  <span className="truncate">{r.is_self ? 'You' : r.full_name}</span>
+                  {r.attempts_count === 1 && (
+                    <Zap
+                      className={`h-3 w-3 flex-shrink-0 ${darkMode ? 'text-yellow-300' : 'text-yellow-500'}`}
+                      aria-label="First try"
+                    />
+                  )}
                 </p>
                 <p className={`text-[10px] ${t.sub}`}>
                   {r.score}/{r.total_questions} correct · {r.time_seconds}s · {r.attempts_count} attempt{r.attempts_count === 1 ? '' : 's'}
