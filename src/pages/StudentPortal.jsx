@@ -15,6 +15,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import StudentClassEtiquette from '../components/student/StudentClassEtiquette';
 import StudentLessons from '../components/student/StudentLessons';
+import StudentQuizLeaderboards from '../components/student/StudentQuizLeaderboards';
 import TestProgressCard from '../components/student/TestProgressCard';
 import StudentCertificateCard from '../components/student/StudentCertificateCard';
 import RecitationPractice from '../components/student/RecitationPractice';
@@ -76,6 +77,7 @@ const StudentPortal = () => {
 
   // Tab state
   const [activeTab, setActiveTab] = useState('home');
+  const [lessonsSubTab, setLessonsSubTab] = useState('lessons'); // 'lessons' | 'reading'
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -532,7 +534,7 @@ const StudentPortal = () => {
               { id: 'home', label: 'Home', icon: Home },
               { id: 'classes', label: 'Classes', icon: Calendar },
               { id: 'lessons', label: 'Lessons', icon: BookOpen },
-              { id: 'practice', label: 'Practice', icon: Gamepad2 },
+              { id: 'practice', label: 'Leaderboard', icon: Trophy },
               { id: 'results', label: 'Results', icon: Trophy },
             ].map(tab => (
               <button
@@ -596,8 +598,8 @@ const StudentPortal = () => {
                 <span className="text-xs font-semibold text-gray-900 dark:text-white">My Lessons</span>
               </button>
               <button onClick={() => setActiveTab('practice')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
-                <Gamepad2 className="h-6 w-6 text-purple-600 mb-1" />
-                <span className="text-xs font-semibold text-gray-900 dark:text-white">Practice</span>
+                <Trophy className="h-6 w-6 text-amber-500 mb-1" />
+                <span className="text-xs font-semibold text-gray-900 dark:text-white">Leaderboard</span>
               </button>
               <button onClick={() => setActiveTab('results')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
                 <Trophy className="h-6 w-6 text-yellow-500 mb-1" />
@@ -996,50 +998,69 @@ const StudentPortal = () => {
           </div>
           </div>
 
-          {/* === LESSONS TAB === */}
+          {/* === LESSONS TAB (with sub-tabs) === */}
           <div className={activeTab !== 'lessons' ? 'hidden' : ''}>
-            <StudentLessons enrollments={enrollments} />
-          </div>
-
-          {/* === PRACTICE TAB === */}
-          <div className={activeTab !== 'practice' ? 'hidden' : ''}>
-          <div className="space-y-6">
-          {/* Practice Drills */}
-          <Card className="border border-purple-200 dark:border-purple-800/50 bg-gradient-to-r from-purple-50 to-white dark:from-purple-900/20 dark:to-gray-800">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/40 rounded-xl flex-shrink-0">
-                  <Gamepad2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Practice Drills</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Level up with interactive quizzes — earn XP, build streaks, and climb the leaderboard</p>
-                </div>
-              </div>
-              <Link to="/drills" className="sm:flex-shrink-0">
-                <Button variant="primary" className="bg-purple-600 hover:bg-purple-700 w-full sm:w-auto whitespace-nowrap">
-                  Start Drilling
-                </Button>
-              </Link>
+            {/* Sub-tabs */}
+            <div className="flex gap-1 mb-4 border-b border-gray-200 dark:border-gray-700">
+              {[
+                { id: 'lessons', label: 'Lessons' },
+                { id: 'reading', label: 'Reading Practice' },
+              ].map(sub => (
+                <button
+                  key={sub.id}
+                  onClick={() => setLessonsSubTab(sub.id)}
+                  className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                    lessonsSubTab === sub.id
+                      ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
+                >
+                  {sub.label}
+                </button>
+              ))}
             </div>
-          </Card>
 
-          {/* Recitation Practice - Per Program */}
-          {enrollments.filter(e => e.status === 'active').map(enrollment => (
-            student?.id && (
-              <div key={enrollment.id}>
-                {enrollments.filter(e => e.status === 'active').length > 1 && (
-                  <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300 mb-3">{getProgramName(enrollment.program)}</h3>
-                )}
-                <RecitationPractice
-                  studentId={student.id}
-                  programId={enrollment.program}
-                  teacherId={assignedTeachers[enrollment.program]?.id}
-                />
+            {lessonsSubTab === 'lessons' && (
+              <StudentLessons enrollments={enrollments} />
+            )}
+
+            {lessonsSubTab === 'reading' && (
+              <div className="space-y-6">
+                {enrollments.filter(e => e.status === 'active').map(enrollment => (
+                  student?.id && (
+                    <div key={enrollment.id}>
+                      {enrollments.filter(e => e.status === 'active').length > 1 && (
+                        <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300 mb-3">{getProgramName(enrollment.program)}</h3>
+                      )}
+                      <RecitationPractice
+                        studentId={student.id}
+                        programId={enrollment.program}
+                        teacherId={assignedTeachers[enrollment.program]?.id}
+                      />
+                    </div>
+                  )
+                ))}
               </div>
-            )
-          ))}
+            )}
           </div>
+
+          {/* === LEADERBOARD TAB (renamed from Practice) === */}
+          <div className={activeTab !== 'practice' ? 'hidden' : ''}>
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-amber-500" />
+                Leaderboard
+              </h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Top scores per chapter drill, by program. Last attempt counts.
+              </p>
+            </div>
+            <StudentQuizLeaderboards
+              enrollments={enrollments}
+              currentWeekByProgram={Object.fromEntries(
+                enrollments.filter(e => e.status === 'active').map(e => [e.program, getActiveWeekForEnrollment(e).week])
+              )}
+            />
           </div>
 
           {/* === RESULTS TAB === */}
@@ -1069,7 +1090,7 @@ const StudentPortal = () => {
             { id: 'home', label: 'Home', icon: Home },
             { id: 'classes', label: 'Classes', icon: Calendar },
             { id: 'lessons', label: 'Lessons', icon: BookOpen },
-            { id: 'practice', label: 'Practice', icon: Gamepad2 },
+            { id: 'practice', label: 'Leaderboard', icon: Trophy },
             { id: 'results', label: 'Results', icon: Trophy },
           ].map(tab => (
             <button

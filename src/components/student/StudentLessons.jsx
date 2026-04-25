@@ -63,6 +63,7 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null); // course of the selected chapter
   const [chapterHasQuiz, setChapterHasQuiz] = useState(false);
+  const [chapterQuizId, setChapterQuizId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedMilestones, setExpandedMilestones] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
@@ -164,11 +165,14 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
 
   // Check quiz
   useEffect(() => {
-    if (!selectedChapter) { setChapterHasQuiz(false); return; }
+    if (!selectedChapter) { setChapterHasQuiz(false); setChapterQuizId(null); return; }
     supabase
       .from('lesson_quizzes').select('id')
       .eq('chapter_id', selectedChapter.id).eq('is_published', true).single()
-      .then(({ data }) => setChapterHasQuiz(!!data));
+      .then(({ data }) => {
+        setChapterHasQuiz(!!data);
+        setChapterQuizId(data?.id || null);
+      });
   }, [selectedChapter]);
 
   useEffect(() => { contentRef.current?.scrollTo(0, 0); }, [selectedChapter]);
@@ -561,15 +565,15 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
               </div>
             </div>
 
-            {/* Quiz link */}
-            {chapterHasQuiz && selectedCourse && (
+            {/* Drill link — gamified replacement for "Test Your Understanding" */}
+            {chapterHasQuiz && chapterQuizId && (
               <div className={`border-t px-4 sm:px-8 py-4 text-center ${t.divider} ${t.quizBg}`}>
                 <button
-                  onClick={() => window.open(`/student/quiz/${selectedCourse.slug}/${selectedChapter.slug}`, '_blank')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-600 text-white text-sm font-medium hover:bg-amber-700 transition-colors"
+                  onClick={() => window.open(`/student/drill/${chapterQuizId}`, '_blank')}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors"
                 >
                   <HelpCircle className="h-4 w-4" />
-                  Test Your Understanding
+                  Let's Go and Drill
                 </button>
               </div>
             )}

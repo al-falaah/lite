@@ -29,7 +29,6 @@ import StoreAdmin from './pages/StoreAdmin';
 import AdminRoles from './pages/AdminRoles';
 import DirectorDashboard from './pages/DirectorDashboard';
 import ResearchAdmin from './pages/ResearchAdmin';
-import ChapterQuiz from './pages/ChapterQuiz';
 import MilestoneTest from './pages/MilestoneTest';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
@@ -39,8 +38,6 @@ import OurMission from './pages/OurMission';
 import RegistrarHub from './pages/RegistrarHub';
 import AcademicDeanHub from './pages/AcademicDeanHub';
 import NotFoundPage from './pages/NotFoundPage';
-import DrillManager from './components/drills/DrillManager';
-import DrillHub from './components/drills/DrillHub';
 import DrillPlayer from './components/drills/DrillPlayer';
 
 // Tools (public, no auth)
@@ -105,8 +102,7 @@ function AppRoutes() {
         <Route path="/payment-cancel" element={<PaymentCancelPage />} />
         <Route path="/student" element={<StudentPortal />} />
         <Route path="/student/test/:programId/:type/:milestoneIndex?" element={<MilestoneTest />} />
-        <Route path="/drills" element={<DrillHub />} />
-        <Route path="/drills/play/:deckId" element={<DrillPlayer />} />
+        <Route path="/student/drill/:quizId" element={<DrillPlayer />} />
         <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
         <Route path="/vacancies" element={<VacanciesPage />} />
         <Route path="/teacher" element={<TeacherPortal />} />
@@ -115,7 +111,6 @@ function AppRoutes() {
         <Route path="/faqs" element={<FAQs />} />
         <Route path="/resources" element={<Navigate to="/blog" replace />} />
         <Route path="/resources/*" element={<Navigate to="/blog" replace />} />
-        <Route path="/student/quiz/:courseSlug/:chapterSlug" element={<ChapterQuiz />} />
         <Route path="/store" element={<StorePage />} />
         <Route path="/store/order" element={<StoreOrderPage />} />
         <Route path="/store/order-confirmation" element={<StoreOrderConfirmation />} />
@@ -207,16 +202,6 @@ function AppRoutes() {
           element={
             <RoleRoute allowedRoles={['academic_dean', 'director']}>
               <ResearchAdmin />
-            </RoleRoute>
-          }
-        />
-
-        {/* Drill Manager - academic_dean or director */}
-        <Route
-          path="/drills/manage"
-          element={
-            <RoleRoute allowedRoles={['academic_dean', 'director']}>
-              <DrillManager />
             </RoleRoute>
           }
         />

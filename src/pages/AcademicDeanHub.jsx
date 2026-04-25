@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { BookOpen, FileText, Gamepad2, LogOut, ArrowRight, ArrowLeft } from 'lucide-react';
+import { BookOpen, FileText, LogOut, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const areas = [
@@ -22,15 +22,6 @@ const areas = [
     iconColor: 'text-teal-600',
     borderColor: 'hover:border-teal-300'
   },
-  {
-    title: 'Drill Manager',
-    description: 'Create and manage interactive drill decks for all programs',
-    icon: Gamepad2,
-    href: '/drills/manage',
-    iconBg: 'bg-purple-50',
-    iconColor: 'text-purple-600',
-    borderColor: 'hover:border-purple-300'
-  }
 ];
 
 export default function AcademicDeanHub() {
