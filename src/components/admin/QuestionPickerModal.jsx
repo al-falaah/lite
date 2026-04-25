@@ -28,15 +28,15 @@ export default function QuestionPickerModal({
     try {
       let query = supabase
         .from('test_questions')
-        .select('id, question_text, question_type, options, difficulty, section_tag, milestone_index')
+        .select('id, question_text, question_type, options, difficulty, section_tag, milestone_index, type')
         .eq('program_id', programId);
       if (type === 'milestone') {
-        query = query.eq('milestone_index', milestoneIndex);
+        query = query.eq('type', 'milestone').eq('milestone_index', milestoneIndex);
       } else {
-        // For final exam, allow picking from any milestone
-        query = query.not('milestone_index', 'is', null);
+        // For final exam grading, let teacher pull from any bank question
+        // (milestone or final_exam) — flexibility is the point.
       }
-      const { data, error } = await query.order('milestone_index').order('id');
+      const { data, error } = await query.order('milestone_index', { nullsFirst: false }).order('id');
       if (error) throw error;
       setQuestions(data || []);
     } catch (err) {
