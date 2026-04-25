@@ -1055,12 +1055,7 @@ const StudentPortal = () => {
                 Top scores per chapter drill, by program. Last attempt counts.
               </p>
             </div>
-            <StudentQuizLeaderboards
-              enrollments={enrollments}
-              currentWeekByProgram={Object.fromEntries(
-                enrollments.filter(e => e.status === 'active').map(e => [e.program, getActiveWeekForEnrollment(e).week])
-              )}
-            />
+            <StudentQuizLeaderboards enrollments={enrollments} />
           </div>
 
           {/* === RESULTS TAB === */}

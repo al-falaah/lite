@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
-import { Trophy, ChevronDown, ChevronUp, Lock } from 'lucide-react';
+import { Trophy, ChevronDown, ChevronUp } from 'lucide-react';
 import QuizLeaderboard from '../drills/QuizLeaderboard';
 import { PROGRAMS } from '../../config/programs';
 
@@ -11,11 +11,12 @@ import { PROGRAMS } from '../../config/programs';
  * published lesson_quiz for the program is listed. Tap a quiz row to reveal
  * its leaderboard.
  *
- * Lock state: a quiz is locked until the student's current_week >= the
- * chapter's milestone weekEnd. Leaderboard is hidden while locked, but the
- * row still shows up so the student knows what's coming.
+ * No week-gating here on purpose: if a quiz is playable from the lesson page
+ * (lesson visibility itself is what gates content), it should also be
+ * inspectable on the leaderboard. The lesson list already controls whether
+ * the student can reach a quiz; this view just shows results.
  */
-export default function StudentQuizLeaderboards({ enrollments, currentWeekByProgram = {} }) {
+export default function StudentQuizLeaderboards({ enrollments }) {
   const activeEnrolments = enrollments?.filter(e => e.status === 'active') || [];
   const [activeProgram, setActiveProgram] = useState(activeEnrolments[0]?.program || null);
   const [quizzes, setQuizzes] = useState({}); // { [program]: rows }
@@ -87,20 +88,6 @@ export default function StudentQuizLeaderboards({ enrollments, currentWeekByProg
   }
 
   const programRows = quizzes[activeProgram] || [];
-  const currentWeek = currentWeekByProgram[activeProgram];
-
-  // A quiz is unlocked if either we have no week-info (fall back to unlocked)
-  // or the chapter's milestone has been reached.
-  const isUnlocked = (row) => {
-    if (currentWeek == null) return true;
-    const milestoneIdx = row.chapter?.milestone_index;
-    if (milestoneIdx == null) return true;
-    const milestones = PROGRAMS[activeProgram]?.milestones || [];
-    // milestone_index in lesson_chapters is 1-based; PROGRAMS.milestones is 0-indexed array
-    const m = milestones[milestoneIdx - 1];
-    if (!m) return true;
-    return currentWeek >= (m.weekEnd ?? 0);
-  };
 
   return (
     <div>
@@ -135,26 +122,16 @@ export default function StudentQuizLeaderboards({ enrollments, currentWeekByProg
 
       <ul className="space-y-2">
         {programRows.map(row => {
-          const unlocked = isUnlocked(row);
-          const isOpen = expandedQuizId === row.id && unlocked;
+          const isOpen = expandedQuizId === row.id;
           const milestoneIdx = row.chapter?.milestone_index;
           return (
             <li key={row.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
               <button
-                disabled={!unlocked}
                 onClick={() => setExpandedQuizId(isOpen ? null : row.id)}
-                className={`w-full px-4 py-3 flex items-center justify-between text-left transition-colors ${
-                  unlocked
-                    ? 'hover:bg-gray-50 dark:hover:bg-gray-700'
-                    : 'opacity-60 cursor-not-allowed'
-                }`}
+                className="w-full px-4 py-3 flex items-center justify-between text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  {unlocked ? (
-                    <Trophy className="h-4 w-4 text-amber-500 flex-shrink-0" />
-                  ) : (
-                    <Lock className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  )}
+                  <Trophy className="h-4 w-4 text-amber-500 flex-shrink-0" />
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{row.chapter?.title || row.title}</p>
                     <p className="text-[11px] text-gray-500 dark:text-gray-400">
@@ -162,7 +139,7 @@ export default function StudentQuizLeaderboards({ enrollments, currentWeekByProg
                     </p>
                   </div>
                 </div>
-                {unlocked && (isOpen ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />)}
+                {isOpen ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
               </button>
               {isOpen && (
                 <div className="border-t border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-900/30">
