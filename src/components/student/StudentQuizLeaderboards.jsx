@@ -49,11 +49,11 @@ export default function StudentQuizLeaderboards({ enrollments }) {
 
       const { data: chapters } = await supabase
         .from('lesson_chapters')
-        .select('id, title, sort_order, milestone_index, course_id')
+        .select('id, title, chapter_number, milestone_index, course_id')
         .in('course_id', courseIds)
         .eq('is_published', true)
         .order('milestone_index', { nullsFirst: false })
-        .order('sort_order', { nullsFirst: false });
+        .order('chapter_number', { nullsFirst: false });
 
       const chapterIds = (chapters || []).map(c => c.id);
       if (chapterIds.length === 0) {
@@ -74,7 +74,7 @@ export default function StudentQuizLeaderboards({ enrollments }) {
           const am = a.chapter?.milestone_index ?? 999;
           const bm = b.chapter?.milestone_index ?? 999;
           if (am !== bm) return am - bm;
-          return (a.chapter?.sort_order ?? 0) - (b.chapter?.sort_order ?? 0);
+          return (a.chapter?.chapter_number ?? 0) - (b.chapter?.chapter_number ?? 0);
         });
 
       if (!cancelled) {
