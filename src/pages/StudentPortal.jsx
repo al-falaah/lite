@@ -1001,7 +1001,7 @@ const StudentPortal = () => {
           {/* === LESSONS TAB (with sub-tabs) === */}
           <div className={activeTab !== 'lessons' ? 'hidden' : ''}>
             {/* Sub-tabs */}
-            <div className="flex gap-1 mb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex gap-1 mb-6 border-b border-gray-200 dark:border-gray-700">
               {[
                 { id: 'lessons', label: 'Lessons' },
                 { id: 'reading', label: 'Reading Practice' },
@@ -1009,7 +1009,7 @@ const StudentPortal = () => {
                 <button
                   key={sub.id}
                   onClick={() => setLessonsSubTab(sub.id)}
-                  className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                  className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
                     lessonsSubTab === sub.id
                       ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
                       : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
