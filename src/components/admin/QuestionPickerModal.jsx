@@ -26,19 +26,81 @@ export default function QuestionPickerModal({
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      let query = supabase
+      // Source 1: formal test_questions bank (milestone exams)
+      let testBankQuery = supabase
         .from('test_questions')
         .select('id, question_text, question_type, options, difficulty, section_tag, milestone_index, type')
         .eq('program_id', programId);
       if (type === 'milestone') {
-        query = query.eq('type', 'milestone').eq('milestone_index', milestoneIndex);
-      } else {
-        // For final exam grading, let teacher pull from any bank question
-        // (milestone or final_exam) — flexibility is the point.
+        testBankQuery = testBankQuery.eq('type', 'milestone').eq('milestone_index', milestoneIndex);
       }
-      const { data, error } = await query.order('milestone_index', { nullsFirst: false }).order('id');
-      if (error) throw error;
-      setQuestions(data || []);
+
+      // Source 2: lesson chapter quizzes — joined through chapter.milestone_index +
+      // course.program_id so we only get questions actually attached to this milestone.
+      //
+      // Note: milestoneIndex from OralTestGrading is 0-based (idx in milestones array),
+      // but lesson_chapters.milestone_index is 1-based. We convert.
+      let chapterQuery = supabase
+        .from('lesson_chapters')
+        .select('id, milestone_index, lesson_courses!inner(program_id)')
+        .eq('lesson_courses.program_id', programId);
+      if (type === 'milestone') {
+        chapterQuery = chapterQuery.eq('milestone_index', milestoneIndex + 1);
+      } else {
+        chapterQuery = chapterQuery.not('milestone_index', 'is', null);
+      }
+      const { data: chapters, error: chErr } = await chapterQuery;
+      if (chErr) throw chErr;
+      const chapterIds = (chapters || []).map((c) => c.id);
+
+      let lessonQuestions = [];
+      if (chapterIds.length > 0) {
+        const { data: quizzes, error: qzErr } = await supabase
+          .from('lesson_quizzes')
+          .select('id, chapter_id')
+          .in('chapter_id', chapterIds);
+        if (qzErr) throw qzErr;
+        const quizIds = (quizzes || []).map((q) => q.id);
+        if (quizIds.length > 0) {
+          const { data: lqs, error: lqErr } = await supabase
+            .from('quiz_questions')
+            .select('id, quiz_id, question, options, correct_answer, difficulty, section_tag')
+            .in('quiz_id', quizIds);
+          if (lqErr) throw lqErr;
+          lessonQuestions = lqs || [];
+        }
+      }
+
+      const { data: testBank, error: tbErr } = await testBankQuery
+        .order('milestone_index', { nullsFirst: false })
+        .order('id');
+      if (tbErr) throw tbErr;
+
+      // Normalise into a single shape with a `source` flag.
+      const merged = [
+        ...(testBank || []).map((q) => ({
+          id: `test:${q.id}`,
+          source: 'test_bank',
+          question_id: q.id,
+          question_text: q.question_text,
+          question_type: q.question_type,
+          difficulty: q.difficulty,
+          section_tag: q.section_tag,
+          milestone_index: q.milestone_index,
+        })),
+        ...lessonQuestions.map((q) => ({
+          id: `lesson:${q.id}`,
+          source: 'lesson_quiz',
+          question_id: null, // lesson quiz questions live in quiz_questions, not test_questions —
+                            // keep null so the rubric stores the text directly.
+          question_text: q.question,
+          question_type: 'mcq',
+          difficulty: q.difficulty,
+          section_tag: q.section_tag,
+          milestone_index: type === 'milestone' ? milestoneIndex : null,
+        })),
+      ];
+      setQuestions(merged);
     } catch (err) {
       console.error('Failed to load questions:', err);
     } finally {
@@ -58,6 +120,7 @@ export default function QuestionPickerModal({
   };
 
   const filtered = questions.filter((q) => {
+    // alreadyPickedIds is a list of strings like "test:<uuid>" / "lesson:<uuid>"
     if (alreadyPickedIds.includes(q.id)) return false;
     if (!search.trim()) return true;
     return q.question_text?.toLowerCase().includes(search.toLowerCase());
@@ -121,6 +184,13 @@ export default function QuestionPickerModal({
                         <div className="min-w-0 flex-1">
                           <p className="text-sm text-gray-900 leading-snug">{q.question_text}</p>
                           <div className="flex flex-wrap gap-1.5 mt-1">
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                              q.source === 'lesson_quiz'
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : 'bg-blue-100 text-blue-700'
+                            }`}>
+                              {q.source === 'lesson_quiz' ? 'Lesson quiz' : 'Test bank'}
+                            </span>
                             {q.milestone_index != null && (
                               <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">
                                 M{q.milestone_index + 1}
@@ -134,11 +204,6 @@ export default function QuestionPickerModal({
                             {q.section_tag && (
                               <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">
                                 {q.section_tag}
-                              </span>
-                            )}
-                            {q.question_type && (
-                              <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded">
-                                {q.question_type}
                               </span>
                             )}
                           </div>

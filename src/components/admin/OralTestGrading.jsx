@@ -30,6 +30,7 @@ function makeRow(partial = {}) {
     rid: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
     source: 'ad_hoc',
     question_id: null,
+    picker_id: null,
     text: '',
     score: '',
     max: 10,
@@ -187,8 +188,14 @@ export default function OralTestGrading({ student, program, currentWeek }) {
       ...prev,
       [itemKey]: [
         ...(prev[itemKey] || []),
+        // picker returns rows shaped: { id: 'test:<uuid>'|'lesson:<uuid>', source, question_id, question_text, ... }
         ...picked.map((q) =>
-          makeRow({ source: 'bank', question_id: q.id, text: q.question_text })
+          makeRow({
+            source: 'bank',
+            question_id: q.question_id, // null for lesson_quiz rows (text is the source of truth)
+            picker_id: q.id, // prefixed id used to dedupe in the picker
+            text: q.question_text,
+          })
         ),
       ],
     }));
@@ -646,7 +653,7 @@ export default function OralTestGrading({ student, program, currentWeek }) {
           programId={program}
           milestoneIndex={picker.milestoneIndex}
           type={picker.type}
-          alreadyPickedIds={(rubrics[picker.key] || []).filter((r) => r.source === 'bank' && r.question_id).map((r) => r.question_id)}
+          alreadyPickedIds={(rubrics[picker.key] || []).filter((r) => r.source === 'bank' && r.picker_id).map((r) => r.picker_id)}
           onPick={(picked) => {
             addBankQuestions(picker.key, picked);
             setPicker(null);
