@@ -18,10 +18,17 @@ import { PROGRAMS } from '../../config/programs';
  */
 export default function StudentQuizLeaderboards({ enrollments }) {
   const activeEnrolments = enrollments?.filter(e => e.status === 'active') || [];
-  const [activeProgram, setActiveProgram] = useState(activeEnrolments[0]?.program || null);
+  const [activeProgram, setActiveProgram] = useState(null);
   const [quizzes, setQuizzes] = useState({}); // { [program]: rows }
   const [loading, setLoading] = useState(false);
   const [expandedQuizId, setExpandedQuizId] = useState(null);
+
+  // Default to the first active enrolment once it arrives.
+  useEffect(() => {
+    if (activeProgram) return;
+    const first = activeEnrolments[0]?.program;
+    if (first) setActiveProgram(first);
+  }, [activeEnrolments, activeProgram]);
 
   useEffect(() => {
     if (!activeProgram || quizzes[activeProgram]) return;
