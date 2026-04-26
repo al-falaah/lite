@@ -13,6 +13,32 @@ const GRADE_OPTIONS = [
 const GRADE_LABEL = Object.fromEntries(GRADE_OPTIONS.map(g => [g.value, g.label]));
 const MAX_SECONDS = 900;
 
+const inputClass =
+  'w-full text-sm text-slate-900 placeholder-slate-400 ' +
+  'border border-slate-300 rounded-md px-3 py-2 bg-white ' +
+  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
+
+const btnPrimary =
+  'inline-flex items-center justify-center px-4 py-2 ' +
+  'bg-emerald-600 text-white text-sm font-medium rounded-md ' +
+  'hover:bg-emerald-700 active:bg-emerald-800 ' +
+  'disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed ' +
+  'transition-colors';
+
+const btnSecondary =
+  'inline-flex items-center justify-center px-3 py-2 ' +
+  'bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md ' +
+  'hover:bg-slate-50 hover:border-slate-400 ' +
+  'disabled:opacity-50 disabled:cursor-not-allowed ' +
+  'transition-colors';
+
+const btnGhost =
+  'inline-flex items-center justify-center px-2 py-1 ' +
+  'text-slate-600 text-xs font-medium rounded ' +
+  'hover:bg-slate-100 hover:text-slate-900 ' +
+  'transition-colors';
+
 /**
  * Recitation Practice — teacher side.
  *
@@ -20,9 +46,9 @@ const MAX_SECONDS = 900;
  * student records audio, teacher reviews with grade + optional feedback +
  * optional voice note.
  *
- * Visual approach: single neutral surface, status as plain text, grade
- * picker as small ghost-bordered chips that turn dark when selected
- * (no traffic-light colours). One emerald accent on the primary action.
+ * Visual approach: standard card-based UI in slate + emerald palette.
+ * Real bordered inputs, real buttons, status as text. Selected grade
+ * uses an emerald-tinted chip — branded selection, not greyscale.
  */
 export default function RecitationAssignments({ student, program, teacherId }) {
   const [rec, setRec] = useState(null);
@@ -57,7 +83,6 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student?.id, program, teacherId]);
 
-  // Realtime: auto-refresh when student submits or recitation changes
   useEffect(() => {
     if (!student?.id || !program) return;
     const channel = supabase
@@ -73,7 +98,6 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [student?.id, program]);
 
-  // Broadcast channel for live recording indicator
   useEffect(() => {
     if (!student?.id || !program) return;
     const ch = supabase.channel(`rec-live-${student.id}-${program}`);
@@ -142,7 +166,6 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     }
   };
 
-  // ── Audio recording (teacher feedback) ──
   const startRec = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -192,7 +215,6 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'teacher', active: false } });
   };
 
-  // ── Submit review ──
   const handleSubmitReview = async () => {
     if (!grade || !rec) { toast.error('Please select a grade'); return; }
     setUploading(true);
@@ -243,9 +265,9 @@ export default function RecitationAssignments({ student, program, teacherId }) {
 
   if (loading) {
     return (
-      <div className="space-y-3 py-2">
-        <div className="h-4 w-32 bg-gray-100 rounded animate-pulse" />
-        <div className="h-12 bg-gray-100 rounded animate-pulse" />
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5 space-y-3">
+        <div className="h-4 w-32 bg-slate-100 rounded animate-pulse" />
+        <div className="h-12 bg-slate-100 rounded animate-pulse" />
       </div>
     );
   }
@@ -255,64 +277,62 @@ export default function RecitationAssignments({ student, program, teacherId }) {
   const canAssign = !rec || (status === 'reviewed' && rec.feedback_seen_at);
   const awaitingStudentView = status === 'reviewed' && !rec.feedback_seen_at;
 
-  // Status text shown next to the heading; null = no status to show.
   let statusText = null;
-  let statusClass = 'text-gray-500';
+  let statusClass = 'text-slate-500';
   if (needsReview) {
     statusText = '1 to review';
-    statusClass = 'text-emerald-700';
+    statusClass = 'text-amber-700';
   } else if (status === 'assigned' && studentRecording) {
     statusText = 'Student is recording…';
     statusClass = 'text-emerald-700';
   } else if (status === 'assigned') {
     statusText = 'Awaiting student';
-    statusClass = 'text-gray-500';
+    statusClass = 'text-slate-500';
   } else if (awaitingStudentView) {
-    statusText = 'Awaiting student to see feedback';
-    statusClass = 'text-gray-500';
+    statusText = 'Awaiting student';
+    statusClass = 'text-slate-500';
   } else if (status === 'reviewed') {
     statusText = 'Reviewed';
-    statusClass = 'text-gray-500';
+    statusClass = 'text-slate-500';
   }
 
   return (
-    <div>
-      {/* Top status line + Assign button */}
-      <div className="flex items-baseline justify-between gap-3 mb-3">
-        {statusText ? (
-          <p className={`text-xs ${statusClass}`}>{statusText}</p>
-        ) : <span />}
+    <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+
+      {/* Card header */}
+      <div className="flex items-baseline justify-between gap-3 px-5 py-4 border-b border-slate-100">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900">Recitation activity</h3>
+          {statusText && <p className={`text-xs mt-0.5 ${statusClass}`}>{statusText}</p>}
+        </div>
         {canAssign && !showAssign && (
-          <button
-            onClick={() => setShowAssign(true)}
-            className="text-sm font-medium text-gray-900 hover:text-gray-600"
-          >
-            {rec ? 'Assign new passage' : '+ Assign passage'}
+          <button onClick={() => setShowAssign(true)} className={btnSecondary}>
+            {rec ? 'Assign new passage' : 'Assign passage'}
           </button>
         )}
       </div>
 
       {/* Submitted — review form */}
       {needsReview && (
-        <div className="py-4 border-t border-gray-200">
-          <div className="mb-3">
-            <p className="text-sm font-medium text-gray-900">{rec.passage}</p>
-            {rec.notes && <p className="text-sm text-gray-600 mt-0.5">{rec.notes}</p>}
-            <p className="text-xs text-gray-500 mt-1">
+        <div className="px-5 py-4 space-y-5">
+          <div>
+            <p className="text-sm font-medium text-slate-900">{rec.passage}</p>
+            {rec.notes && <p className="text-sm text-slate-600 mt-0.5">{rec.notes}</p>}
+            <p className="text-xs text-slate-500 mt-1">
               Sent {new Date(rec.submitted_at || rec.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
 
           {studentUrl && (
-            <div className="mb-4">
-              <p className="text-xs text-gray-500 mb-1.5">Student recording</p>
+            <div>
+              <p className="text-xs font-medium text-slate-700 mb-1.5">Student recording</p>
               <VoiceNote audioUrl={studentUrl} />
             </div>
           )}
 
           {/* Grade picker */}
-          <div className="mb-4">
-            <p className="text-xs text-gray-500 mb-2">Grade</p>
+          <div>
+            <p className="text-xs font-medium text-slate-700 mb-2">Grade</p>
             <div className="flex flex-wrap gap-2">
               {GRADE_OPTIONS.map(opt => {
                 const selected = grade === opt.value;
@@ -320,10 +340,10 @@ export default function RecitationAssignments({ student, program, teacherId }) {
                   <button
                     key={opt.value}
                     onClick={() => setGrade(opt.value)}
-                    className={`text-sm px-3 py-1 rounded-full border transition-colors ${
+                    className={`text-sm px-3 py-1.5 rounded-md border font-medium transition-colors ${
                       selected
-                        ? 'bg-gray-900 text-white border-gray-900'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                        : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400'
                     }`}
                   >
                     {opt.label}
@@ -334,35 +354,33 @@ export default function RecitationAssignments({ student, program, teacherId }) {
           </div>
 
           {/* Written feedback */}
-          <div className="mb-4">
-            <p className="text-xs text-gray-500 mb-1.5">Written feedback (optional)</p>
+          <div>
+            <label className="text-xs font-medium text-slate-700 block mb-1.5">Written feedback (optional)</label>
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              rows={2}
-              className="w-full text-sm text-gray-900 border-0 border-b border-gray-200 bg-transparent px-0 py-1 resize-none focus:border-gray-900 focus:outline-none focus:ring-0"
+              rows={3}
+              placeholder="A note for the student"
+              className={`${inputClass} resize-y`}
             />
           </div>
 
           {/* Voice note */}
-          <div className="mb-4">
-            <p className="text-xs text-gray-500 mb-1.5">Voice note (optional)</p>
+          <div>
+            <p className="text-xs font-medium text-slate-700 mb-1.5">Voice note (optional)</p>
             {!recording && !blob && (
-              <button
-                onClick={startRec}
-                className="text-sm text-gray-700 hover:text-gray-900 underline-offset-4 hover:underline"
-              >
+              <button onClick={startRec} className={btnSecondary}>
                 Record a voice note
               </button>
             )}
             {recording && (
-              <div className="flex items-center justify-between gap-3 py-1">
-                <div className="flex items-center gap-2 text-sm text-gray-700">
+              <div className="flex items-center justify-between gap-3 px-3 py-2 border border-slate-200 rounded-md bg-slate-50">
+                <div className="flex items-center gap-2 text-sm text-slate-700">
                   <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                   <span className="font-mono tabular-nums">{fmt(elapsed)}</span>
-                  <span className="text-gray-500">recording…</span>
+                  <span className="text-slate-500">recording…</span>
                 </div>
-                <button onClick={stopRec} className="text-sm font-medium text-gray-900 hover:text-gray-600">
+                <button onClick={stopRec} className={btnPrimary}>
                   Stop
                 </button>
               </div>
@@ -371,55 +389,57 @@ export default function RecitationAssignments({ student, program, teacherId }) {
               <VoiceNote audioUrl={blobUrl} onDelete={discardAudio} />
             )}
           </div>
+        </div>
+      )}
 
-          <div className="flex justify-end">
-            <button
-              onClick={handleSubmitReview}
-              disabled={!grade || uploading}
-              className="px-4 py-1.5 bg-emerald-700 text-white text-sm font-medium rounded hover:bg-emerald-800 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
-            >
-              {uploading ? 'Submitting…' : 'Submit review'}
-            </button>
-          </div>
+      {needsReview && (
+        <div className="px-5 py-3 border-t border-slate-100 bg-slate-50 flex justify-end">
+          <button
+            onClick={handleSubmitReview}
+            disabled={!grade || uploading}
+            className={btnPrimary}
+          >
+            {uploading ? 'Submitting…' : 'Submit review'}
+          </button>
         </div>
       )}
 
       {/* Assigned — waiting for student */}
       {status === 'assigned' && (
-        <div className="py-4 border-t border-gray-200">
+        <div className="px-5 py-4">
           <div className="flex items-baseline justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900">{rec.passage}</p>
-              {rec.notes && <p className="text-sm text-gray-600 mt-0.5">{rec.notes}</p>}
+              <p className="text-sm font-medium text-slate-900">{rec.passage}</p>
+              {rec.notes && <p className="text-sm text-slate-600 mt-0.5">{rec.notes}</p>}
             </div>
-            <button onClick={deleteRecitation} className="text-xs text-gray-500 hover:text-gray-900 flex-shrink-0">
-              Delete
-            </button>
+            <button onClick={deleteRecitation} className={btnGhost}>Delete</button>
           </div>
         </div>
       )}
 
-      {/* Reviewed — show what was sent */}
+      {/* Reviewed */}
       {status === 'reviewed' && (
-        <div className="py-4 border-t border-gray-200">
+        <div className="px-5 py-4 space-y-3">
           <div className="flex items-baseline justify-between gap-3">
-            <p className="text-sm font-medium text-gray-900">{rec.passage}</p>
+            <p className="text-sm font-medium text-slate-900">{rec.passage}</p>
             {rec.grade && (
-              <span className="text-sm text-gray-700">{GRADE_LABEL[rec.grade] || rec.grade}</span>
+              <span className="text-sm font-medium px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                {GRADE_LABEL[rec.grade] || rec.grade}
+              </span>
             )}
           </div>
           {rec.feedback && (
-            <p className="text-sm text-gray-700 mt-2 italic">"{rec.feedback}"</p>
+            <p className="text-sm text-slate-700 italic">"{rec.feedback}"</p>
           )}
           {studentUrl && (
-            <div className="mt-3">
-              <p className="text-xs text-gray-500 mb-1">Student</p>
+            <div>
+              <p className="text-xs font-medium text-slate-500 mb-1">Student</p>
               <VoiceNote audioUrl={studentUrl} compact />
             </div>
           )}
           {teacherUrl && (
-            <div className="mt-3">
-              <p className="text-xs text-gray-500 mb-1">Your feedback</p>
+            <div>
+              <p className="text-xs font-medium text-slate-500 mb-1">Your feedback</p>
               <VoiceNote audioUrl={teacherUrl} compact />
             </div>
           )}
@@ -428,41 +448,41 @@ export default function RecitationAssignments({ student, program, teacherId }) {
 
       {/* Assign passage form */}
       {showAssign && (
-        <div className="py-4 border-t border-gray-200 space-y-3">
+        <div className="px-5 py-4 space-y-3 border-t border-slate-100 bg-slate-50">
           <div>
-            <p className="text-xs text-gray-500 mb-1">Passage</p>
+            <label className="text-xs font-medium text-slate-700 block mb-1.5">Passage</label>
             <input
               type="text"
               value={passage}
               onChange={(e) => setPassage(e.target.value)}
               placeholder="e.g. Surah Al-Baqarah 1–5, Hadeeth 3, Page 10"
-              className="w-full text-sm text-gray-900 border-0 border-b border-gray-200 bg-transparent px-0 py-1 focus:border-gray-900 focus:outline-none focus:ring-0"
+              className={inputClass}
             />
           </div>
           <div>
-            <p className="text-xs text-gray-500 mb-1">Notes (optional)</p>
+            <label className="text-xs font-medium text-slate-700 block mb-1.5">Notes (optional)</label>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Anything to focus on (e.g. madd, tajweed of letter ر)"
-              className="w-full text-sm text-gray-900 border-0 border-b border-gray-200 bg-transparent px-0 py-1 focus:border-gray-900 focus:outline-none focus:ring-0"
+              placeholder="Anything to focus on"
+              className={inputClass}
             />
           </div>
           {rec && (
-            <p className="text-xs text-gray-500">Previous reading will be replaced.</p>
+            <p className="text-xs text-slate-500">Previous reading will be replaced.</p>
           )}
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-2 pt-1">
             <button
               onClick={() => { setShowAssign(false); setPassage(''); setNotes(''); }}
-              className="px-3 py-1.5 text-sm text-gray-700 hover:text-gray-900"
+              className={btnSecondary}
             >
               Cancel
             </button>
             <button
               onClick={handleAssign}
               disabled={!passage.trim() || assigning}
-              className="px-4 py-1.5 bg-emerald-700 text-white text-sm font-medium rounded hover:bg-emerald-800 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+              className={btnPrimary}
             >
               {assigning ? 'Assigning…' : 'Assign passage'}
             </button>
@@ -470,11 +490,12 @@ export default function RecitationAssignments({ student, program, teacherId }) {
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty */}
       {!rec && !showAssign && (
-        <p className="text-sm text-gray-500 py-2">
-          No recitation activity yet. Assign a passage to get started.
-        </p>
+        <div className="px-5 py-8 text-center">
+          <p className="text-sm text-slate-600">No recitation activity yet.</p>
+          <p className="text-xs text-slate-500 mt-1">Assign a passage to get started.</p>
+        </div>
       )}
     </div>
   );

@@ -214,7 +214,7 @@ export default function TeacherStudentDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent" />
       </div>
     );
@@ -222,9 +222,9 @@ export default function TeacherStudentDetail() {
 
   if (!student) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-3 px-4 text-center">
-        <p className="text-gray-700">Student not found.</p>
-        <button onClick={goBackToStudents} className="text-sm text-emerald-700 hover:text-emerald-800">← Back to my students</button>
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-3 px-4 text-center">
+        <p className="text-slate-700">Student not found.</p>
+        <button onClick={goBackToStudents} className="text-sm font-medium text-emerald-700 hover:text-emerald-800">← Back to my students</button>
       </div>
     );
   }
@@ -232,28 +232,28 @@ export default function TeacherStudentDetail() {
   const programLabel = programConfig?.shortName || program;
 
   return (
-    <>
+    <div className="min-h-screen bg-slate-50">
       <Helmet><title>{`${student.full_name} | Teacher`}</title></Helmet>
 
       {/* Sticky page header */}
-      <div className="sticky top-0 z-30 bg-white border-b border-gray-200">
+      <div className="sticky top-0 z-30 bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3">
           <button
             onClick={goBackToStudents}
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 mb-2"
+            className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 mb-2"
           >
             <ChevronLeft className="h-4 w-4" />
             My students
           </button>
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 truncate">{student.full_name}</h1>
-              <p className="text-sm text-gray-500 mt-0.5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 truncate">{student.full_name}</h1>
+              <p className="text-sm text-slate-500 mt-0.5">
                 ID {student.student_id}
                 {enrollment && (
                   <>
                     {' · '}
-                    <span className={isActive ? 'text-gray-700' : 'text-red-600 font-medium'}>
+                    <span className={isActive ? 'text-slate-700' : 'text-red-700 font-medium'}>
                       {enrollment.status === 'active' ? `Active · Week ${currentWeekNumber} of ${totalWeeks}` :
                        enrollment.status === 'withdrawn' ? 'Withdrawn' :
                        enrollment.status === 'completed' ? 'Graduated' : enrollment.status}
@@ -265,11 +265,11 @@ export default function TeacherStudentDetail() {
 
             {assignedPrograms.length > 1 && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">Program</span>
+                <span className="text-xs text-slate-500">Program</span>
                 <select
                   value={program || ''}
                   onChange={(e) => setSearchParams({ program: e.target.value })}
-                  className="text-sm border border-gray-300 rounded px-2 py-1 bg-white"
+                  className="text-sm border border-slate-300 rounded-md px-2 py-1 bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
                 >
                   {assignedPrograms.map(p => (
                     <option key={p} value={p}>{PROGRAMS[p]?.shortName || p}</option>
@@ -278,138 +278,141 @@ export default function TeacherStudentDetail() {
               </div>
             )}
             {assignedPrograms.length === 1 && (
-              <span className="text-sm text-gray-600">{programLabel}</span>
+              <span className="text-sm font-medium text-slate-700">{programLabel}</span>
             )}
           </div>
         </div>
       </div>
 
       {/* Body */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
         {/* Two-column row: this week's classes + contact info */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
           {/* THIS WEEK'S CLASSES */}
-          <section>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
-              This week's classes
-            </h2>
-
-            {!isActive ? (
-              <p className="text-sm text-red-700 py-2">
-                Enrollment is {enrollment?.status || 'inactive'}. Schedule management is not available.
-              </p>
-            ) : currentWeekClasses.length === 0 ? (
-              <p className="text-sm text-gray-500 py-2">No classes scheduled for this week.</p>
-            ) : (
-              <div className="space-y-3">
-                {[mainClass, shortClass].filter(Boolean).map((cls) => {
-                  const isMain = cls.class_type === 'main';
-                  const duration = isMain
-                    ? programConfig?.schedule?.session1?.duration
-                    : programConfig?.schedule?.session2?.duration;
-                  const dayLabel = cls.day_of_week ?? '';
-                  const timeLabel = formatTime(cls.class_time);
-                  const completed = cls.status === 'completed';
-                  return (
-                    <div key={cls.id} className="py-3 border-b border-gray-100 last:border-b-0">
-                      <div className="flex items-baseline justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
-                            {isMain ? 'Main class' : 'Short class'}
-                            <span className="text-gray-400 font-normal"> · {duration}</span>
-                          </p>
-                          <p className="text-sm text-gray-600 mt-0.5">
-                            {dayLabel}{timeLabel ? ` · ${timeLabel}` : ''}
-                          </p>
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h2 className="text-sm font-semibold text-slate-900">This week's classes</h2>
+            </div>
+            <div className="px-5 py-4">
+              {!isActive ? (
+                <div className="px-3 py-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-800">
+                    Enrollment is {enrollment?.status || 'inactive'}. Schedule management is not available.
+                  </p>
+                </div>
+              ) : currentWeekClasses.length === 0 ? (
+                <p className="text-sm text-slate-500 py-2">No classes scheduled for this week.</p>
+              ) : (
+                <div className="divide-y divide-slate-100">
+                  {[mainClass, shortClass].filter(Boolean).map((cls) => {
+                    const isMain = cls.class_type === 'main';
+                    const duration = isMain
+                      ? programConfig?.schedule?.session1?.duration
+                      : programConfig?.schedule?.session2?.duration;
+                    const dayLabel = cls.day_of_week ?? '';
+                    const timeLabel = formatTime(cls.class_time);
+                    const completed = cls.status === 'completed';
+                    return (
+                      <div key={cls.id} className="py-3 first:pt-0 last:pb-0">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-medium text-slate-900">
+                              {isMain ? 'Main class' : 'Short class'}
+                              <span className="text-slate-400 font-normal"> · {duration}</span>
+                            </p>
+                            <p className="text-sm text-slate-600 mt-0.5">
+                              {dayLabel}{timeLabel ? ` · ${timeLabel}` : ''}
+                            </p>
+                          </div>
+                          <span className={`text-xs font-medium ${completed ? 'text-emerald-700' : 'text-slate-500'}`}>
+                            {completed ? 'Completed' : 'Scheduled'}
+                          </span>
                         </div>
-                        <span className={`text-xs ${completed ? 'text-emerald-700' : 'text-gray-500'}`}>
-                          {completed ? 'Completed' : 'Scheduled'}
-                        </span>
+                        <div className="flex items-center gap-2 mt-2">
+                          {cls.meeting_link && (
+                            <a
+                              href={formatMeetingLink(cls.meeting_link)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 transition-colors"
+                            >
+                              Join class
+                            </a>
+                          )}
+                          {!completed && (
+                            <button
+                              onClick={() => handleMarkComplete(cls.id)}
+                              disabled={saving}
+                              className="inline-flex items-center justify-center px-3 py-1.5 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                              Mark complete
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4 mt-2">
-                        {cls.meeting_link && (
-                          <a
-                            href={formatMeetingLink(cls.meeting_link)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-emerald-700 hover:text-emerald-800"
-                          >
-                            Join class →
-                          </a>
-                        )}
-                        {!completed && (
-                          <button
-                            onClick={() => handleMarkComplete(cls.id)}
-                            disabled={saving}
-                            className="text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50"
-                          >
-                            Mark complete
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
             {/* Milestone + overall progress */}
             {isActive && currentMilestone && (
-              <div className="mt-6 pt-6 border-t border-gray-100">
+              <div className="px-5 py-4 border-t border-slate-100 bg-slate-50">
                 <p className="text-sm">
-                  <span className="text-gray-500">Milestone {currentMilestone.id} of {milestones.length}:</span>
-                  <span className="text-gray-900 ml-1.5 font-medium">{currentMilestone.name}</span>
+                  <span className="text-slate-500">Milestone {currentMilestone.id} of {milestones.length}:</span>
+                  <span className="text-slate-900 ml-1.5 font-medium">{currentMilestone.name}</span>
                 </p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   {currentMilestone.weeksCompleted} of {currentMilestone.weeksInMilestone} weeks ·{' '}
                   {currentMilestone.milestoneProgress}% through this milestone
                 </p>
 
-                <div className="mt-4">
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-1.5">
+                <div className="mt-3">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
                     <span>Overall classes completed</span>
-                    <span>{completedClasses} / {totalClassCount}</span>
+                    <span className="tabular-nums font-medium text-slate-700">{completedClasses} / {totalClassCount}</span>
                   </div>
-                  <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                     <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${overallPct}%` }} />
                   </div>
                 </div>
               </div>
             )}
-          </section>
+          </div>
 
           {/* CONTACT */}
-          <aside>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
-              Contact
-            </h2>
-            <dl className="space-y-3 text-sm">
+          <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h2 className="text-sm font-semibold text-slate-900">Contact</h2>
+            </div>
+            <dl className="px-5 py-4 space-y-4 text-sm">
               <div>
-                <dt className="text-xs text-gray-500">Email</dt>
-                <dd className="text-gray-900 break-all"><CopyableText value={student.email} label="email" /></dd>
+                <dt className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Email</dt>
+                <dd className="text-slate-900 break-all"><CopyableText value={student.email} label="email" /></dd>
               </div>
               <div>
-                <dt className="text-xs text-gray-500">Phone</dt>
-                <dd className="text-gray-900"><CopyableText value={student.phone} label="phone" /></dd>
+                <dt className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Phone</dt>
+                <dd className="text-slate-900"><CopyableText value={student.phone} label="phone" /></dd>
               </div>
               {student.gender && (
                 <div>
-                  <dt className="text-xs text-gray-500">Gender</dt>
-                  <dd className="text-gray-900 capitalize">{student.gender}</dd>
+                  <dt className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Gender</dt>
+                  <dd className="text-slate-900 capitalize">{student.gender}</dd>
                 </div>
               )}
             </dl>
-          </aside>
+          </div>
         </div>
 
         {/* Oral test grading */}
         {isActive && program && (
           <section>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
-              Oral grading
-            </h2>
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h2 className="text-base font-semibold text-slate-900">Oral grading</h2>
+            </div>
             <OralTestGrading
               student={student}
               program={program}
@@ -421,9 +424,9 @@ export default function TeacherStudentDetail() {
         {/* Recitation assignments */}
         {isActive && program && teacher && (
           <section>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
-              Recitation practice
-            </h2>
+            <div className="flex items-baseline justify-between gap-3 mb-3">
+              <h2 className="text-base font-semibold text-slate-900">Recitation practice</h2>
+            </div>
             <RecitationAssignments
               student={student}
               program={program}
@@ -432,6 +435,6 @@ export default function TeacherStudentDetail() {
           </section>
         )}
       </div>
-    </>
+    </div>
   );
 }

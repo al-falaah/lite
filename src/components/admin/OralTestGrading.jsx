@@ -14,9 +14,10 @@ import QuestionPickerModal from './QuestionPickerModal';
  * Locking a row freezes its score (with confirmation). Submit is enabled
  * only when every row is locked. Drafts persist to localStorage.
  *
- * Visual approach: greyscale with a single emerald accent on Submit and
- * the running total. No coloured chips, no decorative icons. Sections
- * separated by border-b lines, not coloured cards.
+ * Visual approach: standard card-based UI with proper bordered inputs and
+ * real buttons. Greyscale palette with a single emerald accent on the
+ * primary submit action. No coloured theme tint, no decorative icons,
+ * no traffic-light pills.
  */
 
 const DRAFT_KEY_PREFIX = 'oral-grading-draft-v1';
@@ -61,17 +62,50 @@ function sourceLabel(source) {
   return source;
 }
 
+// Reusable input class — bordered, padded, focus ring. The standard.
+const inputClass =
+  'w-full text-sm text-slate-900 placeholder-slate-400 ' +
+  'border border-slate-200 rounded-md px-3 py-2 bg-white ' +
+  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
+
+// Compact variant for inline numerics
+const numInputClass =
+  'text-sm tabular-nums text-slate-900 ' +
+  'border border-slate-200 rounded-md px-2 py-1.5 bg-white ' +
+  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
+
+const btnPrimary =
+  'inline-flex items-center justify-center px-4 py-2 ' +
+  'bg-emerald-600 text-white text-sm font-medium rounded-md ' +
+  'hover:bg-emerald-700 active:bg-emerald-800 ' +
+  'disabled:bg-gray-200 disabled:text-slate-400 disabled:cursor-not-allowed ' +
+  'transition-colors';
+
+const btnSecondary =
+  'inline-flex items-center justify-center px-3 py-2 ' +
+  'bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md ' +
+  'hover:bg-slate-50 hover:border-slate-400 ' +
+  'disabled:opacity-50 disabled:cursor-not-allowed ' +
+  'transition-colors';
+
+const btnGhost =
+  'inline-flex items-center justify-center px-2 py-1 ' +
+  'text-slate-600 text-xs font-medium rounded ' +
+  'hover:bg-slate-100 hover:text-slate-900 ' +
+  'disabled:opacity-50 disabled:cursor-not-allowed ' +
+  'transition-colors';
+
 export default function OralTestGrading({ student, program, currentWeek }) {
   const [settings, setSettings] = useState(null);
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(null); // key being saved
 
-  // Per-item rubric state
-  const [rubrics, setRubrics] = useState({}); // { [key]: rubric[] }
-  const [overallNotes, setOverallNotes] = useState({}); // { [key]: string }
+  const [rubrics, setRubrics] = useState({});
+  const [overallNotes, setOverallNotes] = useState({});
 
-  // Picker + confirm modals
   const [picker, setPicker] = useState(null);
   const [lockConfirm, setLockConfirm] = useState(null);
   const [submitConfirm, setSubmitConfirm] = useState(null);
@@ -143,14 +177,13 @@ export default function OralTestGrading({ student, program, currentWeek }) {
   if (loading) return null;
   if (oralMilestones.length === 0 && !isExamOral) return null;
 
-  // Build map of existing oral attempts (graded)
   const attemptMap = {};
   attempts.forEach(a => {
     const key = a.type === 'final_exam' ? 'final_exam' : `milestone_${a.milestone_index}`;
     if (!attemptMap[key] || a.percentage > attemptMap[key].percentage) attemptMap[key] = a;
   });
 
-  // ── Mutations ─────────────────────────────────────────
+  // ── Mutations ────────────────────────────────────────────
   const updateRow = (itemKey, rid, patch) => {
     setRubrics(prev => ({
       ...prev,
@@ -214,14 +247,8 @@ export default function OralTestGrading({ student, program, currentWeek }) {
 
   const requestSubmit = (itemKey, type, milestoneIndex) => {
     const rubric = rubrics[itemKey] || [];
-    if (rubric.length === 0) {
-      toast.error('Add at least one question');
-      return;
-    }
-    if (!rubric.every(r => r.locked)) {
-      toast.error('Lock every question before submitting');
-      return;
-    }
+    if (rubric.length === 0) { toast.error('Add at least one question'); return; }
+    if (!rubric.every(r => r.locked)) { toast.error('Lock every question before submitting'); return; }
     setSubmitConfirm({ key: itemKey, type, milestoneIndex, total: computeTotal(rubric) });
   };
 
@@ -296,7 +323,7 @@ export default function OralTestGrading({ student, program, currentWeek }) {
     }
   };
 
-  // ── Renderers ─────────────────────────────────────────
+  // ── Renderers ────────────────────────────────────────────
 
   const renderGradedItem = (key, label) => {
     const existing = attemptMap[key];
@@ -305,41 +332,50 @@ export default function OralTestGrading({ student, program, currentWeek }) {
     const rubric = existing?.answers?.rubric || null;
 
     return (
-      <div key={key} className="py-4 border-t border-gray-200 first:border-t-0">
-        <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-sm font-medium text-gray-900">{label}</h3>
-          <div className="text-sm">
-            <span className="text-gray-500">Final · </span>
-            <span className={passed ? 'font-semibold text-emerald-700' : 'font-semibold text-red-700'}>
+      <div key={key} className="bg-white border border-slate-200 rounded-xl shadow-sm">
+        <div className="flex items-baseline justify-between gap-3 px-5 py-4 border-b border-slate-100">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">{label}</h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Submitted {new Date(existing.completed_at).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </p>
+          </div>
+          <div className="text-right">
+            <div className={`text-lg font-semibold tabular-nums ${passed ? 'text-emerald-700' : 'text-red-700'}`}>
               {Number(existing.percentage).toFixed(1)}%
-            </span>
+            </div>
+            <div className="text-xs text-slate-500 mt-0.5">{passed ? 'Passed' : 'Did not pass'}</div>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-1">
-          Submitted {new Date(existing.completed_at).toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' })}
-        </p>
+
         {rubric && Array.isArray(rubric) && rubric.length > 0 && (
-          <details className="mt-2">
-            <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-700 select-none">
-              View {rubric.length} question{rubric.length === 1 ? '' : 's'}
+          <details className="px-5 py-3 group">
+            <summary className="text-sm text-slate-700 cursor-pointer hover:text-slate-900 select-none flex items-center gap-1">
+              <span>View {rubric.length} question{rubric.length === 1 ? '' : 's'}</span>
+              <svg className="h-3.5 w-3.5 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </summary>
-            <ul className="mt-2 space-y-2">
+            <ul className="mt-3 space-y-3">
               {rubric.map((r, i) => (
-                <li key={i} className="text-xs text-gray-700">
+                <li key={i} className="text-sm">
                   <div className="flex items-start justify-between gap-3">
-                    <span className="flex-1">{r.text || '(no text)'}</span>
-                    <span className="font-mono text-gray-600 whitespace-nowrap">
+                    <span className="text-slate-800 flex-1">{r.text || '(no text)'}</span>
+                    <span className="font-mono text-slate-700 whitespace-nowrap text-xs tabular-nums">
                       {r.score}/{r.max}{r.weight > 1 ? ` ×${r.weight}` : ''}
                     </span>
                   </div>
-                  {r.notes && <div className="text-[11px] text-gray-500 italic mt-0.5">{r.notes}</div>}
+                  {r.notes && <div className="text-xs text-slate-500 italic mt-0.5">{r.notes}</div>}
                 </li>
               ))}
             </ul>
           </details>
         )}
         {existing.oral_notes && (
-          <p className="text-xs text-gray-600 italic mt-2">Overall: {existing.oral_notes}</p>
+          <div className="px-5 py-3 border-t border-slate-100 bg-slate-50 rounded-b-xl">
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Overall feedback</p>
+            <p className="text-sm text-slate-700 italic">"{existing.oral_notes}"</p>
+          </div>
         )}
       </div>
     );
@@ -353,173 +389,188 @@ export default function OralTestGrading({ student, program, currentWeek }) {
     const isSaving = saving === itemKey;
 
     return (
-      <div key={itemKey} className="py-4 border-t border-gray-200 first:border-t-0">
+      <div key={itemKey} className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
 
-        <div className="flex items-baseline justify-between gap-3 mb-3">
-          <h3 className="text-sm font-medium text-gray-900">{label}</h3>
-          <div className="text-sm">
-            <span className="text-gray-500">Total · </span>
-            <span className="font-semibold text-gray-900 tabular-nums">{total.toFixed(1)}%</span>
+        {/* Card header */}
+        <div className="flex items-baseline justify-between gap-3 px-5 py-4 border-b border-slate-100">
+          <h3 className="text-sm font-semibold text-slate-900">{label}</h3>
+          <div className="text-right">
+            <div className="text-xs text-slate-500">Running total</div>
+            <div className="text-lg font-semibold tabular-nums text-slate-900">{total.toFixed(1)}%</div>
           </div>
         </div>
 
         {/* Rubric rows */}
-        {rubric.length === 0 ? (
-          <p className="text-sm text-gray-500 py-3">
-            No questions yet. Pick from the bank, write a new one, or add a quick mark below.
-          </p>
-        ) : (
-          <ul className="divide-y divide-gray-100">
-            {rubric.map((r, idx) => (
-              <li key={r.rid} className="py-3">
-                <div className="flex items-start gap-3">
-                  <span className="text-xs font-mono text-gray-400 mt-0.5 w-6 flex-shrink-0">Q{idx + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    {r.source === 'bank' ? (
-                      <p className="text-sm text-gray-900 leading-snug">{r.text}</p>
-                    ) : (
-                      <textarea
-                        value={r.text}
-                        onChange={(e) => updateRow(itemKey, r.rid, { text: e.target.value })}
-                        placeholder={r.source === 'quick_mark' ? 'Label (e.g. Recitation accuracy)' : 'Type the question…'}
-                        rows={r.source === 'quick_mark' ? 1 : 2}
-                        disabled={r.locked}
-                        className="w-full text-sm text-gray-900 border-0 border-b border-gray-200 bg-transparent px-0 py-1 resize-none focus:border-gray-900 focus:outline-none focus:ring-0 disabled:text-gray-500"
-                      />
-                    )}
-                    <p className="text-xs text-gray-400 mt-1">
-                      {sourceLabel(r.source)}
-                      {r.source === 'ad_hoc' && (
-                        <>
-                          {' · '}
-                          <label className="inline-flex items-center gap-1 cursor-pointer hover:text-gray-600">
-                            <input
-                              type="checkbox"
-                              checked={!!r.save_to_bank}
-                              onChange={(e) => updateRow(itemKey, r.rid, { save_to_bank: e.target.checked })}
-                              disabled={r.locked}
-                              className="h-3 w-3 accent-gray-900"
-                            />
-                            Save to bank
-                          </label>
-                        </>
+        <div className="px-5 py-4">
+          {rubric.length === 0 ? (
+            <div className="py-8 text-center">
+              <p className="text-sm text-slate-600">No questions yet.</p>
+              <p className="text-xs text-slate-500 mt-1">Pick from the bank, write a new one, or add a quick mark below.</p>
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {rubric.map((r, idx) => (
+                <li
+                  key={r.rid}
+                  className={`border rounded-lg p-3 transition-colors ${
+                    r.locked ? 'bg-slate-50 border-slate-200' : 'bg-white border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  {/* Question text + remove */}
+                  <div className="flex items-start gap-3">
+                    <span className="text-xs font-mono text-slate-400 mt-2 w-6 flex-shrink-0">Q{idx + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      {r.source === 'bank' ? (
+                        <p className="text-sm text-slate-900 leading-snug py-2">{r.text}</p>
+                      ) : (
+                        <textarea
+                          value={r.text}
+                          onChange={(e) => updateRow(itemKey, r.rid, { text: e.target.value })}
+                          placeholder={r.source === 'quick_mark' ? 'Label (e.g. Recitation accuracy)' : 'Type the question…'}
+                          rows={r.source === 'quick_mark' ? 1 : 2}
+                          disabled={r.locked}
+                          className={`${inputClass} resize-none`}
+                        />
                       )}
-                    </p>
+                      <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-500">
+                        <span>{sourceLabel(r.source)}</span>
+                        {r.source === 'ad_hoc' && (
+                          <>
+                            <span className="text-gray-300">·</span>
+                            <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-slate-700">
+                              <input
+                                type="checkbox"
+                                checked={!!r.save_to_bank}
+                                onChange={(e) => updateRow(itemKey, r.rid, { save_to_bank: e.target.checked })}
+                                disabled={r.locked}
+                                className="h-3.5 w-3.5 rounded border-slate-300 accent-gray-900"
+                              />
+                              Save to bank
+                            </label>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => removeRow(itemKey, r.rid)}
+                      disabled={r.locked}
+                      className={btnGhost}
+                      aria-label="Remove question"
+                    >
+                      Remove
+                    </button>
                   </div>
-                  <button
-                    onClick={() => removeRow(itemKey, r.rid)}
+
+                  {/* Score / max / weight + lock */}
+                  <div className="flex items-end gap-3 mt-3 ml-9 flex-wrap">
+                    <div className="flex items-end gap-1.5">
+                      <div>
+                        <label className="text-xs text-slate-500 block mb-1">Score</label>
+                        <input
+                          type="number"
+                          step="0.5"
+                          min="0"
+                          value={r.score}
+                          onChange={(e) => updateRow(itemKey, r.rid, { score: e.target.value })}
+                          disabled={r.locked}
+                          placeholder="0"
+                          className={`${numInputClass} w-16 text-right`}
+                        />
+                      </div>
+                      <span className="text-sm text-slate-400 pb-2">/</span>
+                      <div>
+                        <label className="text-xs text-slate-500 block mb-1">Max</label>
+                        <input
+                          type="number"
+                          step="1"
+                          min="1"
+                          value={r.max}
+                          onChange={(e) => updateRow(itemKey, r.rid, { max: e.target.value })}
+                          disabled={r.locked}
+                          className={`${numInputClass} w-16`}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 block mb-1">Weight</label>
+                      <input
+                        type="number"
+                        step="1"
+                        min="1"
+                        value={r.weight}
+                        onChange={(e) => updateRow(itemKey, r.rid, { weight: e.target.value })}
+                        disabled={r.locked}
+                        className={`${numInputClass} w-14`}
+                      />
+                    </div>
+                    <div className="ml-auto">
+                      {r.locked ? (
+                        <button onClick={() => unlockRow(itemKey, r.rid)} className={btnSecondary}>
+                          Unlock
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => requestLockRow(itemKey, r.rid)}
+                          className={btnPrimary}
+                        >
+                          Lock score
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <input
+                    type="text"
+                    value={r.notes || ''}
+                    onChange={(e) => updateRow(itemKey, r.rid, { notes: e.target.value })}
+                    placeholder="Per-question notes (optional)"
                     disabled={r.locked}
-                    className="text-xs text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    Remove
-                  </button>
-                </div>
+                    className={`${inputClass} mt-3 ml-9`}
+                    style={{ width: 'calc(100% - 2.25rem)' }}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
 
-                {/* Score / max / weight + lock toggle */}
-                <div className="flex items-end gap-3 mt-2 ml-9 flex-wrap">
-                  <div className="flex items-baseline gap-1.5">
-                    <input
-                      type="number"
-                      step="0.5"
-                      min="0"
-                      value={r.score}
-                      onChange={(e) => updateRow(itemKey, r.rid, { score: e.target.value })}
-                      disabled={r.locked}
-                      placeholder="0"
-                      className="w-14 text-sm text-right tabular-nums border-0 border-b border-gray-200 bg-transparent px-0 py-0.5 focus:border-gray-900 focus:outline-none focus:ring-0 disabled:text-gray-500"
-                    />
-                    <span className="text-sm text-gray-400">/</span>
-                    <input
-                      type="number"
-                      step="1"
-                      min="1"
-                      value={r.max}
-                      onChange={(e) => updateRow(itemKey, r.rid, { max: e.target.value })}
-                      disabled={r.locked}
-                      className="w-14 text-sm tabular-nums border-0 border-b border-gray-200 bg-transparent px-0 py-0.5 focus:border-gray-900 focus:outline-none focus:ring-0 disabled:text-gray-500"
-                    />
-                  </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-xs text-gray-400">×</span>
-                    <input
-                      type="number"
-                      step="1"
-                      min="1"
-                      value={r.weight}
-                      onChange={(e) => updateRow(itemKey, r.rid, { weight: e.target.value })}
-                      disabled={r.locked}
-                      className="w-10 text-sm tabular-nums border-0 border-b border-gray-200 bg-transparent px-0 py-0.5 focus:border-gray-900 focus:outline-none focus:ring-0 disabled:text-gray-500"
-                    />
-                  </div>
-                  <div className="ml-auto">
-                    {r.locked ? (
-                      <button
-                        onClick={() => unlockRow(itemKey, r.rid)}
-                        className="text-xs text-gray-500 hover:text-gray-900"
-                      >
-                        Unlock
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => requestLockRow(itemKey, r.rid)}
-                        className="text-xs font-medium text-gray-900 hover:text-gray-600"
-                      >
-                        Lock score
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <input
-                  type="text"
-                  value={r.notes || ''}
-                  onChange={(e) => updateRow(itemKey, r.rid, { notes: e.target.value })}
-                  placeholder="Per-question notes (optional)"
-                  disabled={r.locked}
-                  className="w-full text-xs text-gray-700 border-0 border-b border-transparent hover:border-gray-200 focus:border-gray-900 focus:outline-none focus:ring-0 px-0 py-1 mt-2 ml-9 disabled:text-gray-400"
-                  style={{ width: 'calc(100% - 2.25rem)' }}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {/* Add buttons — plain text links */}
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm">
-          <button onClick={() => setPicker({ key: itemKey, type, milestoneIndex })} className="text-gray-700 hover:text-gray-900">
-            + Pick from bank
-          </button>
-          <span className="text-gray-300">·</span>
-          <button onClick={() => addRow(itemKey, { source: 'ad_hoc', max: 10 })} className="text-gray-700 hover:text-gray-900">
-            + New question
-          </button>
-          <span className="text-gray-300">·</span>
-          <button onClick={() => addRow(itemKey, { source: 'quick_mark', max: 10 })} className="text-gray-700 hover:text-gray-900">
-            + Quick mark
-          </button>
+          {/* Add buttons */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            <button onClick={() => setPicker({ key: itemKey, type, milestoneIndex })} className={btnSecondary}>
+              + Pick from bank
+            </button>
+            <button onClick={() => addRow(itemKey, { source: 'ad_hoc', max: 10 })} className={btnSecondary}>
+              + New question
+            </button>
+            <button onClick={() => addRow(itemKey, { source: 'quick_mark', max: 10 })} className={btnSecondary}>
+              + Quick mark
+            </button>
+          </div>
         </div>
 
-        {/* Overall notes + submit */}
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <input
-            type="text"
-            value={overallNotes[itemKey] || ''}
-            onChange={(e) => setOverallNotes(prev => ({ ...prev, [itemKey]: e.target.value }))}
-            placeholder="Overall feedback for the student (optional)"
-            className="w-full text-sm text-gray-900 border-0 border-b border-gray-200 bg-transparent px-0 py-1.5 focus:border-gray-900 focus:outline-none focus:ring-0"
-          />
-          <div className="flex items-center justify-between gap-3 mt-3">
-            <p className="text-xs text-gray-500">
+        {/* Submit footer */}
+        <div className="px-5 py-4 border-t border-slate-100 bg-slate-50">
+          <div className="mb-3">
+            <label className="text-xs font-medium text-slate-700 block mb-1.5">Overall feedback (optional)</label>
+            <input
+              type="text"
+              value={overallNotes[itemKey] || ''}
+              onChange={(e) => setOverallNotes(prev => ({ ...prev, [itemKey]: e.target.value }))}
+              placeholder="A short note for the student"
+              className={inputClass}
+            />
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs text-slate-500">
               {!allLocked && rubric.length > 0
                 ? `Lock all ${rubric.length} question${rubric.length === 1 ? '' : 's'} to submit.`
                 : rubric.length === 0
-                  ? ''
-                  : 'All locked. Ready to submit.'}
+                  ? 'Add a question above to get started.'
+                  : 'All locked — ready to submit.'}
             </p>
             <button
               onClick={() => requestSubmit(itemKey, type, milestoneIndex)}
               disabled={!allLocked || isSaving}
-              className="px-4 py-1.5 bg-emerald-700 text-white text-sm font-medium rounded hover:bg-emerald-800 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+              className={btnPrimary}
             >
               {isSaving ? 'Submitting…' : `Submit ${total.toFixed(1)}%`}
             </button>
@@ -537,13 +588,14 @@ export default function OralTestGrading({ student, program, currentWeek }) {
   const gradedCount = gradedMilestones.length + (examGraded ? 1 : 0);
 
   return (
-    <div>
-      {/* Status line */}
-      <p className="text-xs text-gray-500 mb-2">
-        {pendingCount > 0
-          ? `${pendingCount} pending${gradedCount > 0 ? ` · ${gradedCount} graded` : ''}`
-          : 'All graded'}
-      </p>
+    <div className="space-y-4">
+      {/* Status row */}
+      {(pendingCount + gradedCount) > 0 && (
+        <p className="text-sm text-slate-500">
+          {pendingCount > 0 ? `${pendingCount} pending` : 'All graded'}
+          {gradedCount > 0 && pendingCount > 0 && ` · ${gradedCount} graded`}
+        </p>
+      )}
 
       {pendingMilestones.map(({ idx }) =>
         renderRubricEditor(
@@ -556,13 +608,15 @@ export default function OralTestGrading({ student, program, currentWeek }) {
       {examPending && renderRubricEditor('final_exam', 'Final exam', 'final_exam', null)}
 
       {gradedCount > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Completed</h4>
+        <>
+          <div className="pt-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Completed</h4>
+          </div>
           {gradedMilestones.map(({ idx }) =>
             renderGradedItem(`milestone_${idx}`, `Milestone ${idx + 1} — ${milestones[idx]?.name || ''}`)
           )}
           {examGraded && renderGradedItem('final_exam', 'Final exam')}
-        </div>
+        </>
       )}
 
       {/* Question picker */}
@@ -580,36 +634,34 @@ export default function OralTestGrading({ student, program, currentWeek }) {
       {/* Lock-row confirmation */}
       {lockConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60] p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-5">
-            <h3 className="text-base font-medium text-gray-900 mb-3">Lock this question?</h3>
-            <dl className="text-sm space-y-2 mb-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h3 className="text-base font-semibold text-slate-900">Lock this question?</h3>
+            </div>
+            <div className="px-5 py-4 space-y-3">
               <div>
-                <dt className="text-xs text-gray-500">Question</dt>
-                <dd className="text-gray-900 line-clamp-3">{lockConfirm.row.text || '(no text)'}</dd>
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Question</p>
+                <p className="text-sm text-slate-900 line-clamp-3">{lockConfirm.row.text || '(no text)'}</p>
               </div>
               <div>
-                <dt className="text-xs text-gray-500">Score</dt>
-                <dd className="text-gray-900 font-mono tabular-nums">
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Score</p>
+                <p className="text-sm font-mono tabular-nums text-slate-900">
                   {lockConfirm.row.score}/{lockConfirm.row.max}
                   {lockConfirm.row.weight > 1 ? ` × weight ${lockConfirm.row.weight}` : ''}
-                  <span className="ml-2 text-gray-500">({lockConfirm.computed}%)</span>
-                </dd>
+                  <span className="ml-2 text-slate-500">({lockConfirm.computed}%)</span>
+                </p>
               </div>
               {lockConfirm.row.notes && (
                 <div>
-                  <dt className="text-xs text-gray-500">Notes</dt>
-                  <dd className="text-gray-700 italic">{lockConfirm.row.notes}</dd>
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Notes</p>
+                  <p className="text-sm italic text-slate-700">{lockConfirm.row.notes}</p>
                 </div>
               )}
-            </dl>
-            <p className="text-xs text-gray-500 mb-4">You can unlock the row later, but only before submitting.</p>
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setLockConfirm(null)} className="px-3 py-1.5 text-sm text-gray-700 hover:text-gray-900">
-                Cancel
-              </button>
-              <button onClick={confirmLockRow} className="px-3 py-1.5 bg-emerald-700 text-white text-sm font-medium rounded hover:bg-emerald-800">
-                Lock score
-              </button>
+              <p className="text-xs text-slate-500">You can unlock the row later, but only before submitting.</p>
+            </div>
+            <div className="px-5 py-3 border-t border-slate-100 bg-slate-50 flex justify-end gap-2 rounded-b-xl">
+              <button onClick={() => setLockConfirm(null)} className={btnSecondary}>Cancel</button>
+              <button onClick={confirmLockRow} className={btnPrimary}>Lock score</button>
             </div>
           </div>
         </div>
@@ -618,19 +670,19 @@ export default function OralTestGrading({ student, program, currentWeek }) {
       {/* Final submit confirmation */}
       {submitConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60] p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-5">
-            <h3 className="text-base font-medium text-gray-900 mb-2">Submit final score?</h3>
-            <p className="text-sm text-gray-700 mb-1">
-              Total: <span className="font-semibold text-gray-900 tabular-nums">{submitConfirm.total.toFixed(1)}%</span>
-            </p>
-            <p className="text-xs text-gray-500 mb-4">Once submitted, the score is final and cannot be changed.</p>
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setSubmitConfirm(null)} className="px-3 py-1.5 text-sm text-gray-700 hover:text-gray-900">
-                Cancel
-              </button>
-              <button onClick={confirmSubmit} className="px-3 py-1.5 bg-emerald-700 text-white text-sm font-medium rounded hover:bg-emerald-800">
-                Submit
-              </button>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h3 className="text-base font-semibold text-slate-900">Submit final score?</h3>
+            </div>
+            <div className="px-5 py-4">
+              <p className="text-sm text-slate-700 mb-1">
+                Total: <span className="font-semibold text-slate-900 tabular-nums">{submitConfirm.total.toFixed(1)}%</span>
+              </p>
+              <p className="text-xs text-slate-500 mt-2">Once submitted, the score is final and cannot be changed.</p>
+            </div>
+            <div className="px-5 py-3 border-t border-slate-100 bg-slate-50 flex justify-end gap-2 rounded-b-xl">
+              <button onClick={() => setSubmitConfirm(null)} className={btnSecondary}>Cancel</button>
+              <button onClick={confirmSubmit} className={btnPrimary}>Submit</button>
             </div>
           </div>
         </div>
