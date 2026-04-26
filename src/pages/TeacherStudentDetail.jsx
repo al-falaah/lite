@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ChevronLeft, Copy, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -107,6 +107,11 @@ export default function TeacherStudentDetail() {
   const program = searchParams.get('program');
   const programConfig = program ? PROGRAMS[program] : null;
   const isActive = enrollment?.status === 'active';
+
+  const goBackToStudents = () => {
+    try { sessionStorage.setItem('teacherTab', 'students'); } catch { /* ignore */ }
+    navigate('/teacher');
+  };
 
   // Load teacher + student + assignments + schedules + enrollments
   useEffect(() => {
@@ -219,7 +224,7 @@ export default function TeacherStudentDetail() {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-3 px-4 text-center">
         <p className="text-gray-700">Student not found.</p>
-        <Link to="/teacher" className="text-sm text-emerald-700 hover:text-emerald-800">← Back to my students</Link>
+        <button onClick={goBackToStudents} className="text-sm text-emerald-700 hover:text-emerald-800">← Back to my students</button>
       </div>
     );
   }
@@ -233,13 +238,13 @@ export default function TeacherStudentDetail() {
       {/* Sticky page header */}
       <div className="sticky top-0 z-30 bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3">
-          <Link
-            to="/teacher"
+          <button
+            onClick={goBackToStudents}
             className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 mb-2"
           >
             <ChevronLeft className="h-4 w-4" />
             My students
-          </Link>
+          </button>
           <div className="flex items-end justify-between gap-4 flex-wrap">
             <div className="min-w-0">
               <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 truncate">{student.full_name}</h1>

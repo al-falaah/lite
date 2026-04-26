@@ -22,7 +22,19 @@ export default function TeacherPortal() {
   const [assignedStudents, setAssignedStudents] = useState([]);
   const [removedStudents, setRemovedStudents] = useState([]);
   const [activeView, setActiveView] = useState('assigned'); // assigned or removed
-  const [teacherTab, setTeacherTab] = useState('home'); // home, students, calendar
+  const [teacherTab, setTeacherTab] = useState(() => {
+    // Restore last-visited tab so navigating away and back lands you in the
+    // same place (e.g. clicking a student → coming back via the "My students"
+    // breadcrumb should return to the Students tab, not Home).
+    try {
+      const saved = sessionStorage.getItem('teacherTab');
+      if (saved && ['home', 'students', 'lessons', 'calendar'].includes(saved)) return saved;
+    } catch { /* ignore */ }
+    return 'home';
+  });
+  useEffect(() => {
+    try { sessionStorage.setItem('teacherTab', teacherTab); } catch { /* ignore */ }
+  }, [teacherTab]);
 
   // Pending recitation submissions (student_id → true)
   const [pendingRecitations, setPendingRecitations] = useState({});
@@ -48,7 +60,7 @@ export default function TeacherPortal() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  // Pull-to-refresh: reload teacher data
+  // Pull-to-refresh: force-reload teacher data (silent=false shows the spinner)
   const { pullDistance, isPulling } = usePullToRefresh(() => {
     if (teacher?.id) {
       loadTeacherData(teacher.id);
@@ -109,7 +121,13 @@ export default function TeacherPortal() {
 
         if (mounted) {
           setTeacher(teacherRecord);
-          await loadTeacherData(teacherRecord.id);
+          // If we have cached assigned-students from a previous mount,
+          // paint instantly and refresh in the background. This avoids
+          // re-showing the loading spinner every time the teacher
+          // navigates away from /teacher (e.g. into a student detail page)
+          // and back, especially noticeable on slow networks.
+          const hadCache = hydrateFromCache(teacherRecord.id);
+          await loadTeacherData(teacherRecord.id, { silent: hadCache });
         }
       } catch (error) {
         console.error('Session restore error:', error);
@@ -144,6 +162,16 @@ export default function TeacherPortal() {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
+      // Clear cached teacher data so a different teacher signing in next
+      // doesn't briefly see the previous account's students.
+      try {
+        if (teacher?.id) {
+          sessionStorage.removeItem(`teacher.${teacher.id}.assigned`);
+          sessionStorage.removeItem(`teacher.${teacher.id}.removed`);
+          sessionStorage.removeItem(`teacher.${teacher.id}.pendingRecs`);
+        }
+        sessionStorage.removeItem('teacherTab');
+      } catch { /* ignore */ }
       setTeacher(null);
       setAssignedStudents([]);
       setRemovedStudents([]);
@@ -152,27 +180,50 @@ export default function TeacherPortal() {
     }
   };
 
-  const loadTeacherData = async (teacherId) => {
+  // sessionStorage key prefix for caching teacher data
+  const cacheKey = (teacherId, suffix) => `teacher.${teacherId}.${suffix}`;
+
+  // Hydrate state from cache (instant paint on poor networks). Returns true
+  // if any cached data was found, so the caller can suppress the loading
+  // spinner and refresh in the background.
+  const hydrateFromCache = (teacherId) => {
+    let foundAny = false;
+    try {
+      const a = sessionStorage.getItem(cacheKey(teacherId, 'assigned'));
+      if (a) { setAssignedStudents(JSON.parse(a)); foundAny = true; }
+      const r = sessionStorage.getItem(cacheKey(teacherId, 'removed'));
+      if (r) { setRemovedStudents(JSON.parse(r)); foundAny = true; }
+      const p = sessionStorage.getItem(cacheKey(teacherId, 'pendingRecs'));
+      if (p) { setPendingRecitations(JSON.parse(p)); foundAny = true; }
+    } catch { /* ignore parse errors */ }
+    return foundAny;
+  };
+
+  const loadTeacherData = async (teacherId, { silent = false } = {}) => {
+    // If silent is true, don't show the full-screen spinner — keep cached
+    // data on screen while we refresh in the background.
     let progressInterval;
     try {
-      setLoading(true);
-      setLoadingProgress(0);
-
-      // Simulate progress
-      progressInterval = setInterval(() => {
-        setLoadingProgress(prev => {
-          if (prev >= 100) return 100;
-          if (prev >= 90) return prev;
-          return Math.min(prev + Math.random() * 15, 100);
-        });
-      }, 300);
+      if (!silent) {
+        setLoading(true);
+        setLoadingProgress(0);
+        progressInterval = setInterval(() => {
+          setLoadingProgress(prev => {
+            if (prev >= 100) return 100;
+            if (prev >= 90) return prev;
+            return Math.min(prev + Math.random() * 15, 100);
+          });
+        }, 300);
+      }
 
       // Load assigned students
       const { data: assigned, error: assignedError } = await teacherAssignments.getByTeacher(teacherId, 'assigned');
       if (assignedError) {
         console.error('Error loading assigned students:', assignedError);
       } else {
-        setAssignedStudents((assigned || []).filter(a => a.student));
+        const filtered = (assigned || []).filter(a => a.student);
+        setAssignedStudents(filtered);
+        try { sessionStorage.setItem(cacheKey(teacherId, 'assigned'), JSON.stringify(filtered)); } catch { /* quota */ }
       }
 
       // Load removed students
@@ -180,7 +231,9 @@ export default function TeacherPortal() {
       if (removedError) {
         console.error('Error loading removed students:', removedError);
       } else {
-        setRemovedStudents((removed || []).filter(a => a.student));
+        const filtered = (removed || []).filter(a => a.student);
+        setRemovedStudents(filtered);
+        try { sessionStorage.setItem(cacheKey(teacherId, 'removed'), JSON.stringify(filtered)); } catch { /* quota */ }
       }
 
       // Load pending recitation submissions for badge display
@@ -193,14 +246,18 @@ export default function TeacherPortal() {
         const map = {};
         pendingRecs.forEach(r => { map[r.student_id] = true; });
         setPendingRecitations(map);
+        try { sessionStorage.setItem(cacheKey(teacherId, 'pendingRecs'), JSON.stringify(map)); } catch { /* quota */ }
       }
     } catch (err) {
       console.error('Error loading teacher data:', err);
-      toast.error('Failed to load student data');
+      // Only nag the user when we don't have cached data to fall back on.
+      if (!silent) toast.error('Failed to load student data');
     } finally {
       if (progressInterval) clearInterval(progressInterval);
-      setLoadingProgress(100);
-      setLoading(false);
+      if (!silent) {
+        setLoadingProgress(100);
+        setLoading(false);
+      }
     }
   };
 
