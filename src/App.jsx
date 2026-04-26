@@ -17,6 +17,7 @@ import EnrollAdditionalProgram from './pages/EnrollAdditionalProgram';
 import AdminDashboard from './pages/AdminDashboard';
 import VacanciesPage from './pages/VacanciesPage';
 import TeacherPortal from './pages/TeacherPortal';
+import TeacherStudentDetail from './pages/TeacherStudentDetail';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
@@ -106,6 +107,7 @@ function AppRoutes() {
         <Route path="/enroll-additional" element={<EnrollAdditionalProgram />} />
         <Route path="/vacancies" element={<VacanciesPage />} />
         <Route path="/teacher" element={<TeacherPortal />} />
+        <Route path="/teacher/students/:studentId" element={<TeacherStudentDetail />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/faqs" element={<FAQs />} />
