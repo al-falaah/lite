@@ -688,13 +688,15 @@ export default function TeacherPortal() {
 
         {/* === LESSONS TAB === */}
         <div className={teacherTab !== 'lessons' ? 'hidden' : ''}>
-          <div className="mb-5 sm:mb-6">
+          <div className="mb-20 sm:mb-6">
             <h1 className={HEADING_LG}>Lessons</h1>
             <p className="text-sm text-slate-500 mt-1">Review the chapters and quizzes for the programs you teach.</p>
           </div>
-          <StudentLessons
+          <div className="mt-14">
+            <StudentLessons
             programs={[...new Set(assignedStudents.map(a => a.program).filter(Boolean))]}
           />
+          </div>
         </div>
 
         {/* === CALENDAR TAB === */}
