@@ -515,72 +515,67 @@ export default function TeacherPortal() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-28 sm:pb-8">
+      {/* Main content */}
+      <div className={`${CONTAINER_WIDE} py-5 sm:py-8 pb-24 sm:pb-8`}>
         {/* === HOME TAB === */}
         <div className={teacherTab !== 'home' ? 'hidden' : ''}>
-        {/* Welcome Message */}
-        <div className="mb-5 sm:mb-8">
-          <h1 className="text-lg sm:text-3xl font-bold text-gray-900 mb-0.5">Welcome, {teacher.full_name.split(' ')[0]}!</h1>
-          <p className="text-xs sm:text-base text-gray-500">Manage students and track progress</p>
-        </div>
+          {/* Greeting */}
+          <div className="mb-5 sm:mb-6">
+            <h1 className={HEADING_LG}>Welcome, {teacher.full_name.split(' ')[0]}</h1>
+            <p className="text-sm text-slate-500 mt-1">Here's a snapshot of your classroom.</p>
+          </div>
 
-        {/* Teaching Guidelines */}
-        <div className="mb-5 sm:mb-8">
-          <TeacherClassGuidelines />
-        </div>
+          {/* Stats grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+            <div className={`${CARD} px-4 py-4 sm:px-5 sm:py-5`}>
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Assigned</p>
+              <p className="mt-1 text-2xl sm:text-3xl font-semibold text-slate-900 tabular-nums">{assignedStudents.length}</p>
+              <p className="text-xs text-slate-500 mt-0.5">student{assignedStudents.length === 1 ? '' : 's'} you teach</p>
+            </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 mb-5 sm:mb-8">
-          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-gray-600 mb-1">Assigned Students</p>
-                <p className="text-2xl sm:text-3xl font-semibold text-gray-900">{assignedStudents.length}</p>
-              </div>
-              <div className="hidden sm:block">
-                <Users className="h-8 w-8 text-gray-400" />
-              </div>
+            <div className={`${CARD} px-4 py-4 sm:px-5 sm:py-5`}>
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Removed</p>
+              <p className="mt-1 text-2xl sm:text-3xl font-semibold text-slate-900 tabular-nums">{removedStudents.length}</p>
+              <p className="text-xs text-slate-500 mt-0.5">no longer assigned</p>
+            </div>
+
+            <div className={`${CARD} px-4 py-4 sm:px-5 sm:py-5 col-span-2 lg:col-span-1`}>
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Total</p>
+              <p className="mt-1 text-2xl sm:text-3xl font-semibold text-slate-900 tabular-nums">
+                {assignedStudents.length + removedStudents.length}
+              </p>
+              <p className="text-xs text-slate-500 mt-0.5">all-time students</p>
             </div>
           </div>
 
-          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-gray-600 mb-1">Removed</p>
-                <p className="text-2xl sm:text-3xl font-semibold text-gray-900">{removedStudents.length}</p>
-              </div>
-              <div className="hidden sm:block">
-                <UserX className="h-8 w-8 text-gray-400" />
-              </div>
-            </div>
+          {/* Class guidelines (collapsible) */}
+          <div className="mb-6">
+            <TeacherClassGuidelines />
           </div>
 
-          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 col-span-2 sm:col-span-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm text-gray-600 mb-1">Total Students</p>
-                <p className="text-2xl sm:text-3xl font-semibold text-gray-900">{assignedStudents.length + removedStudents.length}</p>
-              </div>
-              <div className="hidden sm:block">
-                <BarChart3 className="h-8 w-8 text-gray-400" />
-              </div>
+          {/* Install app card */}
+          <div className={CARD_OVERFLOW}>
+            <div className={CARD_HEADER}>
+              <h2 className={HEADING}>Get the mobile app</h2>
+              <p className="text-sm text-slate-500 mt-0.5">Runs like a native app — add it to your home screen in seconds.</p>
+            </div>
+            <div className={CARD_BODY}>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5">
+                  <dt className="text-xs font-medium text-slate-500 uppercase tracking-wide">iPhone</dt>
+                  <dd className="text-slate-900 mt-1">
+                    Safari → <span className="text-slate-700">Share</span> → <strong>Add to Home Screen</strong>
+                  </dd>
+                </div>
+                <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2.5">
+                  <dt className="text-xs font-medium text-slate-500 uppercase tracking-wide">Android</dt>
+                  <dd className="text-slate-900 mt-1">
+                    Chrome → <span className="text-slate-700">⋮ menu</span> → <strong>Install app</strong>
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
-        </div>
-
-        {/* Install App Guide */}
-        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 sm:p-5">
-          <div className="flex items-center gap-2 mb-1">
-            <svg className="h-4 w-4 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-            <p className="text-sm font-semibold text-gray-900">Get the Mobile App</p>
-          </div>
-          <p className="text-xs text-gray-500 mb-3">Runs like a native app on your phone — add it to your home screen in seconds.</p>
-          <div className="text-sm text-gray-700 space-y-1">
-            <p><strong>iPhone:</strong> Safari → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share → <strong>Add to Home Screen</strong></p>
-            <p><strong>Android:</strong> Chrome → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg> → <strong>Install app</strong></p>
-          </div>
-        </div>
         </div>
 
         {/* === STUDENTS TAB === */}
