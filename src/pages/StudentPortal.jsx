@@ -560,57 +560,56 @@ const StudentPortal = () => {
           {/* === HOME TAB === */}
           <div className={activeTab !== 'home' ? 'hidden' : ''}>
 
-            {/* Hero Section with Initials Avatar */}
+            {/* Greeting card */}
             {(() => {
-              // Get initials
               const name = student?.full_name || '';
-              const initials = name.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
-              // Deterministic color palette
-              const colors = [
-                'bg-emerald-600', 'bg-blue-600', 'bg-purple-600', 'bg-pink-600', 'bg-yellow-500', 'bg-orange-500', 'bg-teal-600', 'bg-red-500', 'bg-indigo-600', 'bg-cyan-600',
-                'bg-lime-600', 'bg-fuchsia-600', 'bg-rose-600', 'bg-sky-600', 'bg-violet-600', 'bg-amber-600', 'bg-green-700', 'bg-gray-700', 'bg-blue-800', 'bg-emerald-800'
-              ];
-              // Hash initials to pick color
-              let hash = 0;
-              for (let i = 0; i < initials.length; i++) hash += initials.charCodeAt(i);
-              const color = colors[hash % colors.length];
+              const initials = name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase() || 'S';
+              const enrolmentStatus = student?.status || 'active';
               return (
-                <div className="rounded-2xl bg-gradient-to-br from-emerald-100 to-white dark:from-emerald-900/30 dark:to-gray-900 p-5 mb-4 flex flex-col items-center text-center">
-                  <div className={`w-24 h-24 mb-2 rounded-full shadow-lg border-4 border-white dark:border-gray-800 flex items-center justify-center text-4xl font-bold text-white select-none ${color}`}>{initials}</div>
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome, {student?.full_name?.split(' ')[0]}!</h1>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{student?.student_id ? `Student ID: ${student.student_id}` : 'Complete payment to receive your Student ID'}</p>
-                  <div className="flex justify-center gap-2 mb-2">
-                    <span className="inline-block bg-emerald-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Active Student</span>
+                <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm p-5 sm:p-6 mb-5 flex items-center gap-4 sm:gap-5">
+                  <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-700 dark:text-emerald-300 text-lg sm:text-xl font-semibold flex-shrink-0">
+                    {initials}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Next class: <span className="font-medium text-gray-900 dark:text-white">Check your Classes tab</span></p>
+                  <div className="min-w-0 flex-1">
+                    <h1 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white truncate">
+                      As-salāmu ʿalaykum, {student?.full_name?.split(' ')[0]}
+                    </h1>
+                    <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">
+                      {student?.student_id
+                        ? <>ID {student.student_id} · <span className={enrolmentStatus === 'active' ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-slate-700 dark:text-gray-300'}>
+                            {enrolmentStatus === 'active' ? 'Active' : enrolmentStatus}
+                          </span></>
+                        : 'Complete payment to receive your Student ID'
+                      }
+                    </p>
+                  </div>
                 </div>
               );
             })()}
 
-            {/* Action Cards */}
-            <div className="grid grid-cols-2 gap-3 mb-5">
-              <button onClick={() => setActiveTab('classes')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
-                <Calendar className="h-6 w-6 text-emerald-600 mb-1" />
-                <span className="text-xs font-semibold text-gray-900 dark:text-white">My Classes</span>
-              </button>
-              <button onClick={() => setActiveTab('lessons')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
-                <BookOpen className="h-6 w-6 text-emerald-600 mb-1" />
-                <span className="text-xs font-semibold text-gray-900 dark:text-white">My Lessons</span>
-              </button>
-              <button onClick={() => setActiveTab('practice')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
-                <Trophy className="h-6 w-6 text-amber-500 mb-1" />
-                <span className="text-xs font-semibold text-gray-900 dark:text-white">Leaderboard</span>
-              </button>
-              <button onClick={() => setActiveTab('results')} className="rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex flex-col items-center shadow-sm hover:shadow-md transition-all">
-                <Trophy className="h-6 w-6 text-yellow-500 mb-1" />
-                <span className="text-xs font-semibold text-gray-900 dark:text-white">Results</span>
-              </button>
+            {/* Quick links */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+              {[
+                { id: 'classes', label: 'My classes', icon: Calendar },
+                { id: 'lessons', label: 'My lessons', icon: BookOpen },
+                { id: 'practice', label: 'Leaderboard', icon: Trophy },
+                { id: 'results', label: 'Results', icon: Trophy },
+              ].map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm hover:border-slate-300 hover:shadow transition-all p-4 flex items-center gap-3 text-left"
+                >
+                  <div className="h-9 w-9 rounded-md bg-slate-50 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="h-4.5 w-4.5 text-slate-700 dark:text-gray-200" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-900 dark:text-white">{item.label}</span>
+                </button>
+              ))}
             </div>
 
-
-            {/* Progress Bar (matches Classes tab logic) */}
+            {/* Overall progress card */}
             {(() => {
-              // Sum completed/total classes across all active enrollments
               let completedClasses = 0;
               let totalClasses = 0;
               enrollments.filter(e => e.status === 'active').forEach(enrollment => {
@@ -618,41 +617,55 @@ const StudentPortal = () => {
                 const programConfig = PROGRAMS[enrollment.program];
                 const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
                 const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
-                const classes = programSchedules.length;
-                // Each week has 2 classes (main + short)
                 const completed = programSchedules.filter(s => s.status === 'completed').length;
                 completedClasses += completed;
                 totalClasses += totalWeeks * 2;
               });
               const percent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
               return (
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Overall Progress</span>
-                    <span className="text-xs font-semibold text-emerald-600">{percent}%</span>
+                <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm p-5 mb-5">
+                  <div className="flex items-baseline justify-between mb-2">
+                    <h2 className={`${HEADING} dark:text-white`}>Overall progress</h2>
+                    <span className="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white">{percent}<span className="text-sm text-slate-500 dark:text-gray-400">%</span></span>
                   </div>
-                  <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500 transition-all" style={{ width: `${percent}%` }} />
+                  <div className="h-1.5 w-full bg-slate-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${percent}%` }} />
                   </div>
+                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">
+                    {completedClasses} of {totalClasses} classes completed across your active programs
+                  </p>
                 </div>
               );
             })()}
 
-            {/* Class Etiquette / Rules */}
+            {/* Class etiquette block (collapsible card) */}
             <div className="mb-5">
               <StudentClassEtiquette />
             </div>
 
-            {/* Install App Guide */}
-            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <svg className="h-4 w-4 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">Get the Mobile App</p>
+            {/* Install app card */}
+            <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700">
+                <h2 className={`${HEADING} dark:text-white`}>Get the mobile app</h2>
+                <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">
+                  Runs like a native app — add it to your home screen in seconds.
+                </p>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Runs like a native app on your phone — add it to your home screen in seconds.</p>
-              <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                <p><strong>iPhone:</strong> Safari → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share → <strong>Add to Home Screen</strong></p>
-                <p><strong>Android:</strong> Chrome → tap <svg className="inline h-5 w-5 -mt-0.5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg> → <strong>Install app</strong></p>
+              <div className="px-5 py-4">
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div className="rounded-md border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-700/50 px-3 py-2.5">
+                    <dt className={LABEL_TINY}>iPhone</dt>
+                    <dd className="text-slate-900 dark:text-white mt-1">
+                      Safari → <span className="text-slate-700 dark:text-gray-300">Share</span> → <strong>Add to Home Screen</strong>
+                    </dd>
+                  </div>
+                  <div className="rounded-md border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-700/50 px-3 py-2.5">
+                    <dt className={LABEL_TINY}>Android</dt>
+                    <dd className="text-slate-900 dark:text-white mt-1">
+                      Chrome → <span className="text-slate-700 dark:text-gray-300">⋮ menu</span> → <strong>Install app</strong>
+                    </dd>
+                  </div>
+                </dl>
               </div>
             </div>
           </div>
