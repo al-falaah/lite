@@ -211,7 +211,7 @@ const getEmailHeader = (title, subtitle = '') => `
     ${getLogoSvg()}
   </div>
   <div class="brand-name">The FastTrack Madrasah</div>
-  <div class="brand-tagline">Authentic Islamic Education</div>
+  <div class="brand-tagline">Flexible. Structured. Tailored.</div>
   ${title ? `<h1 class="header-title">${title}</h1>` : ''}
   ${subtitle ? `<p class="header-subtitle">${subtitle}</p>` : ''}
 </div>
@@ -220,7 +220,7 @@ const getEmailHeader = (title, subtitle = '') => `
 const getEmailFooter = () => `
 <div class="footer">
   <p class="footer-text"><strong>The FastTrack Madrasah</strong></p>
-  <p class="footer-text">Authentic Islamic Education Rooted in the Qur'an and Sunnah</p>
+  <p class="footer-text">Flexible. Structured. Tailored.</p>
   <p class="footer-text" style="margin-top: 16px;">
     <a href="mailto:admin@tftmadrasah.nz" class="footer-link">admin@tftmadrasah.nz</a>
   </p>

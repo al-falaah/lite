@@ -174,7 +174,7 @@ const VacanciesPage = () => {
               © {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.
             </p>
             <p className="text-xs text-gray-500 mt-2">
-              Authentic Islamic Education Rooted in the Qur'an and Sunnah
+              Flexible. Structured. Tailored.
             </p>
           </div>
         </div>
