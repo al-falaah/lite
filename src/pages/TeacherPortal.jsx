@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BookOpen, LogOut, Users, UserX, Calendar, Eye, X, Mail, Send, Settings, Mic, Home } from 'lucide-react';
+import { BookOpen, LogOut, Users, UserX, Calendar, X, Mail, Send, Settings, Mic, Home } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh.jsx';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
@@ -580,153 +580,110 @@ export default function TeacherPortal() {
 
         {/* === STUDENTS TAB === */}
         <div className={teacherTab !== 'students' ? 'hidden' : ''}>
-        {/* View Toggle */}
-        <div className="border-b border-gray-200 mb-6">
-          <div className="flex gap-6">
-            <button
-              onClick={() => setActiveView('assigned')}
-              className={`px-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeView === 'assigned'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
-              }`}
-            >
-              <Users className="h-4 w-4 inline mr-2 -mt-0.5" />
-              Assigned ({assignedStudents.length})
-            </button>
-            <button
-              onClick={() => setActiveView('removed')}
-              className={`px-1 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeView === 'removed'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
-              }`}
-            >
-              <UserX className="h-4 w-4 inline mr-2 -mt-0.5" />
-              Removed ({removedStudents.length})
-            </button>
-          </div>
-        </div>
-
-        {/* Student List Content */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="relative w-24 h-24 inline-block">
-              <svg className="w-24 h-24" viewBox="0 0 80 80">
-                <circle
-                  className="text-gray-200"
-                  strokeWidth="6"
-                  stroke="currentColor"
-                  fill="transparent"
-                  r="34"
-                  cx="40"
-                  cy="40"
-                />
-                <circle
-                  className="text-emerald-600"
-                  strokeWidth="6"
-                  strokeDasharray={213.628}
-                  strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
-                  strokeLinecap="round"
-                  stroke="currentColor"
-                  fill="transparent"
-                  r="34"
-                  cx="40"
-                  cy="40"
-                  style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-lg font-semibold text-gray-700">
-                  {Math.round(loadingProgress)}%
-                </span>
-              </div>
+          {/* Heading + view toggle */}
+          <div className="mb-5 sm:mb-6 flex items-end justify-between gap-3 flex-wrap">
+            <div>
+              <h1 className={HEADING_LG}>Your students</h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Tap a student to grade oral tests, review recitations, and manage their classes.
+              </p>
             </div>
-            <p className="mt-4 text-gray-600">
-              {loadingProgress < 30 && 'Connecting...'}
-              {loadingProgress >= 30 && loadingProgress < 60 && 'Loading students...'}
-              {loadingProgress >= 60 && loadingProgress < 90 && 'Processing...'}
-              {loadingProgress >= 90 && 'Almost there...'}
-            </p>
           </div>
-        ) : displayedStudents.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-            {activeView === 'assigned' ? (
-              <>
-                <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No assigned students yet</p>
-              </>
-            ) : (
-              <>
-                <UserX className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No removed students</p>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-            {displayedStudents.map((assignment) => (
-              <div
-                key={assignment.id}
-                className="bg-white p-4 sm:p-5 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+
+          <div className="border-b border-slate-200 mb-5">
+            <div className="flex gap-6">
+              <button
+                onClick={() => setActiveView('assigned')}
+                className={activeView === 'assigned' ? TAB_ACTIVE : TAB_INACTIVE}
               >
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex-1 min-w-0 pr-2">
-                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1.5 truncate">
-                      {assignment.student.full_name}
-                    </h3>
-                    <span className="inline-block px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
-                      {PROGRAMS[assignment.program]?.shortName || assignment.program}
-                    </span>
-                    {pendingRecitations[assignment.student?.id] && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700">
-                        <Mic className="h-2.5 w-2.5" /> Review
-                      </span>
+                Assigned <span className="text-slate-400 tabular-nums">({assignedStudents.length})</span>
+              </button>
+              <button
+                onClick={() => setActiveView('removed')}
+                className={activeView === 'removed' ? TAB_ACTIVE : TAB_INACTIVE}
+              >
+                Removed <span className="text-slate-400 tabular-nums">({removedStudents.length})</span>
+              </button>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mx-auto" />
+              <p className="mt-3 text-sm text-slate-500">Loading students…</p>
+            </div>
+          ) : displayedStudents.length === 0 ? (
+            <div className={`${CARD} p-10 text-center`}>
+              {activeView === 'assigned' ? (
+                <>
+                  <Users className="h-10 w-10 text-slate-300 mx-auto mb-3" strokeWidth={1.5} />
+                  <p className="text-sm font-medium text-slate-700">No assigned students yet</p>
+                  <p className="text-xs text-slate-500 mt-1">Once a student is assigned to you, they'll appear here.</p>
+                </>
+              ) : (
+                <>
+                  <UserX className="h-10 w-10 text-slate-300 mx-auto mb-3" strokeWidth={1.5} />
+                  <p className="text-sm font-medium text-slate-700">No removed students</p>
+                  <p className="text-xs text-slate-500 mt-1">Anyone reassigned away will appear here.</p>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+              {displayedStudents.map((assignment) => {
+                const hasPending = pendingRecitations[assignment.student?.id];
+                const isRemoved = assignment.status === 'removed';
+                return (
+                  <div
+                    key={assignment.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleViewStudent(assignment)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleViewStudent(assignment); }}
+                    className={`${CARD} p-4 sm:p-5 cursor-pointer hover:border-slate-300 hover:shadow transition-all`}
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm sm:text-base font-semibold text-slate-900 truncate">
+                          {assignment.student.full_name}
+                        </h3>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          ID {assignment.student.student_id} · {PROGRAMS[assignment.program]?.shortName || assignment.program}
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleOpenEmailModal(assignment.student, assignment.program); }}
+                        className="inline-flex items-center justify-center h-9 w-9 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors flex-shrink-0"
+                        aria-label={`Send email to ${assignment.student.full_name}`}
+                      >
+                        <Mail className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <p className="text-sm text-slate-600 truncate mb-1">{assignment.student.email}</p>
+                    <p className="text-xs text-slate-500">Assigned {formatDate(assignment.assigned_at)}</p>
+
+                    {hasPending && (
+                      <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700">
+                        <Mic className="h-3.5 w-3.5" />
+                        Recitation to review
+                      </p>
+                    )}
+
+                    {isRemoved && assignment.removed_at && (
+                      <p className="mt-3 text-xs text-red-700">
+                        Removed {formatDate(assignment.removed_at)}
+                      </p>
+                    )}
+
+                    {assignment.notes && (
+                      <p className="mt-3 text-xs text-slate-600 italic line-clamp-2">{assignment.notes}</p>
                     )}
                   </div>
-                  <div className="flex gap-1 flex-shrink-0">
-                    <button
-                      onClick={() => handleOpenEmailModal(assignment.student, assignment.program)}
-                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                      title="Send email"
-                    >
-                      <Mail className="h-4 w-4 sm:h-4 sm:w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleViewStudent(assignment)}
-                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                      title="View details"
-                    >
-                      <Eye className="h-4 w-4 sm:h-4 sm:w-4" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 text-xs sm:text-sm text-gray-600">
-                  <p className="truncate">
-                    <span className="text-gray-500">Email:</span> {assignment.student.email}
-                  </p>
-                  <p>
-                    <span className="text-gray-500">ID:</span> {assignment.student.student_id}
-                  </p>
-                  <p className="hidden sm:block">
-                    <span className="text-gray-500">Assigned:</span> {formatDate(assignment.assigned_at)}
-                  </p>
-                  {assignment.status === 'removed' && assignment.removed_at && (
-                    <p className="text-red-600">
-                      <span className="font-medium">Removed:</span> {formatDate(assignment.removed_at)}
-                    </p>
-                  )}
-                  {assignment.notes && (
-                    <p className="text-xs italic mt-2 p-2 bg-gray-50 rounded border border-gray-100">
-                      {assignment.notes}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* === LESSONS TAB === */}
