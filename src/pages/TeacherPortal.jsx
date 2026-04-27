@@ -688,9 +688,9 @@ export default function TeacherPortal() {
 
         {/* === LESSONS TAB === */}
         <div className={teacherTab !== 'lessons' ? 'hidden' : ''}>
-          <div className="mb-5 sm:mb-8">
-            <h1 className="text-lg sm:text-3xl font-bold text-gray-900 mb-0.5">Lessons</h1>
-            <p className="text-xs sm:text-base text-gray-500">Review lesson content for the programs you teach</p>
+          <div className="mb-5 sm:mb-6">
+            <h1 className={HEADING_LG}>Lessons</h1>
+            <p className="text-sm text-slate-500 mt-1">Review the chapters and quizzes for the programs you teach.</p>
           </div>
           <StudentLessons
             programs={[...new Set(assignedStudents.map(a => a.program).filter(Boolean))]}
@@ -699,10 +699,14 @@ export default function TeacherPortal() {
 
         {/* === CALENDAR TAB === */}
         <div className={teacherTab !== 'calendar' ? 'hidden' : ''}>
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="mb-5 sm:mb-6">
+            <h1 className={HEADING_LG}>School calendar</h1>
+            <p className="text-sm text-slate-500 mt-1">All scheduled classes, holidays, and term breaks.</p>
+          </div>
+          <div className={CARD_OVERFLOW}>
             <iframe
               src="https://calendar.google.com/calendar/embed?showTitle=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA&wkst=1&ctz=Pacific%2FAuckland&src=ZDQ2NjdiMDUxMWI1ZDZiNTIzZmE4OGE2Y2RmZjc4MmFhYTllMTQyODlkYzc2M2QyZWE1N2U5NTRlODI4NWYwN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4ubmV3X3plYWxhbmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23f4511e&color=%230b8043"
-              className="w-full border-0 h-[calc(100vh-13rem)] sm:h-[600px]"
+              className="w-full border-0 h-[calc(100vh-15rem)] sm:h-[640px]"
               title="School Calendar"
             />
           </div>
