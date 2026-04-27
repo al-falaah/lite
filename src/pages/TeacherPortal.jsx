@@ -2,15 +2,21 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { BookOpen, LogOut, Users, UserX, Calendar, BarChart3, Eye, X, CheckCircle, Mail, Send, XCircle, Settings, Mic, Home } from 'lucide-react';
+import { BookOpen, LogOut, Users, UserX, Calendar, Eye, X, Mail, Send, Settings, Mic, Home } from 'lucide-react';
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh.jsx';
-import Button from '../components/common/Button';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
-import OralTestGrading from '../components/admin/OralTestGrading';
-import RecitationAssignments from '../components/admin/RecitationAssignments';
 import StudentLessons from '../components/student/StudentLessons';
-import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
+import { PROGRAMS } from '../config/programs';
+import {
+  PAGE, CARD, CARD_OVERFLOW, CARD_HEADER, CARD_BODY, CARD_FOOTER,
+  BTN_PRIMARY, BTN_SECONDARY,
+  INPUT, TEXTAREA,
+  CONTAINER_WIDE,
+  TAB_ACTIVE, TAB_INACTIVE,
+  BOTTOM_TAB_ACTIVE, BOTTOM_TAB_INACTIVE,
+  HEADING_LG, HEADING, LABEL, LABEL_TINY,
+} from '../design/ui';
 
 export default function TeacherPortal() {
   const navigate = useNavigate();
@@ -436,66 +442,70 @@ export default function TeacherPortal() {
   // Loading spinner while checking session
   if (initialLoading || !teacher) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+      <div className={`${PAGE} flex items-center justify-center`}>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent" />
       </div>
     );
   }
 
-  // Dashboard Screen
   const displayedStudents = activeView === 'assigned' ? assignedStudents : removedStudents;
 
+  const TABS = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'students', label: 'Students', icon: Users },
+    { id: 'lessons', label: 'Lessons', icon: BookOpen },
+    { id: 'calendar', label: 'Calendar', icon: Calendar },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={PAGE}>
       <Helmet><title>Teacher Portal | The FastTrack Madrasah</title></Helmet>
       <PullIndicator pullDistance={pullDistance} isPulling={isPulling} />
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-8 sm:w-8" />
-              <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
-              </div>
-            </Link>
-            <div className="flex items-center gap-1.5 sm:gap-4">
-              <div className="text-right">
-                <p className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">{teacher.full_name}</p>
-                <p className="text-[10px] sm:text-xs text-gray-600 hidden sm:block">Staff ID: {teacher.staff_id}</p>
-              </div>
-              <Button variant="outline" onClick={handleOpenSettings} className="text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
-                <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Settings</span>
-              </Button>
-              <Button variant="secondary" onClick={handleLogout} className="text-xs sm:text-base px-2 py-1.5 sm:px-4 sm:py-2">
-                <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Logout</span>
-              </Button>
+
+      {/* Top nav */}
+      <nav className="sticky top-0 z-40 bg-white border-b border-slate-200">
+        <div className={`${CONTAINER_WIDE} h-14 sm:h-16 flex items-center justify-between gap-3`}>
+          <Link to="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
+            <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0" />
+            <div className="flex flex-col leading-none">
+              <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900">The FastTrack</span>
+              <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900" style={{ letterSpacing: '0.28em' }}>Madrasah</span>
             </div>
+          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-medium text-slate-900 truncate max-w-[160px]">{teacher.full_name}</p>
+              <p className="text-xs text-slate-500">Staff ID: {teacher.staff_id}</p>
+            </div>
+            <button
+              onClick={handleOpenSettings}
+              className="inline-flex items-center justify-center h-9 w-9 sm:h-auto sm:w-auto sm:px-3 sm:py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 transition-colors"
+              aria-label="Settings"
+            >
+              <Settings className="h-4 w-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Settings</span>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center justify-center h-9 w-9 sm:h-auto sm:w-auto sm:px-3 sm:py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 transition-colors"
+              aria-label="Log out"
+            >
+              <LogOut className="h-4 w-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Desktop Tab Bar */}
-      <div className="hidden sm:block bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1">
-            {[
-              { id: 'home', label: 'Home', icon: Home },
-              { id: 'students', label: 'Students', icon: Users },
-              { id: 'lessons', label: 'Lessons', icon: BookOpen },
-              { id: 'calendar', label: 'Calendar', icon: Calendar },
-            ].map(tab => (
+      {/* Desktop tab bar */}
+      <div className="hidden sm:block bg-white border-b border-slate-200">
+        <div className={CONTAINER_WIDE}>
+          <div className="flex gap-1 overflow-x-auto">
+            {TABS.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setTeacherTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  teacherTab === tab.id
-                    ? 'border-emerald-600 text-emerald-700'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={teacherTab === tab.id ? TAB_ACTIVE : TAB_INACTIVE}
               >
                 <tab.icon className="h-4 w-4" />
                 {tab.label}
@@ -748,199 +758,162 @@ export default function TeacherPortal() {
 
       </div>
 
-      {/* Mobile Bottom Tab Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 z-50 sm:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-        <div className="flex justify-around items-center h-14 px-1">
-          {[
-            { id: 'home', label: 'Home', icon: Home },
-            { id: 'students', label: 'Students', icon: Users },
-            { id: 'lessons', label: 'Lessons', icon: BookOpen },
-            { id: 'calendar', label: 'Calendar', icon: Calendar },
-          ].map(tab => (
+      {/* Mobile bottom tab bar */}
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 sm:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <div className="flex justify-around items-stretch px-1">
+          {TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setTeacherTab(tab.id)}
-              className={`flex flex-col items-center justify-center flex-1 py-1.5 rounded-lg transition-colors ${
-                teacherTab === tab.id
-                  ? 'text-emerald-700'
-                  : 'text-gray-400 active:bg-gray-100'
-              }`}
+              className={teacherTab === tab.id ? BOTTOM_TAB_ACTIVE : BOTTOM_TAB_INACTIVE}
             >
-              <tab.icon className={`h-5 w-5 ${teacherTab === tab.id ? 'text-emerald-600' : ''}`} strokeWidth={teacherTab === tab.id ? 2.5 : 1.5} />
-              <span className={`text-[10px] ${teacherTab === tab.id ? 'font-semibold' : 'font-medium'}`}>{tab.label}</span>
+              <tab.icon className="h-5 w-5" strokeWidth={teacherTab === tab.id ? 2.25 : 1.75} />
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>
       </div>
 
-
-      {/* Email Modal */}
+      {/* Email modal */}
       {showEmailModal && emailRecipient && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-          <div className="bg-white rounded-t-lg sm:rounded-lg border border-gray-200 w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                  <div className="min-w-0">
-                    <h2 className="text-sm sm:text-lg font-semibold text-gray-900">Send Message</h2>
-                    <p className="text-xs sm:text-sm text-gray-600 truncate">To: {emailRecipient.name}</p>
-                  </div>
+        <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-xl sm:rounded-xl shadow-xl border border-slate-200 w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-slate-100 px-5 py-4 flex items-baseline justify-between gap-3">
+              <div className="min-w-0">
+                <h2 className={HEADING}>Send message</h2>
+                <p className="text-sm text-slate-500 truncate">To {emailRecipient.name}</p>
+              </div>
+              <button
+                onClick={() => { setShowEmailModal(false); setEmailMessage(''); setEmailRecipient(null); }}
+                className="text-slate-400 hover:text-slate-700 p-1.5 -mr-1.5 rounded transition-colors"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="px-5 py-5 space-y-5">
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div>
+                  <dt className={LABEL_TINY}>Student ID</dt>
+                  <dd className="text-slate-900 mt-1">{emailRecipient.studentId}</dd>
                 </div>
-                <button
-                  onClick={() => {
-                    setShowEmailModal(false);
-                    setEmailMessage('');
-                    setEmailRecipient(null);
-                  }}
-                  className="text-gray-400 hover:text-gray-600 p-2 -mr-2 transition-colors"
-                >
-                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
-                </button>
+                <div>
+                  <dt className={LABEL_TINY}>Program</dt>
+                  <dd className="text-slate-900 mt-1">{PROGRAMS[emailRecipient.program]?.shortName || emailRecipient.program}</dd>
+                </div>
+                <div className="sm:col-span-2">
+                  <dt className={LABEL_TINY}>Email</dt>
+                  <dd className="text-slate-900 mt-1 break-all">{emailRecipient.email}</dd>
+                </div>
+              </dl>
+
+              <div>
+                <label htmlFor="emailMessage" className={LABEL}>Message</label>
+                <textarea
+                  id="emailMessage"
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  rows={8}
+                  placeholder="Type your message…"
+                  className={TEXTAREA}
+                />
+                <p className="text-xs text-slate-500 mt-2">
+                  The student receives this via email and can reply to your address directly.
+                </p>
               </div>
             </div>
 
-            <div className="p-4 sm:p-6">
-
-              <div className="mb-4 sm:mb-6">
-                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200 mb-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-                    <div>
-                      <p className="text-gray-500 text-xs mb-1">Student ID</p>
-                      <p className="text-gray-900">{emailRecipient.studentId}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500 text-xs mb-1">Program</p>
-                      <p className="text-gray-900 capitalize">
-                        {PROGRAMS[emailRecipient.program]?.shortName || emailRecipient.program}
-                      </p>
-                    </div>
-                    <div className="col-span-2">
-                      <p className="text-gray-500 text-xs mb-1">Email</p>
-                      <p className="text-gray-900">{emailRecipient.email}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="emailMessage" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="emailMessage"
-                    value={emailMessage}
-                    onChange={(e) => setEmailMessage(e.target.value)}
-                    rows={8}
-                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
-                    placeholder="Type your message here..."
-                  />
-                  <p className="text-xs text-gray-500 mt-2">
-                    The student will receive this message via email and can reply directly to your email address.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setShowEmailModal(false);
-                    setEmailMessage('');
-                    setEmailRecipient(null);
-                  }}
-                  disabled={sendingEmail}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSendEmail}
-                  disabled={sendingEmail || !emailMessage.trim()}
-                  className="inline-flex items-center"
-                >
-                  {sendingEmail ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </div>
+            <div className={`${CARD_FOOTER} flex justify-end gap-2`}>
+              <button
+                onClick={() => { setShowEmailModal(false); setEmailMessage(''); setEmailRecipient(null); }}
+                disabled={sendingEmail}
+                className={BTN_SECONDARY}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSendEmail}
+                disabled={sendingEmail || !emailMessage.trim()}
+                className={BTN_PRIMARY}
+              >
+                {sendingEmail ? 'Sending…' : (
+                  <>
+                    <Send className="h-4 w-4 mr-1.5" />
+                    Send message
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Settings Modal */}
+      {/* Settings modal */}
       {showSettingsModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-          <div className="bg-white rounded-t-lg sm:rounded-lg border border-gray-200 w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">Settings</h3>
+        <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white rounded-t-xl sm:rounded-xl shadow-xl border border-slate-200 w-full sm:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-slate-100 px-5 py-4 flex items-baseline justify-between gap-3">
+              <h2 className={HEADING}>Settings</h2>
               <button
                 onClick={() => setShowSettingsModal(false)}
-                className="text-gray-400 hover:text-gray-600 p-2 -mr-2 transition-colors"
+                className="text-slate-400 hover:text-slate-700 p-1.5 -mr-1.5 rounded transition-colors"
+                aria-label="Close"
               >
-                <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="p-4 sm:p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={settingsFormData.full_name}
-                    onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="Your full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={settingsFormData.phone}
-                    onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="Your phone number"
-                  />
-                </div>
-
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <p className="text-sm text-gray-700">
-                    <strong>Read-only Information:</strong>
-                  </p>
-                  <div className="mt-2 space-y-1 text-sm text-gray-600">
-                    <p><strong>Email:</strong> {teacher.email}</p>
-                    <p><strong>Staff ID:</strong> {teacher.staff_id}</p>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={handleUpdateProfile}
-                  disabled={updatingProfile}
-                  className="w-full"
-                >
-                  {updatingProfile ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Updating Profile...
-                    </>
-                  ) : (
-                    'Update Profile'
-                  )}
-                </Button>
+            <div className="px-5 py-5 space-y-4">
+              <div>
+                <label className={LABEL}>Full name</label>
+                <input
+                  type="text"
+                  value={settingsFormData.full_name}
+                  onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
+                  placeholder="Your full name"
+                  className={INPUT}
+                />
               </div>
+
+              <div>
+                <label className={LABEL}>Phone number</label>
+                <input
+                  type="tel"
+                  value={settingsFormData.phone}
+                  onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
+                  placeholder="Your phone number"
+                  className={INPUT}
+                />
+              </div>
+
+              <div className="rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+                <p className={`${LABEL_TINY} mb-2`}>Read-only</p>
+                <dl className="space-y-1 text-slate-700">
+                  <div className="flex justify-between gap-3"><dt className="text-slate-500">Email</dt><dd className="text-slate-900 truncate">{teacher.email}</dd></div>
+                  <div className="flex justify-between gap-3"><dt className="text-slate-500">Staff ID</dt><dd className="text-slate-900">{teacher.staff_id}</dd></div>
+                </dl>
+              </div>
+            </div>
+
+            <div className={`${CARD_FOOTER} flex justify-end gap-2`}>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                disabled={updatingProfile}
+                className={BTN_SECONDARY}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateProfile}
+                disabled={updatingProfile}
+                className={BTN_PRIMARY}
+              >
+                {updatingProfile ? 'Saving…' : 'Save changes'}
+              </button>
             </div>
           </div>
         </div>
