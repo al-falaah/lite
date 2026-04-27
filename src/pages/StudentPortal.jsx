@@ -20,6 +20,16 @@ import TestProgressCard from '../components/student/TestProgressCard';
 import StudentCertificateCard from '../components/student/StudentCertificateCard';
 import RecitationPractice from '../components/student/RecitationPractice';
 import {
+  PAGE,
+  CARD_FOOTER,
+  BTN_PRIMARY, BTN_SECONDARY,
+  INPUT, TEXTAREA,
+  CONTAINER_WIDE,
+  TAB_ACTIVE, TAB_INACTIVE,
+  BOTTOM_TAB_ACTIVE, BOTTOM_TAB_INACTIVE,
+  HEADING, LABEL, LABEL_TINY,
+} from '../design/ui';
+import {
   PROGRAMS,
   PROGRAM_IDS,
   getProgramName as getConfigProgramName,
@@ -463,88 +473,78 @@ const StudentPortal = () => {
 
   if (initialLoading || !student) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className={`${PAGE} dark:bg-gray-900 flex items-center justify-center`}>
         <div className="text-center">
           <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4 dark:hidden" />
           <img src="/favicon-white.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4 hidden dark:block" />
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mx-auto" />
+          <p className="mt-3 text-sm text-slate-500 dark:text-gray-400">Loading…</p>
         </div>
       </div>
     );
   }
 
+  const TABS = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'classes', label: 'Classes', icon: Calendar },
+    { id: 'lessons', label: 'Lessons', icon: BookOpen },
+    { id: 'practice', label: 'Leaderboard', icon: Trophy },
+    { id: 'results', label: 'Results', icon: Trophy },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`${PAGE} dark:bg-gray-900`}>
       <Helmet><title>Student Portal | The FastTrack Madrasah</title></Helmet>
       <PullIndicator pullDistance={pullDistance} isPulling={isPulling} />
-      {/* Header */}
-      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity">
-              <img
-                src="/favicon.svg"
-                alt="The FastTrack Madrasah"
-                className="h-6 w-6 sm:h-8 sm:w-8 dark:hidden"
-              />
-              <img
-                src="/favicon-white.svg"
-                alt="The FastTrack Madrasah"
-                className="h-6 w-6 sm:h-8 sm:w-8 hidden dark:block"
-              />
-              <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900 dark:text-white" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-xs sm:text-base font-brand font-semibold text-gray-900 dark:text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
-              </div>
-            </Link>
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Removed student name and ID from navbar */}
-              <button
-                onClick={toggleTheme}
-                className="flex items-center justify-center p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </button>
-              <button
-                onClick={handleOpenSettings}
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Settings</span>
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
+
+      {/* Top nav */}
+      <nav className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+        <div className={`${CONTAINER_WIDE} h-14 sm:h-16 flex items-center justify-between gap-3`}>
+          <Link to="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
+            <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 dark:hidden" />
+            <img src="/favicon-white.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 hidden dark:block" />
+            <div className="flex flex-col leading-none">
+              <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900 dark:text-white">The FastTrack</span>
+              <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900 dark:text-white" style={{ letterSpacing: '0.28em' }}>Madrasah</span>
             </div>
+          </Link>
+          <div className="flex items-center gap-2 sm:gap-2">
+            <button
+              onClick={toggleTheme}
+              className="inline-flex items-center justify-center h-9 w-9 text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-700 rounded-md transition-colors"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={handleOpenSettings}
+              className="inline-flex items-center justify-center h-9 w-9 sm:h-auto sm:w-auto sm:px-3 sm:py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Settings"
+            >
+              <Settings className="h-4 w-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Settings</span>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center justify-center h-9 w-9 sm:h-auto sm:w-auto sm:px-3 sm:py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Log out"
+            >
+              <LogOut className="h-4 w-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Desktop Tab Bar */}
-      <div className="hidden sm:block bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1">
-            {[
-              { id: 'home', label: 'Home', icon: Home },
-              { id: 'classes', label: 'Classes', icon: Calendar },
-              { id: 'lessons', label: 'Lessons', icon: BookOpen },
-              { id: 'practice', label: 'Leaderboard', icon: Trophy },
-              { id: 'results', label: 'Results', icon: Trophy },
-            ].map(tab => (
+      {/* Desktop tab bar */}
+      <div className="hidden sm:block bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+        <div className={CONTAINER_WIDE}>
+          <div className="flex gap-1 overflow-x-auto">
+            {TABS.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === tab.id
-                    ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
-                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
-                }`}
+                className={activeTab === tab.id ? TAB_ACTIVE : TAB_INACTIVE}
               >
                 <tab.icon className="h-4 w-4" />
                 {tab.label}
@@ -1078,205 +1078,161 @@ const StudentPortal = () => {
         </div>
       </div>
 
-      {/* Mobile Bottom Tab Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 z-50 sm:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-        <div className="flex justify-around items-center h-14 px-1">
-          {[
-            { id: 'home', label: 'Home', icon: Home },
-            { id: 'classes', label: 'Classes', icon: Calendar },
-            { id: 'lessons', label: 'Lessons', icon: BookOpen },
-            { id: 'practice', label: 'Leaderboard', icon: Trophy },
-            { id: 'results', label: 'Results', icon: Trophy },
-          ].map(tab => (
+      {/* Mobile bottom tab bar */}
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-slate-200 dark:border-gray-700 z-40 sm:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <div className="flex justify-around items-stretch px-1">
+          {TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center flex-1 py-1.5 rounded-lg transition-colors ${
-                activeTab === tab.id
-                  ? 'text-emerald-700 dark:text-emerald-400'
-                  : 'text-gray-400 dark:text-gray-500 active:bg-gray-100 dark:active:bg-gray-700'
-              }`}
+              className={activeTab === tab.id ? BOTTOM_TAB_ACTIVE : BOTTOM_TAB_INACTIVE}
             >
-              <tab.icon className={`h-5 w-5 ${activeTab === tab.id ? 'text-emerald-600 dark:text-emerald-400' : ''}`} strokeWidth={activeTab === tab.id ? 2.5 : 1.5} />
-              <span className={`text-[10px] ${activeTab === tab.id ? 'font-semibold' : 'font-medium'}`}>{tab.label}</span>
+              <tab.icon className="h-5 w-5" strokeWidth={activeTab === tab.id ? 2.25 : 1.75} />
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Email Modal */}
+      {/* Email modal */}
       {showEmailModal && emailRecipient && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 max-w-2xl w-full">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full">
-                    <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Send Message</h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">To: {emailRecipient.name}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowEmailModal(false);
-                    setEmailMessage('');
-                    setEmailRecipient(null);
-                  }}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  <X className="h-6 w-6" />
-                </button>
+        <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-t-xl sm:rounded-xl shadow-xl border border-slate-200 dark:border-gray-700 w-full sm:max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-slate-100 dark:border-gray-700 px-5 py-4 flex items-baseline justify-between gap-3">
+              <div className="min-w-0">
+                <h2 className={HEADING}>Message your teacher</h2>
+                <p className="text-sm text-slate-500 dark:text-gray-400 truncate">To {emailRecipient.name}</p>
               </div>
+              <button
+                onClick={() => { setShowEmailModal(false); setEmailMessage(''); setEmailRecipient(null); }}
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-gray-200 p-1.5 -mr-1.5 rounded transition-colors"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-              <div className="mb-6">
-                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-gray-600 dark:text-gray-400 mb-1">Staff ID</p>
-                      <p className="font-medium dark:text-white">{emailRecipient.staffId}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600 dark:text-gray-400 mb-1">Program</p>
-                      <p className="font-medium capitalize dark:text-white">
-                        {PROGRAMS[emailRecipient.program]?.shortName || emailRecipient.program}
-                      </p>
-                    </div>
-                    <div className="col-span-2">
-                      <p className="text-gray-600 dark:text-gray-400 mb-1">Email</p>
-                      <p className="font-medium dark:text-white">{emailRecipient.email}</p>
-                    </div>
-                  </div>
-                </div>
-
+            <div className="px-5 py-5 space-y-5">
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div>
-                  <label htmlFor="emailMessage" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="emailMessage"
-                    value={emailMessage}
-                    onChange={(e) => setEmailMessage(e.target.value)}
-                    rows={8}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none bg-white dark:bg-gray-700 dark:text-white"
-                    placeholder="Type your message here..."
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    Your teacher will receive this message via email and can reply directly to your email address.
-                  </p>
+                  <dt className={LABEL_TINY}>Staff ID</dt>
+                  <dd className="text-slate-900 dark:text-white mt-1">{emailRecipient.staffId}</dd>
                 </div>
-              </div>
+                <div>
+                  <dt className={LABEL_TINY}>Program</dt>
+                  <dd className="text-slate-900 dark:text-white mt-1">{PROGRAMS[emailRecipient.program]?.shortName || emailRecipient.program}</dd>
+                </div>
+                <div className="sm:col-span-2">
+                  <dt className={LABEL_TINY}>Email</dt>
+                  <dd className="text-slate-900 dark:text-white mt-1 break-all">{emailRecipient.email}</dd>
+                </div>
+              </dl>
 
-              <div className="flex justify-end gap-3">
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setShowEmailModal(false);
-                    setEmailMessage('');
-                    setEmailRecipient(null);
-                  }}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSendEmail}
-                  disabled={loading || !emailMessage.trim()}
-                  className="inline-flex items-center"
-                >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
+              <div>
+                <label htmlFor="emailMessage" className={LABEL}>Message</label>
+                <textarea
+                  id="emailMessage"
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  rows={8}
+                  placeholder="Type your message…"
+                  className={TEXTAREA}
+                />
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">
+                  Your teacher receives this via email and can reply to your address directly.
+                </p>
               </div>
+            </div>
+
+            <div className={`${CARD_FOOTER} flex justify-end gap-2`}>
+              <button
+                onClick={() => { setShowEmailModal(false); setEmailMessage(''); setEmailRecipient(null); }}
+                disabled={loading}
+                className={BTN_SECONDARY}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSendEmail}
+                disabled={loading || !emailMessage.trim()}
+                className={BTN_PRIMARY}
+              >
+                {loading ? 'Sending…' : (
+                  <>
+                    <Send className="h-4 w-4 mr-1.5" />
+                    Send message
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Settings Modal */}
+      {/* Settings modal */}
       {showSettingsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-full">
-                    <Settings className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Profile Settings</h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Update your profile information</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowSettingsModal(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  <X className="h-6 w-6" />
-                </button>
+        <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50 sm:p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-t-xl sm:rounded-xl shadow-xl border border-slate-200 dark:border-gray-700 w-full sm:max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-slate-100 dark:border-gray-700 px-5 py-4 flex items-baseline justify-between gap-3">
+              <h2 className={HEADING}>Profile settings</h2>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-gray-200 p-1.5 -mr-1.5 rounded transition-colors"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="px-5 py-5 space-y-4">
+              <div>
+                <label className={LABEL}>Full name</label>
+                <input
+                  type="text"
+                  value={settingsFormData.full_name}
+                  onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
+                  placeholder="Your full name"
+                  className={INPUT}
+                />
               </div>
 
-              {/* Profile Form */}
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={settingsFormData.full_name}
-                    onChange={(e) => setSettingsFormData({ ...settingsFormData, full_name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 dark:text-white"
-                    placeholder="Your full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={settingsFormData.phone}
-                    onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-700 dark:text-white"
-                    placeholder="+64 21 123 4567"
-                  />
-                </div>
-
-                <div className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    <strong>Note:</strong> Your email and student ID cannot be changed. Contact admin if you need to update these details.
-                  </p>
-                </div>
-
-                <div className="flex justify-end gap-3">
-                  <Button
-                    variant="secondary"
-                    onClick={() => setShowSettingsModal(false)}
-                    disabled={settingsLoading}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={handleUpdateProfile}
-                    disabled={settingsLoading}
-                  >
-                    {settingsLoading ? 'Updating...' : 'Update Profile'}
-                  </Button>
-                </div>
+              <div>
+                <label className={LABEL}>Phone number</label>
+                <input
+                  type="tel"
+                  value={settingsFormData.phone}
+                  onChange={(e) => setSettingsFormData({ ...settingsFormData, phone: e.target.value })}
+                  placeholder="+64 21 123 4567"
+                  className={INPUT}
+                />
               </div>
+
+              <div className="rounded-md border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-700/50 px-4 py-3 text-sm">
+                <p className={`${LABEL_TINY} mb-1`}>Note</p>
+                <p className="text-slate-600 dark:text-gray-300">
+                  Your email and student ID can't be changed here. Contact admin to update them.
+                </p>
+              </div>
+            </div>
+
+            <div className={`${CARD_FOOTER} flex justify-end gap-2`}>
+              <button
+                onClick={() => setShowSettingsModal(false)}
+                disabled={settingsLoading}
+                className={BTN_SECONDARY}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateProfile}
+                disabled={settingsLoading}
+                className={BTN_PRIMARY}
+              >
+                {settingsLoading ? 'Saving…' : 'Save changes'}
+              </button>
             </div>
           </div>
         </div>
