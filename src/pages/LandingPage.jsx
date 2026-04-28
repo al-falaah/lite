@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram } from 'lucide-react';
 import Button from '../components/common/Button';
 import { storage } from '../services/supabase';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
@@ -1450,9 +1450,29 @@ const LandingPage = () => {
                   {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
-                Authentic Islamic education rooted in the Qur'an and Sunnah
+              <p className="text-gray-400 text-sm mb-4">
+                Flexible. Structured. Tailored.
               </p>
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://www.facebook.com/share/1BLq4A9uWp/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-gray-300 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/the.fasttrack.madrasah?igsh=MWN1dGE1bzc1Nms4dg%3D%3D&utm_source=qr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-gray-300 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+              </div>
             </div>
 
             {/* Quick Links */}
