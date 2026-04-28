@@ -960,14 +960,11 @@ const StudentPortal = () => {
             )}
           </div>
 
-          {/* === LEADERBOARD TAB (renamed from Practice) === */}
+          {/* === LEADERBOARD TAB === */}
           <div className={activeTab !== 'practice' ? 'hidden' : ''}>
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-amber-500" />
-                Leaderboard
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <div className="mb-5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Leaderboard</h1>
+              <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
                 Top scores per chapter drill, by program. Last attempt counts.
               </p>
             </div>
@@ -976,20 +973,28 @@ const StudentPortal = () => {
 
           {/* === RESULTS TAB === */}
           <div className={activeTab !== 'results' ? 'hidden' : ''}>
-          <div className="space-y-6">
-          {enrollments.filter(e => e.status === 'active').map(enrollment => {
-            const activeWeek = getActiveWeekForEnrollment(enrollment);
-            return (
-              <div key={enrollment.id} className="space-y-4">
-                {enrollments.filter(e => e.status === 'active').length > 1 && (
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{getProgramName(enrollment.program)}</h3>
-                )}
-                <TestProgressCard programId={enrollment.program} currentWeek={activeWeek.week} />
-                <StudentCertificateCard programId={enrollment.program} />
-              </div>
-            );
-          })}
-          </div>
+            <div className="mb-5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Your results</h1>
+              <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
+                Test progress and certificates for each program you're enrolled in.
+              </p>
+            </div>
+            <div className="space-y-5">
+              {enrollments.filter(e => e.status === 'active').length === 0 ? (
+                <p className="text-sm text-slate-500 dark:text-gray-400">No active enrolments.</p>
+              ) : enrollments.filter(e => e.status === 'active').map(enrollment => {
+                const activeWeek = getActiveWeekForEnrollment(enrollment);
+                return (
+                  <div key={enrollment.id} className="space-y-4">
+                    {enrollments.filter(e => e.status === 'active').length > 1 && (
+                      <h2 className="text-sm font-semibold text-slate-900 dark:text-white">{getProgramName(enrollment.program)}</h2>
+                    )}
+                    <TestProgressCard programId={enrollment.program} currentWeek={activeWeek.week} />
+                    <StudentCertificateCard programId={enrollment.program} />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
