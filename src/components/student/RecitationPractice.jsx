@@ -1,21 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../services/supabase';
 import { toast } from 'sonner';
-import { Mic, Square, Send, Clock, CheckCircle, BookOpen } from 'lucide-react';
+import { Mic, Send } from 'lucide-react';
 import VoiceNote from '../common/VoiceNote';
 
-const GRADE_STYLES = {
-  excellent: 'bg-emerald-100 text-emerald-700 border-emerald-300',
-  good: 'bg-blue-100 text-blue-700 border-blue-300',
-  fair: 'bg-amber-100 text-amber-700 border-amber-300',
-  needs_improvement: 'bg-red-100 text-red-700 border-red-300',
-};
 const GRADE_LABELS = {
-  excellent: 'Excellent', good: 'Good', fair: 'Fair', needs_improvement: 'Needs Improvement',
+  excellent: 'Excellent',
+  good: 'Good',
+  fair: 'Fair',
+  needs_improvement: 'Needs improvement',
 };
 
 const MAX_SECONDS = 900;
 
+/**
+ * Reading practice — student side.
+ *
+ * One active recitation per (student, program). The student picks a passage,
+ * records a reading, and submits. Teacher reviews on their end. Once reviewed,
+ * the student sees their grade + written feedback + optional voice note.
+ *
+ * Design: card-based with a header strip showing the current state
+ * (no active practice / awaiting / pending review / reviewed). Status
+ * shown as plain text in the header subtitle, not as decorative pills.
+ * Single emerald accent on primary actions (Start / Record / Submit).
+ */
 export default function RecitationPractice({ studentId, programId, teacherId }) {
   const [rec, setRec] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,8 +37,8 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const [uploading, setUploading] = useState(false);
   const [studentUrl, setStudentUrl] = useState(null);
   const [teacherUrl, setTeacherUrl] = useState(null);
-  const [feedbackSeen, setFeedbackSeen] = useState(false);
-
+  // eslint-disable-next-line no-unused-vars
+  const [_feedbackSeen, setFeedbackSeen] = useState(false);
   const [teacherRecording, setTeacherRecording] = useState(false);
 
   const mrRef = useRef(null);
@@ -40,9 +49,9 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   useEffect(() => {
     if (studentId && programId) load();
     return () => stopRec();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studentId, programId]);
 
-  // Realtime: auto-refresh when teacher updates this student's recitation
   useEffect(() => {
     if (!studentId || !programId) return;
     const channel = supabase
@@ -55,9 +64,9 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       }, () => { load(); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studentId, programId]);
 
-  // Broadcast channel for recording indicators
   useEffect(() => {
     if (!studentId || !programId) return;
     const ch = supabase.channel(`rec-live-${studentId}-${programId}`);
@@ -83,7 +92,6 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       setStudentUrl(null);
       setTeacherUrl(null);
       setFeedbackSeen(!!data?.feedback_seen_at);
-      // Auto-mark feedback as seen when student loads a reviewed recitation
       if (data?.status === 'reviewed' && !data?.feedback_seen_at) {
         supabase.from('recitations').update({ feedback_seen_at: new Date().toISOString() }).eq('id', data.id).then(() => {
           setFeedbackSeen(true);
@@ -121,7 +129,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       if (error) throw error;
       setPassage('');
       setShowStart(false);
-      toast.success('Ready \u2014 record your reading');
+      toast.success('Ready — record your reading');
       load();
     } catch (e) {
       console.error(e);
@@ -191,7 +199,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       }).eq('id', rec.id);
       if (de) throw de;
       discard();
-      toast.success('Voice note sent!');
+      toast.success('Voice note sent');
       load();
     } catch (e) {
       console.error(e);
@@ -231,59 +239,95 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
 
   if (loading) {
     return (
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-5 mt-5">
-        <div className="animate-pulse space-y-2.5">
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
-          <div className="h-14 bg-gray-100 dark:bg-gray-700 rounded-lg" />
-        </div>
+      <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-3">
+        <div className="h-4 w-32 bg-slate-100 dark:bg-gray-700 rounded animate-pulse" />
+        <div className="h-12 bg-slate-100 dark:bg-gray-700 rounded animate-pulse" />
       </div>
     );
   }
 
   const status = rec?.status;
 
+  // Status text shown in the card header strip
+  let statusText = null;
+  let statusClass = 'text-slate-500 dark:text-gray-400';
+  if (!rec) {
+    statusText = 'Ready when you are';
+  } else if (showStart) {
+    statusText = 'New practice';
+  } else if (status === 'assigned') {
+    statusText = 'Ready to record';
+    statusClass = 'text-emerald-700 dark:text-emerald-400';
+  } else if (status === 'submitted') {
+    statusText = 'Awaiting teacher review';
+    statusClass = 'text-amber-700 dark:text-amber-400';
+  } else if (status === 'reviewed') {
+    statusText = 'Reviewed';
+    statusClass = 'text-emerald-700 dark:text-emerald-400';
+  }
+
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 pt-5 mt-5">
-      <div className="flex items-center gap-2 mb-3">
-        <BookOpen className="h-4 w-4 text-emerald-600" />
-        <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">Reading Practice</h3>
+    <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+
+      {/* Card header */}
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700 flex items-baseline justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Reading practice</h3>
+          {statusText && <p className={`text-xs mt-0.5 ${statusClass}`}>{statusText}</p>}
+        </div>
+        {status === 'reviewed' && !showStart && (
+          <button
+            onClick={() => setShowStart(true)}
+            className="inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            New practice
+          </button>
+        )}
       </div>
 
+      {/* Empty / Start state */}
       {(!rec || showStart) && !recording && !blob && (
-        <div>
+        <div className="px-5 py-5">
           {!showStart ? (
-            <div className="text-center py-8">
-              <Mic className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No active reading practice</p>
+            <div className="text-center py-6">
+              <Mic className="h-8 w-8 text-slate-300 dark:text-gray-600 mx-auto mb-3" strokeWidth={1.5} />
+              <p className="text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">No active practice yet</p>
+              <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">
+                Pick something to read aloud and we'll send it to your teacher when you're ready.
+              </p>
               <button
                 onClick={() => setShowStart(true)}
-                className="inline-flex items-center gap-2 bg-emerald-600 text-white text-xs sm:text-sm font-medium px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+                className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
               >
-                <Mic className="h-3.5 w-3.5" />
-                Start Practice
+                <Mic className="h-4 w-4 mr-1.5" /> Start practice
               </button>
             </div>
           ) : (
-            <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">What are you reading?</label>
-              <input
-                type="text"
-                value={passage}
-                onChange={(e) => setPassage(e.target.value)}
-                placeholder="e.g. Surah Al-Fatiha, Hadeeth 1, Page 12"
-                className="w-full text-sm border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white dark:bg-gray-800 dark:text-white"
-                onKeyDown={(e) => e.key === 'Enter' && handleStart()}
-              />
-              <div className="flex gap-2 mt-2.5">
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-medium text-slate-700 dark:text-gray-300 block mb-1.5">What are you reading?</label>
+                <input
+                  type="text"
+                  value={passage}
+                  onChange={(e) => setPassage(e.target.value)}
+                  placeholder="e.g. Surah Al-Fātiḥah, Hadeeth 1, Page 12"
+                  onKeyDown={(e) => e.key === 'Enter' && handleStart()}
+                  className="w-full text-sm text-slate-900 placeholder-slate-400 border border-slate-300 rounded-md px-3 py-2 bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => { setShowStart(false); setPassage(''); }}
+                  className="inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
                 <button
                   onClick={handleStart}
                   disabled={!passage.trim()}
-                  className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                  className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
                 >
                   Start
-                </button>
-                <button onClick={() => { setShowStart(false); setPassage(''); }} className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1.5 hover:text-gray-700 dark:hover:text-gray-200">
-                  Cancel
                 </button>
               </div>
             </div>
@@ -291,115 +335,120 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
         </div>
       )}
 
+      {/* Assigned — record state */}
       {status === 'assigned' && !showStart && (
-        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4">
-          <div className="flex items-start justify-between mb-2.5">
+        <div className="px-5 py-5 space-y-4">
+          <div className="flex items-baseline justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{rec.passage}</p>
-              {rec.notes && <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{rec.notes}</p>}
+              <p className="text-sm font-medium text-slate-900 dark:text-white">{rec.passage}</p>
+              {rec.notes && <p className="text-sm text-slate-600 dark:text-gray-300 mt-0.5">{rec.notes}</p>}
             </div>
-            <button onClick={deleteAll} className="flex-shrink-0 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 ml-2">Cancel</button>
+            <button onClick={deleteAll} className="text-xs text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0">
+              Cancel
+            </button>
           </div>
 
           {!recording && !blob && (
             <button
               onClick={startRec}
-              className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white text-xs sm:text-sm font-medium py-2.5 rounded-lg hover:bg-emerald-700 transition-colors"
+              className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
             >
-              <Mic className="h-3.5 w-3.5" />
-              Record
+              <Mic className="h-4 w-4 mr-1.5" /> Start recording
             </button>
           )}
 
           {recording && (
-            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded-lg px-3 py-2.5">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-3 px-3 py-2.5 border border-slate-200 dark:border-gray-600 rounded-md bg-slate-50 dark:bg-gray-700/50">
+              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-gray-200">
                 <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-xs font-mono text-gray-700 dark:text-gray-200 tabular-nums">{fmt(elapsed)}</span>
+                <span className="font-mono tabular-nums">{fmt(elapsed)}</span>
+                <span className="text-slate-500 dark:text-gray-400">recording…</span>
               </div>
-              <button onClick={stopRec} className="flex items-center gap-1 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-gray-800">
-                <Square className="h-2.5 w-2.5" /> Stop
+              <button
+                onClick={stopRec}
+                className="inline-flex items-center justify-center px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+              >
+                Stop
               </button>
             </div>
           )}
 
           {blob && blobUrl && !recording && (
-            <div className="space-y-2.5">
-              <VoiceNote audioUrl={blobUrl} color="emerald" onDelete={discard} />
-              <button
-                onClick={submit}
-                disabled={uploading}
-                className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white text-xs sm:text-sm font-medium py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-              >
-                <Send className="h-3 w-3" />
-                {uploading ? 'Sending...' : 'Submit'}
-              </button>
+            <div className="space-y-3">
+              <VoiceNote audioUrl={blobUrl} onDelete={discard} />
+              <div className="flex justify-end">
+                <button
+                  onClick={submit}
+                  disabled={uploading}
+                  className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+                >
+                  {uploading ? 'Sending…' : (
+                    <>
+                      <Send className="h-4 w-4 mr-1.5" /> Submit to teacher
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           )}
         </div>
       )}
 
+      {/* Submitted — awaiting review */}
       {status === 'submitted' && !showStart && (
-        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4">
-          <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium text-gray-900 dark:text-white min-w-0 truncate">{rec.passage}</p>
-            <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-              <Clock className="h-3 w-3" /> Pending
-            </span>
+        <div className="px-5 py-5 space-y-3">
+          <div>
+            <p className="text-sm font-medium text-slate-900 dark:text-white">{rec.passage}</p>
+            <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+              Sent {rec.submitted_at ? new Date(rec.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
+            </p>
           </div>
-          <p className="text-[10px] sm:text-xs text-gray-400 mb-2.5">
-            Sent {rec.submitted_at ? new Date(rec.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
-          </p>
-          {studentUrl && <VoiceNote audioUrl={studentUrl} color="emerald" onDelete={deleteMyAudio} />}
-          {teacherRecording && (
-            <div className="flex items-center gap-2 mt-2 text-xs text-blue-600 animate-pulse">
-              <Mic className="h-3 w-3" />
-              Teacher is recording feedback...
-            </div>
-          )}
-        </div>
-      )}
-
-      {status === 'reviewed' && !showStart && (
-        <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4 space-y-2.5">
-          <div className="flex items-start justify-between">
-            <p className="text-sm font-medium text-gray-900 dark:text-white min-w-0 truncate">{rec.passage}</p>
-            <span className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] sm:text-xs font-medium text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-              <CheckCircle className="h-3 w-3" /> Reviewed
-            </span>
-          </div>
-
-          {rec.grade && (
-            <span className={'inline-block text-xs font-medium px-2.5 py-0.5 rounded-full border ' + (GRADE_STYLES[rec.grade] || '')}>
-              {GRADE_LABELS[rec.grade] || rec.grade}
-            </span>
-          )}
-
-          {rec.feedback && <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-600 rounded-lg p-2.5">{rec.feedback}</p>}
 
           {studentUrl && (
             <div>
-              <p className="text-[10px] text-gray-400 mb-1">Your recording</p>
-              <VoiceNote audioUrl={studentUrl} color="emerald" compact />
+              <p className="text-xs font-medium text-slate-500 dark:text-gray-400 mb-1.5">Your recording</p>
+              <VoiceNote audioUrl={studentUrl} onDelete={deleteMyAudio} />
+            </div>
+          )}
+
+          {teacherRecording && (
+            <p className="text-xs text-emerald-700 dark:text-emerald-400 inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-pulse" />
+              Your teacher is recording feedback…
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Reviewed */}
+      {status === 'reviewed' && !showStart && (
+        <div className="px-5 py-5 space-y-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="text-sm font-medium text-slate-900 dark:text-white">{rec.passage}</p>
+            {rec.grade && (
+              <span className="text-sm font-medium px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                {GRADE_LABELS[rec.grade] || rec.grade}
+              </span>
+            )}
+          </div>
+
+          {rec.feedback && (
+            <p className="text-sm text-slate-700 dark:text-gray-300 italic">"{rec.feedback}"</p>
+          )}
+
+          {studentUrl && (
+            <div>
+              <p className="text-xs font-medium text-slate-500 dark:text-gray-400 mb-1.5">Your recording</p>
+              <VoiceNote audioUrl={studentUrl} compact />
             </div>
           )}
 
           {teacherUrl && (
             <div>
-              <p className="text-[10px] text-gray-400 mb-1">Teacher feedback</p>
-              <VoiceNote audioUrl={teacherUrl} color="blue" compact />
+              <p className="text-xs font-medium text-slate-500 dark:text-gray-400 mb-1.5">Teacher feedback</p>
+              <VoiceNote audioUrl={teacherUrl} compact />
             </div>
           )}
-
-          <div>
-            <button
-              onClick={() => setShowStart(true)}
-              className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white text-xs sm:text-sm font-medium py-2 rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              <Mic className="h-3.5 w-3.5" /> New Practice
-            </button>
-            <p className="text-[10px] text-gray-400 text-center mt-1">This will replace the current reading</p>
-          </div>
         </div>
       )}
     </div>
