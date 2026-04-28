@@ -672,182 +672,157 @@ const StudentPortal = () => {
 
           {/* === CLASSES TAB === */}
           <div className={activeTab !== 'classes' ? 'hidden' : ''}>
-          <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Class Schedule & Progress</h2>
-            {!isEnrolledInAllPrograms() && student?.email && (
-              <Link
-                to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
-              >
-                + Add another program
-              </Link>
-            )}
-          </div>
+            <div className="flex items-baseline justify-between mb-5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Your classes</h1>
+              {!isEnrolledInAllPrograms() && student?.email && (
+                <Link
+                  to={`/enroll-additional?email=${encodeURIComponent(student.email)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 transition-colors"
+                >
+                  + Add another program
+                </Link>
+              )}
+            </div>
 
-          {/* Class Schedules - Per Program */}
-          {enrollments.map((enrollment) => {
-            const programSchedules = schedules.filter(s => s.program === enrollment.program);
-            const programName = getProgramName(enrollment.program);
-            const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
+            <div className="space-y-5">
+            {enrollments.map((enrollment) => {
+              const programSchedules = schedules.filter(s => s.program === enrollment.program);
+              const programName = getProgramName(enrollment.program);
+              const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
+              const programConfig = PROGRAMS[enrollment.program];
 
-            // If enrollment is not active, show disabled message
-            if (enrollment.status !== 'active') {
-              return (
-                <Card key={enrollment.id}>
-                  <div className="text-center py-8 bg-red-50 dark:bg-red-900/20">
-                    <Calendar className="h-16 w-16 mx-auto mb-4 text-red-400" />
-                    <p className="text-lg font-semibold mb-2 text-red-800 dark:text-red-300">{programName} - Enrollment {enrollment.status}</p>
-                    <p className="text-sm text-red-600 dark:text-red-400">
+              // Inactive enrolment — disabled card
+              if (enrollment.status !== 'active') {
+                return (
+                  <div key={enrollment.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700">
+                      <h2 className="text-base font-semibold text-slate-900 dark:text-white">{programName}</h2>
+                      <p className="text-sm text-red-700 dark:text-red-400 mt-0.5">
+                        Enrollment {enrollment.status}
+                      </p>
+                    </div>
+                    <div className="px-5 py-5 text-sm text-slate-700 dark:text-gray-300">
                       {enrollment.status === 'withdrawn'
                         ? 'Your enrollment has been withdrawn. Please contact admin for assistance.'
                         : enrollment.status === 'completed'
                         ? 'Congratulations! You have completed this program.'
                         : 'Your enrollment is not active. Please contact admin for assistance.'}
-                    </p>
+                    </div>
                   </div>
-                </Card>
-              );
-            }
-
-            if (programSchedules.length === 0) {
-              return (
-                <Card key={enrollment.id}>
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
-                    <p className="text-lg font-medium mb-2">{programName} - Schedule Coming Soon</p>
-                    <p className="text-sm">Your class schedule will appear here once it's been created by the admin.</p>
-                  </div>
-                </Card>
-              );
-            }
-
-            // Get program config from centralized configuration
-            const programConfig = PROGRAMS[enrollment.program];
-            const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
-            const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
-            const weeksPerYear = Math.ceil(totalWeeks / totalYears);
-
-            // Get current active week based on actual schedule data (same logic as TeacherPortal)
-            const getCurrentActiveWeekAndYear = () => {
-              if (programSchedules.length === 0) return { year: 1, week: 1 };
-
-              const weekMap = {};
-
-              programSchedules.forEach(schedule => {
-                const key = `${schedule.academic_year}-${schedule.week_number}`;
-                if (!weekMap[key]) {
-                  weekMap[key] = [];
-                }
-                weekMap[key].push(schedule);
-              });
-
-              // Check each year for the first incomplete week
-              for (let year = 1; year <= totalYears; year++) {
-                for (let weekNum = 1; weekNum <= weeksPerYear; weekNum++) {
-                  const weekClasses = weekMap[`${year}-${weekNum}`];
-                  if (!weekClasses || weekClasses.length === 0) {
-                    return { year, week: weekNum }; // First week without classes
-                  }
-
-                  const allCompleted = weekClasses.every(c => c.status === 'completed');
-                  if (!allCompleted) {
-                    return { year, week: weekNum }; // First incomplete week
-                  }
-                }
+                );
               }
 
-              return { year: totalYears, week: weeksPerYear }; // All complete
-            };
+              // No schedule yet
+              if (programSchedules.length === 0) {
+                return (
+                  <div key={enrollment.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700">
+                      <h2 className="text-base font-semibold text-slate-900 dark:text-white">{programName}</h2>
+                    </div>
+                    <div className="px-5 py-8 text-center">
+                      <Calendar className="h-8 w-8 text-slate-300 dark:text-gray-600 mx-auto mb-3" strokeWidth={1.5} />
+                      <p className="text-sm font-medium text-slate-700 dark:text-gray-300">Schedule coming soon</p>
+                      <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
+                        Your class schedule will appear here once it's been created.
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
 
-            const currentActive = getCurrentActiveWeekAndYear();
-            const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
-            const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
+              // Active with schedule — render full card
+              const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+              const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+              const weeksPerYear = Math.ceil(totalWeeks / totalYears);
 
-            const currentWeekClasses = programSchedules.filter(
-              s => s.academic_year === currentActive.year && s.week_number === currentActive.week
-            );
+              const getCurrentActiveWeekAndYear = () => {
+                const weekMap = {};
+                programSchedules.forEach(s => {
+                  const key = `${s.academic_year}-${s.week_number}`;
+                  if (!weekMap[key]) weekMap[key] = [];
+                  weekMap[key].push(s);
+                });
+                for (let year = 1; year <= totalYears; year++) {
+                  for (let weekNum = 1; weekNum <= weeksPerYear; weekNum++) {
+                    const weekClasses = weekMap[`${year}-${weekNum}`];
+                    if (!weekClasses || weekClasses.length === 0) return { year, week: weekNum };
+                    if (!weekClasses.every(c => c.status === 'completed')) return { year, week: weekNum };
+                  }
+                }
+                return { year: totalYears, week: weeksPerYear };
+              };
 
-            const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
-            const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
+              const currentActive = getCurrentActiveWeekAndYear();
+              const completedWeeks = (currentActive.year - 1) * weeksPerYear + currentActive.week - 1;
+              const progressPercent = Math.round((completedWeeks / totalWeeks) * 100);
+              const currentWeekClasses = programSchedules.filter(
+                s => s.academic_year === currentActive.year && s.week_number === currentActive.week
+              );
+              const mainClass = currentWeekClasses.find(c => c.class_type === 'main');
+              const shortClass = currentWeekClasses.find(c => c.class_type === 'short');
+              const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
+              const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
+              const milestones = programConfig?.milestones || (isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES);
+              const totalMilestones = milestones.length;
+              const completedClasses = programSchedules.filter(s => s.status === 'completed').length;
+              const totalClasses = totalWeeks * 2;
+              const completionPercent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
 
-            // Calculate milestone progress
-            const currentWeekNumber = (currentActive.year - 1) * weeksPerYear + currentActive.week;
-            const currentMilestone = getCurrentMilestone(currentWeekNumber, isTajweed);
-            const milestones = programConfig?.milestones || (isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES);
-            const totalMilestones = milestones.length;
-
-            return (
-              <Card key={enrollment.id}>
-                {/* Program Header */}
-                <div className="mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
-                  <div className="flex items-center justify-between mb-3">
+              return (
+                <div key={enrollment.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+                  {/* Card header */}
+                  <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700 flex items-baseline justify-between gap-3">
                     <div>
-                      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">{programName}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Week {currentActive.week} • {progressPercent}% Complete</p>
+                      <h2 className="text-base font-semibold text-slate-900 dark:text-white">{programName}</h2>
+                      <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                        Week {currentWeekNumber} of {totalWeeks} · {progressPercent}% complete
+                      </p>
                     </div>
                   </div>
-                </div>
 
-                {/* Milestone Tracker */}
-                <div className="mb-8">
-                  {/* Current Milestone Info */}
-                  <div className="mb-4">
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {currentMilestone.name}
-                      </h4>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        Milestone {currentMilestone.id} of {totalMilestones}
-                      </span>
+                  {/* Milestone */}
+                  <div className="px-5 py-5">
+                    <div className="mb-4">
+                      <div className="flex items-baseline gap-2">
+                        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                          {currentMilestone.name}
+                        </h3>
+                        <span className="text-xs text-slate-500 dark:text-gray-400">
+                          Milestone {currentMilestone.id} of {totalMilestones}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                        {currentMilestone.subtitle}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {currentMilestone.subtitle}
-                    </p>
-                  </div>
 
-                  {/* Milestone Timeline - Full Width */}
-                  <div className="space-y-3">
-                    {/* Progress Track */}
-                    <div className="relative">
-                      {/* Background Track */}
-                      <div className="absolute top-3 left-0 right-0 h-0.5 bg-gray-200 dark:bg-gray-600" />
-
-                      {/* Progress Fill */}
+                    {/* Milestone timeline */}
+                    <div className="relative mb-2">
+                      <div className="absolute top-3 left-0 right-0 h-0.5 bg-slate-200 dark:bg-gray-700" />
                       <div
                         className="absolute top-3 left-0 h-0.5 bg-emerald-600 transition-all"
-                        style={{
-                          width: `${((currentMilestone.id - 1) / (totalMilestones - 1)) * 100}%`
-                        }}
+                        style={{ width: `${((currentMilestone.id - 1) / Math.max(totalMilestones - 1, 1)) * 100}%` }}
                       />
-
-                      {/* Milestone Nodes */}
                       <div className="relative flex justify-between">
                         {(isTajweed ? TAJWEED_MILESTONES : EAIS_MILESTONES).map((milestone) => {
                           const isCompleted = currentMilestone.id > milestone.id;
                           const isCurrent = currentMilestone.id === milestone.id;
-
                           return (
                             <div key={milestone.id} className="flex flex-col items-center">
-                              {/* Node Circle */}
                               <div
                                 className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-colors ${
-                                  isCompleted
+                                  isCompleted || isCurrent
                                     ? 'bg-emerald-600 text-white'
-                                    : isCurrent
-                                    ? 'bg-emerald-600 text-white'
-                                    : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-500 text-gray-400'
+                                    : 'bg-white dark:bg-gray-800 border border-slate-300 dark:border-gray-600 text-slate-400 dark:text-gray-500'
                                 }`}
                                 title={milestone.subtitle}
                               >
                                 {isCompleted ? '✓' : milestone.id}
                               </div>
-
-                              {/* Milestone Label - Hidden on small screens */}
                               <span className={`mt-2 text-[10px] font-medium text-center max-w-[60px] leading-tight hidden sm:block ${
-                                isCurrent ? 'text-gray-900 dark:text-white' : isCompleted ? 'text-gray-600 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'
+                                isCurrent ? 'text-slate-900 dark:text-white' : isCompleted ? 'text-slate-700 dark:text-gray-300' : 'text-slate-400 dark:text-gray-500'
                               }`}>
                                 {milestone.name}
                               </span>
@@ -857,158 +832,83 @@ const StudentPortal = () => {
                       </div>
                     </div>
 
-                    {/* Milestone Progress Info */}
-                    <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 pt-2">
-                      <span>{currentMilestone.weeksCompleted} of {currentMilestone.weeksInMilestone} weeks completed</span>
-                      <span>{currentMilestone.milestoneProgress}%</span>
+                    <p className="text-xs text-slate-500 dark:text-gray-400 mt-3 sm:mt-4">
+                      {currentMilestone.weeksCompleted} of {currentMilestone.weeksInMilestone} weeks · {currentMilestone.milestoneProgress}% through this milestone
+                    </p>
+                  </div>
+
+                  {/* This week's classes */}
+                  <div className="px-5 py-4 border-t border-slate-100 dark:border-gray-700">
+                    <h3 className="text-xs font-medium text-slate-500 dark:text-gray-400 uppercase tracking-wide mb-3">This week</h3>
+                    {currentWeekClasses.length === 0 ? (
+                      <p className="text-sm text-slate-500 dark:text-gray-400 py-2">No classes scheduled this week.</p>
+                    ) : (
+                      <div className="divide-y divide-slate-100 dark:divide-gray-700">
+                        {[mainClass, shortClass].filter(Boolean).map(cls => {
+                          const isMain = cls.class_type === 'main';
+                          const duration = isMain
+                            ? programConfig?.schedule?.session1?.duration
+                            : programConfig?.schedule?.session2?.duration;
+                          const completed = cls.status === 'completed';
+                          const dateLabel = cls.scheduled_date ? new Date(cls.scheduled_date).toLocaleDateString('en-NZ', {
+                            weekday: 'short', month: 'short', day: 'numeric',
+                          }) : null;
+                          const timeLabel = cls.scheduled_date ? new Date(cls.scheduled_date).toLocaleTimeString('en-NZ', {
+                            hour: '2-digit', minute: '2-digit',
+                          }) : null;
+                          return (
+                            <div key={cls.id} className="py-3 first:pt-0 last:pb-0">
+                              <div className="flex items-baseline justify-between gap-3">
+                                <div>
+                                  <p className="text-sm font-medium text-slate-900 dark:text-white">
+                                    {isMain ? 'Main class' : 'Short class'}
+                                    <span className="text-slate-400 dark:text-gray-500 font-normal"> · {duration}</span>
+                                  </p>
+                                  {(dateLabel || timeLabel) && (
+                                    <p className="text-sm text-slate-600 dark:text-gray-300 mt-0.5">
+                                      {dateLabel}{dateLabel && timeLabel ? ' · ' : ''}{timeLabel}
+                                    </p>
+                                  )}
+                                </div>
+                                <span className={`text-xs font-medium ${completed ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500 dark:text-gray-400'}`}>
+                                  {completed ? 'Completed' : 'Scheduled'}
+                                </span>
+                              </div>
+                              {cls.meeting_link && cls.status === 'scheduled' && (
+                                <a
+                                  href={cls.meeting_link.startsWith('http') ? cls.meeting_link : `https://${cls.meeting_link}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center mt-2 px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+                                >
+                                  <Video className="h-4 w-4 mr-1.5" />
+                                  Join class
+                                </a>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Overall program progress */}
+                  <div className="px-5 py-4 border-t border-slate-100 dark:border-gray-700 bg-slate-50 dark:bg-gray-700/30">
+                    <div className="flex items-baseline justify-between mb-2">
+                      <h3 className="text-xs font-medium text-slate-500 dark:text-gray-400 uppercase tracking-wide">Overall progress</h3>
+                      <span className="text-lg font-semibold tabular-nums text-slate-900 dark:text-white">{completionPercent}%</span>
                     </div>
+                    <div className="h-1.5 w-full bg-slate-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
+                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${completionPercent}%` }} />
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-gray-400">
+                      {completedClasses} of {totalClasses} classes completed
+                    </p>
                   </div>
                 </div>
-
-                {/* Current Week Classes */}
-                {currentWeekClasses.length > 0 ? (
-                  <div className="space-y-3">
-                    {/* Main Class */}
-                    {mainClass && (
-                      <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <Video className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                                Main Class
-                              </span>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">2 hrs</span>
-                            </div>
-                            {mainClass.scheduled_date && (
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {new Date(mainClass.scheduled_date).toLocaleDateString('en-US', {
-                                  weekday: 'short',
-                                  month: 'short',
-                                  day: 'numeric',
-                                })} • {new Date(mainClass.scheduled_date).toLocaleTimeString('en-US', {
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            )}
-                          </div>
-                          <span className={`text-xs px-2 py-1 rounded font-medium ${
-                            mainClass.status === 'completed' ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' :
-                            mainClass.status === 'scheduled' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' :
-                            'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
-                          }`}>
-                            {mainClass.status === 'completed' ? 'Completed' :
-                             mainClass.status === 'scheduled' ? 'Scheduled' : mainClass.status}
-                          </span>
-                        </div>
-
-                        {mainClass.meeting_link && mainClass.status === 'scheduled' && (
-                          <a
-                            href={mainClass.meeting_link.startsWith('http') ? mainClass.meeting_link : `https://${mainClass.meeting_link}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-emerald-950 dark:bg-emerald-600 text-white rounded-lg hover:bg-emerald-900 dark:hover:bg-emerald-700 transition-colors text-sm font-medium"
-                          >
-                            <Video className="h-4 w-4 mr-2" />
-                            Join Class
-                          </a>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Short Class */}
-                    {shortClass && (
-                      <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <Video className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                                Short Class
-                              </span>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">30 min</span>
-                            </div>
-                            {shortClass.scheduled_date && (
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {new Date(shortClass.scheduled_date).toLocaleDateString('en-US', {
-                                  weekday: 'short',
-                                  month: 'short',
-                                  day: 'numeric',
-                                })} • {new Date(shortClass.scheduled_date).toLocaleTimeString('en-US', {
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            )}
-                          </div>
-                          <span className={`text-xs px-2 py-1 rounded font-medium ${
-                            shortClass.status === 'completed' ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300' :
-                            shortClass.status === 'scheduled' ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300' :
-                            'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
-                          }`}>
-                            {shortClass.status === 'completed' ? 'Completed' :
-                             shortClass.status === 'scheduled' ? 'Scheduled' : shortClass.status}
-                          </span>
-                        </div>
-
-                        {shortClass.meeting_link && shortClass.status === 'scheduled' && (
-                          <a
-                            href={shortClass.meeting_link.startsWith('http') ? shortClass.meeting_link : `https://${shortClass.meeting_link}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-full px-4 py-2.5 bg-emerald-950 dark:bg-emerald-600 text-white rounded-lg hover:bg-emerald-900 dark:hover:bg-emerald-700 transition-colors text-sm font-medium"
-                          >
-                            <Video className="h-4 w-4 mr-2" />
-                            Join Class
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p>No classes scheduled for this week</p>
-                  </div>
-                )}
-
-                {/* Overall Progress */}
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  {(() => {
-                    const completedClasses = programSchedules.filter(s => s.status === 'completed').length;
-                    const totalClasses = totalWeeks * 2; // 2 classes per week (main + short)
-                    const completionPercent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
-
-                    return (
-                      <div>
-                        {/* Header */}
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Overall Progress</h4>
-                          <span className="text-2xl font-bold text-emerald-600">{completionPercent}%</span>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="relative w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden mb-3">
-                          <div
-                            className="absolute top-0 left-0 h-full bg-emerald-600 rounded-full transition-all"
-                            style={{ width: `${completionPercent}%` }}
-                          />
-                        </div>
-
-                        {/* Class Count */}
-                        <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
-                          <span>{completedClasses} of {totalClasses} classes completed</span>
-                          <span>{totalClasses - completedClasses} remaining</span>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </Card>
-            );
-          })}
-          </div>
+              );
+            })}
+            </div>
           </div>
 
           {/* === LESSONS TAB (with sub-tabs) === */}
