@@ -913,8 +913,15 @@ const StudentPortal = () => {
 
           {/* === LESSONS TAB (with sub-tabs) === */}
           <div className={activeTab !== 'lessons' ? 'hidden' : ''}>
+            <div className="mb-5">
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Lessons & practice</h1>
+              <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
+                Review your chapter notes and practise reading aloud.
+              </p>
+            </div>
+
             {/* Sub-tabs */}
-            <div className="flex gap-1 mb-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex gap-1 mb-5 border-b border-slate-200 dark:border-gray-700">
               {[
                 { id: 'lessons', label: 'Lessons' },
                 { id: 'reading', label: 'Reading Practice' },
@@ -922,11 +929,7 @@ const StudentPortal = () => {
                 <button
                   key={sub.id}
                   onClick={() => setLessonsSubTab(sub.id)}
-                  className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-                    lessonsSubTab === sub.id
-                      ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
-                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                  }`}
+                  className={lessonsSubTab === sub.id ? TAB_ACTIVE : TAB_INACTIVE}
                 >
                   {sub.label}
                 </button>
@@ -938,12 +941,12 @@ const StudentPortal = () => {
             )}
 
             {lessonsSubTab === 'reading' && (
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {enrollments.filter(e => e.status === 'active').map(enrollment => (
                   student?.id && (
                     <div key={enrollment.id}>
                       {enrollments.filter(e => e.status === 'active').length > 1 && (
-                        <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300 mb-3">{getProgramName(enrollment.program)}</h3>
+                        <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">{getProgramName(enrollment.program)}</h2>
                       )}
                       <RecitationPractice
                         studentId={student.id}
