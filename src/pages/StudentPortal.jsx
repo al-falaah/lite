@@ -511,7 +511,7 @@ const StudentPortal = () => {
           <div className="flex items-center gap-2 sm:gap-2">
             <button
               onClick={toggleTheme}
-              className="inline-flex items-center justify-center h-9 w-9 text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-700 rounded-md transition-colors"
+              className="inline-flex items-center justify-center h-10 w-10 text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-700 rounded-md transition-colors"
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -555,7 +555,7 @@ const StudentPortal = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-28 sm:pb-8">
+      <div className={`${CONTAINER_WIDE} py-5 sm:py-8 pb-24 sm:pb-8`}>
         <div className="space-y-6">
           {/* === HOME TAB === */}
           <div className={activeTab !== 'home' ? 'hidden' : ''}>
@@ -921,7 +921,7 @@ const StudentPortal = () => {
             </div>
 
             {/* Sub-tabs */}
-            <div className="flex gap-1 mb-5 border-b border-slate-200 dark:border-gray-700">
+            <div className="flex gap-1 mb-20 border-b border-slate-200 dark:border-gray-700">
               {[
                 { id: 'lessons', label: 'Lessons' },
                 { id: 'reading', label: 'Reading Practice' },
