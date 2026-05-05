@@ -147,22 +147,19 @@ const StoreOrderPage = () => {
         throw new Error(itemsError.message || 'Failed to create order items');
       }
 
-      // Send admin notification
+      // Send admin notification + customer confirmation in parallel; don't fail the order if either fails
       try {
-        await fetch(`${supabaseUrl}/functions/v1/send-store-order-notification`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${supabaseAnonKey}`
-          },
-          body: JSON.stringify({
-            orderId: order.id,
-            orderNumber: order.order_number
-          })
-        });
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        };
+        const body = JSON.stringify({ orderId: order.id, orderNumber: order.order_number });
+        await Promise.allSettled([
+          fetch(`${supabaseUrl}/functions/v1/send-store-order-notification`, { method: 'POST', headers, body }),
+          fetch(`${supabaseUrl}/functions/v1/send-store-order-confirmation`, { method: 'POST', headers, body }),
+        ]);
       } catch (emailError) {
         console.error('Email notification error:', emailError);
-        // Don't fail the order if email fails
       }
 
       // Clear cart
