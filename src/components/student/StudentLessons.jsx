@@ -3,7 +3,7 @@ import { supabase } from '../../services/supabase';
 import { getYouTubeEmbedUrl } from '../../utils/youtube';
 import { processContentForRTL } from '../../utils/rtl';
 import { PROGRAMS } from '../../config/programs';
-import { ChevronLeft, ChevronDown, ChevronRight, HelpCircle, BookOpen, Video } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronRight, HelpCircle, BookOpen, Video, X } from 'lucide-react';
 import DOMPurify from 'dompurify';
 
 const sanitizeContent = (html) => {
@@ -11,10 +11,11 @@ const sanitizeContent = (html) => {
     ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
                    'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'div', 'span',
                    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'img', 'sup',
+                   'figure', 'figcaption',
                    'style', 'section', 'header', 'footer', 'nav', 'article',
                    'svg', 'defs', 'linearGradient', 'stop', 'rect', 'circle', 'ellipse',
                    'line', 'polygon', 'text', 'tspan', 'path', 'g'],
-    ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'dir', 'data-footnote',
+    ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'target', 'rel', 'style', 'id', 'dir', 'data-footnote', 'loading',
                    'viewBox', 'xmlns', 'fill', 'stroke', 'stroke-width', 'stroke-dasharray',
                    'cx', 'cy', 'r', 'rx', 'ry', 'x', 'y', 'x1', 'y1', 'x2', 'y2',
                    'width', 'height', 'opacity', 'transform', 'text-anchor', 'font-family',
@@ -70,6 +71,16 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
   const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'light');
   const [viewMode, setViewMode] = useState('milestones'); // 'milestones' | 'courses'
   const contentRef = useRef(null);
+
+  // Lightbox: clicking any <img> in the lesson body opens it full-size.
+  const [lightboxSrc, setLightboxSrc] = useState(null);
+  const [lightboxAlt, setLightboxAlt] = useState('');
+  useEffect(() => {
+    if (!lightboxSrc) return;
+    const onKey = (e) => { if (e.key === 'Escape') setLightboxSrc(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxSrc]);
 
   useEffect(() => { localStorage.setItem('lessonTheme', theme); }, [theme]);
 
@@ -534,7 +545,13 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
                 />
               ) : selectedChapter.content ? (
                 <div
-                  className={`prose max-w-none ${proseTheme[theme]} prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm`}
+                  className={`prose max-w-none ${proseTheme[theme]} prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm prose-img:cursor-zoom-in prose-img:rounded-lg prose-img:my-3`}
+                  onClick={(e) => {
+                    if (e.target.tagName === 'IMG' && e.target.src) {
+                      setLightboxSrc(e.target.src);
+                      setLightboxAlt(e.target.alt || '');
+                    }
+                  }}
                   dangerouslySetInnerHTML={{ __html: sanitizeContent(processContentForRTL(selectedChapter.content)) }}
                 />
               ) : !videoUrl ? (
@@ -612,6 +629,36 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
           text-align: right;
         }
       `}</style>
+
+      {/* Image lightbox: any <img> inside the prose body opens here on tap. */}
+      {lightboxSrc && (
+        <div
+          className="fixed inset-0 bg-black/85 flex items-center justify-center z-[100] p-4"
+          onClick={() => setLightboxSrc(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightboxAlt || 'Image'}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); setLightboxSrc(null); }}
+            className="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <img
+            src={lightboxSrc}
+            alt={lightboxAlt}
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+          />
+          {lightboxAlt && (
+            <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/80 text-sm bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-md max-w-[90vw] text-center">
+              {lightboxAlt}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
