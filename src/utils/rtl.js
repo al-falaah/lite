@@ -1,11 +1,40 @@
-const ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/;
+// Any Arabic character (for the public hasArabic helper)
+const ARABIC_REGEX = /[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/;
+// Base Arabic letters only — excludes combining diacritics (fatḥah, kasrah,
+// ḍammah, sukūn, shaddah, etc.), Qur'ānic annotations, and tatweel. We need
+// "letters" not "code points" because a single Arabic word can carry many
+// diacritics that inflate a naive character count.
+const ARABIC_LETTERS = /[ء-يٱ-ۓۺ-ۿﭐ-﷿ﹰ-ﻼ]/g;
+const LATIN_LETTERS = /[A-Za-z]/g;
 
 export const hasArabic = (text) => ARABIC_REGEX.test(text);
 
 /**
- * Process HTML content to auto-detect Arabic text and apply RTL direction.
- * Works on paragraph-level elements — if the text content contains Arabic,
- * it gets dir="rtl", right-alignment, and Amiri font.
+ * Decide whether a block's text is Arabic-dominant enough to flip to RTL.
+ *
+ * An English paragraph that mentions Arabic terms inline (e.g. "The الهَمْزَة
+ * is distinguished by الجَهْر and الشِّدَّة") is semantically LTR even if its
+ * Arabic letter count is high — those inline Arabic words are rendered by
+ * their own dir="rtl" spans and the surrounding English narrative reads
+ * left-to-right.
+ *
+ * We only flip when Arabic letters STRONGLY dominate the block (more than
+ * 2× the Latin letter count). This keeps pure Arabic blocks RTL while
+ * leaving English-narrative-with-Arabic-terms alone.
+ */
+const isArabicDominant = (text) => {
+  if (!text) return false;
+  const arabicCount = (text.match(ARABIC_LETTERS) || []).length;
+  const latinCount = (text.match(LATIN_LETTERS) || []).length;
+  if (arabicCount < 3) return false;
+  return arabicCount > latinCount * 2;
+};
+
+/**
+ * Process HTML content to auto-detect Arabic text and apply RTL direction
+ * only to elements that are predominantly Arabic. Mixed-direction paragraphs
+ * (mostly English with inline Arabic spans) are left LTR — the inline spans
+ * still render correctly because they carry their own dir="rtl" attribute.
  */
 export const processContentForRTL = (htmlContent) => {
   if (!htmlContent) return htmlContent;
@@ -20,7 +49,7 @@ export const processContentForRTL = (htmlContent) => {
       // Skip elements with class (likely intentionally styled)
       if (el.classList.length > 0) return;
 
-      if (hasArabic(el.textContent)) {
+      if (isArabicDominant(el.textContent)) {
         el.setAttribute('dir', 'rtl');
         el.style.direction = 'rtl';
         el.style.textAlign = 'right';
