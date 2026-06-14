@@ -2,17 +2,10 @@
 // chapter 1 of milestone 2.
 //
 // Usage:
-//   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/createTMP201AndMoveMakhaarij.js
+//   node scripts/createTMP201AndMoveMakhaarij.js
 
-import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Need SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY env vars');
-  process.exit(1);
-}
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const supabase = adminClient();
 
 const MAKHAARIJ_CHAPTER_ID = '535bf175-a662-4181-8332-4e0b560a264d';
 const TMP_102_AUTHOR = '2cafbb3d-08a4-4976-b417-0597bc19b57d'; // matches existing course rows

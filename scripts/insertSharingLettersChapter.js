@@ -1,7 +1,8 @@
-// One-off: insert TMP 201 chapter 2 (M2 / week 6) — Ṣifāt al-Ḥurūf — and its quiz.
+// One-off: insert TMP 201 chapter 4 (M2 / week 8) — Refining Shared Letters
+// (the 11 makhraj/ṣifah-shared groups) — with its quiz.
 //
 // Usage:
-//   node scripts/insertSifaatChapter.js
+//   node scripts/insertSharingLettersChapter.js
 
 import fs from 'fs';
 import { adminClient } from './_lib/supabase.js';
@@ -10,26 +11,26 @@ const supabase = adminClient();
 
 const COURSE_ID = '859bbc8d-643f-4e90-a94b-621fb6015aba'; // TMP 201
 
-const LESSON_HTML = fs.readFileSync('scripts/data/sifaat_lesson.html', 'utf8');
-const QUIZ_QUESTIONS = JSON.parse(fs.readFileSync('scripts/data/sifaat_quiz.json', 'utf8'));
+const LESSON_HTML = fs.readFileSync('scripts/data/sharing_letters_lesson.html', 'utf8');
+const QUIZ_QUESTIONS = JSON.parse(fs.readFileSync('scripts/data/sharing_letters_quiz.json', 'utf8'));
 
 const NEW_CHAPTER = {
   course_id: COURSE_ID,
-  title: 'Ṣifāt al-Ḥurūf — The Attributes of Letters',
-  slug: 'sifaat-al-huruuf',
-  chapter_number: 2,
+  title: 'Refining Shared Letters — Letters That Share a Makhraj or Ṣifah',
+  slug: 'refining-shared-letters',
+  chapter_number: 4,
   content: LESSON_HTML,
   content_type: 'rich_text',
   is_published: true,
   published_at: new Date().toISOString(),
   milestone_index: 2,
-  week_number: 6,
+  week_number: 8,
 };
 
 const NEW_QUIZ = {
-  title: 'Quiz: Ṣifāt al-Ḥurūf',
-  subtitle: "The five opposite-pairs, the eight standalone attributes, and the classification of letters by strength.",
-  passing_score: 10,
+  title: 'Quiz: Refining Shared Letters',
+  subtitle: "Distinguishing the 11 letter-pairs and groups that share a makhraj or ṣifah.",
+  passing_score: 11,
   shuffle_questions: true,
   shuffle_options: true,
   is_published: true,
@@ -37,7 +38,7 @@ const NEW_QUIZ = {
 };
 
 async function main() {
-  console.log('Step 1: insert chapter 2 (Ṣifāt) into TMP 201');
+  console.log('Step 1: insert chapter 4 (Shared Letters) into TMP 201');
   const { data: ch, error: chErr } = await supabase
     .from('lesson_chapters')
     .insert(NEW_CHAPTER)

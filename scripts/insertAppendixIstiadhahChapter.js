@@ -1,18 +1,12 @@
 // One-off: insert the TMP 102 appendix chapter (chapter_number 5 in milestone 1),
 // its lesson_quiz, all 15 quiz_questions, and bump Maraatib to chapter_number 6.
 // Run from project root:
-//   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node /tmp/insert_appendix_chapter.js
+//   node /tmp/insert_appendix_chapter.js
 
-import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
+import { adminClient } from './_lib/supabase.js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Need SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY env vars');
-  process.exit(1);
-}
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const supabase = adminClient();
 
 const COURSE_ID = 'ed848813-91ff-4cd1-be60-ca8505902f9d'; // TMP 102
 const MARAATIB_ID = '64bf3b30-cee8-4468-bef8-f66afa382e55'; // existing chapter_number 5

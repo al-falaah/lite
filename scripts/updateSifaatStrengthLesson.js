@@ -1,15 +1,15 @@
-// Update the Ṣifāt chapter content with the latest version.
+// Update the Ṣifāt (Part 2) chapter content with the latest version.
 //
 // Usage:
-//   node scripts/updateSifaatLesson.js
+//   node scripts/updateSifaatStrengthLesson.js
 
 import fs from 'fs';
 import { adminClient } from './_lib/supabase.js';
 
 const supabase = adminClient();
 
-const CHAPTER_ID = 'd99c458b-f229-4f48-bcc6-5dcd85c290a9';
-const LESSON_HTML = fs.readFileSync('scripts/data/sifaat_lesson.html', 'utf8');
+const CHAPTER_ID = 'f40827a4-50cd-4278-a380-a34c3762d463';
+const LESSON_HTML = fs.readFileSync('scripts/data/sifaat_strength_lesson.html', 'utf8');
 
 const { error } = await supabase
   .from('lesson_chapters')

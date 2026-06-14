@@ -81,6 +81,9 @@ supabase/.temp/
 scripts/data/
 
 
+# Claude Code local settings (may contain inline secrets in permission entries)
+.claude/
+
 # OS files
 Thumbs.db
 .vercel

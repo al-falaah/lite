@@ -9,19 +9,10 @@
 //   node scripts/backfillReferralPromoCodes.js
 
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
+import { adminClient } from './_lib/supabase.js';
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Missing env vars. Need STRIPE_SECRET_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.');
-  process.exit(1);
-}
-
-const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+const supabase = adminClient();
 
 async function run() {
   const { data: students, error } = await supabase
