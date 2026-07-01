@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { toast } from 'sonner';
-import { Save, Eye, Trash2, Edit2, Home, ArrowLeft } from 'lucide-react';
+import { Save, Eye, Trash2, Edit2, Home, ArrowLeft, Pin, PinOff } from 'lucide-react';
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/common/Card';
@@ -508,6 +508,62 @@ const BlogAdmin = () => {
     }
   };
 
+  const handleTogglePin = async (post) => {
+    const willPin = !post.is_pinned;
+
+    // Enforce the max-2-pinned-posts rule (same as the form)
+    if (willPin) {
+      const pinnedCount = posts.filter(p => p.is_pinned && p.id !== post.id).length;
+      if (pinnedCount >= 2) {
+        toast.error('Maximum 2 posts can be pinned. Please unpin another post first.');
+        return;
+      }
+    }
+
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const storageKey = `sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`;
+      const authData = localStorage.getItem(storageKey);
+
+      let accessToken = null;
+      if (authData) {
+        try {
+          const parsed = JSON.parse(authData);
+          accessToken = parsed.access_token || parsed.accessToken;
+        } catch (e) {
+          console.error('Failed to parse auth data:', e);
+        }
+      }
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+        'Prefer': 'return=representation'
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/blog_posts?id=eq.${post.id}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ is_pinned: willPin })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update pin status');
+      }
+
+      toast.success(willPin ? 'Post pinned' : 'Post unpinned');
+      fetchAllPosts();
+    } catch (error) {
+      console.error('Error toggling pin:', error);
+      toast.error('Failed to update pin status');
+    }
+  };
+
   const resetForm = () => {
     setEditingPost(null);
     setFormData({
@@ -991,9 +1047,17 @@ const BlogAdmin = () => {
                       className="border border-gray-200 rounded-lg p-3 hover:border-emerald-300 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <h3 className="font-medium text-sm text-gray-900 line-clamp-2 flex-1">
-                          {post.title}
-                        </h3>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-sm text-gray-900 line-clamp-2">
+                            {post.title}
+                          </h3>
+                          {post.is_pinned && (
+                            <span className="inline-flex items-center gap-1 text-xs text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded mt-1">
+                              <Pin className="h-3 w-3" />
+                              Pinned
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <span
                             className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
@@ -1029,6 +1093,27 @@ const BlogAdmin = () => {
                           >
                             <Edit2 className="h-3 w-3" />
                             Edit
+                          </button>
+                          <button
+                            onClick={() => handleTogglePin(post)}
+                            className={`text-xs flex items-center gap-1 ${
+                              post.is_pinned
+                                ? 'text-amber-600 hover:text-amber-700'
+                                : 'text-gray-500 hover:text-amber-600'
+                            }`}
+                            title={post.is_pinned ? 'Unpin from top' : 'Pin to top'}
+                          >
+                            {post.is_pinned ? (
+                              <>
+                                <PinOff className="h-3 w-3" />
+                                Unpin
+                              </>
+                            ) : (
+                              <>
+                                <Pin className="h-3 w-3" />
+                                Pin
+                              </>
+                            )}
                           </button>
                           <button
                             onClick={() => handleDelete(post.id)}
