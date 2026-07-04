@@ -224,6 +224,51 @@ function Setup() {
             </p>
           </div>
 
+          {/* How to use — collapsed by default */}
+          <details className="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 group">
+            <summary className="cursor-pointer text-sm font-semibold text-emerald-900 flex items-center gap-2 select-none">
+              <span className="inline-block transform transition-transform group-open:rotate-90">▸</span>
+              How to use
+            </summary>
+            <div className="mt-4 space-y-4 text-sm text-emerald-900">
+              <div>
+                <p className="font-semibold mb-1">1. Set up the session (this page)</p>
+                <ul className="list-disc pl-5 space-y-1 text-emerald-800">
+                  <li>Give the session a class name (e.g. <em>Advanced Tajweed — Week 8</em>).</li>
+                  <li>Pick the tajweed topics you want to test. You can select a whole category or individual topics.</li>
+                  <li>Set the total number of questions, the questions each student should answer in a row, and the max points per question.</li>
+                  <li>Add the student names — one per line, in the order they'll go.</li>
+                  <li>Click <strong>Start Session</strong> — the tool draws random ayat from the Qurʾān that match the topics you picked.</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">2. Run the session (next page)</p>
+                <p className="text-emerald-800 mb-2">
+                  The projected screen shows a grid of numbers and the current student's name. Ask the student to pick a number — you click it to open the ayah full-screen. You then have two ways to run the question:
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-emerald-800">
+                  <li>
+                    <strong>Option A — Recite whole, then rule on a chosen part.</strong>
+                    Ask the student to recite the whole ayah. Then click one or more words to highlight the portion you want to ask about, and ask them to name the tajweed rule in that portion.
+                  </li>
+                  <li>
+                    <strong>Option B — Highlight first, then recite that part.</strong>
+                    Click words to highlight the portion first. Ask the student to recite only that highlighted portion aloud, and to name the tajweed rule in it.
+                  </li>
+                </ul>
+                <p className="text-emerald-800 mt-2">
+                  When you're ready, use the score buttons (0 to your chosen max) to score the answer. The scoring panel has a "Reveal rule (teacher only)" toggle in case you need to check what topic the ayah matched.
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">3. Finish and export</p>
+                <p className="text-emerald-800">
+                  When the session ends, click <strong>End session</strong> to go to the leaderboard. From there you can download a CSV or print the results.
+                </p>
+              </div>
+            </div>
+          </details>
+
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 space-y-6">
             {/* Class name */}
             <div>
@@ -467,19 +512,27 @@ function Present() {
 
   // Split the ayah into words (whitespace).
   //
-  // Also normalise a few Uthmani-QCF codepoints back to standard Arabic marks
-  // so they render correctly in Amiri Quran (Google Fonts). The QCF Uthmani
-  // encoding uses:
-  //   U+0657 (ARABIC INVERTED DAMMA)         → visually a small fatḥatān-alif
-  //   U+065C (ARABIC VOWEL SIGN DOT BELOW)   → rare
-  //   U+065B (ARABIC VOWEL SIGN INVERTED SMALL V ABOVE) → rare
-  // Amiri Quran doesn't ship glyphs for these codepoints, so we swap to the
-  // closest standard equivalent that IS in the font.
+  // The DB stores the Uthmani (QCF) encoding of the tanwīn marks, which is
+  // NOT the standard Arabic Unicode tanwīn. Amiri Quran (Google Fonts) does
+  // not ship glyphs for the QCF variants, so they render as nothing (or the
+  // wrong mark). We normalise each QCF tanwīn back to its standard Arabic
+  // equivalent — preserving the grammatical case:
+  //
+  //   U+0657 ٗ  (Inverted Damma)      → ً  U+064B  tanwīn fatḥ
+  //                                     (used with alif suffix: فَرِيقٗا → فَرِيقًا)
+  //   U+065E ٞ  (Fatha with Two Dots) → ٌ  U+064C  tanwīn ḍamm
+  //                                     (used at end of nominative words: عَلِيمٞ → عَلِيمٌ)
+  //   U+0656 ٖ  (Subscript Alef)      → ٍ  U+064D  tanwīn kasr
+  //                                     (used at end of genitive words: خَيۡرٖ → خَيۡرٍ)
+  //
+  // Only these three QCF marks appear in the corpus we surveyed. Getting
+  // the ḍamm/fatḥ/kasr mapping right matters — mapping U+065E to a plain
+  // fatḥa would silently change the grammatical case shown to students.
   const normalizeUthmani = (s) =>
     s
-      .replace(/ٗ/g, 'ً') // inverted damma → fatḥatān
-      .replace(/ٞ/g, 'َ') // fatḥa-with-two-dots → fatḥa
-      .replace(/ٖ/g, 'ِ'); // subscript alif → kasrah
+      .replace(/ٗ/g, 'ً') // U+0657 → U+064B  tanwīn fatḥ
+      .replace(/ٞ/g, 'ٌ') // U+065E → U+064C  tanwīn ḍamm
+      .replace(/ٖ/g, 'ٍ'); // U+0656 → U+064D  tanwīn kasr
   const ayahWords = useMemo(() => {
     if (!openQuestion?.aya_text) return [];
     return normalizeUthmani(openQuestion.aya_text.trim()).split(/\s+/);
@@ -654,13 +707,14 @@ function Present() {
             <div className="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 sm:p-10 mb-6">
               <div
                 dir="rtl"
-                className="font-arabic text-3xl sm:text-5xl leading-loose text-gray-900 text-center select-none"
+                className="font-arabic text-3xl sm:text-5xl text-gray-900 text-center select-none"
+                style={{ lineHeight: '2.6' }}
               >
                 {ayahWords.map((w, i) => (
                   <span
                     key={i}
                     onClick={() => toggleWord(i)}
-                    className={`inline-block px-1 mx-0.5 rounded cursor-pointer transition-colors ${
+                    className={`inline-block px-2 py-1 mx-1 my-1 rounded cursor-pointer transition-colors ${
                       highlightedWordSet.has(i)
                         ? 'bg-emerald-200 text-emerald-900'
                         : 'hover:bg-emerald-50'
@@ -670,7 +724,7 @@ function Present() {
                   </span>
                 ))}
               </div>
-              <p className="text-center text-xs text-gray-500 mt-4">
+              <p className="text-center text-xs text-gray-500 mt-6">
                 Click any word to highlight it. Click again to un-highlight.
               </p>
             </div>
