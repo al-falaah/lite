@@ -20,6 +20,12 @@ const TOOLS = [
     description: "Qur'an Page Insights — Scholar-curated benefits and lessons from every page of the Qur'an (604 pages), with English translation.",
     status: 'live',
   },
+  {
+    path: '/tools/tajweed-test',
+    title: 'Tajweed Test Runner (اختبار)',
+    description: "Run a live tajweed quiz for your class. Pick topics, add students, project the number grid — students take turns picking, you score on the fly, and you get a printable leaderboard at the end.",
+    status: 'live',
+  },
 ];
 
 function ToolsHome() {

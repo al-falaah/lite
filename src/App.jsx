@@ -47,6 +47,7 @@ import ToolsHome from './pages/tools/ToolsHome';
 import ExamplesFinder from './pages/tools/ExamplesFinder';
 import RootExplorer from './pages/tools/RootExplorer';
 import PageInsights from './pages/tools/PageInsights';
+import TajweedTest from './pages/tools/TajweedTest';
 
 // Components
 import FloatingWhatsApp from './components/FloatingWhatsApp';
@@ -214,6 +215,7 @@ function AppRoutes() {
           <Route path="examples" element={<ExamplesFinder />} />
           <Route path="roots" element={<RootExplorer />} />
           <Route path="pages" element={<PageInsights />} />
+          <Route path="tajweed-test/*" element={<TajweedTest />} />
         </Route>
 
         {/* Fallback - 404 Page */}
