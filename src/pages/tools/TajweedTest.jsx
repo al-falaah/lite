@@ -20,6 +20,7 @@ import { Link, useNavigate, useParams, Routes, Route } from 'react-router-dom';
 import { ArrowLeft, Play, Users, Hash, ListChecks, Download, Printer, RotateCcw } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import { TAJWEED_CATEGORIES } from '../../utils/topicMap';
+import { normalizeUthmani } from '../../utils/uthmani';
 
 // ---------- Surah names (matches other tools) ----------
 const SURAH_NAMES = {
@@ -510,29 +511,9 @@ function Present() {
 
   const openQuestionTopic = openQuestion ? TOPIC_BY_ID[openQuestion.topic_id] : null;
 
-  // Split the ayah into words (whitespace).
-  //
-  // The DB stores the Uthmani (QCF) encoding of the tanwīn marks, which is
-  // NOT the standard Arabic Unicode tanwīn. Amiri Quran (Google Fonts) does
-  // not ship glyphs for the QCF variants, so they render as nothing (or the
-  // wrong mark). We normalise each QCF tanwīn back to its standard Arabic
-  // equivalent — preserving the grammatical case:
-  //
-  //   U+0657 ٗ  (Inverted Damma)      → ً  U+064B  tanwīn fatḥ
-  //                                     (used with alif suffix: فَرِيقٗا → فَرِيقًا)
-  //   U+065E ٞ  (Fatha with Two Dots) → ٌ  U+064C  tanwīn ḍamm
-  //                                     (used at end of nominative words: عَلِيمٞ → عَلِيمٌ)
-  //   U+0656 ٖ  (Subscript Alef)      → ٍ  U+064D  tanwīn kasr
-  //                                     (used at end of genitive words: خَيۡرٖ → خَيۡرٍ)
-  //
-  // Only these three QCF marks appear in the corpus we surveyed. Getting
-  // the ḍamm/fatḥ/kasr mapping right matters — mapping U+065E to a plain
-  // fatḥa would silently change the grammatical case shown to students.
-  const normalizeUthmani = (s) =>
-    s
-      .replace(/ٗ/g, 'ً') // U+0657 → U+064B  tanwīn fatḥ
-      .replace(/ٞ/g, 'ٌ') // U+065E → U+064C  tanwīn ḍamm
-      .replace(/ٖ/g, 'ٍ'); // U+0656 → U+064D  tanwīn kasr
+  // Split the ayah into words. QCF Uthmani tanwīn marks are normalised to
+  // standard Arabic tanwīn (see src/utils/uthmani.js) so they render in
+  // Amiri Quran without silently changing grammatical case.
   const ayahWords = useMemo(() => {
     if (!openQuestion?.aya_text) return [];
     return normalizeUthmani(openQuestion.aya_text.trim()).split(/\s+/);
@@ -580,12 +561,19 @@ function Present() {
       if (error) throw error;
       // Only rotate to the next student once the current student has
       // answered their per-student allocation. Otherwise stay on them.
+      // Don't loop back to the first student after the last one finishes —
+      // clamp at the end so the teacher can end the session naturally.
       const perStudent = session.questions_per_student || 1;
       const newCount = currentStudentAnsweredCount + 1;
       if (newCount >= perStudent) {
-        const nextIdx = (currentStudentIdx + 1) % Math.max(1, studentNames.length);
-        setCurrentStudentIdx(nextIdx);
-        setCurrentStudentAnsweredCount(0);
+        if (currentStudentIdx < studentNames.length - 1) {
+          setCurrentStudentIdx(currentStudentIdx + 1);
+          setCurrentStudentAnsweredCount(0);
+        } else {
+          // Last student's last question — stay here; the teacher can end
+          // the session with the End button.
+          setCurrentStudentAnsweredCount(newCount);
+        }
       } else {
         setCurrentStudentAnsweredCount(newCount);
       }
@@ -650,23 +638,28 @@ function Present() {
             </div>
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <div className="text-xs text-gray-500">Current student</div>
+                <div className="text-xs text-gray-500">
+                  Student {currentStudentIdx + 1} of {studentNames.length}
+                </div>
                 <div className="text-emerald-700 font-bold text-lg">
                   {currentStudent || '—'}
                 </div>
                 {(session.questions_per_student || 1) > 1 && (
                   <div className="text-xs text-gray-500 mt-0.5">
-                    Q {currentStudentAnsweredCount + 1} of {session.questions_per_student} for this student
+                    Q {Math.min(currentStudentAnsweredCount + 1, session.questions_per_student)} of {session.questions_per_student} for this student
                   </div>
                 )}
               </div>
               <button
                 type="button"
+                disabled={currentStudentIdx >= studentNames.length - 1}
                 onClick={() => {
-                  setCurrentStudentIdx((i) => (i + 1) % Math.max(1, studentNames.length));
-                  setCurrentStudentAnsweredCount(0);
+                  if (currentStudentIdx < studentNames.length - 1) {
+                    setCurrentStudentIdx(currentStudentIdx + 1);
+                    setCurrentStudentAnsweredCount(0);
+                  }
                 }}
-                className="px-3 py-1.5 text-xs bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                className="px-3 py-1.5 text-xs bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
                 title="Skip to next student without scoring"
               >
                 Skip →
@@ -787,11 +780,15 @@ function Present() {
                     : 'bg-gray-300 cursor-not-allowed'
                 }`}
               >
-                {savingScore
-                  ? 'Saving…'
-                  : currentStudentAnsweredCount + 1 >= (session.questions_per_student || 1)
-                    ? 'Save & Next Student'
-                    : `Save & Next Question (${currentStudentAnsweredCount + 1}/${session.questions_per_student})`}
+                {(() => {
+                  if (savingScore) return 'Saving…';
+                  const perStudent = session.questions_per_student || 1;
+                  const isLastAnswerForStudent = currentStudentAnsweredCount + 1 >= perStudent;
+                  const isLastStudent = currentStudentIdx >= studentNames.length - 1;
+                  if (isLastAnswerForStudent && isLastStudent) return 'Save & Finish';
+                  if (isLastAnswerForStudent) return 'Save & Next Student';
+                  return `Save & Next Question (${currentStudentAnsweredCount + 1}/${perStudent})`;
+                })()}
               </button>
             </div>
           </div>

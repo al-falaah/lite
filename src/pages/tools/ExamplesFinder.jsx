@@ -8,6 +8,7 @@ import {
   buildSearchIndex,
   searchTopics,
 } from '../../utils/topicMap';
+import { normalizeUthmani } from '../../utils/uthmani';
 
 // Surah names for display
 const SURAH_NAMES = {
@@ -355,7 +356,7 @@ function ResultCard({ result, topic, isPrimary }) {
 
       {/* Ayah text with highlighted matches */}
       <div className="px-4 py-3 border-b border-gray-100">
-        <AyahWithHighlights ayahText={result.aya_text} refs={quranicRefs} />
+        <AyahWithHighlights ayahText={normalizeUthmani(result.aya_text)} refs={quranicRefs} />
       </div>
 
       {/* Analysis content */}
