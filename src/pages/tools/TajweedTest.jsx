@@ -864,38 +864,32 @@ function Results() {
     if (!session) return [];
     const students = session.student_names || [];
     const maxPts = session.max_points_per_q || 3;
-    const perQuestions = session.question_pool?.length || 0;
-    const maxTotal = perQuestions * maxPts;
+    // Each student is graded against the questions they were ASSIGNED
+    // (questions_per_student × max_points_per_q), not the whole pool.
+    const assignedQuestions = session.questions_per_student || 1;
+    const assignedMax = assignedQuestions * maxPts;
     return students
       .map((name) => {
         const rows = answers.filter((a) => a.student_name === name);
         const total = rows.reduce((s, r) => s + (r.points_awarded || 0), 0);
-        const answered = rows.length;
-        const possible = answered * maxPts;
         return {
           name,
-          answered,
           total,
-          possible,
-          percent: possible > 0 ? Math.round((total / possible) * 100) : 0,
-          overall_percent: maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0,
+          score_percent: assignedMax > 0 ? Math.round((total / assignedMax) * 100) : 0,
           rows,
         };
       })
-      .sort((a, b) => b.total - a.total || b.answered - a.answered);
+      .sort((a, b) => b.total - a.total);
   }, [session, answers]);
 
   const handleDownloadCsv = () => {
     if (!session) return;
     const rows = [
-      ['Student', 'Answered', 'Points', 'Possible', '% of attempted', '% of total'],
+      ['Student', 'Points', 'Score'],
       ...perStudent.map((s) => [
         s.name,
-        s.answered,
         s.total,
-        s.possible,
-        `${s.percent}%`,
-        `${s.overall_percent}%`,
+        `${s.score_percent}%`,
       ]),
     ];
     const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
@@ -985,16 +979,14 @@ function Results() {
                 <tr className="text-left text-gray-600">
                   <th className="pb-2 pr-2">#</th>
                   <th className="pb-2 pr-2">Student</th>
-                  <th className="pb-2 pr-2 text-right">Answered</th>
                   <th className="pb-2 pr-2 text-right">Points</th>
-                  <th className="pb-2 pr-2 text-right">% attempted</th>
-                  <th className="pb-2 pr-2 text-right">% overall</th>
+                  <th className="pb-2 pr-2 text-right">Score</th>
                 </tr>
               </thead>
               <tbody>
                 {perStudent.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-6 text-center text-gray-500">
+                    <td colSpan={4} className="py-6 text-center text-gray-500">
                       No answers recorded yet.
                     </td>
                   </tr>
@@ -1003,10 +995,8 @@ function Results() {
                     <tr key={s.name} className="border-b border-gray-100">
                       <td className="py-2 pr-2 font-semibold text-gray-500">{i + 1}</td>
                       <td className="py-2 pr-2 font-medium text-gray-900">{s.name}</td>
-                      <td className="py-2 pr-2 text-right">{s.answered}</td>
                       <td className="py-2 pr-2 text-right font-bold text-emerald-700">{s.total}</td>
-                      <td className="py-2 pr-2 text-right">{s.percent}%</td>
-                      <td className="py-2 pr-2 text-right">{s.overall_percent}%</td>
+                      <td className="py-2 pr-2 text-right">{s.score_percent}%</td>
                     </tr>
                   ))
                 )}
