@@ -84,6 +84,9 @@ scripts/data/
 # Claude Code local settings (may contain inline secrets in permission entries)
 .claude/
 
+# Source PDFs used to draft lessons (kept locally, not shared publicly)
+*.pdf
+
 # OS files
 Thumbs.db
 .vercel
