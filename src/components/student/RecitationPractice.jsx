@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../services/supabase';
 import { toast } from 'sonner';
 import { Mic, Send } from 'lucide-react';
+import { BTN_PRIMARY } from '../../design/ui';
+import { EmptyState } from '../common/DataStates';
 import VoiceNote from '../common/VoiceNote';
 
 const GRADE_LABELS = {
@@ -289,19 +291,16 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       {(!rec || showStart) && !recording && !blob && (
         <div className="px-5 py-5">
           {!showStart ? (
-            <div className="text-center py-6">
-              <Mic className="h-8 w-8 text-slate-300 dark:text-gray-600 mx-auto mb-3" strokeWidth={1.5} />
-              <p className="text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">No active practice yet</p>
-              <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">
-                Pick something to read aloud and we'll send it to your teacher when you're ready.
-              </p>
-              <button
-                onClick={() => setShowStart(true)}
-                className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
-              >
-                <Mic className="h-4 w-4 mr-1.5" /> Start practice
-              </button>
-            </div>
+            <EmptyState
+              icon={Mic}
+              title="No active practice yet"
+              description="Pick something to read aloud and we'll send it to your teacher when you're ready."
+              action={
+                <button onClick={() => setShowStart(true)} className={BTN_PRIMARY}>
+                  <Mic className="h-4 w-4 mr-1.5" /> Start practice
+                </button>
+              }
+            />
           ) : (
             <div className="space-y-3">
               <div>
@@ -325,7 +324,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
                 <button
                   onClick={handleStart}
                   disabled={!passage.trim()}
-                  className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+                  className={BTN_PRIMARY}
                 >
                   Start
                 </button>
@@ -351,7 +350,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
           {!recording && !blob && (
             <button
               onClick={startRec}
-              className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+              className={`w-full ${BTN_PRIMARY}`}
             >
               <Mic className="h-4 w-4 mr-1.5" /> Start recording
             </button>
@@ -364,6 +363,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
                 <span className="font-mono tabular-nums">{fmt(elapsed)}</span>
                 <span className="text-slate-500 dark:text-gray-400">recording…</span>
               </div>
+              {/* Stop is a secondary in-context action, not the primary CTA of this state — leave hand-rolled for visual distinction */}
               <button
                 onClick={stopRec}
                 className="inline-flex items-center justify-center px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
@@ -380,7 +380,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
                 <button
                   onClick={submit}
                   disabled={uploading}
-                  className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+                  className={BTN_PRIMARY}
                 >
                   {uploading ? 'Sending…' : (
                     <>

@@ -13,6 +13,7 @@ import {
 import { useTheme } from '../hooks/useTheme';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { EmptyState, Spinner } from '../components/common/DataStates';
 import StudentClassEtiquette from '../components/student/StudentClassEtiquette';
 import StudentLessons from '../components/student/StudentLessons';
 import StudentQuizLeaderboards from '../components/student/StudentQuizLeaderboards';
@@ -30,6 +31,21 @@ import {
   HEADING, LABEL, LABEL_TINY,
 } from '../design/ui';
 import {
+  CONTEXT_STRIP,
+  CONTEXT_STRIP_LABEL,
+  CONTEXT_STRIP_TEXT,
+  CONTEXT_PROGRAM_PILL,
+  CONTEXT_PROGRAM_PILL_ACTIVE,
+  CARD_DARK,
+  CARD_HEADER_DARK,
+  CARD_BODY_DARK,
+  HEADING_LG_DARK,
+  TEXT_MUTED_DARK,
+  TABLE_HEADER_CELL,
+  TABLE_BODY_CELL,
+  TABLE_ROW,
+} from '../design/lms';
+import {
   PROGRAMS,
   PROGRAM_IDS,
   getProgramName as getConfigProgramName,
@@ -39,6 +55,47 @@ import {
 // Get milestones from centralized config
 const TAJWEED_MILESTONES = PROGRAMS[PROGRAM_IDS.TAJWEED].milestones;
 const EAIS_MILESTONES = PROGRAMS[PROGRAM_IDS.ESSENTIALS].milestones;
+
+// Helper to compute program context info for the context strip
+const getProgramContextInfo = (enrollment, schedules) => {
+  if (!enrollment) return null;
+
+  const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
+  const programConfig = PROGRAMS[enrollment.program];
+  const totalYears = programConfig?.duration.years || (isTajweed ? 1 : 2);
+  const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+
+  // Find the active week by checking schedules for this program
+  const programSchedules = schedules.filter(s => s.program === enrollment.program);
+  if (programSchedules.length === 0) {
+    return {
+      programName: getConfigProgramName(enrollment.program),
+      currentWeek: 1,
+      totalWeeks,
+      milestoneName: TAJWEED_MILESTONES[0]?.name || 'Getting Started',
+    };
+  }
+
+  // week_number is within the academic year; milestones span overall weeks
+  // (EASI: 1–104 across 2 years), so convert to the overall week.
+  const weeksPerYear = Math.ceil(totalWeeks / totalYears);
+  let currentWeek = 1;
+  for (const schedule of programSchedules) {
+    if (schedule.status !== 'completed') {
+      currentWeek = ((schedule.academic_year || 1) - 1) * weeksPerYear + schedule.week_number;
+      break;
+    }
+  }
+
+  const milestone = getCurrentMilestone(currentWeek, isTajweed);
+
+  return {
+    programName: getConfigProgramName(enrollment.program),
+    currentWeek,
+    totalWeeks,
+    milestoneName: milestone?.name || 'In Progress',
+  };
+};
 
 // Calculate current milestone based on week number
 const getCurrentMilestone = (currentWeek, isTajweed) => {
@@ -86,8 +143,20 @@ const StudentPortal = () => {
   const [assignedTeachers, setAssignedTeachers] = useState({});
 
   // Tab state
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState(() => {
+    // Restore last-visited tab so navigating away and back lands you in the
+    // same place (e.g. clicking a class → coming back via browser back button
+    // should return to the Classes tab, not Home).
+    try {
+      const saved = sessionStorage.getItem('studentTab');
+      if (saved && ['home', 'classes', 'lessons', 'practice', 'results'].includes(saved)) return saved;
+    } catch { /* ignore */ }
+    return 'home';
+  });
   const [lessonsSubTab, setLessonsSubTab] = useState('lessons'); // 'lessons' | 'reading'
+
+  // Multi-enrollment program scoping: track the active program for Classes/Lessons/Results tabs
+  const [activeProgram, setActiveProgram] = useState(null); // Set on mount to first active enrollment
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -113,6 +182,11 @@ const StudentPortal = () => {
       toast('Refreshed', { duration: 1500 });
     }
   });
+
+  // Persist active tab to sessionStorage on change
+  useEffect(() => {
+    try { sessionStorage.setItem('studentTab', activeTab); } catch { /* ignore */ }
+  }, [activeTab]);
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -172,6 +246,11 @@ const StudentPortal = () => {
       }
       console.log('Enrollments loaded:', enrollmentsData?.length || 0);
       setEnrollments(enrollmentsData || []);
+
+      // Set activeProgram to the first enrollment's program (for multi-enrollment scoping)
+      if (enrollmentsData?.length > 0) {
+        setActiveProgram(enrollmentsData[0].program);
+      }
 
       // Get the programs for active enrollments
       const activePrograms = (enrollmentsData || []).map(e => e.program);
@@ -241,7 +320,7 @@ const StudentPortal = () => {
   };
 
   const handleBillingPortal = async () => {
-    setLoading(true);
+    setProcessingPayment(true);
     try {
       const response = await fetch(
         `${supabaseUrl}/functions/v1/create-billing-portal`,
@@ -269,7 +348,7 @@ const StudentPortal = () => {
       console.error('Billing portal error:', error);
       toast.error(error.message || 'Failed to access billing portal');
     } finally {
-      setLoading(false);
+      setProcessingPayment(false);
     }
   };
 
@@ -477,7 +556,7 @@ const StudentPortal = () => {
         <div className="text-center">
           <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4 dark:hidden" />
           <img src="/favicon-white.svg" alt="The FastTrack Madrasah" className="h-10 w-10 mx-auto mb-4 hidden dark:block" />
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mx-auto" />
+          <Spinner className="mx-auto" />
           <p className="mt-3 text-sm text-slate-500 dark:text-gray-400">Loading…</p>
         </div>
       </div>
@@ -489,7 +568,7 @@ const StudentPortal = () => {
     { id: 'classes', label: 'Classes', icon: Calendar },
     { id: 'lessons', label: 'Lessons', icon: BookOpen },
     { id: 'practice', label: 'Leaderboard', icon: Trophy },
-    { id: 'results', label: 'Results', icon: Trophy },
+    { id: 'results', label: 'Results', icon: BarChart3 },
   ];
 
   return (
@@ -554,6 +633,52 @@ const StudentPortal = () => {
         </div>
       </div>
 
+      {/* Course Context Strip — persistent program/week orientation */}
+      {enrollments.length > 0 && (
+        <div className={CONTEXT_STRIP}>
+          <div className={`${CONTAINER_WIDE}`}>
+            {/* Multi-enrollment: show program switcher pills */}
+            {enrollments.length > 1 ? (
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className={CONTEXT_STRIP_LABEL}>Active Programs</div>
+                <div className="flex flex-wrap gap-2">
+                  {enrollments.map(enrollment => (
+                    <button
+                      key={enrollment.id}
+                      onClick={() => setActiveProgram(enrollment.program)}
+                      className={
+                        activeProgram === enrollment.program
+                          ? CONTEXT_PROGRAM_PILL_ACTIVE
+                          : CONTEXT_PROGRAM_PILL
+                      }
+                    >
+                      {getConfigProgramName(enrollment.program)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* Single enrollment: show program context inline */
+              (() => {
+                const enrollment = enrollments[0];
+                const contextInfo = getProgramContextInfo(enrollment, schedules);
+                if (!contextInfo) return <div>{getConfigProgramName(enrollment.program)}</div>;
+                return (
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                    <div>
+                      <div className={CONTEXT_STRIP_TEXT}>{contextInfo.programName}</div>
+                      <div className={CONTEXT_STRIP_LABEL}>
+                        Week {contextInfo.currentWeek} of {contextInfo.totalWeeks} · {contextInfo.milestoneName}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className={`${CONTAINER_WIDE} py-5 sm:py-8 pb-24 sm:pb-8`}>
         <div className="space-y-6">
@@ -566,7 +691,7 @@ const StudentPortal = () => {
               const initials = name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase() || 'S';
               const enrolmentStatus = student?.status || 'active';
               return (
-                <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm p-5 sm:p-6 mb-5 flex items-center gap-4 sm:gap-5">
+                <div className={`${CARD_DARK} p-5 sm:p-6 mb-5 flex items-center gap-4 sm:gap-5`}>
                   <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-700 dark:text-emerald-300 text-lg sm:text-xl font-semibold flex-shrink-0">
                     {initials}
                   </div>
@@ -593,12 +718,12 @@ const StudentPortal = () => {
                 { id: 'classes', label: 'My classes', icon: Calendar },
                 { id: 'lessons', label: 'My lessons', icon: BookOpen },
                 { id: 'practice', label: 'Leaderboard', icon: Trophy },
-                { id: 'results', label: 'Results', icon: Trophy },
+                { id: 'results', label: 'Results', icon: BarChart3 },
               ].map(item => (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm hover:border-slate-300 hover:shadow transition-all p-4 flex items-center gap-3 text-left"
+                  className={`${CARD_DARK} hover:border-slate-300 hover:shadow transition-all p-4 flex items-center gap-3 text-left`}
                 >
                   <div className="h-9 w-9 rounded-md bg-slate-50 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                     <item.icon className="h-4.5 w-4.5 text-slate-700 dark:text-gray-200" />
@@ -608,8 +733,24 @@ const StudentPortal = () => {
               ))}
             </div>
 
-            {/* Overall progress card */}
-            {(() => {
+            {/* Overall progress card (or enrol prompt when no programs yet) */}
+            {enrollments.length === 0 ? (
+              <div className={`${CARD_DARK} mb-5`}>
+                <EmptyState
+                  icon={GraduationCap}
+                  title="No active programs yet"
+                  description="Once you're enrolled in a program, your classes, lessons, and progress will appear here."
+                  action={
+                    <Link
+                      to={`/enroll-additional${student?.email ? `?email=${encodeURIComponent(student.email)}` : ''}`}
+                      className={BTN_PRIMARY}
+                    >
+                      Browse programs
+                    </Link>
+                  }
+                />
+              </div>
+            ) : (() => {
               let completedClasses = 0;
               let totalClasses = 0;
               enrollments.filter(e => e.status === 'active').forEach(enrollment => {
@@ -623,9 +764,9 @@ const StudentPortal = () => {
               });
               const percent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
               return (
-                <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm p-5 mb-5">
+                <div className={`${CARD_DARK} p-5 mb-5`}>
                   <div className="flex items-baseline justify-between mb-2">
-                    <h2 className={`${HEADING} dark:text-white`}>Overall progress</h2>
+                    <h2 className={HEADING_LG_DARK}>Overall progress</h2>
                     <span className="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white">{percent}<span className="text-sm text-slate-500 dark:text-gray-400">%</span></span>
                   </div>
                   <div className="h-1.5 w-full bg-slate-100 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -644,9 +785,9 @@ const StudentPortal = () => {
             </div>
 
             {/* Install app card */}
-            <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700">
-                <h2 className={`${HEADING} dark:text-white`}>Get the mobile app</h2>
+            <div className={`${CARD_DARK} overflow-hidden`}>
+              <div className={CARD_HEADER_DARK}>
+                <h2 className={HEADING_LG_DARK}>Get the mobile app</h2>
                 <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">
                   Runs like a native app — add it to your home screen in seconds.
                 </p>
@@ -687,7 +828,14 @@ const StudentPortal = () => {
             </div>
 
             <div className="space-y-5">
-            {enrollments.map((enrollment) => {
+            {enrollments.length === 0 && (
+              <EmptyState
+                icon={Calendar}
+                title="No classes yet"
+                description="Your class schedule will appear here once you're enrolled in a program."
+              />
+            )}
+            {enrollments.filter(e => enrollments.length === 1 || e.program === activeProgram).map((enrollment) => {
               const programSchedules = schedules.filter(s => s.program === enrollment.program);
               const programName = getProgramName(enrollment.program);
               const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
@@ -696,8 +844,8 @@ const StudentPortal = () => {
               // Inactive enrolment — disabled card
               if (enrollment.status !== 'active') {
                 return (
-                  <div key={enrollment.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-                    <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700">
+                  <div key={enrollment.id} className={`${CARD_DARK} overflow-hidden`}>
+                    <div className={CARD_HEADER_DARK}>
                       <h2 className="text-base font-semibold text-slate-900 dark:text-white">{programName}</h2>
                       <p className="text-sm text-red-700 dark:text-red-400 mt-0.5">
                         Enrollment {enrollment.status}
@@ -717,17 +865,15 @@ const StudentPortal = () => {
               // No schedule yet
               if (programSchedules.length === 0) {
                 return (
-                  <div key={enrollment.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-                    <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700">
+                  <div key={enrollment.id} className={`${CARD_DARK} overflow-hidden`}>
+                    <div className={CARD_HEADER_DARK}>
                       <h2 className="text-base font-semibold text-slate-900 dark:text-white">{programName}</h2>
                     </div>
-                    <div className="px-5 py-8 text-center">
-                      <Calendar className="h-8 w-8 text-slate-300 dark:text-gray-600 mx-auto mb-3" strokeWidth={1.5} />
-                      <p className="text-sm font-medium text-slate-700 dark:text-gray-300">Schedule coming soon</p>
-                      <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
-                        Your class schedule will appear here once it's been created.
-                      </p>
-                    </div>
+                    <EmptyState
+                      icon={Calendar}
+                      title="Schedule coming soon"
+                      description="Your class schedule will appear here once it's been created."
+                    />
                   </div>
                 );
               }
@@ -771,7 +917,7 @@ const StudentPortal = () => {
               const completionPercent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
 
               return (
-                <div key={enrollment.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+                <div key={enrollment.id} className={`${CARD_DARK} overflow-hidden`}>
                   {/* Card header */}
                   <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700 flex items-baseline justify-between gap-3">
                     <div>
@@ -879,7 +1025,7 @@ const StudentPortal = () => {
                                   href={cls.meeting_link.startsWith('http') ? cls.meeting_link : `https://${cls.meeting_link}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center mt-2 px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
+                                  className={`${BTN_PRIMARY} mt-2`}
                                 >
                                   <Video className="h-4 w-4 mr-1.5" />
                                   Join class
@@ -937,12 +1083,21 @@ const StudentPortal = () => {
             </div>
 
             {lessonsSubTab === 'lessons' && (
-              <StudentLessons enrollments={enrollments} />
+              <StudentLessons
+                enrollments={enrollments}
+                currentWeekByProgram={Object.fromEntries(
+                  enrollments.filter(e => e.status === 'active').map(e => {
+                    const w = getActiveWeekForEnrollment(e);
+                    // Overall week across years (EASI milestones span weeks 1–104)
+                    return [e.program, (w.year - 1) * w.weeksPerYear + w.week];
+                  })
+                )}
+              />
             )}
 
             {lessonsSubTab === 'reading' && (
               <div className="space-y-5">
-                {enrollments.filter(e => e.status === 'active').map(enrollment => (
+                {enrollments.filter(e => e.status === 'active' && (enrollments.filter(a => a.status === 'active').length === 1 || e.program === activeProgram)).map(enrollment => (
                   student?.id && (
                     <div key={enrollment.id}>
                       {enrollments.filter(e => e.status === 'active').length > 1 && (
@@ -982,14 +1137,14 @@ const StudentPortal = () => {
             <div className="space-y-5">
               {enrollments.filter(e => e.status === 'active').length === 0 ? (
                 <p className="text-sm text-slate-500 dark:text-gray-400">No active enrolments.</p>
-              ) : enrollments.filter(e => e.status === 'active').map(enrollment => {
+              ) : enrollments.filter(e => e.status === 'active' && (enrollments.filter(a => a.status === 'active').length === 1 || e.program === activeProgram)).map(enrollment => {
                 const activeWeek = getActiveWeekForEnrollment(enrollment);
                 return (
                   <div key={enrollment.id} className="space-y-4">
                     {enrollments.filter(e => e.status === 'active').length > 1 && (
                       <h2 className="text-sm font-semibold text-slate-900 dark:text-white">{getProgramName(enrollment.program)}</h2>
                     )}
-                    <TestProgressCard programId={enrollment.program} currentWeek={activeWeek.week} />
+                    <TestProgressCard programId={enrollment.program} currentWeek={(activeWeek.year - 1) * activeWeek.weeksPerYear + activeWeek.week} />
                     <StudentCertificateCard programId={enrollment.program} />
                   </div>
                 );
@@ -1137,6 +1292,22 @@ const StudentPortal = () => {
                   Your email and student ID can't be changed here. Contact admin to update them.
                 </p>
               </div>
+
+              {student?.stripe_customer_id && (
+                <div className="rounded-md border border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-700/50 px-4 py-3">
+                  <p className={`${LABEL_TINY} mb-2`}>Billing</p>
+                  <p className="text-sm text-slate-600 dark:text-gray-300 mb-3">
+                    Manage your subscription, invoices, and payment methods.
+                  </p>
+                  <button
+                    onClick={handleBillingPortal}
+                    disabled={processingPayment}
+                    className={`${BTN_SECONDARY} disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {processingPayment ? 'Opening…' : 'Go to billing portal'}
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className={`${CARD_FOOTER} flex justify-end gap-2`}>

@@ -4,6 +4,8 @@ import { getYouTubeEmbedUrl } from '../../utils/youtube';
 import { processContentForRTL } from '../../utils/rtl';
 import { PROGRAMS } from '../../config/programs';
 import { ChevronLeft, ChevronDown, ChevronRight, HelpCircle, BookOpen, Video, X } from 'lucide-react';
+import { BTN_SECONDARY } from '../../design/ui';
+import { Spinner, EmptyState } from '../common/DataStates';
 import DOMPurify from 'dompurify';
 
 const sanitizeContent = (html) => {
@@ -51,7 +53,7 @@ const proseTheme = {
   dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700',
 };
 
-export default function StudentLessons({ enrollments, programs: programsProp }) {
+export default function StudentLessons({ enrollments, programs: programsProp, currentWeekByProgram }) {
   // Accept either a direct programs array (teacher use) or derive from enrollments (student use)
   const derivedPrograms = programsProp
     ? programsProp
@@ -66,6 +68,8 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
   const [chapterHasQuiz, setChapterHasQuiz] = useState(false);
   const [chapterQuizId, setChapterQuizId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0); // bump to retry after a fetch error
   const [expandedMilestones, setExpandedMilestones] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'light');
@@ -91,21 +95,34 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
     if (!selectedProgram) { setLoading(false); return; }
     const fetchAll = async () => {
       setLoading(true);
-      const { data: coursesData } = await supabase
+      setFetchError(false);
+      const { data: coursesData, error: coursesError } = await supabase
         .from('lesson_courses')
         .select('*')
         .eq('program_id', selectedProgram)
         .order('display_order');
+      if (coursesError) {
+        console.error('Error fetching lesson courses:', coursesError);
+        setFetchError(true);
+        setLoading(false);
+        return;
+      }
       setCourses(coursesData || []);
 
       if (coursesData?.length) {
         const courseIds = coursesData.map(c => c.id);
-        const { data: chaptersData } = await supabase
+        const { data: chaptersData, error: chaptersError } = await supabase
           .from('lesson_chapters')
           .select('*')
           .in('course_id', courseIds)
           .eq('is_published', true)
           .order('week_number', { ascending: true, nullsFirst: false });
+        if (chaptersError) {
+          console.error('Error fetching lesson chapters:', chaptersError);
+          setFetchError(true);
+          setLoading(false);
+          return;
+        }
         setAllChapters(chaptersData || []);
       } else {
         setAllChapters([]);
@@ -114,14 +131,23 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
       setSelectedChapter(null);
       setSelectedCourse(null);
       setLoading(false);
-
-      // Auto-expand first milestone that has content
-      if (milestones.length) {
-        setExpandedMilestones({ [milestones[0].id]: true });
-      }
     };
     fetchAll();
-  }, [selectedProgram]);
+  }, [selectedProgram, reloadKey]);
+
+  // Auto-expand the milestone the student is currently in (falls back to the
+  // first milestone when no week is known, e.g. teacher view). Re-runs when the
+  // parent's schedule data arrives, since currentWeekByProgram loads async.
+  const currentWeek = currentWeekByProgram?.[selectedProgram];
+  useEffect(() => {
+    const programMilestones = PROGRAMS[selectedProgram]?.milestones || [];
+    if (!programMilestones.length) return;
+    const target = currentWeek
+      ? programMilestones.find(m => currentWeek >= m.weekStart && currentWeek <= m.weekEnd)
+        || programMilestones[programMilestones.length - 1] // past the end = program finished
+      : programMilestones[0];
+    setExpandedMilestones({ [target.id]: true });
+  }, [selectedProgram, currentWeek]);
 
   // Build course lookup
   const courseMap = useMemo(() => {
@@ -239,12 +265,10 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
 
   if (!uniquePrograms.length) {
     return (
-      <div className="text-center py-16">
-        <BookOpen className="h-10 w-10 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
-          {programsProp ? 'No programs assigned' : 'No active enrollments'}
-        </p>
-      </div>
+      <EmptyState
+        icon={BookOpen}
+        title={programsProp ? 'No programs assigned' : 'No active enrollments'}
+      />
     );
   }
 
@@ -295,13 +319,22 @@ export default function StudentLessons({ enrollments, programs: programsProp }) 
         )}
 
         {loading ? (
+          <div className="flex justify-center py-12">
+            <Spinner size="sm" />
+          </div>
+        ) : fetchError ? (
           <div className="text-center py-12">
-            <div className="h-6 w-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-slate-700 dark:text-gray-300">Couldn't load your lessons.</p>
+            <button onClick={() => setReloadKey(k => k + 1)} className={`${BTN_SECONDARY} mt-3`}>
+              Try again
+            </button>
           </div>
         ) : allChapters.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-sm">No lessons available yet</p>
-          </div>
+          <EmptyState
+            icon={BookOpen}
+            title="No lessons available yet"
+            description="Published chapter notes for this program will appear here."
+          />
         ) : (
           <div className="space-y-3">
             {/* View toggle */}

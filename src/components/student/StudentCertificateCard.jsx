@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../services/supabase';
 import { Award, Download, ExternalLink } from 'lucide-react';
+import { BTN_PRIMARY } from '../../design/ui';
 import CertificateTemplate from './CertificateTemplate';
 
 export default function StudentCertificateCard({ programId }) {
@@ -25,8 +26,9 @@ export default function StudentCertificateCard({ programId }) {
         .maybeSingle();
 
       setCertificate(data);
-    } catch {
-      // No certificate yet
+    } catch (error) {
+      // No certificate is the common case; log so real failures are diagnosable
+      console.error('Error loading certificate:', error);
     } finally {
       setLoading(false);
     }
@@ -36,7 +38,7 @@ export default function StudentCertificateCard({ programId }) {
 
   return (
     <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-      <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4 sm:p-5">
+      <div className="bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
             <Award className="h-5 w-5 text-emerald-600" />
@@ -53,7 +55,7 @@ export default function StudentCertificateCard({ programId }) {
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 onClick={() => setShowPreview(true)}
-                className="inline-flex items-center px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                className={BTN_PRIMARY}
               >
                 <Download className="h-3.5 w-3.5 mr-1.5" />
                 View & Download
@@ -62,7 +64,7 @@ export default function StudentCertificateCard({ programId }) {
                 href={`/verify?code=${certificate.verification_code}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-3 py-1.5 bg-white text-emerald-700 text-xs font-medium rounded-lg border border-emerald-300 hover:bg-emerald-50 transition-colors"
+                className="inline-flex items-center px-3 py-2 bg-white text-emerald-700 text-sm font-medium rounded-md border border-emerald-300 hover:bg-emerald-50 transition-colors"
               >
                 <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                 Verify
