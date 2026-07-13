@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, CheckCircle, ChevronDown, Mail, Phone, MessageCircle, Heart } from 'lucide-react';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
+import DiagonalSeam from '../components/common/DiagonalSeam';
 import usePricing from '../hooks/usePricing';
 import SubsidizedPrice from '../components/common/SubsidizedPrice';
 
@@ -56,25 +57,31 @@ const Programs = () => {
         </div>
       </nav>
 
-      {/* Programs Section */}
-      <section className="bg-gray-50 py-16 sm:py-24 min-h-screen">
+      {/* Header */}
+      <div className="bg-gray-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-              Our Programs
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-              Choose the learning path that matches your goals
-            </p>
-          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
+            Our Programs
+          </h1>
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
+            Choose the learning path that matches your goals
+          </p>
+        </div>
+      </div>
+
+      {/* Diagonal seam out of the header */}
+      <DiagonalSeam from="bg-gray-900" to="bg-gray-50" direction="up" />
+
+      {/* Programs Section */}
+      <section id="our-programs" className="bg-gray-50 pb-16 pt-4 sm:pb-24 sm:pt-10 min-h-screen scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Quick Comparison - Mobile Cards / Desktop Table */}
           <div className="mb-12 sm:mb-16 max-w-6xl mx-auto">
             {/* Mobile View: Stacked Cards */}
             <div className="grid grid-cols-1 gap-4 md:hidden">
               {/* QARI Card */}
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div data-anchor="qari" className="bg-white rounded-lg border border-gray-200 p-5 scroll-mt-20">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">QARI</span>
@@ -189,7 +196,7 @@ const Programs = () => {
 
                     <div className="pt-3 border-t border-gray-100">
                       <Link to="/apply">
-                        <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                        <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                           <span>Apply for QARI</span>
                           <ArrowRight className="h-4 w-4" />
                         </button>
@@ -200,7 +207,7 @@ const Programs = () => {
               </div>
 
               {/* TMP Card */}
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div data-anchor="tajweed" className="bg-white rounded-lg border border-gray-200 p-5 scroll-mt-20">
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">TMP</span>
                   <span className="text-xs text-gray-500">Track 2</span>
@@ -316,7 +323,7 @@ const Programs = () => {
 
                     <div className="pt-3 border-t border-gray-100">
                       <Link to="/apply">
-                        <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                        <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                           <span>Apply for TMP</span>
                           <ArrowRight className="h-4 w-4" />
                         </button>
@@ -327,7 +334,7 @@ const Programs = () => {
               </div>
 
               {/* EASI Card */}
-              <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div data-anchor="easi" className="bg-white rounded-lg border border-gray-200 p-5 scroll-mt-20">
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">EASI</span>
                   <span className="text-xs text-gray-500">Track 3</span>
@@ -446,7 +453,7 @@ const Programs = () => {
 
                     <div className="pt-3 border-t border-gray-100">
                       <Link to="/apply">
-                        <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                        <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                           <span>Apply for EASI</span>
                           <ArrowRight className="h-4 w-4" />
                         </button>
@@ -463,19 +470,44 @@ const Programs = () => {
               <div className="grid grid-cols-4 bg-gray-50 border-b border-gray-200">
                 <div className="p-5"></div>
                 <div className="p-5 text-center border-l border-gray-200">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-1.5">Track 1</p>
                   <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                     QARI
                   </div>
+                  <p className="text-xs text-gray-500 mt-1.5">{qari.name}</p>
                 </div>
                 <div className="p-5 text-center border-l border-gray-200">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-1.5">Track 2</p>
                   <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                     TMP
                   </div>
+                  <p className="text-xs text-gray-500 mt-1.5">{tajweed.name}</p>
                 </div>
                 <div className="p-5 text-center border-l border-gray-200">
+                  <p className="text-xs text-gray-400 uppercase tracking-wider mb-1.5">Track 3</p>
                   <div className="inline-flex items-center justify-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                     EASI
                   </div>
+                  <p className="text-xs text-gray-500 mt-1.5">{essentials.name}</p>
+                </div>
+              </div>
+
+              {/* Best For Row */}
+              <div className="grid grid-cols-4 border-b border-gray-100">
+                <div className="p-5 flex items-center">
+                  <div>
+                    <p className="text-base font-semibold text-gray-900">Best for</p>
+                    <p className="text-sm text-gray-500 mt-0.5">Your starting point</p>
+                  </div>
+                </div>
+                <div className="p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-sm text-gray-700 text-center">Absolute beginners & new Muslims</p>
+                </div>
+                <div className="p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-sm text-gray-700 text-center">Can read, but don't know Tajweed</p>
+                </div>
+                <div className="p-5 border-l border-gray-100 flex items-center justify-center">
+                  <p className="text-sm text-gray-700 text-center">Want to understand what you're reading</p>
                 </div>
               </div>
 
@@ -542,7 +574,7 @@ const Programs = () => {
               </div>
 
               {/* Focus Row */}
-              <div className="grid grid-cols-4">
+              <div className="grid grid-cols-4 border-b border-gray-100">
                 <div className="p-5 flex items-center">
                   <div>
                     <p className="text-base font-semibold text-gray-900">Focus</p>
@@ -559,13 +591,28 @@ const Programs = () => {
                   <p className="text-sm text-gray-700 text-center">Arabic Language & Islamic Studies</p>
                 </div>
               </div>
+
+              {/* Apply Row */}
+              <div className="grid grid-cols-4 bg-gray-50">
+                <div className="p-5"></div>
+                {['QARI', 'TMP', 'EASI'].map((code) => (
+                  <div key={code} className="p-5 border-l border-gray-200 flex items-center justify-center">
+                    <Link to="/apply" className="w-full max-w-[180px]">
+                      <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded transition-colors text-sm flex items-center justify-center gap-1.5">
+                        <span>Apply</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Program Cards Grid - Order: QARI (Track 1), TMP (Track 2), EASI (Track 3) */}
           <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* QARI Program Card - Track 1 */}
-            <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
+            <div data-anchor="qari" className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden scroll-mt-20">
               {/* Card Header */}
               <div className="px-6 pt-6 pb-5 border-b border-gray-100">
                 <div className="flex items-center gap-3 mb-3">
@@ -653,7 +700,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for QARI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -663,7 +710,7 @@ const Programs = () => {
             </div>
 
             {/* TMP Program Card - Track 2 */}
-            <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
+            <div data-anchor="tajweed" className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden scroll-mt-20">
               {/* Card Header */}
               <div className="px-6 pt-6 pb-5 border-b border-gray-100">
                 <div className="flex items-center gap-3 mb-3">
@@ -749,7 +796,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for TMP</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -759,7 +806,7 @@ const Programs = () => {
             </div>
 
             {/* EASI Program Card - Track 3 */}
-            <div className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden">
+            <div data-anchor="easi" className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors overflow-hidden scroll-mt-20">
               {/* Card Header */}
               <div className="px-6 pt-6 pb-5 border-b border-gray-100">
                 <div className="flex items-center gap-3 mb-3">
@@ -845,7 +892,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-600 hover:bg-emerald-900 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for EASI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -862,7 +909,7 @@ const Programs = () => {
               Not sure which program is right for you?
             </p>
             <Link to="/apply">
-              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-900 text-white font-medium rounded transition-colors text-sm">
+              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm">
                 <span>Start Your Application</span>
                 <ArrowRight className="h-4 w-4" />
               </button>

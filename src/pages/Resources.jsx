@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Book, ChevronRight, BookOpen } from 'lucide-react';
+import DiagonalSeam from '../components/common/DiagonalSeam';
 import { supabase } from '../services/supabase';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
@@ -248,12 +249,15 @@ const Resources = () => {
       </nav>
 
       {/* Header */}
-      <section className="border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-6 py-10">
-          <h1 className="text-3xl font-normal text-gray-900 mb-2">Resources</h1>
-          <p className="text-base text-gray-600">Course materials and lesson notes</p>
+      <div className="bg-gray-900 text-white py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">Resources</h1>
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">Course materials and lesson notes</p>
         </div>
-      </section>
+      </div>
+
+      {/* Diagonal seam out of the header */}
+      <DiagonalSeam from="bg-gray-900" to="bg-white" direction="up" />
 
       {/* Content */}
       <section className="py-8">

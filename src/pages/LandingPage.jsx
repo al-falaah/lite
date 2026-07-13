@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram } from 'lucide-react';
 import Button from '../components/common/Button';
+import DiagonalSeam from '../components/common/DiagonalSeam';
 import { storage } from '../services/supabase';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
@@ -45,6 +46,9 @@ const LandingPage = () => {
   ];
 
   useEffect(() => {
+    // Manual navigation still works; we just don't auto-rotate for users
+    // who prefer reduced motion.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const timer = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % quotes.length);
     }, 6000);
@@ -310,42 +314,9 @@ const LandingPage = () => {
           <div className="absolute inset-0 bg-gradient-to-bl from-black/100 via-black/95 to-black/40"></div>
         </div>
 
-        {/* Centered Hero Content with Slider and CTA */}
-        <div className="relative flex-1 flex items-start justify-center px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 md:pt-32">
+        {/* Centered Hero Content with CTA (hadith slider lives in the floating card below) */}
+        <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
           <div className="max-w-4xl mx-auto w-full text-center">
-            {/* Quote Slider */}
-            <div className="mb-6 md:mb-10">
-              <p className="text-emerald-400 font-semibold text-xs md:text-lg mb-2 md:mb-3 font-arabic">
-                قال رسول الله ﷺ
-              </p>
-              <p className="text-lg md:text-2xl lg:text-4xl text-white mb-3 md:mb-4 font-serif leading-tight md:leading-relaxed px-2 md:px-4">
-                "{quotes[currentQuote].text}"
-              </p>
-              <p className="text-xs md:text-base text-gray-200 font-light mb-4 md:mb-6">
-                {quotes[currentQuote].source}
-              </p>
-
-              {/* Navigation Controls - Minimal Progress Bar */}
-              <div className="flex justify-center items-center mb-6 md:mb-8">
-                <div className="flex gap-1.5 md:gap-2">
-                  {quotes.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentQuote(idx)}
-                      className="group relative"
-                      aria-label={`Go to quote ${idx + 1}`}
-                    >
-                      <div className={`h-0.5 md:h-1 w-12 md:w-16 rounded-full transition-all duration-500 ${
-                        idx === currentQuote
-                          ? 'bg-white'
-                          : 'bg-white/20 group-hover:bg-white/40'
-                      }`} />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
             {/* Hero Content */}
             <div>
               <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
@@ -417,8 +388,68 @@ const LandingPage = () => {
         )}
       </section>
 
-      {/* Simple Transition */}
-      <div className="relative h-20 sm:h-32 bg-emerald-950"></div>
+      {/* Transition: dark band with diagonal bottom edge + floating hadith card */}
+      <div className="relative bg-white">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-emerald-950"
+          style={{ clipPath: 'polygon(0 0, 100% 0, 100% 45%, 0 92%)' }}
+        />
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+          <div className="bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 p-6 sm:p-10">
+            <div className="sm:flex items-center gap-8 lg:gap-10">
+              {/* Arch-cropped image with dotted accent */}
+              <div className="relative hidden sm:block flex-shrink-0">
+                <div
+                  aria-hidden="true"
+                  className="absolute -top-4 -left-4 w-20 h-20"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, rgb(5 150 105 / 0.35) 1.5px, transparent 1.5px)',
+                    backgroundSize: '11px 11px',
+                  }}
+                />
+                <img
+                  src={bgImageUrl}
+                  alt=""
+                  loading="lazy"
+                  className="relative w-40 h-56 object-cover rounded-t-full rounded-b-xl shadow-lg"
+                />
+              </div>
+
+              {/* Quote slider */}
+              <div className="text-center sm:text-left min-w-0">
+                <p className="text-emerald-700 font-semibold text-sm sm:text-base mb-2 font-arabic">
+                  قال رسول الله ﷺ
+                </p>
+                <p className="text-lg sm:text-xl lg:text-2xl text-gray-900 font-serif leading-relaxed mb-3">
+                  "{quotes[currentQuote].text}"
+                </p>
+                <p className="text-xs sm:text-sm text-gray-500 mb-5">
+                  {quotes[currentQuote].source}
+                </p>
+                <div className="flex justify-center sm:justify-start items-center">
+                  <div className="flex gap-1.5 md:gap-2">
+                    {quotes.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentQuote(idx)}
+                        className="group relative"
+                        aria-label={`Go to quote ${idx + 1}`}
+                      >
+                        <div className={`h-1 w-10 md:w-14 rounded-full transition-all duration-500 ${
+                          idx === currentQuote
+                            ? 'bg-emerald-600'
+                            : 'bg-gray-200 group-hover:bg-gray-300'
+                        }`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Student Experience Preview Section */}
       <section id="experience" className="bg-white py-10 sm:py-24 overflow-hidden">
@@ -432,9 +463,46 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
-            {/* 1. Practice Drills (merged Interactive + Endless) */}
+            {/* HERO — Recitation Practice: the teacher feedback loop */}
+            <div className="lg:col-span-2 lg:row-span-2 bg-gray-950 rounded-2xl p-6 sm:p-10 relative overflow-hidden">
+              <div className="grid md:grid-cols-2 gap-8 items-center h-full">
+                <div className="text-center md:text-left">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wide mb-4">
+                    Teacher feedback
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
+                    Recite. A real teacher listens.
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+                    Record your recitation and send it straight to your teacher. You get graded,
+                    personal feedback on your tajweed every week — not just at exam time.
+                  </p>
+                </div>
+                <div className="flex flex-col items-center justify-center py-4">
+                  <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Recording</p>
+                  <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-6 leading-relaxed px-2">
+                    ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
+                  </p>
+                  {/* Waveform bars */}
+                  <div className="flex items-center justify-center gap-[3px] mb-6 h-10">
+                    {Array.from({ length: 16 }).map((_, i) => (
+                      <div key={i} className="w-[3px] bg-emerald-500 rounded-full h-full"
+                        style={{ animation: `waveform-bar ${0.8 + (i % 4) * 0.2}s ease-in-out ${i * 0.08}s infinite`, transformOrigin: 'center' }} />
+                    ))}
+                  </div>
+                  {/* Record button */}
+                  <div className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center"
+                    style={{ animation: 'record-pulse 2s ease-in-out infinite' }}>
+                    <div className="w-5 h-5 bg-white rounded-sm" />
+                  </div>
+                  <p className="text-gray-500 text-xs mt-3 font-mono">0:12 / 5:00</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Tile — Daily practice drills */}
             <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
               <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col">
                 {/* Flash overlay */}
@@ -490,34 +558,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* 2. Recitation Practice */}
-            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col items-center justify-center">
-                <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Recording</p>
-                <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-6 leading-relaxed px-2">
-                  ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
-                </p>
-                {/* Waveform bars */}
-                <div className="flex items-center justify-center gap-[3px] mb-6 h-10">
-                  {Array.from({ length: 16 }).map((_, i) => (
-                    <div key={i} className="w-[3px] bg-emerald-500 rounded-full h-full"
-                      style={{ animation: `waveform-bar ${0.8 + (i % 4) * 0.2}s ease-in-out ${i * 0.08}s infinite`, transformOrigin: 'center' }} />
-                  ))}
-                </div>
-                {/* Record button */}
-                <div className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center"
-                  style={{ animation: 'record-pulse 2s ease-in-out infinite' }}>
-                  <div className="w-5 h-5 bg-white rounded-sm" />
-                </div>
-                <p className="text-gray-500 text-xs mt-3 font-mono">0:12 / 5:00</p>
-              </div>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Recitation Practice</h3>
-                <p className="text-sm text-gray-600">Record yourself reciting, get teacher feedback, and track your improvement over time.</p>
-              </div>
-            </div>
-
-            {/* 3. Certificates */}
+            {/* Tile — Tests → verifiable certificate */}
             <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
               <button onClick={() => setShowCertPreview(true)} className="w-full text-left group">
                 <div className="rounded-2xl relative overflow-hidden min-h-[280px] h-full flex items-center justify-center cursor-pointer" style={{ background: '#fffdf7', border: '1px solid #d4a574' }}>
@@ -569,192 +610,54 @@ const LandingPage = () => {
                 </div>
               </button>
               <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Program Certificates</h3>
-                <p className="text-sm text-gray-600">Graduate with a verifiable Certificate of Completion for each program you finish.</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Tests & Certificates</h3>
+                <p className="text-sm text-gray-600">Milestone tests and a final exam lead to a verifiable Certificate of Completion for every program you finish.</p>
               </div>
             </div>
 
-            {/* 4. Leaderboard & Progress */}
-            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] border border-gray-200">
-                {/* Stats row */}
-                <div className="flex items-center gap-4 mb-4 text-sm">
-                  <div><span className="font-bold text-gray-900">1,250</span> <span className="text-gray-500 text-xs">XP</span></div>
-                  <div><span className="font-bold text-gray-900">🔥 12</span> <span className="text-gray-500 text-xs">streak</span></div>
-                  <div><span className="font-bold text-gray-900">8</span> <span className="text-gray-500 text-xs">completed</span></div>
+            {/* Free tools strip */}
+            <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-200 p-5 sm:p-6">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-5">
+                <div className="lg:flex-1 min-w-0">
+                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
+                  <h3 className="text-base font-semibold text-gray-900 mt-2 mb-1">Study tools, free for everyone</h3>
+                  <p className="text-sm text-gray-600">No account needed — open to every student of the Qur'an.</p>
                 </div>
-                {/* Level bar */}
-                <div className="mb-5">
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-gray-600 font-medium">Seeker · Level 3</span>
-                    <span className="text-gray-400">250 XP to next</span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500 rounded-full" style={{ animation: 'lp-progress-fill 3s ease-out infinite alternate' }} />
-                  </div>
-                </div>
-                {/* Mini leaderboard */}
-                <div className="bg-gray-50 rounded-xl border border-gray-100 divide-y divide-gray-100">
-                  {[
-                    { rank: '🥇', name: 'Yusuf A.', xp: '2,840', streak: 15 },
-                    { rank: '🥈', name: 'Khadijah M.', xp: '2,210', streak: 8 },
-                    { rank: '🥉', name: 'Ahmad R.', xp: '1,950', streak: 12 },
-                    { rank: '4', name: 'You', xp: '1,250', streak: 12, isMe: true },
-                  ].map((row, i) => (
-                    <div key={i} className={`flex items-center px-3 py-2.5 text-xs ${row.isMe ? 'bg-emerald-50' : ''}`}>
-                      <span className={`w-6 text-center font-bold ${i < 3 ? 'text-amber-500' : 'text-gray-400'}`}>{row.rank}</span>
-                      <span className={`flex-1 font-medium ${row.isMe ? 'text-emerald-700' : 'text-gray-700'}`}>{row.name}</span>
-                      <span className="text-amber-600 font-bold">{row.xp} XP</span>
-                      {row.streak >= 3 && <span className="ml-1.5 text-orange-500">🔥{row.streak}</span>}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a href="/tools/examples" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-emerald-300 hover:shadow-sm transition-all">
+                    <Search className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900">Shawaahid</p>
+                      <p className="text-xs text-gray-500 truncate">Qur'anic Examples Finder</p>
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Leaderboard & Progress</h3>
-                <p className="text-sm text-gray-600">Track your growth with XP, streaks, and levels. See how you rank among fellow students.</p>
-              </div>
-            </div>
-
-            {/* 5. Tests & Exams */}
-            <div className="md:col-span-2 grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden border border-gray-200">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
-                    <span className="text-amber-500">🏆</span> Tests & Exam Progress
-                  </h4>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">IN PROGRESS</span>
-                </div>
-                {/* Score summary */}
-                <div className="bg-gray-50 rounded-lg p-2.5 sm:p-3 mb-3 flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Weighted Total</span>
-                  <span className="text-base font-bold text-emerald-600">74.8%</span>
-                </div>
-                {/* Milestones */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-2">
-                  {[
-                    { name: 'Arabic Letters', score: '85.0%', done: true },
-                    { name: 'Vowel Marks', score: '72.5%', done: true },
-                    { name: 'Connected Letters', score: null, done: false, unlocked: true },
-                    { name: 'Word Reading', score: null, done: false, unlocked: false, week: '8+' },
-                  ].map((m, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 rounded-lg border border-gray-100 gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        {m.done ? (
-                          <span className="text-emerald-500 text-xs">✓</span>
-                        ) : m.unlocked ? (
-                          <span className="text-amber-500 text-xs">⏱</span>
-                        ) : (
-                          <span className="text-gray-300 text-xs">🔒</span>
-                        )}
-                        <span className="text-xs font-medium text-gray-900">Milestone {i + 1}: {m.name}</span>
-                      </div>
-                      {m.done && <span className="text-[11px] text-emerald-600 font-medium">{m.score}</span>}
-                      {!m.done && m.unlocked && <span className="text-[10px] px-2 py-0.5 bg-amber-600 text-white rounded-lg font-semibold">Take Test →</span>}
-                      {!m.done && !m.unlocked && <span className="text-[10px] text-gray-400">Week {m.week}</span>}
+                  </a>
+                  <a href="/tools/roots" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-emerald-300 hover:shadow-sm transition-all">
+                    <BookOpen className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900">Tasreef</p>
+                      <p className="text-xs text-gray-500 truncate">Root Word Explorer</p>
                     </div>
-                  ))}
+                  </a>
+                  <a href="/tools" className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors whitespace-nowrap">
+                    All tools <ArrowRight className="w-4 h-4" />
+                  </a>
                 </div>
-                {/* Final exam */}
-                <div className="p-2.5 rounded-lg border-2 border-gray-200 bg-gray-50 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-300 text-xs">🔒</span>
-                    <div>
-                      <p className="text-xs font-bold text-gray-900">Final Exam</p>
-                      <p className="text-[10px] text-gray-400">Complete all milestone tests first</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Milestone Tests & Final Exams</h3>
-                <p className="text-sm text-gray-600">Regular assessments track your progress. Pass all milestones and the final exam to earn your certificate.</p>
               </div>
             </div>
 
-            {/* 6. Free Study Tools — Qur'anic Examples Finder */}
-            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <a href="/tools/examples" className="block group">
-                <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] h-full border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Search className="w-5 h-5 text-emerald-600" strokeWidth={2} />
-                    <span className="text-xs font-bold text-gray-900 uppercase tracking-wide">Qur'anic Examples Finder</span>
-                    <span className="ml-auto text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
-                  </div>
-                  {/* Mock search bar */}
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 mb-3">
-                    <Search className="w-3.5 h-3.5 text-gray-400" />
-                    <span className="text-xs text-gray-700 font-medium">qalqalah</span>
-                  </div>
-                  {/* Mock results */}
-                  <div className="space-y-2 mt-auto">
-                    {[
-                      { ref: '2:3', snippet: 'وَمِمَّا رَزَ', hl: 'قْ', tail: 'نَاهُمْ يُنفِقُونَ' },
-                      { ref: '4:22', snippet: 'إِنَّهُ كَانَ فَا', hl: 'حِ', tail: 'شَةً وَمَقْتًا' },
-                      { ref: '112:3', snippet: 'لَمْ يَلِدْ وَلَمْ يُو', hl: 'لَ', tail: 'دْ' },
-                    ].map((r, i) => (
-                      <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 border border-gray-100">
-                        <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded flex-shrink-0">{r.ref}</span>
-                        <p dir="rtl" className="text-sm font-arabic text-gray-800 flex-1 truncate leading-relaxed">
-                          {r.snippet}<span className="bg-amber-200 text-amber-900 px-0.5 rounded">{r.hl}</span>{r.tail}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </a>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Qur'anic Examples Finder</h3>
-                <p className="text-sm text-gray-600">Search for any tajweed or grammar topic and see real Qur'anic examples with scholar-annotated references. Free and open to everyone.</p>
-              </div>
-            </div>
+          </div>
 
-            {/* 7. Free Study Tools — Root Word Explorer */}
-            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <a href="/tools/roots" className="block group">
-                <div className="bg-white rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] h-full border border-gray-200 flex flex-col group-hover:border-emerald-300 group-hover:shadow-md transition-all">
-                  <div className="flex items-center gap-2 mb-3">
-                    <BookOpen className="w-5 h-5 text-emerald-600" strokeWidth={2} />
-                    <span className="text-xs font-bold text-gray-900 uppercase tracking-wide">Root Word Explorer</span>
-                    <span className="ml-auto text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
-                  </div>
-                  {/* Mock search bar */}
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 mb-3" dir="rtl">
-                    <span className="text-sm font-arabic text-gray-700 font-medium">كتب</span>
-                    <Search className="w-3.5 h-3.5 text-gray-400 mr-auto" />
-                  </div>
-                  {/* Mock root result */}
-                  <div className="mb-3">
-                    <p dir="rtl" className="font-arabic text-2xl text-emerald-700 font-bold text-center tracking-widest mb-1">ك ت ب</p>
-                    <div className="flex justify-center gap-2">
-                      <span className="text-[10px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">319 occurrences</span>
-                      <span className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded-full text-gray-600">8 forms</span>
-                    </div>
-                  </div>
-                  {/* Mock derived forms */}
-                  <div className="space-y-1.5 mt-auto">
-                    {[
-                      { lem: 'كِتَاب', tag: 'Noun', count: '260x' },
-                      { lem: 'كَتَبَ', tag: 'Verb I', count: '49x' },
-                      { lem: 'كَاتِب', tag: 'Noun', count: '6x' },
-                    ].map((f, i) => (
-                      <div key={i} className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-100">
-                        <div className="flex items-center gap-2" dir="rtl">
-                          <span className="font-arabic text-sm text-gray-900">{f.lem}</span>
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${f.tag.startsWith('Verb') ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'}`}>{f.tag}</span>
-                        </div>
-                        <span className="text-[10px] text-gray-400">{f.count}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </a>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Root Word Explorer</h3>
-                <p className="text-sm text-gray-600">Enter any Arabic word to discover its root, derived forms, verb patterns, and every occurrence across the Qur'an. Free and open to everyone.</p>
-              </div>
+          {/* Section CTA */}
+          <div className="mt-10 sm:mt-14 text-center">
+            <p className="text-base sm:text-lg text-gray-600 mb-5">This is what your first week looks like.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/apply">
+                <Button variant="emerald" size="lg" className="w-full sm:w-auto">Apply Now</Button>
+              </Link>
+              <Link to="/programs">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">View Programs</Button>
+              </Link>
             </div>
-
           </div>
         </div>
       </section>
@@ -825,8 +728,11 @@ const LandingPage = () => {
         </div>
       )}
 
+      {/* Diagonal seam into Who We Serve */}
+      <DiagonalSeam from="bg-white" to="bg-gray-50" direction="up" />
+
       {/* Who We Serve - Target Audience Cards */}
-      <section className="bg-gray-50 py-10 sm:py-24">
+      <section className="bg-gray-50 pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
@@ -842,7 +748,7 @@ const LandingPage = () => {
             <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
                     01
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Absolute Beginners</h3>
@@ -862,7 +768,7 @@ const LandingPage = () => {
             <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
                     02
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Can Read</h3>
@@ -882,7 +788,7 @@ const LandingPage = () => {
             <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
                     03
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Want to Understand</h3>
@@ -902,7 +808,7 @@ const LandingPage = () => {
             <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="inline-flex items-center justify-center w-8 h-8 rounded bg-gray-900 text-white text-sm font-semibold mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
                     04
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Parents & Children</h3>
@@ -1154,8 +1060,11 @@ const LandingPage = () => {
       </section>
 
 
+      {/* Diagonal seam into The Path to Mastery */}
+      <DiagonalSeam from="bg-white" to="bg-gray-50" direction="down" />
+
       {/* How Admission Works Section */}
-      <section className="bg-gray-50 py-10 sm:py-24">
+      <section className="bg-gray-50 pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
             The Path to Mastery
@@ -1401,6 +1310,9 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
+      {/* Diagonal seam into the closing CTA */}
+      <DiagonalSeam from="bg-gray-100" to="bg-emerald-900" direction="up" height="h-12 sm:h-20" />
+
       <section className="py-12 md:py-24 bg-emerald-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">

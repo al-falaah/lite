@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import DiagonalSeam from '../../components/common/DiagonalSeam';
 
 const TOOLS = [
   {
@@ -35,17 +36,20 @@ function ToolsHome() {
         <title>Free Qur'anic Learning Tools | The FastTrack Madrasah</title>
         <meta name="description" content="Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), and Safha (page insights)." />
       </Helmet>
-      {/* Header — matches Blog page pattern */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3 tracking-tight">
+      {/* Header — matches Blog page pattern (dark band + diagonal seam) */}
+      <div className="bg-gray-900 text-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             Learning Tools
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl">
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
             Free tools to help you study tajweed, Arabic grammar, and morphology through the Qur'an.
           </p>
         </div>
       </div>
+
+      {/* Diagonal seam out of the header */}
+      <DiagonalSeam from="bg-gray-900" to="bg-gray-50" direction="up" />
 
       {/* Tools list */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

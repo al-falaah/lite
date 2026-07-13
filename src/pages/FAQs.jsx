@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ArrowLeft, Mail } from 'lucide-react';
+import DiagonalSeam from '../components/common/DiagonalSeam';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
 const FAQs = () => {
@@ -75,6 +76,9 @@ const FAQs = () => {
           </p>
         </div>
       </div>
+
+      {/* Diagonal seam out of the header */}
+      <DiagonalSeam from="bg-gray-900" to="bg-gray-50" direction="up" />
 
       {/* FAQ Content */}
       <div className="py-16 md:py-24 bg-gray-50">

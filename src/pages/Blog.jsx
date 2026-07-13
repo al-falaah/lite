@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 import { Calendar, ArrowRight, Home, Filter, Mail } from 'lucide-react';
+import DiagonalSeam from '../components/common/DiagonalSeam';
 import BlogSubscribe from '../components/blog/BlogSubscribe';
 
 const CATEGORIES = [
@@ -309,16 +310,19 @@ const Blog = () => {
       </nav>
 
       {/* Header */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3 tracking-tight">
+      <div className="bg-gray-900 text-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             The FastTrack Journal
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl">
+          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
             Reflections on Arabic and Islamic knowledge
           </p>
         </div>
       </div>
+
+      {/* Diagonal seam out of the header */}
+      <DiagonalSeam from="bg-gray-900" to="bg-white" direction="up" />
 
       {/* Main Content with Sidebar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

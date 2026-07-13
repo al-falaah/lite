@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ArrowRight, ArrowLeft, X } from 'lucide-react';
+import DiagonalSeam from '../components/common/DiagonalSeam';
 
 const OurMission = () => {
   const [founderBioExpanded, setFounderBioExpanded] = useState(false);
@@ -24,6 +25,9 @@ const OurMission = () => {
           </h1>
         </div>
       </div>
+
+      {/* Diagonal seam out of the header */}
+      <DiagonalSeam from="bg-gray-900" to="bg-white" direction="up" />
 
       <section className="bg-white py-10 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
