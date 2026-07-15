@@ -48,9 +48,9 @@ const themeClasses = {
 };
 
 const proseTheme = {
-  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md',
-  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.tip]:bg-[#ebe4d8] [&_.tip]:border-l-2 [&_.tip]:border-[#8a7a6a] [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md',
-  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.tip]:bg-blue-900/20 [&_.tip]:border-l-2 [&_.tip]:border-blue-500 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md',
+  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md [&_.verse]:bg-emerald-600/5 [&_.verse]:text-gray-900',
+  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-li:marker:text-[#8a7a6a] prose-hr:border-[#d4c9b8] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.tip]:bg-[#ebe4d8] [&_.tip]:border-l-2 [&_.tip]:border-[#8a7a6a] [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md [&_.verse]:bg-[#ebe4d8] [&_.verse]:text-[#3d3229]',
+  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-800 prose-pre:bg-gray-800 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-800 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.tip]:bg-blue-900/20 [&_.tip]:border-l-2 [&_.tip]:border-blue-500 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md [&_.verse]:bg-emerald-500/10 [&_.verse]:text-gray-100',
 };
 
 export default function StudentLessons({ enrollments, programs: programsProp, currentWeekByProgram }) {
@@ -657,7 +657,7 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
           padding: 16px 20px;
           margin: 20px 0;
           border-radius: 8px;
-          background: rgba(5, 150, 105, 0.05);
+          /* background + text color are theme-aware, set via proseTheme [&_.verse] classes */
         }
         .arabic-prose {
           font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
