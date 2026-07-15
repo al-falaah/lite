@@ -932,7 +932,7 @@ const ResearchAdmin = () => {
                             onChange={(e) => setEditingChapter({ ...editingChapter, content_type: e.target.value })}
                             className="text-xs border border-gray-300 rounded px-2 py-1 text-gray-600"
                           >
-                            <option value="rich_text">Rich Text</option>
+                            <option value="rich_text">Visual Editor</option>
                             <option value="full_html">HTML File</option>
                           </select>
                         </div>
