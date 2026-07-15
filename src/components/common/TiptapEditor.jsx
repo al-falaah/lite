@@ -88,7 +88,9 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
+      // H4 included: real lessons use <h4> sub-headings; without it StarterKit
+      // silently downgrades them on load (verified against DB content).
+      StarterKit.configure({ heading: { levels: [1, 2, 3, 4] } }),
       Underline,
       Link.configure({ openOnClick: false }),
       Image,
@@ -115,16 +117,41 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
     onFocus: () => { clearTimeout(blurTimer.current); setShowBar(true); },
   });
 
-  // Round-trip safety check on first load of non-empty content: if Tiptap's
-  // parse dropped a meaningful chunk of the incoming HTML, warn the admin.
+  // Round-trip safety check on first load of non-empty content. Runs AFTER the
+  // editor has parsed (guarded by isEmpty), and only warns on genuine loss.
+  // A naive length compare false-positives because Tiptap normalizes tables
+  // LARGER (adds colgroup/colspan) — so we compare TAG MULTISETS instead:
+  // warn only if a tag present in the source is missing from the output.
   useEffect(() => {
     if (!editor || checkedInitialLoad.current) return;
-    checkedInitialLoad.current = true;
     const incoming = normalize(value);
-    if (!incoming) return;
+    if (!incoming) { checkedInitialLoad.current = true; return; }
+    // Wait until Tiptap has actually loaded the doc (avoids a mount-race where
+    // getHTML() returns an empty doc and the check fires spuriously).
     const parsed = normalize(editor.getHTML());
-    if (parsed.length < incoming.length * 0.9) setLossWarning(true);
-  }, [editor, value]);
+    if (editor.isEmpty || parsed.length < 20) return; // not parsed yet — retry next tick
+    checkedInitialLoad.current = true;
+
+    const tagCounts = (s) => {
+      const m = {}; let x;
+      const re = /<([a-z][a-z0-9]*)/gi;
+      while ((x = re.exec(s))) { const t = x[1].toLowerCase(); m[t] = (m[t] || 0) + 1; }
+      return m;
+    };
+    const ci = tagCounts(incoming);
+    const co = tagCounts(parsed);
+    // Ignore tags our extensions intentionally rewrite rather than drop:
+    //  - col/colgroup/tbody/thead: Tiptap's table model normalizes these
+    //    (header cells survive as <th>, which is what the reader styles).
+    //  - div: our VerseBlock/ArabicProse render <div class="verse|arabic-prose">
+    //    as the semantic <p class="…">, so the div count legitimately falls.
+    //  - br: Tiptap may collapse trailing hard breaks.
+    const IGNORE = new Set(['col', 'colgroup', 'br', 'tbody', 'thead', 'div']);
+    const lost = Object.keys(ci).some(
+      (t) => !IGNORE.has(t) && (co[t] || 0) < ci[t] * 0.5
+    );
+    if (lost) setLossWarning(true);
+  }, [editor, value, editor?.isEmpty]);
 
   // External value sync (e.g. switching which chapter is being edited).
   useEffect(() => {
