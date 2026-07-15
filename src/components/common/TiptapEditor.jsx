@@ -8,8 +8,6 @@ import Placeholder from '@tiptap/extension-placeholder';
 import TextAlign from '@tiptap/extension-text-align';
 import Table from '@tiptap/extension-table';
 import TableRow from '@tiptap/extension-table-row';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
 import {
   Bold as BoldIcon,
   Italic as ItalicIcon,
@@ -33,6 +31,10 @@ import {
   AlignCenter,
   AlignRight,
   Languages,
+  Columns,
+  Rows,
+  Trash2,
+  PaintBucket,
 } from 'lucide-react';
 import {
   TipCallout,
@@ -46,6 +48,8 @@ import {
   Figure,
   Figcaption,
   StyledDiv,
+  ColorTableCell,
+  ColorTableHeader,
 } from './tiptapExtensions';
 
 /**
@@ -68,6 +72,16 @@ const normalize = (html) =>
 const BTN =
   'p-1.5 rounded text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors';
 const BTN_ACTIVE = 'p-1.5 rounded bg-emerald-100 text-emerald-700 transition-colors';
+
+// Cell fill palette (soft, brand-aligned tints + a clear option).
+const CELL_COLORS = [
+  { name: 'None', value: null, swatch: '#ffffff' },
+  { name: 'Emerald', value: '#d1fae5', swatch: '#d1fae5' },
+  { name: 'Amber', value: '#fef3c7', swatch: '#fef3c7' },
+  { name: 'Rose', value: '#ffe4e6', swatch: '#ffe4e6' },
+  { name: 'Sky', value: '#e0f2fe', swatch: '#e0f2fe' },
+  { name: 'Slate', value: '#f1f5f9', swatch: '#f1f5f9' },
+];
 
 function ToolbarButton({ onClick, active, title, children }) {
   return (
@@ -98,8 +112,8 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Table.configure({ resizable: false }),
       TableRow,
-      TableCell,
-      TableHeader,
+      ColorTableCell,
+      ColorTableHeader,
       TipCallout,
       VerseBlock,
       ArabicProse,
@@ -269,6 +283,42 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
           onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>
           <TableIcon className="h-4 w-4" />
         </ToolbarButton>
+        {editor.isActive('table') && (
+          <>
+            <ToolbarButton title="Add column" onClick={() => editor.chain().focus().addColumnAfter().run()}>
+              <Columns className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton title="Delete column" onClick={() => editor.chain().focus().deleteColumn().run()}>
+              <Columns className="h-4 w-4 opacity-40" />
+            </ToolbarButton>
+            <ToolbarButton title="Add row" onClick={() => editor.chain().focus().addRowAfter().run()}>
+              <Rows className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton title="Delete row" onClick={() => editor.chain().focus().deleteRow().run()}>
+              <Rows className="h-4 w-4 opacity-40" />
+            </ToolbarButton>
+            {/* Cell fill colours */}
+            <span className="inline-flex items-center gap-0.5 px-1">
+              <PaintBucket className="h-3.5 w-3.5 text-gray-400" />
+              {CELL_COLORS.map((c) => (
+                <button
+                  key={c.name}
+                  type="button"
+                  title={`Cell fill: ${c.name}`}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => editor.chain().focus().setCellAttribute('backgroundColor', c.value).run()}
+                  className="h-4 w-4 rounded-sm border border-gray-300 hover:ring-2 hover:ring-emerald-400 transition-all"
+                  style={{ backgroundColor: c.swatch }}
+                >
+                  {c.value === null && <span className="block text-[8px] leading-none text-gray-400">✕</span>}
+                </button>
+              ))}
+            </span>
+            <ToolbarButton title="Delete table" onClick={() => editor.chain().focus().deleteTable().run()}>
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </ToolbarButton>
+          </>
+        )}
         <ToolbarButton title="Callout box" active={editor.isActive('tipCallout')}
           onClick={() => editor.chain().focus().toggleTipCallout().run()}>
           <Lightbulb className="h-4 w-4" />

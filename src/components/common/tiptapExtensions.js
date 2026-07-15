@@ -1,5 +1,7 @@
 import { Node, Mark, Extension, mergeAttributes } from '@tiptap/core';
 import Superscript from '@tiptap/extension-superscript';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
 
 /**
  * Custom Tiptap extensions for the site's lesson HTML vocabulary.
@@ -250,5 +252,30 @@ export const StyledDiv = Node.create({
         renderHTML: (attrs) => (attrs.class ? { class: attrs.class } : {}),
       },
     };
+  },
+});
+
+// Table cells with a backgroundColor attribute for the colour picker. The
+// global StyleAttribute already preserves any authored inline style on load;
+// this adds a first-class colour attr the toolbar can set/clear cleanly.
+const bgColorAttr = {
+  backgroundColor: {
+    default: null,
+    parseHTML: (el) =>
+      el.style.backgroundColor || el.getAttribute('data-bg') || null,
+    renderHTML: (attrs) =>
+      attrs.backgroundColor ? { style: `background-color: ${attrs.backgroundColor}` } : {},
+  },
+};
+
+export const ColorTableCell = TableCell.extend({
+  addAttributes() {
+    return { ...this.parent?.(), ...bgColorAttr };
+  },
+});
+
+export const ColorTableHeader = TableHeader.extend({
+  addAttributes() {
+    return { ...this.parent?.(), ...bgColorAttr };
   },
 });
