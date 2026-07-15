@@ -7,7 +7,7 @@ import { Save, Eye, Trash2, Edit2, Home, ArrowLeft, Pin, PinOff } from 'lucide-r
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
 import Card from '../components/common/Card';
-import RichTextEditor from '../components/common/RichTextEditor';
+import RichTextEditor from '../components/common/TiptapEditor';
 
 const CATEGORIES = [
   'General',

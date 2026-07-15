@@ -48,9 +48,9 @@ const themeClasses = {
 };
 
 const proseTheme = {
-  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300',
-  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8]',
-  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700',
+  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md',
+  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.tip]:bg-[#ebe4d8] [&_.tip]:border-l-2 [&_.tip]:border-[#8a7a6a] [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md',
+  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.tip]:bg-blue-900/20 [&_.tip]:border-l-2 [&_.tip]:border-blue-500 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip]:rounded-r-md',
 };
 
 export default function StudentLessons({ enrollments, programs: programsProp, currentWeekByProgram }) {
@@ -259,8 +259,9 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
   const contentStartsAsFullDoc = selectedChapter?.content?.trim().startsWith('<!DOCTYPE') ||
     selectedChapter?.content?.trim().startsWith('<html');
   const isFullHtml = selectedChapter?.content_type === 'full_html' || contentStartsAsFullDoc;
-  const hasTable = /<table[\s>]/i.test(selectedChapter?.content || '');
-  const useIframe = isFullHtml || hasTable;
+  // rich_text tables render in the themed prose path (prose-table styles below);
+  // only full HTML documents need the iframe.
+  const useIframe = isFullHtml;
   const videoUrl = getYouTubeEmbedUrl(selectedChapter?.video_url);
 
   if (!uniquePrograms.length) {
@@ -557,7 +558,7 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
             )}
 
             {/* Content */}
-            <div className={`lesson-content-protected ${useIframe ? 'p-0' : 'px-4 sm:px-8 py-4'}`}>
+            <div className={`lesson-content-protected ${useIframe ? 'p-0' : 'px-4 sm:px-8 py-4 overflow-x-auto'}`}>
               {useIframe ? (
                 <iframe
                   srcDoc={isFullHtml ? selectedChapter.content : `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding:24px;color:#111;line-height:1.7}.tip{background:#eff6ff;border-left:3px solid #60a5fa;padding:12px 16px;margin:16px 0;border-radius:6px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #d1d5db;padding:8px 12px;font-size:0.875rem}th{background:#f9fafb;text-align:left;font-weight:600}</style></head><body>${selectedChapter.content}</body></html>`}
@@ -578,7 +579,7 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
                 />
               ) : selectedChapter.content ? (
                 <div
-                  className={`prose max-w-none ${proseTheme[theme]} prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm prose-img:cursor-zoom-in prose-img:rounded-lg prose-img:my-3`}
+                  className={`prose max-w-[72ch] mx-auto sm:prose-lg ${proseTheme[theme]} prose-p:leading-relaxed prose-headings:font-semibold prose-headings:tracking-tight prose-hr:my-8 prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2 prose-a:no-underline prose-ul:my-4 prose-li:my-1 prose-ol:my-4 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-[''] prose-code:after:content-[''] prose-table:border-collapse prose-table:w-full prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-sm prose-td:px-3 prose-td:py-2 prose-td:text-sm prose-img:cursor-zoom-in prose-img:rounded-lg prose-img:my-3`}
                   onClick={(e) => {
                     if (e.target.tagName === 'IMG' && e.target.src) {
                       setLightboxSrc(e.target.src);
@@ -653,6 +654,10 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
           line-height: 2 !important;
           text-align: center;
           direction: rtl;
+          padding: 16px 20px;
+          margin: 20px 0;
+          border-radius: 8px;
+          background: rgba(5, 150, 105, 0.05);
         }
         .arabic-prose {
           font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 import { useAuth } from '../context/AuthContext';
 import DOMPurify from 'dompurify';
-import RichTextEditor from '../components/common/RichTextEditor';
+import RichTextEditor from '../components/common/TiptapEditor';
 import TestSettingsPanel from '../components/admin/TestSettingsPanel';
 import TestQuestionManager from '../components/admin/TestQuestionManager';
 import TestResultsDashboard from '../components/admin/TestResultsDashboard';
@@ -1495,7 +1495,7 @@ const ResearchAdmin = () => {
             </div>
             
             <div className="overflow-hidden" style={{ height: 'calc(90vh - 140px)' }}>
-              {(previewChapter.content_type === 'full_html' || /<table[\s>]/i.test(previewChapter.content || '')) ? (
+              {previewChapter.content_type === 'full_html' ? (
                 <div className="bg-white w-full h-full overflow-hidden">
                   <iframe
                     srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding:24px;color:#111;line-height:1.7}.tip{background:#eff6ff;border-left:3px solid #60a5fa;padding:12px 16px;margin:16px 0;border-radius:6px}</style></head><body>${previewChapter.content}</body></html>`}
