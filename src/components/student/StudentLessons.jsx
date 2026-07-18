@@ -64,7 +64,14 @@ const proseTheme = {
   dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-800 prose-pre:bg-gray-800 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-800 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.verse]:bg-emerald-500/10 [&_.verse]:text-gray-100',
 };
 
-export default function StudentLessons({ enrollments, programs: programsProp, currentWeekByProgram }) {
+export default function StudentLessons({
+  enrollments,
+  programs: programsProp,
+  currentWeekByProgram,
+  // Course-as-home (student portal only; teacher portal passes neither):
+  autoResume = false,       // on mount, open the student's current/last chapter
+  onReaderChange,           // (isOpen: bool) => void — portal hides its chrome while reading
+}) {
   // Accept either a direct programs array (teacher use) or derive from enrollments (student use)
   const derivedPrograms = programsProp
     ? programsProp
@@ -160,6 +167,41 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
     setExpandedMilestones({ [target.id]: true });
   }, [selectedProgram, currentWeek]);
 
+  // Tell the host when the reader opens/closes (the portal hides its chrome
+  // for an immersive, single-bar course-player view while reading).
+  useEffect(() => {
+    onReaderChange?.(!!selectedChapter);
+    return () => onReaderChange?.(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChapter]);
+
+  // Course-as-home: on first load, drop the student straight into their
+  // current chapter instead of the browse list. Fires once per mount only —
+  // switching programs afterwards must not hijack the browse view.
+  const autoResumedRef = useRef(false);
+  useEffect(() => {
+    if (!autoResume || autoResumedRef.current) return;
+    if (loading || selectedChapter || !allChapters.length) return;
+    autoResumedRef.current = true;
+
+    const byId = (id) => allChapters.find(ch => ch.id === id);
+    let target = null;
+    // 1. Last chapter the student had open (persisted by openChapter)
+    try { target = byId(localStorage.getItem(`lessonResume:${selectedProgram}`)); } catch { /* ignore */ }
+    // 2. The chapter matching the student's current week
+    const week = currentWeekByProgram?.[selectedProgram];
+    if (!target && week) target = allChapters.find(ch => ch.week_number === week);
+    // 3. First chapter of the current milestone
+    if (!target && week) {
+      const m = milestones.find(x => week >= x.weekStart && week <= x.weekEnd);
+      if (m) target = (milestoneGroups.groups[m.id] || [])[0];
+    }
+    // 4. Anything at all
+    if (!target) target = allChapters[0];
+    if (target) openChapter(target);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoResume, loading, allChapters, selectedChapter, selectedProgram]);
+
   // Build course lookup
   const courseMap = useMemo(() => {
     const map = {};
@@ -235,6 +277,9 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
   const openChapter = (ch) => {
     setSelectedChapter(ch);
     setSelectedCourse(courseMap[ch.course_id] || null);
+    // Remember where the student is so the portal can resume here next visit.
+    try { localStorage.setItem(`lessonResume:${selectedProgram}`, ch.id); } catch { /* ignore */ }
+    window.scrollTo(0, 0);
   };
 
   // Reader sidebar: scope to the currently-open chapter's course so lessons from
@@ -506,13 +551,20 @@ export default function StudentLessons({ enrollments, programs: programsProp, cu
       {/* Top bar */}
       <div className={`sticky top-0 z-40 border-b backdrop-blur ${t.navBg} transition-colors`}>
         <div className="flex items-center justify-between h-14 px-3 sm:px-5">
-          <button
-            onClick={() => { setSelectedChapter(null); setSelectedCourse(null); }}
-            className={`inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1.5 rounded-md ${t.muted} ${t.hover} transition-colors`}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">All lessons</span>
-          </button>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <img
+              src={theme === 'dark' ? '/favicon-white.svg' : '/favicon.svg'}
+              alt="The FastTrack Madrasah"
+              className="h-5 w-5 flex-shrink-0"
+            />
+            <button
+              onClick={() => { setSelectedChapter(null); setSelectedCourse(null); }}
+              className={`inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1.5 rounded-md ${t.muted} ${t.hover} transition-colors`}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">All lessons</span>
+            </button>
+          </div>
           <div className="flex items-center gap-2 min-w-0">
             <span className={`hidden sm:inline text-sm font-medium truncate max-w-[40vw] ${t.muted}`}>
               {selectedCourse?.title || (PROGRAMS[selectedProgram]?.shortName || '')}

@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
@@ -143,17 +143,26 @@ const StudentPortal = () => {
   const [assignedTeachers, setAssignedTeachers] = useState({});
 
   // Tab state
+  // True when the session restored a deliberately-chosen tab — in that case we
+  // never hijack it; otherwise enrolled students land in the course (Lessons).
+  const hadSavedTabRef = useRef(false);
   const [activeTab, setActiveTab] = useState(() => {
     // Restore last-visited tab so navigating away and back lands you in the
     // same place (e.g. clicking a class → coming back via browser back button
     // should return to the Classes tab, not Home).
     try {
       const saved = sessionStorage.getItem('studentTab');
-      if (saved && ['home', 'classes', 'lessons', 'practice', 'results'].includes(saved)) return saved;
+      if (saved && ['home', 'classes', 'lessons', 'practice', 'results'].includes(saved)) {
+        hadSavedTabRef.current = true;
+        return saved;
+      }
     } catch { /* ignore */ }
     return 'home';
   });
   const [lessonsSubTab, setLessonsSubTab] = useState('lessons'); // 'lessons' | 'reading'
+  // True while a lesson chapter is open in the reader — the portal hides its
+  // chrome (nav, tab bars, context strip) for an immersive course-player view.
+  const [readerOpen, setReaderOpen] = useState(false);
 
   // Multi-enrollment program scoping: track the active program for Classes/Lessons/Results tabs
   const [activeProgram, setActiveProgram] = useState(null); // Set on mount to first active enrollment
@@ -246,6 +255,13 @@ const StudentPortal = () => {
       }
       console.log('Enrollments loaded:', enrollmentsData?.length || 0);
       setEnrollments(enrollmentsData || []);
+
+      // Course-as-home: enrolled students land in their course (Lessons tab)
+      // unless this session already restored a deliberately-chosen tab.
+      if (!hadSavedTabRef.current && (enrollmentsData || []).some(e => e.status === 'active')) {
+        hadSavedTabRef.current = true; // only redirect once
+        setActiveTab('lessons');
+      }
 
       // Set activeProgram to the first enrollment's program (for multi-enrollment scoping)
       if (enrollmentsData?.length > 0) {
@@ -563,6 +579,10 @@ const StudentPortal = () => {
     );
   }
 
+  // Immersive course-player: while a chapter is open on the Lessons tab, the
+  // reader's own top bar is the only chrome (DeepLearning.AI-style).
+  const immersive = readerOpen && activeTab === 'lessons';
+
   const TABS = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'classes', label: 'Classes', icon: Calendar },
@@ -577,7 +597,7 @@ const StudentPortal = () => {
       <PullIndicator pullDistance={pullDistance} isPulling={isPulling} />
 
       {/* Top nav */}
-      <nav className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+      <nav className={`sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700 ${immersive ? 'hidden' : ''}`}>
         <div className={`${CONTAINER_WIDE} h-14 sm:h-16 flex items-center justify-between gap-3`}>
           <Link to="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
             <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 dark:hidden" />
@@ -616,7 +636,7 @@ const StudentPortal = () => {
       </nav>
 
       {/* Desktop tab bar */}
-      <div className="hidden sm:block bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+      <div className={`${immersive ? 'hidden' : 'hidden sm:block'} bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700`}>
         <div className={CONTAINER_WIDE}>
           <div className="flex gap-1 overflow-x-auto">
             {TABS.map(tab => (
@@ -634,7 +654,7 @@ const StudentPortal = () => {
       </div>
 
       {/* Course Context Strip — persistent program/week orientation */}
-      {enrollments.length > 0 && (
+      {!immersive && enrollments.length > 0 && (
         <div className={CONTEXT_STRIP}>
           <div className={`${CONTAINER_WIDE}`}>
             {/* Multi-enrollment: show program switcher pills */}
@@ -1085,6 +1105,8 @@ const StudentPortal = () => {
             {lessonsSubTab === 'lessons' && (
               <StudentLessons
                 enrollments={enrollments}
+                autoResume
+                onReaderChange={setReaderOpen}
                 currentWeekByProgram={Object.fromEntries(
                   enrollments.filter(e => e.status === 'active').map(e => {
                     const w = getActiveWeekForEnrollment(e);
@@ -1156,7 +1178,7 @@ const StudentPortal = () => {
 
       {/* Mobile bottom tab bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-slate-200 dark:border-gray-700 z-40 sm:hidden"
+        className={`fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-slate-200 dark:border-gray-700 z-40 ${immersive ? 'hidden' : 'sm:hidden'}`}
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex justify-around items-stretch px-1">
