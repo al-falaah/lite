@@ -8,7 +8,7 @@ import {
   Calendar, Clock, Video, CheckCircle, BookOpen, BarChart3,
   User, LogOut, ExternalLink, CreditCard,
   DollarSign, AlertCircle, GraduationCap, X, UserCheck, Mail, Send, Settings, Gamepad2,
-  Home, Trophy, Sun, Moon
+  Home, Trophy, Sun, Moon, ArrowRight
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import Button from '../components/common/Button';
@@ -138,24 +138,18 @@ const StudentPortal = () => {
   const [student, setStudent] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
   const [schedules, setSchedules] = useState([]);
-  const [progress, setProgress] = useState(null);
+  const [certificates, setCertificates] = useState([]);
   const [processingPayment, setProcessingPayment] = useState(null);
   const [assignedTeachers, setAssignedTeachers] = useState({});
 
   // Tab state
-  // True when the session restored a deliberately-chosen tab — in that case we
-  // never hijack it; otherwise enrolled students land in the course (Lessons).
-  const hadSavedTabRef = useRef(false);
   const [activeTab, setActiveTab] = useState(() => {
     // Restore last-visited tab so navigating away and back lands you in the
     // same place (e.g. clicking a class → coming back via browser back button
     // should return to the Classes tab, not Home).
     try {
       const saved = sessionStorage.getItem('studentTab');
-      if (saved && ['home', 'classes', 'lessons', 'practice', 'results'].includes(saved)) {
-        hadSavedTabRef.current = true;
-        return saved;
-      }
+      if (saved && ['home', 'classes', 'lessons', 'practice', 'results'].includes(saved)) return saved;
     } catch { /* ignore */ }
     return 'home';
   });
@@ -256,13 +250,6 @@ const StudentPortal = () => {
       console.log('Enrollments loaded:', enrollmentsData?.length || 0);
       setEnrollments(enrollmentsData || []);
 
-      // Course-as-home: enrolled students land in their course (Lessons tab)
-      // unless this session already restored a deliberately-chosen tab.
-      if (!hadSavedTabRef.current && (enrollmentsData || []).some(e => e.status === 'active')) {
-        hadSavedTabRef.current = true; // only redirect once
-        setActiveTab('lessons');
-      }
-
       // Set activeProgram to the first enrollment's program (for multi-enrollment scoping)
       if (enrollmentsData?.length > 0) {
         setActiveProgram(enrollmentsData[0].program);
@@ -292,17 +279,19 @@ const StudentPortal = () => {
 
       setSchedules(schedulesData);
 
-      // Load progress
-      const { data: progressData, error: progressError } = await supabase
-        .from('student_class_progress')
-        .select('*')
-        .eq('student_id', studentId)
-        .single();
-
-      if (progressError) {
-        console.error('Progress error:', progressError);
-      } else {
-        setProgress(progressData);
+      // Certificates (for the Home snapshot + strip). Keyed by auth user id,
+      // same as StudentCertificateCard's own per-program query.
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: certs } = await supabase
+            .from('certificates')
+            .select('id, program_id, verification_code, weighted_total, created_at')
+            .eq('student_id', user.id);
+          setCertificates(certs || []);
+        }
+      } catch (e) {
+        console.error('Certificates fetch failed (non-fatal):', e);
       }
 
       // Load assigned teachers
@@ -446,7 +435,7 @@ const StudentPortal = () => {
       setStudent(null);
       setEnrollments([]);
       setSchedules([]);
-      setProgress(null);
+      setCertificates([]);
       navigate('/login', { replace: true });
     }
   };
@@ -722,56 +711,53 @@ const StudentPortal = () => {
           {/* === HOME TAB === */}
           <div className={activeTab !== 'home' ? 'hidden' : ''}>
 
-            {/* Greeting card */}
+            {/* Hero — greeting + continue-learning in one card */}
             {(() => {
               const name = student?.full_name || '';
               const initials = name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase() || 'S';
               const enrolmentStatus = student?.status || 'active';
+              const active = enrollments.filter(e => e.status === 'active');
+              const resumeEnrollment = active.find(e => e.program === activeProgram) || active[0];
+              const contextInfo = resumeEnrollment ? getProgramContextInfo(resumeEnrollment, schedules) : null;
               return (
-                <div className={`${CARD_DARK} p-5 sm:p-6 mb-5 flex items-center gap-4 sm:gap-5`}>
-                  <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-700 dark:text-emerald-300 text-lg sm:text-xl font-semibold flex-shrink-0">
-                    {initials}
+                <div className={`${CARD_DARK} p-5 sm:p-6 mb-5`}>
+                  <div className="flex items-center gap-4 sm:gap-5">
+                    <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-700 dark:text-emerald-300 text-lg sm:text-xl font-semibold flex-shrink-0">
+                      {initials}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h1 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white truncate">
+                        As-salāmu ʿalaykum, {student?.full_name?.split(' ')[0]}
+                      </h1>
+                      <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">
+                        {student?.student_id
+                          ? <>ID {student.student_id} · <span className={enrolmentStatus === 'active' ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-slate-700 dark:text-gray-300'}>
+                              {enrolmentStatus === 'active' ? 'Active' : enrolmentStatus}
+                            </span></>
+                          : 'Complete payment to receive your Student ID'
+                        }
+                      </p>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <h1 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white truncate">
-                      As-salāmu ʿalaykum, {student?.full_name?.split(' ')[0]}
-                    </h1>
-                    <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">
-                      {student?.student_id
-                        ? <>ID {student.student_id} · <span className={enrolmentStatus === 'active' ? 'text-emerald-700 dark:text-emerald-400 font-medium' : 'text-slate-700 dark:text-gray-300'}>
-                            {enrolmentStatus === 'active' ? 'Active' : enrolmentStatus}
-                          </span></>
-                        : 'Complete payment to receive your Student ID'
-                      }
-                    </p>
-                  </div>
+                  {resumeEnrollment && contextInfo && (
+                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{contextInfo.programName}</p>
+                        <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                          Week {contextInfo.currentWeek} of {contextInfo.totalWeeks} · {contextInfo.milestoneName}
+                        </p>
+                      </div>
+                      <button onClick={() => setActiveTab('lessons')} className={`${BTN_PRIMARY} flex-shrink-0`}>
+                        Continue learning <ArrowRight className="h-4 w-4 ml-1.5" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })()}
 
-            {/* Quick links */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-              {[
-                { id: 'classes', label: 'My classes', icon: Calendar },
-                { id: 'lessons', label: 'My lessons', icon: BookOpen },
-                { id: 'practice', label: 'Leaderboard', icon: Trophy },
-                { id: 'results', label: 'Results', icon: BarChart3 },
-              ].map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`${CARD_DARK} hover:border-slate-300 hover:shadow transition-all p-4 flex items-center gap-3 text-left`}
-                >
-                  <div className="h-9 w-9 rounded-md bg-slate-50 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                    <item.icon className="h-4.5 w-4.5 text-slate-700 dark:text-gray-200" />
-                  </div>
-                  <span className="text-sm font-medium text-slate-900 dark:text-white">{item.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Overall progress card (or enrol prompt when no programs yet) */}
             {enrollments.length === 0 ? (
+              /* Enrol prompt when no programs yet */
               <div className={`${CARD_DARK} mb-5`}>
                 <EmptyState
                   icon={GraduationCap}
@@ -787,34 +773,54 @@ const StudentPortal = () => {
                   }
                 />
               </div>
-            ) : (() => {
-              let completedClasses = 0;
-              let totalClasses = 0;
-              enrollments.filter(e => e.status === 'active').forEach(enrollment => {
-                const programSchedules = schedules.filter(s => s.program === enrollment.program);
-                const programConfig = PROGRAMS[enrollment.program];
-                const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
-                const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
-                const completed = programSchedules.filter(s => s.status === 'completed').length;
-                completedClasses += completed;
-                totalClasses += totalWeeks * 2;
-              });
-              const percent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
-              return (
-                <div className={`${CARD_DARK} p-5 mb-5`}>
-                  <div className="flex items-baseline justify-between mb-2">
-                    <h2 className={HEADING_LG_DARK}>Overall progress</h2>
-                    <span className="text-2xl font-semibold tabular-nums text-slate-900 dark:text-white">{percent}<span className="text-sm text-slate-500 dark:text-gray-400">%</span></span>
-                  </div>
-                  <div className="h-1.5 w-full bg-slate-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${percent}%` }} />
-                  </div>
-                  <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">
-                    {completedClasses} of {totalClasses} classes completed across your active programs
-                  </p>
+            ) : (
+              /* Your programs — per-program class progress */
+              <div className={`${CARD_DARK} p-5 mb-5 space-y-4`}>
+                <h2 className={HEADING_LG_DARK}>Your programs</h2>
+                {enrollments.filter(e => e.status === 'active').map(e => {
+                  const p = classProgressByProgram[e.program];
+                  if (!p) return null;
+                  return (
+                    <div key={e.id}>
+                      <div className="flex items-baseline justify-between mb-1.5">
+                        <span className="text-sm font-medium text-slate-900 dark:text-white">{getConfigProgramName(e.program)}</span>
+                        <span className="text-xs tabular-nums text-slate-500 dark:text-gray-400">{p.completed}/{p.total} classes · {p.pct}%</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${p.pct}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Certificates — shown only once earned */}
+            {certificates.length > 0 && (
+              <div className={`${CARD_DARK} p-5 mb-5`}>
+                <div className="flex items-baseline justify-between mb-3">
+                  <h2 className={HEADING_LG_DARK}>Certificates</h2>
+                  <button onClick={() => setActiveTab('results')} className="text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800">
+                    View all →
+                  </button>
                 </div>
-              );
-            })()}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {certificates.map(c => (
+                    <div key={c.id} className="flex items-center gap-3 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/20 px-4 py-3">
+                      <GraduationCap className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                          {getConfigProgramName(c.program_id) || c.program_id}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-gray-400">
+                          {c.weighted_total != null ? `${Number(c.weighted_total).toFixed(1)}% · ` : ''}ID {c.verification_code}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Class etiquette block (collapsible card) */}
             <div className="mb-5">
