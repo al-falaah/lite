@@ -93,6 +93,7 @@ export default function StudentLessons({
   // signed-in user's last attempt per quiz (real completion signal).
   const [quizByChapter, setQuizByChapter] = useState({});   // { chapterId: quizId }
   const [myAttempts, setMyAttempts] = useState({});         // { quizId: { score, total } }
+  const [readChapters, setReadChapters] = useState(new Set()); // chapterIds visited (lesson_progress)
   const [reloadKey, setReloadKey] = useState(0); // bump to retry after a fetch error
   const [expandedMilestones, setExpandedMilestones] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
@@ -177,9 +178,21 @@ export default function StudentLessons({
             } else {
               setMyAttempts({});
             }
+            // Read-state (lesson_progress): which chapters this user has opened
+            if (user) {
+              const { data: readRows } = await supabase
+                .from('lesson_progress')
+                .select('chapter_id')
+                .eq('student_id', user.id)
+                .in('chapter_id', chapterIds);
+              setReadChapters(new Set((readRows || []).map(r => r.chapter_id)));
+            } else {
+              setReadChapters(new Set());
+            }
           } else {
             setQuizByChapter({});
             setMyAttempts({});
+            setReadChapters(new Set());
           }
         } catch (e) {
           console.error('Drill-state fetch failed (non-fatal):', e);
@@ -188,6 +201,7 @@ export default function StudentLessons({
         setAllChapters([]);
         setQuizByChapter({});
         setMyAttempts({});
+        setReadChapters(new Set());
       }
 
       setSelectedChapter(null);
@@ -333,6 +347,22 @@ export default function StudentLessons({
     // Remember where the student is so the portal can resume here next visit.
     try { localStorage.setItem(`lessonResume:${selectedProgram}`, ch.id); } catch { /* ignore */ }
     window.scrollTo(0, 0);
+    // Record read-state (student portal only) — powers the rail checkmarks for
+    // chapters without drills. Fire-and-forget; unique(student,chapter) in DB.
+    if (autoResume && !readChapters.has(ch.id)) {
+      setReadChapters(prev => new Set(prev).add(ch.id));
+      (async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            await supabase.from('lesson_progress').upsert(
+              { student_id: user.id, chapter_id: ch.id },
+              { onConflict: 'student_id,chapter_id', ignoreDuplicates: true }
+            );
+          }
+        } catch (e) { console.error('lesson_progress write failed (non-fatal):', e); }
+      })();
+    }
   };
 
   // Reader sidebar: scope to the currently-open chapter's course so lessons from
@@ -407,6 +437,8 @@ export default function StudentLessons({
   const ChapterItem = ({ ch }) => {
     const course = courseMap[ch.course_id];
     const drill = drillState(ch.id);
+    // Done = drill played (quiz chapters) or visited (quiz-less chapters)
+    const done = drill ? drill.done : readChapters.has(ch.id);
     return (
       <button
         onClick={() => openChapter(ch)}
@@ -414,7 +446,7 @@ export default function StudentLessons({
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start gap-2.5 min-w-0">
-            {drill?.done ? (
+            {done ? (
               <CheckCircle className="h-4 w-4 mt-0.5 text-emerald-500 flex-shrink-0" />
             ) : drill ? (
               <Circle className="h-4 w-4 mt-0.5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
@@ -678,6 +710,7 @@ export default function StudentLessons({
                     {section.chapters.map((ch, ci) => {
                       const isActive = selectedChapter?.id === ch.id;
                       const drill = drillState(ch.id);
+                      const done = drill ? drill.done : readChapters.has(ch.id);
                       return (
                         <button
                           key={ch.id}
@@ -687,7 +720,7 @@ export default function StudentLessons({
                           }`}
                         >
                           {isActive && <span className={`absolute left-0 top-1.5 bottom-1.5 w-1 rounded-full ${t.itemActiveBar}`} />}
-                          {drill?.done ? (
+                          {done ? (
                             <CheckCircle className="mt-0.5 flex-shrink-0 h-5 w-5 text-emerald-500" />
                           ) : (
                             <span className={`mt-0.5 flex-shrink-0 h-5 w-5 rounded-md text-[11px] font-semibold flex items-center justify-center ${
@@ -720,9 +753,21 @@ export default function StudentLessons({
             const cls = classProgressByProgram?.[selectedProgram];
             const quizIds = Object.values(quizByChapter);
             const drillsDone = quizIds.filter(id => myAttempts[id]).length;
+            const readCount = allChapters.filter(ch => readChapters.has(ch.id)).length;
             if (!cls && !quizIds.length && !onOpenResults) return null;
             return (
               <div className={`shrink-0 border-t ${t.divider} p-3 space-y-2.5`}>
+                {allChapters.length > 0 && autoResume && (
+                  <div>
+                    <div className="flex items-baseline justify-between mb-1">
+                      <span className={`text-xs font-medium ${t.text}`}>Lessons</span>
+                      <span className={`text-xs tabular-nums ${t.faint}`}>{readCount}/{allChapters.length}</span>
+                    </div>
+                    <div className={`h-1.5 rounded-full overflow-hidden ${t.itemNum.split(' ')[0]}`}>
+                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${Math.round((readCount / allChapters.length) * 100)}%` }} />
+                    </div>
+                  </div>
+                )}
                 {cls && (
                   <div>
                     <div className="flex items-baseline justify-between mb-1">
