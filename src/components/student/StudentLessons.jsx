@@ -3,7 +3,7 @@ import { supabase } from '../../services/supabase';
 import { getYouTubeEmbedUrl } from '../../utils/youtube';
 import { processContentForRTL, textDir } from '../../utils/rtl';
 import { PROGRAMS } from '../../config/programs';
-import { ChevronLeft, ChevronDown, ChevronRight, HelpCircle, BookOpen, Video, X } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronRight, HelpCircle, BookOpen, Video, X, CheckCircle, Circle } from 'lucide-react';
 import { BTN_SECONDARY } from '../../design/ui';
 import { Spinner, EmptyState } from '../common/DataStates';
 import DOMPurify from 'dompurify';
@@ -71,6 +71,8 @@ export default function StudentLessons({
   // Course-as-home (student portal only; teacher portal passes neither):
   autoResume = false,       // on mount, open the student's current/last chapter
   onReaderChange,           // (isOpen: bool) => void — portal hides its chrome while reading
+  classProgressByProgram,   // { [program]: { completed, total, pct } } — teacher-marked class progress
+  onOpenResults,            // () => void — jump to the Results tab from the reader footer
 }) {
   // Accept either a direct programs array (teacher use) or derive from enrollments (student use)
   const derivedPrograms = programsProp
@@ -87,6 +89,10 @@ export default function StudentLessons({
   const [chapterQuizId, setChapterQuizId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
+  // Per-chapter drill state: which chapters have a published quiz, and the
+  // signed-in user's last attempt per quiz (real completion signal).
+  const [quizByChapter, setQuizByChapter] = useState({});   // { chapterId: quizId }
+  const [myAttempts, setMyAttempts] = useState({});         // { quizId: { score, total } }
   const [reloadKey, setReloadKey] = useState(0); // bump to retry after a fetch error
   const [expandedMilestones, setExpandedMilestones] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
@@ -142,8 +148,46 @@ export default function StudentLessons({
           return;
         }
         setAllChapters(chaptersData || []);
+
+        // Drill completion signals (non-blocking — rail works without them).
+        // 1. Which chapters have a published quiz; 2. my attempts on those.
+        try {
+          const chapterIds = (chaptersData || []).map(c => c.id);
+          if (chapterIds.length) {
+            const { data: quizzes } = await supabase
+              .from('lesson_quizzes')
+              .select('id, chapter_id')
+              .in('chapter_id', chapterIds)
+              .eq('is_published', true);
+            const qbc = {};
+            (quizzes || []).forEach(q => { qbc[q.chapter_id] = q.id; });
+            setQuizByChapter(qbc);
+
+            const quizIds = Object.values(qbc);
+            const { data: { user } } = await supabase.auth.getUser();
+            if (quizIds.length && user) {
+              const { data: attempts } = await supabase
+                .from('quiz_drill_attempts')
+                .select('quiz_id, score, total_questions')
+                .eq('student_id', user.id)
+                .in('quiz_id', quizIds);
+              const att = {};
+              (attempts || []).forEach(a => { att[a.quiz_id] = { score: a.score, total: a.total_questions }; });
+              setMyAttempts(att);
+            } else {
+              setMyAttempts({});
+            }
+          } else {
+            setQuizByChapter({});
+            setMyAttempts({});
+          }
+        } catch (e) {
+          console.error('Drill-state fetch failed (non-fatal):', e);
+        }
       } else {
         setAllChapters([]);
+        setQuizByChapter({});
+        setMyAttempts({});
       }
 
       setSelectedChapter(null);
@@ -201,6 +245,15 @@ export default function StudentLessons({
     if (target) openChapter(target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoResume, loading, allChapters, selectedChapter, selectedProgram]);
+
+  // Drill status for a chapter: null = no quiz; {done:false} = quiz not yet
+  // played; {done:true, score, total} = played (last attempt counts).
+  const drillState = (chapterId) => {
+    const quizId = quizByChapter[chapterId];
+    if (!quizId) return null;
+    const a = myAttempts[quizId];
+    return a ? { done: true, score: a.score, total: a.total } : { done: false };
+  };
 
   // Build course lookup
   const courseMap = useMemo(() => {
@@ -353,23 +406,35 @@ export default function StudentLessons({
   // Chapter item renderer (shared between milestone and course views)
   const ChapterItem = ({ ch }) => {
     const course = courseMap[ch.course_id];
+    const drill = drillState(ch.id);
     return (
       <button
         onClick={() => openChapter(ch)}
         className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
       >
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{ch.title}</p>
-            <div className="flex items-center gap-2 mt-0.5">
-              {ch.week_number && <span className="text-xs text-gray-600 dark:text-gray-400">Week {ch.week_number}</span>}
-              {courses.length > 1 && course && (
-                <span className="text-xs text-gray-600 dark:text-gray-400 truncate">{course.title}</span>
-              )}
+          <div className="flex items-start gap-2.5 min-w-0">
+            {drill?.done ? (
+              <CheckCircle className="h-4 w-4 mt-0.5 text-emerald-500 flex-shrink-0" />
+            ) : drill ? (
+              <Circle className="h-4 w-4 mt-0.5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
+            ) : null}
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{ch.title}</p>
+              <div className="flex items-center gap-2 mt-0.5">
+                {ch.week_number && <span className="text-xs text-gray-600 dark:text-gray-400">Week {ch.week_number}</span>}
+                {drill?.done && (
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Drill {drill.score}/{drill.total}</span>
+                )}
+                {courses.length > 1 && course && (
+                  <span className="text-xs text-gray-600 dark:text-gray-400 truncate">{course.title}</span>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />}
+            {drill && !drill.done && <HelpCircle className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />}
             {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-500 dark:text-gray-400">HTML</span>}
           </div>
         </div>
@@ -590,7 +655,7 @@ export default function StudentLessons({
         {/* Sidebar */}
         <aside className={`
           fixed lg:sticky lg:top-14 inset-y-0 left-0 z-30
-          w-72 overflow-y-auto border-r ${t.sidebar}
+          w-72 flex flex-col border-r ${t.sidebar}
           transition-transform lg:transition-none lg:translate-x-0
           ${showSidebar ? 'translate-x-0' : '-translate-x-full'}
           lg:h-[calc(100vh-3.5rem)] lg:shrink-0
@@ -598,7 +663,7 @@ export default function StudentLessons({
           {showSidebar && (
             <div className="fixed inset-0 bg-black/30 z-[-1] lg:hidden" onClick={() => setShowSidebar(false)} />
           )}
-          <nav className="p-3 space-y-5">
+          <nav className="flex-1 overflow-y-auto p-3 space-y-5">
             {readerSections.map((section, si) => {
               const activeInSection = section.chapters.some(c => c.id === selectedChapter?.id);
               return (
@@ -612,6 +677,7 @@ export default function StudentLessons({
                   <div className="space-y-0.5">
                     {section.chapters.map((ch, ci) => {
                       const isActive = selectedChapter?.id === ch.id;
+                      const drill = drillState(ch.id);
                       return (
                         <button
                           key={ch.id}
@@ -621,16 +687,22 @@ export default function StudentLessons({
                           }`}
                         >
                           {isActive && <span className={`absolute left-0 top-1.5 bottom-1.5 w-1 rounded-full ${t.itemActiveBar}`} />}
-                          <span className={`mt-0.5 flex-shrink-0 h-5 w-5 rounded-md text-[11px] font-semibold flex items-center justify-center ${
-                            isActive ? t.itemNumActive : t.itemNum
-                          }`}>
-                            {ci + 1}
-                          </span>
+                          {drill?.done ? (
+                            <CheckCircle className="mt-0.5 flex-shrink-0 h-5 w-5 text-emerald-500" />
+                          ) : (
+                            <span className={`mt-0.5 flex-shrink-0 h-5 w-5 rounded-md text-[11px] font-semibold flex items-center justify-center ${
+                              isActive ? t.itemNumActive : t.itemNum
+                            }`}>
+                              {ci + 1}
+                            </span>
+                          )}
                           <span className="min-w-0">
                             <span className={`block text-sm leading-snug ${isActive ? 'font-semibold' : 'font-medium'}`}>{ch.title}</span>
-                            {ch.week_number && (
-                              <span className={`block text-xs mt-0.5 ${t.faint}`}>Week {ch.week_number}</span>
-                            )}
+                            <span className={`block text-xs mt-0.5 ${t.faint}`}>
+                              {ch.week_number ? `Week ${ch.week_number}` : ''}
+                              {ch.video_url ? `${ch.week_number ? ' · ' : ''}Video` : ''}
+                              {drill ? `${ch.week_number || ch.video_url ? ' · ' : ''}${drill.done ? `Drill ${drill.score}/${drill.total}` : 'Drill'}` : ''}
+                            </span>
                           </span>
                         </button>
                       );
@@ -641,6 +713,49 @@ export default function StudentLessons({
               );
             })}
           </nav>
+
+          {/* Pinned progress footer — real data: teacher-marked class progress
+              + the student's own drill completion (DeepLearning.AI-style). */}
+          {(() => {
+            const cls = classProgressByProgram?.[selectedProgram];
+            const quizIds = Object.values(quizByChapter);
+            const drillsDone = quizIds.filter(id => myAttempts[id]).length;
+            if (!cls && !quizIds.length && !onOpenResults) return null;
+            return (
+              <div className={`shrink-0 border-t ${t.divider} p-3 space-y-2.5`}>
+                {cls && (
+                  <div>
+                    <div className="flex items-baseline justify-between mb-1">
+                      <span className={`text-xs font-medium ${t.text}`}>Classes</span>
+                      <span className={`text-xs tabular-nums ${t.faint}`}>{cls.completed}/{cls.total} · {cls.pct}%</span>
+                    </div>
+                    <div className={`h-1.5 rounded-full overflow-hidden ${t.itemNum.split(' ')[0]}`}>
+                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${cls.pct}%` }} />
+                    </div>
+                  </div>
+                )}
+                {quizIds.length > 0 && (
+                  <div>
+                    <div className="flex items-baseline justify-between mb-1">
+                      <span className={`text-xs font-medium ${t.text}`}>Drills</span>
+                      <span className={`text-xs tabular-nums ${t.faint}`}>{drillsDone}/{quizIds.length}</span>
+                    </div>
+                    <div className={`h-1.5 rounded-full overflow-hidden ${t.itemNum.split(' ')[0]}`}>
+                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${quizIds.length ? Math.round((drillsDone / quizIds.length) * 100) : 0}%` }} />
+                    </div>
+                  </div>
+                )}
+                {onOpenResults && (
+                  <button
+                    onClick={onOpenResults}
+                    className="w-full text-left text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
+                  >
+                    Tests &amp; results →
+                  </button>
+                )}
+              </div>
+            );
+          })()}
         </aside>
 
         {/* Main content — article on a raised surface floating over the tinted page */}

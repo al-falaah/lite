@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../services/supabase';
 import { toast } from 'sonner';
@@ -562,6 +562,23 @@ const StudentPortal = () => {
   };
 
   // Redirect to login if not authenticated
+  // Teacher-marked class progress per program — same calculation the Classes
+  // tab cards use, so the reader footer and Classes tab always agree.
+  // (Hook — must stay above the early returns below.)
+  const classProgressByProgram = useMemo(() => {
+    const map = {};
+    enrollments.filter(e => e.status === 'active').forEach(enrollment => {
+      const programSchedules = schedules.filter(s => s.program === enrollment.program);
+      const programConfig = PROGRAMS[enrollment.program];
+      const isTajweed = enrollment.program === PROGRAM_IDS.TAJWEED;
+      const totalWeeks = programConfig?.duration.weeks || (isTajweed ? 24 : 104);
+      const completed = programSchedules.filter(s => s.status === 'completed').length;
+      const total = totalWeeks * 2;
+      map[enrollment.program] = { completed, total, pct: total ? Math.round((completed / total) * 100) : 0 };
+    });
+    return map;
+  }, [enrollments, schedules]);
+
   if (shouldRedirect) {
     return <Navigate to="/login" replace />;
   }
@@ -1107,6 +1124,8 @@ const StudentPortal = () => {
                 enrollments={enrollments}
                 autoResume
                 onReaderChange={setReaderOpen}
+                classProgressByProgram={classProgressByProgram}
+                onOpenResults={() => setActiveTab('results')}
                 currentWeekByProgram={Object.fromEntries(
                   enrollments.filter(e => e.status === 'active').map(e => {
                     const w = getActiveWeekForEnrollment(e);
