@@ -68,8 +68,9 @@ export default function StudentLessons({
   enrollments,
   programs: programsProp,
   currentWeekByProgram,
-  // Course-as-home (student portal only; teacher portal passes neither):
-  autoResume = false,       // on mount, open the student's current/last chapter
+  // Course-player extras (student portal only; teacher portal passes none):
+  autoResume = false,       // student mode: record read-state + show Lessons progress bar
+  resumeSignal = 0,         // bump to jump to the student's resume point (Home → Continue)
   onReaderChange,           // (isOpen: bool) => void — portal hides its chrome while reading
   classProgressByProgram,   // { [program]: { completed, total, pct } } — teacher-marked class progress
   onOpenResults,            // () => void — jump to the Results tab from the reader footer
@@ -96,6 +97,11 @@ export default function StudentLessons({
   const [readChapters, setReadChapters] = useState(new Set()); // chapterIds visited (lesson_progress)
   const [reloadKey, setReloadKey] = useState(0); // bump to retry after a fetch error
   const [expandedMilestones, setExpandedMilestones] = useState({});
+  // Reader rail: which sections are open, keyed `${program}:${sectionId}` so
+  // milestone ids shared across programs can't leak expansion state. Default
+  // (no entry) = open only if the section holds the active chapter; explicit
+  // user toggles are stored and always win.
+  const [expandedSections, setExpandedSections] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'light');
   const [viewMode, setViewMode] = useState('milestones'); // 'milestones' | 'courses'
@@ -121,6 +127,7 @@ export default function StudentLessons({
     const fetchAll = async () => {
       setLoading(true);
       setFetchError(false);
+      const fetchedChapterIds = new Set(); // filled below; used to preserve a valid open chapter
       const { data: coursesData, error: coursesError } = await supabase
         .from('lesson_courses')
         .select('*')
@@ -149,6 +156,7 @@ export default function StudentLessons({
           return;
         }
         setAllChapters(chaptersData || []);
+        (chaptersData || []).forEach(c => fetchedChapterIds.add(c.id));
 
         // Drill completion signals (non-blocking — rail works without them).
         // 1. Which chapters have a published quiz; 2. my attempts on those.
@@ -204,8 +212,11 @@ export default function StudentLessons({
         setReadChapters(new Set());
       }
 
-      setSelectedChapter(null);
-      setSelectedCourse(null);
+      // Reset the open chapter ONLY if it doesn't belong to the fetched set
+      // (i.e. a real program switch). A blind null here clobbered the chapter
+      // auto-resume had just opened when effects double-fire (StrictMode dev)
+      // — the reader silently fell back to the browse list on reload.
+      setSelectedChapter(prev => (prev && fetchedChapterIds.has(prev.id)) ? prev : null);
       setLoading(false);
     };
     fetchAll();
@@ -233,14 +244,25 @@ export default function StudentLessons({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChapter]);
 
-  // Course-as-home: on first load, drop the student straight into their
-  // current chapter instead of the browse list. Fires once per mount only —
-  // switching programs afterwards must not hijack the browse view.
-  const autoResumedRef = useRef(false);
+  // When navigation moves the active chapter into a section (prev/next,
+  // auto-resume), make sure that section is open. Never re-collapses sections
+  // the user opened — only adds.
   useEffect(() => {
-    if (!autoResume || autoResumedRef.current) return;
-    if (loading || selectedChapter || !allChapters.length) return;
-    autoResumedRef.current = true;
+    if (!selectedChapter) return;
+    const sec = readerSections.find(s => s.chapters.some(c => c.id === selectedChapter.id));
+    if (sec) setExpandedSections(prev => ({ ...prev, [`${selectedProgram}:${sec.id}`]: true }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedChapter, selectedProgram]);
+
+  // Resume-on-request: the Lessons tab is browse-first (reader opens only when
+  // a lesson is clicked). The host's "Continue learning" bumps resumeSignal to
+  // jump straight to the student's resume point. Waits for chapters to load;
+  // each signal value is honoured exactly once.
+  const handledResumeRef = useRef(0);
+  useEffect(() => {
+    if (!resumeSignal || resumeSignal === handledResumeRef.current) return;
+    if (loading || !allChapters.length) return; // re-runs when data arrives
+    handledResumeRef.current = resumeSignal;
 
     const byId = (id) => allChapters.find(ch => ch.id === id);
     let target = null;
@@ -258,7 +280,7 @@ export default function StudentLessons({
     if (!target) target = allChapters[0];
     if (target) openChapter(target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoResume, loading, allChapters, selectedChapter, selectedProgram]);
+  }, [resumeSignal, loading, allChapters, selectedProgram]);
 
   // Drill status for a chapter: null = no quiz; {done:false} = quiz not yet
   // played; {done:true, score, total} = played (last attempt counts).
@@ -267,6 +289,13 @@ export default function StudentLessons({
     if (!quizId) return null;
     const a = myAttempts[quizId];
     return a ? { done: true, score: a.score, total: a.total } : { done: false };
+  };
+
+  // Single source of "is this chapter done": drill played (quiz chapters) or
+  // visited (quiz-less chapters). Used by the rail, browse list, and counts.
+  const isChapterDone = (ch) => {
+    const d = drillState(ch.id);
+    return d ? d.done : readChapters.has(ch.id);
   };
 
   // Build course lookup
@@ -325,7 +354,8 @@ export default function StudentLessons({
     if (!selectedChapter) { setChapterHasQuiz(false); setChapterQuizId(null); return; }
     supabase
       .from('lesson_quizzes').select('id')
-      .eq('chapter_id', selectedChapter.id).eq('is_published', true).single()
+      // maybeSingle: chapters without a quiz are normal, not 406 errors
+      .eq('chapter_id', selectedChapter.id).eq('is_published', true).maybeSingle()
       .then(({ data }) => {
         setChapterHasQuiz(!!data);
         setChapterQuizId(data?.id || null);
@@ -437,8 +467,7 @@ export default function StudentLessons({
   const ChapterItem = ({ ch }) => {
     const course = courseMap[ch.course_id];
     const drill = drillState(ch.id);
-    // Done = drill played (quiz chapters) or visited (quiz-less chapters)
-    const done = drill ? drill.done : readChapters.has(ch.id);
+    const done = isChapterDone(ch);
     return (
       <button
         onClick={() => openChapter(ch)}
@@ -695,22 +724,36 @@ export default function StudentLessons({
           {showSidebar && (
             <div className="fixed inset-0 bg-black/30 z-[-1] lg:hidden" onClick={() => setShowSidebar(false)} />
           )}
-          <nav className="flex-1 overflow-y-auto p-3 space-y-5">
-            {readerSections.map((section, si) => {
+          <nav className="flex-1 overflow-y-auto p-3 space-y-2">
+            {readerSections.map((section) => {
               const activeInSection = section.chapters.some(c => c.id === selectedChapter?.id);
+              const sectionKey = `${selectedProgram}:${section.id}`;
+              const isOpen = expandedSections[sectionKey] ?? activeInSection;
+              const doneInSection = section.chapters.filter(isChapterDone).length;
               return (
                 <div key={section.id}>
-                  <div className="flex items-baseline justify-between px-2 mb-1.5">
-                    <p className={`text-xs font-semibold uppercase tracking-wider ${activeInSection ? t.heading : t.faint}`}>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setExpandedSections(prev => ({ ...prev, [sectionKey]: !isOpen }))}
+                    className={`w-full flex items-center justify-between gap-2 px-3 min-h-[44px] rounded-lg border text-left transition-colors ${t.border} ${activeInSection ? t.itemActive : t.hover} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50`}
+                  >
+                    <span className={`text-sm font-semibold leading-snug ${activeInSection ? '' : t.text}`}>
                       {section.label}
-                    </p>
-                    <span className={`text-[10px] font-medium ${t.faint}`}>{section.chapters.length}</span>
-                  </div>
-                  <div className="space-y-0.5">
+                    </span>
+                    <span className="flex items-center gap-2 flex-shrink-0">
+                      <span className={`text-xs font-medium tabular-nums ${doneInSection === section.chapters.length && section.chapters.length > 0 ? 'text-emerald-500' : t.faint}`}>
+                        {doneInSection}/{section.chapters.length}
+                      </span>
+                      <ChevronDown className={`h-4 w-4 ${t.faint} transition-transform motion-reduce:transition-none ${isOpen ? 'rotate-180' : ''}`} />
+                    </span>
+                  </button>
+                  {isOpen && (
+                  <div className="space-y-0.5 mt-1.5 mb-2 pl-1">
                     {section.chapters.map((ch, ci) => {
                       const isActive = selectedChapter?.id === ch.id;
                       const drill = drillState(ch.id);
-                      const done = drill ? drill.done : readChapters.has(ch.id);
+                      const done = isChapterDone(ch);
                       return (
                         <button
                           key={ch.id}
@@ -741,7 +784,7 @@ export default function StudentLessons({
                       );
                     })}
                   </div>
-                  {si < readerSections.length - 1 && <div className={`mt-4 border-t ${t.divider}`} />}
+                  )}
                 </div>
               );
             })}

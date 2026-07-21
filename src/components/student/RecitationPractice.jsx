@@ -48,6 +48,24 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const timer = useRef(null);
   const broadcastRef = useRef(null);
 
+  // Broadcast the recording flag. Uses httpSend (REST) when available — send()
+  // silently falls back to REST with a deprecation warning when the socket
+  // isn't joined (e.g. during unmount cleanup); httpSend is the explicit form.
+  const sendRecordingFlag = (active) => {
+    const ch = broadcastRef.current;
+    if (!ch) return;
+    const payload = { role: 'student', active };
+    try {
+      // httpSend(event, payload) — positional signature, unlike send()'s
+      // message object. Falls back to send() on older realtime-js versions.
+      if (typeof ch.httpSend === 'function') {
+        Promise.resolve(ch.httpSend('recording', payload)).catch(() => {});
+      } else {
+        ch.send({ type: 'broadcast', event: 'recording', payload });
+      }
+    } catch { /* non-fatal signal */ }
+  };
+
   useEffect(() => {
     if (studentId && programId) load();
     return () => stopRec();
@@ -162,7 +180,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
       setElapsed(0);
       setBlob(null);
       setBlobUrl(null);
-      broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'student', active: true } });
+      sendRecordingFlag(true);
       timer.current = setInterval(() => {
         setElapsed(p => { if (p >= MAX_SECONDS - 1) { stopRec(); return MAX_SECONDS; } return p + 1; });
       }, 1000);
@@ -176,7 +194,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
     if (mrRef.current?.state === 'recording') mrRef.current.stop();
     setRecording(false);
-    broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'student', active: false } });
+    sendRecordingFlag(false);
   };
 
   const discard = () => {
@@ -185,7 +203,7 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
     setBlobUrl(null);
     setElapsed(0);
     chunks.current = [];
-    broadcastRef.current?.send({ type: 'broadcast', event: 'recording', payload: { role: 'student', active: false } });
+    sendRecordingFlag(false);
   };
 
   const submit = async () => {

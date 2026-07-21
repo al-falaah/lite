@@ -157,6 +157,9 @@ const StudentPortal = () => {
   // True while a lesson chapter is open in the reader — the portal hides its
   // chrome (nav, tab bars, context strip) for an immersive course-player view.
   const [readerOpen, setReaderOpen] = useState(false);
+  // Bumped by Home's "Continue learning" — tells StudentLessons to open the
+  // student's resume point. The Lessons tab itself is browse-first.
+  const [resumeSignal, setResumeSignal] = useState(0);
 
   // Multi-enrollment program scoping: track the active program for Classes/Lessons/Results tabs
   const [activeProgram, setActiveProgram] = useState(null); // Set on mount to first active enrollment
@@ -747,7 +750,10 @@ const StudentPortal = () => {
                           Week {contextInfo.currentWeek} of {contextInfo.totalWeeks} · {contextInfo.milestoneName}
                         </p>
                       </div>
-                      <button onClick={() => setActiveTab('lessons')} className={`${BTN_PRIMARY} flex-shrink-0`}>
+                      <button
+                        onClick={() => { setActiveTab('lessons'); setLessonsSubTab('lessons'); setResumeSignal(n => n + 1); }}
+                        className={`${BTN_PRIMARY} flex-shrink-0`}
+                      >
                         Continue learning <ArrowRight className="h-4 w-4 ml-1.5" />
                       </button>
                     </div>
@@ -1102,7 +1108,8 @@ const StudentPortal = () => {
 
           {/* === LESSONS TAB (with sub-tabs) === */}
           <div className={activeTab !== 'lessons' ? 'hidden' : ''}>
-            <div className="mb-5">
+            {/* Tab heading + sub-tabs hide in immersive reader mode too */}
+            <div className={immersive ? 'hidden' : 'mb-5'}>
               <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Lessons & practice</h1>
               <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">
                 Review your chapter notes and practise reading aloud.
@@ -1110,7 +1117,7 @@ const StudentPortal = () => {
             </div>
 
             {/* Sub-tabs */}
-            <div className="flex gap-1 mb-20 border-b border-slate-200 dark:border-gray-700">
+            <div className={`${immersive ? 'hidden' : 'flex'} gap-1 mb-20 border-b border-slate-200 dark:border-gray-700`}>
               {[
                 { id: 'lessons', label: 'Lessons' },
                 { id: 'reading', label: 'Reading Practice' },
@@ -1129,6 +1136,7 @@ const StudentPortal = () => {
               <StudentLessons
                 enrollments={enrollments}
                 autoResume
+                resumeSignal={resumeSignal}
                 onReaderChange={setReaderOpen}
                 classProgressByProgram={classProgressByProgram}
                 onOpenResults={() => setActiveTab('results')}
