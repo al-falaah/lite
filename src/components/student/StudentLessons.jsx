@@ -59,9 +59,14 @@ const themeClasses = {
 };
 
 const proseTheme = {
-  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.verse]:bg-emerald-600/5 [&_.verse]:text-gray-900',
-  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-li:marker:text-[#8a7a6a] prose-hr:border-[#d4c9b8] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.verse]:bg-[#ebe4d8] [&_.verse]:text-[#3d3229]',
-  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-800 prose-pre:bg-gray-800 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-800 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.verse]:bg-emerald-500/10 [&_.verse]:text-gray-100',
+  // NOTE on table headers: authored lessons give <th> an inline emerald
+  // background + white text, but the reader forces prose-th:bg-* per theme,
+  // which wins over the inline background — leaving white-on-pale (invisible)
+  // in light/sepia. The [&_th]:text-* below overrides the header text colour
+  // to stay legible on whatever background the theme actually renders.
+  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 [&_th]:!text-gray-900 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.verse]:bg-emerald-600/5 [&_.verse]:text-gray-900',
+  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-li:marker:text-[#8a7a6a] prose-hr:border-[#d4c9b8] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] [&_th]:!text-[#3d3229] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.verse]:bg-[#ebe4d8] [&_.verse]:text-[#3d3229]',
+  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-800 prose-pre:bg-gray-800 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-800 [&_th]:!text-gray-100 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.verse]:bg-emerald-500/10 [&_.verse]:text-gray-100',
 };
 
 export default function StudentLessons({
