@@ -35,11 +35,14 @@ import {
   Rows,
   Trash2,
   PaintBucket,
+  BadgeCheck,
 } from 'lucide-react';
+import VersePicker from './VersePicker';
 import {
   TipCallout,
   VerseBlock,
   ArabicProse,
+  VerifiedAyah,
   FootnoteSup,
   DirAttribute,
   StyleAttribute,
@@ -97,6 +100,7 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
   const [htmlDraft, setHtmlDraft] = useState(value || '');
   const [lossWarning, setLossWarning] = useState(false);
   const [showBar, setShowBar] = useState(false); // floating toolbar visibility
+  const [showVersePicker, setShowVersePicker] = useState(false);
   const checkedInitialLoad = useRef(false);
   const blurTimer = useRef(null);
 
@@ -117,6 +121,7 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
       TipCallout,
       VerseBlock,
       ArabicProse,
+      VerifiedAyah, // verified Qur'anic ayah with citation metadata (VersePicker)
       FootnoteSup, // registered instead of plain Superscript — preserves data-footnote
       DirAttribute,
       StyleAttribute,
@@ -351,6 +356,11 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
           onClick={() => editor.chain().focus().setVerseBlock().run()}>
           <BookOpen className="h-4 w-4" />
         </ToolbarButton>
+        <ToolbarButton title="Insert verified āyah (checked against the muṣḥaf)"
+          active={editor.isActive('verifiedAyah')}
+          onClick={() => setShowVersePicker(true)}>
+          <BadgeCheck className="h-4 w-4" />
+        </ToolbarButton>
         <ToolbarButton title="Arabic prose (RTL block)" active={editor.isActive('arabicProse')}
           onClick={() => editor.chain().focus().setArabicProse().run()}>
           <Languages className="h-4 w-4" />
@@ -460,6 +470,15 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
         .tiptap-lesson-editor .tip > :first-of-type { margin-top: 0; }
         .tiptap-lesson-editor .tip > :last-child { margin-bottom: 0; }
       `}</style>
+
+      {showVersePicker && (
+        <VersePicker
+          onInsert={({ sura, aya, text, source }) =>
+            editor.chain().focus().insertVerifiedAyah({ sura, aya, text, source }).run()
+          }
+          onClose={() => setShowVersePicker(false)}
+        />
+      )}
     </div>
   );
 };
