@@ -90,3 +90,7 @@ scripts/data/
 # OS files
 Thumbs.db
 .vercel
+
+# Python bytecode
+__pycache__/
+*.pyc

@@ -108,6 +108,68 @@ export const ArabicProse = Node.create({
   },
 });
 
+// <p class="verse" data-sura data-aya data-verified> — a Qur'anic ayah that was
+// confirmed against the corpus by the VersePicker. Reuses the .verse reader
+// styling (centered RTL) but carries citation metadata so the reference is
+// machine-checkable and survives the load→save round-trip. Parses AFTER
+// VerseBlock's plain <p.verse> by matching the data-verified attribute.
+export const VerifiedAyah = Node.create({
+  name: 'verifiedAyah',
+  group: 'block',
+  content: 'inline*',
+  defining: true,
+  addAttributes() {
+    return {
+      'data-sura': {
+        default: null,
+        parseHTML: (el) => el.getAttribute('data-sura'),
+        renderHTML: (a) => (a['data-sura'] ? { 'data-sura': a['data-sura'] } : {}),
+      },
+      'data-aya': {
+        default: null,
+        parseHTML: (el) => el.getAttribute('data-aya'),
+        renderHTML: (a) => (a['data-aya'] ? { 'data-aya': a['data-aya'] } : {}),
+      },
+      'data-verified': {
+        default: null,
+        parseHTML: (el) => el.getAttribute('data-verified'),
+        renderHTML: (a) => (a['data-verified'] ? { 'data-verified': a['data-verified'] } : {}),
+      },
+      'data-source': {
+        default: null,
+        parseHTML: (el) => el.getAttribute('data-source'),
+        renderHTML: (a) => (a['data-source'] ? { 'data-source': a['data-source'] } : {}),
+      },
+    };
+  },
+  parseHTML() {
+    return [{ tag: 'p.verse[data-verified]', priority: 120 }, { tag: 'div.verse[data-verified]', priority: 120 }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['p', mergeAttributes(HTMLAttributes, { class: 'verse', dir: 'rtl' }), 0];
+  },
+  addCommands() {
+    return {
+      // Insert a verified ayah node with its citation metadata and text.
+      insertVerifiedAyah:
+        ({ sura, aya, text, source = null }) =>
+        ({ chain }) =>
+          chain()
+            .insertContent({
+              type: this.name,
+              attrs: {
+                'data-sura': String(sura),
+                'data-aya': String(aya),
+                'data-verified': 'true',
+                ...(source ? { 'data-source': source } : {}),
+              },
+              content: text ? [{ type: 'text', text }] : [],
+            })
+            .run(),
+    };
+  },
+});
+
 // Superscript that preserves data-footnote (register INSTEAD of plain Superscript)
 export const FootnoteSup = Superscript.extend({
   addAttributes() {
@@ -127,7 +189,7 @@ export const FootnoteSup = Superscript.extend({
 const ATTR_TYPES = [
   'paragraph', 'heading', 'blockquote', 'listItem', 'bulletList', 'orderedList',
   'table', 'tableRow', 'tableCell', 'tableHeader', 'horizontalRule', 'image',
-  'tipCallout', 'verseBlock', 'arabicProse', 'figure', 'figcaption',
+  'tipCallout', 'verseBlock', 'arabicProse', 'verifiedAyah', 'figure', 'figcaption',
   'spanMark', 'smallMark', 'italic', 'bold', 'link', 'styledDiv',
 ];
 
