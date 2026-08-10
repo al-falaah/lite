@@ -104,7 +104,7 @@ export default function StudentQuizLeaderboards({ enrollments }) {
 
   if (activeEnrolments.length === 0) {
     return (
-      <div className="text-center py-12 text-sm text-slate-500 dark:text-gray-400">
+      <div className="text-center py-12 text-sm text-[var(--mq-ink-faint)]">
         No active enrolments.
       </div>
     );
@@ -116,15 +116,15 @@ export default function StudentQuizLeaderboards({ enrollments }) {
     <div>
       {/* Program tabs */}
       {activeEnrolments.length > 1 && (
-        <div className="flex gap-2 mb-4 border-b border-slate-200 dark:border-gray-700 overflow-x-auto">
+        <div className="flex gap-2 mb-4 border-b border-[var(--mq-rule)] overflow-x-auto">
           {activeEnrolments.map(e => (
             <button
               key={e.program}
               onClick={() => { setActiveProgram(e.program); setExpandedQuizId(null); }}
               className={`px-3 py-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
                 activeProgram === e.program
-                  ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
-                  : 'border-transparent text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300'
+                  ? 'border-[var(--mq-accent)] text-[var(--mq-accent)]'
+                  : 'border-transparent text-[var(--mq-ink-faint)] hover:text-[var(--mq-ink-soft)]'
               }`}
             >
               {PROGRAMS[e.program]?.shortName || e.program}
@@ -141,7 +141,7 @@ export default function StudentQuizLeaderboards({ enrollments }) {
 
       {!loading && fetchErrors[activeProgram] && (
         <div className="text-center py-8">
-          <p className="text-sm text-slate-700 dark:text-gray-300">Couldn't load the leaderboards.</p>
+          <p className="text-sm text-[var(--mq-ink-soft)]">Couldn't load the leaderboards.</p>
           <button onClick={() => setReloadKey(k => k + 1)} className={`${BTN_SECONDARY} mt-3`}>
             Try again
           </button>
@@ -149,41 +149,73 @@ export default function StudentQuizLeaderboards({ enrollments }) {
       )}
 
       {!loading && !fetchErrors[activeProgram] && programRows.length === 0 && (
-        <div className="text-center py-8 text-xs text-slate-500 dark:text-gray-400">
+        <div className="text-center py-8 text-xs text-[var(--mq-ink-faint)]">
           No quizzes published for this program yet.
         </div>
       )}
 
-      <ul className="space-y-2">
-        {programRows.map(row => {
-          const isOpen = expandedQuizId === row.id;
-          const milestoneIdx = row.chapter?.milestone_index;
-          return (
-            <li key={row.id} className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg overflow-hidden">
-              <button
-                onClick={() => setExpandedQuizId(isOpen ? null : row.id)}
-                className="w-full px-4 py-3 flex items-center justify-between text-left transition-colors hover:bg-slate-50 dark:hover:bg-gray-700"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Trophy className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{row.chapter?.title || row.title}</p>
-                    <p className="text-[11px] text-slate-500 dark:text-gray-400">
-                      {milestoneIdx != null ? `Milestone ${milestoneIdx}` : 'No milestone'} · {row.title}
-                    </p>
+      {/* Grouped by milestone so the sheet has structure and rhythm, not a
+          uniform run of identical rows. Each group is a ruled section with a
+          mono specimen-label header; rows read as ruled entries you can open
+          to reveal the ranked scores. */}
+      {(() => {
+        const groups = [];
+        const byIdx = new Map();
+        programRows.forEach(row => {
+          const idx = row.chapter?.milestone_index ?? 999;
+          if (!byIdx.has(idx)) { byIdx.set(idx, []); groups.push(idx); }
+          byIdx.get(idx).push(row);
+        });
+        return (
+          <div className="space-y-7">
+            {groups.map(idx => {
+              const rows = byIdx.get(idx);
+              return (
+                <section key={idx}>
+                  <div className="flex items-baseline justify-between mb-2.5 pb-1.5 border-b border-[var(--mq-rule)]">
+                    <span className="font-['JetBrains_Mono',monospace] text-[11px] uppercase tracking-[0.16em] text-[var(--mq-ink-faint)]">
+                      {idx !== 999 ? `Milestone ${idx}` : 'Unassigned'}
+                    </span>
+                    <span className="font-['JetBrains_Mono',monospace] text-[11px] tabular-nums text-[var(--mq-ink-ghost)]">
+                      {rows.length} {rows.length === 1 ? 'drill' : 'drills'}
+                    </span>
                   </div>
-                </div>
-                {isOpen ? <ChevronUp className="h-4 w-4 text-slate-400 dark:text-gray-500" /> : <ChevronDown className="h-4 w-4 text-slate-400 dark:text-gray-500" />}
-              </button>
-              {isOpen && (
-                <div className="border-t border-slate-200 dark:border-gray-700 p-3 bg-slate-50 dark:bg-gray-900/30">
-                  <QuizLeaderboard quizId={row.id} program={activeProgram} />
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                  <ul className="divide-y divide-[var(--mq-rule-soft)]">
+                    {rows.map(row => {
+                      const isOpen = expandedQuizId === row.id;
+                      return (
+                        <li key={row.id}>
+                          <button
+                            onClick={() => setExpandedQuizId(isOpen ? null : row.id)}
+                            aria-expanded={isOpen}
+                            className="w-full py-3 flex items-center justify-between gap-3 text-left transition-colors hover:bg-[var(--mq-paper-sunk)]/60 rounded-[3px] px-2 -mx-2 mashq-focus"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <Trophy className={`h-4 w-4 flex-shrink-0 ${isOpen ? 'text-[var(--mq-accent)]' : 'text-[var(--mq-ink-ghost)]'}`} />
+                              <p className="text-sm font-medium text-[var(--mq-ink)] truncate">{row.chapter?.title || row.title}</p>
+                            </div>
+                            <span className="flex items-center gap-2 flex-shrink-0">
+                              <span className="font-['JetBrains_Mono',monospace] text-[11px] uppercase tracking-[0.08em] text-[var(--mq-ink-faint)] hidden sm:inline">
+                                {isOpen ? 'Hide' : 'Rankings'}
+                              </span>
+                              {isOpen ? <ChevronUp className="h-4 w-4 text-[var(--mq-accent)]" /> : <ChevronDown className="h-4 w-4 text-[var(--mq-ink-ghost)]" />}
+                            </span>
+                          </button>
+                          {isOpen && (
+                            <div className="pb-3 pt-1">
+                              <QuizLeaderboard quizId={row.id} program={activeProgram} />
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              );
+            })}
+          </div>
+        );
+      })()}
     </div>
   );
 }

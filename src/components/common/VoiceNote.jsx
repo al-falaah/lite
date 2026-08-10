@@ -69,20 +69,25 @@ export default function VoiceNote({ audioUrl, color = 'emerald', onDelete, compa
     return `${m}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   };
 
-  const palette = color === 'blue'
-    ? { bg: 'bg-blue-50', fill: 'bg-blue-500', btn: 'bg-blue-500', track: 'bg-blue-200', dot: 'bg-blue-600' }
-    : { bg: 'bg-emerald-50', fill: 'bg-emerald-500', btn: 'bg-emerald-500', track: 'bg-emerald-200', dot: 'bg-emerald-600' };
+  const palettes = {
+    blue: { bg: 'bg-blue-50', fill: 'bg-blue-500', btn: 'bg-blue-500', track: 'bg-blue-200', dot: 'bg-blue-600', time: 'text-gray-500' },
+    emerald: { bg: 'bg-emerald-50', fill: 'bg-emerald-500', btn: 'bg-emerald-500', track: 'bg-emerald-200', dot: 'bg-emerald-600', time: 'text-gray-500' },
+    // Mashq world: deep teal on warm paper, ink-toned labels.
+    mashq: { bg: 'bg-[var(--mq-paper-sunk)]', fill: 'bg-[var(--mq-accent)]', btn: 'bg-[var(--mq-accent)]', track: 'bg-[var(--mq-rule)]', dot: 'bg-[var(--mq-accent)]', time: 'text-[var(--mq-ink-faint)]' },
+  };
+  const palette = palettes[color] || palettes.emerald;
 
   const sz = compact ? 'px-2.5 py-1.5 gap-2' : 'px-3 py-2 gap-2.5';
   const btnSz = compact ? 'w-6 h-6' : 'w-7 h-7';
   const iconSz = compact ? 'h-2.5 w-2.5' : 'h-3 w-3';
 
+  const isMashq = color === 'mashq';
   return (
-    <div className={`flex items-center ${sz} rounded-lg ${palette.bg}`}>
+    <div className={`flex items-center ${sz} ${isMashq ? 'rounded-[4px] border border-[var(--mq-rule)]' : 'rounded-lg'} ${palette.bg}`}>
       {/* Play / Pause */}
       <button
         onClick={togglePlay}
-        className={`flex-shrink-0 ${btnSz} rounded-full ${palette.btn} text-white flex items-center justify-center shadow-sm`}
+        className={`flex-shrink-0 ${btnSz} rounded-full ${palette.btn} ${isMashq ? "text-[var(--mq-on-accent)]" : "text-white"} flex items-center justify-center shadow-sm`}
       >
         {playing
           ? <Pause className={iconSz} />
@@ -108,8 +113,8 @@ export default function VoiceNote({ audioUrl, color = 'emerald', onDelete, compa
           />
         </div>
         <div className="flex justify-between mt-0.5">
-          <span className="text-[10px] text-gray-500 tabular-nums">{fmt(currentTime)}</span>
-          <span className="text-[10px] text-gray-500 tabular-nums">{fmt(duration)}</span>
+          <span className={`text-[10px] tabular-nums ${palette.time} ${isMashq ? "font-['JetBrains_Mono',monospace]" : ''}`}>{fmt(currentTime)}</span>
+          <span className={`text-[10px] tabular-nums ${palette.time} ${isMashq ? "font-['JetBrains_Mono',monospace]" : ''}`}>{fmt(duration)}</span>
         </div>
       </div>
 

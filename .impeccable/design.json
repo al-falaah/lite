@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-10T00:00:00Z",
+  "title": "Design System: The FastTrack Madrasah — Student Portal",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Brand Green",
+        "canonical": "#24e08a",
+        "tonalRamp": [
+          "#04160f",
+          "#0a8354",
+          "#16c476",
+          "#24e08a",
+          "#38c88f",
+          "#66d6a8",
+          "#9ce6c6",
+          "#d6f4e6"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Board (green-black)",
+        "canonical": "#000000",
+        "tonalRamp": [
+          "#060708",
+          "#000000",
+          "#0e1112",
+          "#161a1c",
+          "#26302f",
+          "#34423f",
+          "#4f5a59",
+          "#7e8a89"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "canonical": "#f4f7f6",
+        "tonalRamp": [
+          "#4f5a59",
+          "#7e8a89",
+          "#b9c2c1",
+          "#f4f7f6",
+          "#f4f7f6",
+          "#f4f7f6",
+          "#f4f7f6",
+          "#f4f7f6"
+        ]
+      },
+      "status-pending": {
+        "role": "tertiary",
+        "displayName": "Amber",
+        "canonical": "#ffd23f",
+        "tonalRamp": [
+          "#3a2708",
+          "#5c3f0f",
+          "#7c5514",
+          "#9a6a1a",
+          "#c69138",
+          "#ffd23f",
+          "#eccf95",
+          "#f6ead0"
+        ]
+      },
+      "status-bad": {
+        "role": "tertiary",
+        "displayName": "Coral",
+        "canonical": "#ff5d9e",
+        "tonalRamp": [
+          "#3d130f",
+          "#5f1e17",
+          "#82271e",
+          "#a3352a",
+          "#c85447",
+          "#ff5d9e",
+          "#f0a89e",
+          "#f7d3cd"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "glyph": {
+        "displayName": "Mastery Glyph",
+        "purpose": "The hero Amiri Arabic letterform, inked to progress. Hero only."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Student name on the hub; page titles."
+      },
+      "label": {
+        "displayName": "Specimen Label",
+        "purpose": "Uppercase mono captions and section headers."
+      },
+      "readout": {
+        "displayName": "Readout",
+        "purpose": "Measured values only — IDs, weeks, counts, percentages."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet-lift",
+        "value": "0 1px 0 rgba(255,255,255,0.04) inset, 0 14px 30px -18px rgba(0,0,0,0.6)",
+        "purpose": "The only elevation: a lit sheet on the dark board. Every sheet carries it; nothing else does."
+      },
+      {
+        "name": "chalk-glow",
+        "value": "text-shadow: 0 0 18px rgba(22,184,119,0.45); box-shadow: 0 0 6px rgba(22,184,119,0.5)",
+        "purpose": "Reserved for mastery — the glowing glyph ink and completed stroke marks only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ink-fill",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Exponential ease-out for the mastery glyph inking in (clip-path, 900ms). Snaps under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one assertive surface — Continue, Join class, Verify.",
+      "html": "<button class=\"ds-btn-primary\">Continue learning <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; gap:8px; background:#24e08a; color:#04160f; font-size:0.875rem; font-weight:500; letter-spacing:0.01em; padding:10px 20px; border:none; border-radius:3px; cursor:pointer; transition:background-color 0.2s; } .ds-btn-primary:hover { background:#16c476; } .ds-btn-primary:focus-visible { outline:2px solid #24e08a; outline-offset:2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A stamped field on the sheet — settings, cancel, add.",
+      "html": "<button class=\"ds-btn-secondary\">Settings</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; gap:8px; background:transparent; color:#f4f7f6; font-size:0.875rem; font-weight:500; padding:10px 16px; border:1px solid #34423f; border-radius:3px; cursor:pointer; transition:background-color 0.2s; } .ds-btn-secondary:hover { background:#161a1c; } .ds-btn-secondary:focus-visible { outline:2px solid #24e08a; outline-offset:2px; }"
+    },
+    {
+      "name": "Sheet",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "The primary container: a lit sheet on the board, ruled edge, soft cast shadow.",
+      "html": "<section class=\"ds-sheet\"><span class=\"ds-spec-label\">Now studying</span><p class=\"ds-sheet-title\">Essential Arabic &amp; Islamic Studies</p></section>",
+      "css": ".ds-sheet { background:#0e1112; border:1px solid #26302f; border-radius:4px; padding:24px; box-shadow:0 1px 0 rgba(255,255,255,0.04) inset, 0 14px 30px -18px rgba(0,0,0,0.6); } .ds-spec-label { font-family:'JetBrains Mono',monospace; font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.16em; color:#7e8a89; } .ds-sheet-title { margin:6px 0 0; font-weight:600; font-size:1.125rem; color:#f4f7f6; }"
+    },
+    {
+      "name": "Nav Tab",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Numbered specimen section index; active carries a green underline stroke and aria-current.",
+      "html": "<nav class=\"ds-tabs\"><button class=\"ds-tab is-active\" aria-current=\"page\">Home</button><button class=\"ds-tab\">Classes</button><button class=\"ds-tab\">Lessons</button></nav>",
+      "css": ".ds-tabs { display:flex; gap:28px; background:rgba(12,22,19,0.7); border-bottom:1px solid #26302f; padding:0 8px; } .ds-tab { background:none; border:none; border-bottom:2px solid transparent; padding:4px 4px 10px; font-size:0.875rem; font-weight:500; color:#7e8a89; cursor:pointer; transition:color 0.2s; } .ds-tab:hover { color:#f4f7f6; } .ds-tab.is-active { color:#f4f7f6; border-bottom-color:#24e08a; }"
+    },
+    {
+      "name": "Mastery Glyph",
+      "kind": "custom",
+      "refersTo": "glyph",
+      "description": "The signature: an Amiri letterform written in glowing green chalk from a faint ghost to full mastery via a --fill clip.",
+      "html": "<div class=\"ds-glyph\" style=\"--fill:0.26\"><span class=\"ds-glyph-ghost\">ع</span><span class=\"ds-glyph-ink\">ع</span></div>",
+      "css": ".ds-glyph { position:relative; display:inline-block; font-family:'Amiri',serif; font-size:10rem; line-height:0.9; } .ds-glyph-ghost { color:rgba(240,244,239,0.10); } .ds-glyph-ink { position:absolute; inset:0; color:#24e08a; text-shadow:0 0 18px rgba(22,184,119,0.45); clip-path:inset(calc((1 - var(--fill,1)) * 100%) 0 0 0); transition:clip-path 900ms cubic-bezier(0.16,1,0.3,1); } @media (prefers-reduced-motion: reduce) { .ds-glyph-ink { transition:none; } }"
+    },
+    {
+      "name": "Strokes Meter",
+      "kind": "custom",
+      "refersTo": "sheet",
+      "description": "Mastery as a row of drilled chalk strokes; completed strokes glow brand-green.",
+      "html": "<div class=\"ds-strokes\"><span class=\"is-done\"></span><span class=\"is-done\"></span><span class=\"is-done\"></span><span></span><span></span><span></span><span></span><span></span></div>",
+      "css": ".ds-strokes { display:flex; gap:3px; align-items:flex-end; height:20px; } .ds-strokes span { width:4px; height:14px; border-radius:2px; background:#34423f; } .ds-strokes span:nth-child(2){height:18px} .ds-strokes span:nth-child(4){height:11px} .ds-strokes span.is-done { background:#24e08a; box-shadow:0 0 6px rgba(22,184,119,0.5); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lightboard",
+    "overview": "The student portal is the madrasah's e-glass teaching board turned into an interface. Learning is the practice of a script written in chalk: a student's progress renders as an Arabic letterform that glows in from a faint ghost to bright chalk as it is mastered, and the whole portal is the dark board that letterform is written on. Chalk-white text on a deep green-black ground, lit sheets, ruled hairlines, a tiny disciplined monospace hand. Hierarchy is scale contrast, never chrome. It refuses the LMS card-dashboard, the gold-on-green tile cliché, and the warm-cream-paper AI default; the board is the product's own teaching instrument and lets the brand green sit at home.",
+    "keyCharacteristics": [
+      "Chalk-white text on a deep green-black board; the brand green is the one glowing accent.",
+      "A monumental Amiri Arabic glyph as the hero, written in glowing chalk to real progress.",
+      "Lit sheets with ruled hairline edges floating on the board — not rounded app cards.",
+      "Monospace specimen labels and readouts for measured values only.",
+      "Scale-contrast hierarchy; registration ticks and ruled sections instead of boxes.",
+      "Every text pair meets WCAG AA on the dark ground."
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Teal (#24e08a) is the only saturated color and appears on a small fraction of any screen — the primary action, the active state, the mastered stroke. Its rarity is the point.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tinted-Secondary Rule",
+        "body": "Secondary and faint text is drawn from the board’s green hue (#b9c2c1 / #7e8a89), never a cool gray. No slate/gray values exist in this world.",
+        "section": "colors"
+      },
+      {
+        "name": "The Measured-Value Rule",
+        "body": "Monospace is reserved for genuine measurement — IDs, counts, weeks, percentages. Never a costume for 'technical' prose.",
+        "section": "typography"
+      },
+      {
+        "name": "The Scale-Contrast Rule",
+        "body": "Hierarchy comes from size and weight steps, not added chrome, boxes, or color.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper-Not-Card Rule",
+        "body": "Containers are sheets of paper: warm raised surface, hairline ruled edge, ~4px corners, one soft paper shadow. No app-card chrome, gradients, or glass.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep ink-on-warm-paper: ground #000000, ink #f4f7f6, secondary from the paper hue.",
+      "Do use Brand Green (#24e08a) only for the primary action, active/live state, and mastery.",
+      "Do render containers as ruled paper sheets and separate groups with hairlines, not nested cards.",
+      "Do reserve JetBrains Mono for measured values and specimen labels (UPPERCASE, 0.16em).",
+      "Do let the Arabic letterform carry hero scale; hierarchy is scale contrast.",
+      "Do give dense lists a mono section header and ruled entries so a long run has rhythm."
+    ],
+    "donts": [
+      "Don't introduce slate/gray neutrals, pure white, or pure black.",
+      "Don't use a second saturated color, gradients, glass/blur-as-decoration, colored glows, or hard offset shadows.",
+      "Don't build same-size app cards (or nested cards) as the page structure.",
+      "Don't use monospace as a costume for prose, or set status colors as filled pill backgrounds.",
+      "Don't alter Qurʾānic/lesson content or its Amiri Quran rendering — this system governs the portal shell only.",
+      "Don't reintroduce a light/dark theme toggle here; the world is committed to one paper treatment."
+    ]
+  }
+}

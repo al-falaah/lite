@@ -81,7 +81,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
   if (fetchError) {
     return (
       <div className={`${CARD_DARK} p-4 sm:p-5 text-center`}>
-        <p className="text-sm text-slate-700 dark:text-gray-300">Couldn't load your test progress.</p>
+        <p className="text-sm text-[var(--mq-ink-soft)]">Couldn't load your test progress.</p>
         <button onClick={fetchData} className={`${BTN_SECONDARY} mt-3`}>
           Try again
         </button>
@@ -131,28 +131,28 @@ export default function TestProgressCard({ programId, currentWeek }) {
       <div className="mt-1.5 ml-6">
         <button
           onClick={() => toggleBreakdown(attempt.id)}
-          className="inline-flex items-center gap-1 text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-medium"
+          className="inline-flex items-center gap-1 text-xs text-[var(--mq-accent)] hover:text-[var(--mq-accent-deeper)] font-medium"
         >
           {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
           {isOpen ? 'Hide' : 'View'} breakdown ({rubric.length} question{rubric.length === 1 ? '' : 's'})
         </button>
         {isOpen && (
-          <ul className="mt-1.5 space-y-1.5 border-l-2 border-emerald-200 dark:border-emerald-800 pl-2.5">
+          <ul className="mt-1.5 space-y-1.5 border-l-2 border-[var(--mq-accent)]/25 pl-2.5">
             {rubric.map((r, i) => (
               <li key={i} className="text-xs">
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-gray-700 dark:text-gray-300 flex-1">{r.text || '(no text)'}</span>
-                  <span className="font-mono text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                  <span className="text-[var(--mq-ink-soft)] flex-1">{r.text || '(no text)'}</span>
+                  <span className="font-mono text-[var(--mq-ink-soft)] whitespace-nowrap">
                     {r.score}/{r.max}{r.weight > 1 ? ` ×${r.weight}` : ''}
                   </span>
                 </div>
-                {r.notes && <div className="text-gray-500 dark:text-gray-400 italic mt-0.5">{r.notes}</div>}
+                {r.notes && <div className="text-[var(--mq-ink-faint)] italic mt-0.5">{r.notes}</div>}
               </li>
             ))}
           </ul>
         )}
         {attempt.oral_notes && (
-          <p className="mt-1.5 text-xs text-gray-600 dark:text-gray-400 italic">
+          <p className="mt-1.5 text-xs text-[var(--mq-ink-soft)] italic">
             Teacher: {attempt.oral_notes}
           </p>
         )}
@@ -161,10 +161,10 @@ export default function TestProgressCard({ programId, currentWeek }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-5 shadow-sm">
+    <div className="bg-[var(--mq-paper-raised)] rounded-xl border border-[var(--mq-rule)] p-4 sm:p-5 shadow-sm">
       <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h3 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide flex items-center gap-1.5 sm:gap-2">
-          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 flex-shrink-0" />
+        <h3 className="text-xs sm:text-sm font-bold text-[var(--mq-ink)] uppercase tracking-wide flex items-center gap-1.5 sm:gap-2">
+          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[var(--mq-warn)] flex-shrink-0" />
           Tests & Exam Progress
         </h3>
         {results && (
@@ -183,16 +183,16 @@ export default function TestProgressCard({ programId, currentWeek }) {
 
       {/* Overall score */}
       {results?.weighted_total != null && (
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
+        <div className="bg-[var(--mq-paper-sunk)] rounded-lg p-4 mb-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500 dark:text-gray-400">Weighted Total</span>
+            <span className="text-xs text-[var(--mq-ink-faint)]">Weighted Total</span>
             <span className={`text-lg font-bold ${
-              results.weighted_total >= (settings?.pass_mark || 50) ? 'text-emerald-600' : 'text-red-600'
+              results.weighted_total >= (settings?.pass_mark || 50) ? 'text-[var(--mq-accent)]' : 'text-red-600'
             }`}>
               {Number(results.weighted_total).toFixed(1)}%
             </span>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-1 gap-0.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-[var(--mq-ink-faint)] mt-1 gap-0.5">
             <span>Milestones ({settings?.milestone_test_weight || 50}%): {results.milestone_average != null ? `${Number(results.milestone_average).toFixed(1)}%` : '—'}</span>
             <span>Exam ({settings?.final_exam_weight || 50}%): {results.final_exam_score != null ? `${Number(results.final_exam_score).toFixed(1)}%` : '—'}</span>
           </div>
@@ -209,23 +209,23 @@ export default function TestProgressCard({ programId, currentWeek }) {
           const isOral = testModes[String(idx)] === 'oral';
 
           return (
-            <div key={idx} className="p-3 sm:p-4 rounded-lg border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 transition-all">
+            <div key={idx} className="p-3 sm:p-4 rounded-lg border border-[var(--mq-rule-soft)] hover:border-[var(--mq-rule)] transition-all">
               <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {completed ? (
-                  <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-[var(--mq-accent)] flex-shrink-0" />
                 ) : unlocked ? (
-                  isOral ? <Mic className="h-4 w-4 text-amber-500 flex-shrink-0" /> : <Clock className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                  isOral ? <Mic className="h-4 w-4 text-[var(--mq-warn)] flex-shrink-0" /> : <Clock className="h-4 w-4 text-[var(--mq-warn)] flex-shrink-0" />
                 ) : (
-                  <Lock className="h-4 w-4 text-gray-300 dark:text-gray-600 flex-shrink-0" />
+                  <Lock className="h-4 w-4 text-[var(--mq-ink-ghost)] flex-shrink-0" />
                 )}
                 <div className="min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white leading-snug">
+                  <p className="text-xs sm:text-sm font-medium text-[var(--mq-ink)] leading-snug">
                     Milestone {idx + 1}: {m.name}
-                    {isOral && <span className="ml-1 sm:ml-1.5 text-xs px-2.5 py-1 bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-300 rounded-full font-medium align-middle">ORAL</span>}
+                    {isOral && <span className="ml-1 sm:ml-1.5 text-xs px-2.5 py-1 bg-[var(--mq-paper-tint)] text-[var(--mq-ink-soft)] rounded-full font-medium align-middle">ORAL</span>}
                   </p>
                   {completed && (
-                    <p className="text-xs text-emerald-600 font-medium">{Number(test.percentage).toFixed(1)}%</p>
+                    <p className="text-xs text-[var(--mq-accent)] font-medium">{Number(test.percentage).toFixed(1)}%</p>
                   )}
                 </div>
               </div>
@@ -238,10 +238,10 @@ export default function TestProgressCard({ programId, currentWeek }) {
                 </Link>
               )}
               {unlocked && !completed && isOral && (
-                <span className="text-xs text-amber-700 dark:text-amber-400 font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
+                <span className="text-xs text-[var(--mq-warn)] font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
               )}
               {!unlocked && !completed && (
-                <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
+                <span className="text-xs text-[var(--mq-ink-ghost)] whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
               )}
               </div>
               {completed && renderBreakdown(test)}
@@ -257,32 +257,32 @@ export default function TestProgressCard({ programId, currentWeek }) {
 
         return (
           <div className={`p-4 sm:p-4 rounded-lg border-2 ${
-            bestExam ? 'border-emerald-200 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20' :
-            isFinalExamUnlocked() ? 'border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20' :
-            'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800'
+            bestExam ? 'border-[var(--mq-accent)]/25 bg-[var(--mq-accent)]/[0.06]' :
+            isFinalExamUnlocked() ? 'border-[var(--mq-warn)]/30 bg-[var(--mq-warn)]/[0.08]' :
+            'border-[var(--mq-rule)] bg-[var(--mq-paper-sunk)]'
           }`}>
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
                 {bestExam ? (
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-[var(--mq-accent)] flex-shrink-0" />
                 ) : isFinalExamUnlocked() ? (
-                  isExamOral ? <Mic className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" /> : <Award className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" />
+                  isExamOral ? <Mic className="h-4 w-4 sm:h-5 sm:w-5 text-[var(--mq-warn)] flex-shrink-0" /> : <Award className="h-4 w-4 sm:h-5 sm:w-5 text-[var(--mq-warn)] flex-shrink-0" />
                 ) : (
-                  <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
+                  <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-[var(--mq-ink-ghost)] flex-shrink-0" />
                 )}
                 <div className="min-w-0">
-                  <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
+                  <p className="text-xs sm:text-sm font-bold text-[var(--mq-ink)]">
                     Final Exam
-                    {isExamOral && <span className="ml-1 sm:ml-1.5 text-xs px-2 py-1 bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-300 rounded-full font-medium align-middle">ORAL</span>}
+                    {isExamOral && <span className="ml-1 sm:ml-1.5 text-xs px-2 py-1 bg-[var(--mq-paper-tint)] text-[var(--mq-ink-soft)] rounded-full font-medium align-middle">ORAL</span>}
                   </p>
                   {bestExam && (
-                    <p className="text-xs text-emerald-600 font-medium">
+                    <p className="text-xs text-[var(--mq-accent)] font-medium">
                       Best: {Number(bestExam.percentage).toFixed(1)}%
                       {examAttempts.length > 1 && ` (${examAttempts.length} attempts)`}
                     </p>
                   )}
                   {!isFinalExamUnlocked() && (
-                    <p className="text-xs text-gray-400 dark:text-gray-500">Complete all milestone tests first</p>
+                    <p className="text-xs text-[var(--mq-ink-ghost)]">Complete all milestone tests first</p>
                   )}
                 </div>
               </div>
@@ -295,7 +295,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
                 </Link>
               )}
               {isFinalExamUnlocked() && !bestExam && isExamOral && (
-                <span className="text-xs text-amber-700 dark:text-amber-400 font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
+                <span className="text-xs text-[var(--mq-warn)] font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
               )}
               {canRetakeExam && !isExamOral && (
                 <Link

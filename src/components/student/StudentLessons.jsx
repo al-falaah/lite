@@ -28,33 +28,38 @@ const sanitizeContent = (html) => {
 
 const themeClasses = {
   light: {
-    // page = tinted backdrop; surface = raised article/card; sidebar = its own panel
-    bg: 'bg-slate-100', surface: 'bg-white', border: 'border-slate-200', sidebar: 'bg-white border-slate-200',
-    heading: 'text-slate-900', text: 'text-slate-700', muted: 'text-slate-500', faint: 'text-slate-400',
-    hover: 'hover:bg-slate-50',
-    // nav-item selected: tinted wash + emerald left-accent (NOT a solid brand fill)
-    itemActive: 'bg-emerald-50 text-emerald-900', itemActiveBar: 'bg-emerald-600',
-    itemIdle: 'text-slate-600', itemNum: 'bg-slate-100 text-slate-500', itemNumActive: 'bg-emerald-600 text-white',
-    navBg: 'bg-white/90 border-slate-200', divider: 'border-slate-200', quizBg: 'bg-slate-50',
-    chip: 'bg-slate-100 text-slate-600',
+    // A clean paper reading mode. Self-contained ink values (NOT the dark-tuned
+    // --mq-* chalk vars, which are pale on white) — near-black text so the
+    // sidebar and captions stay crisp on the white sheet.
+    // page = warm off-white backdrop; surface = white article; sidebar = its own panel
+    bg: 'bg-[#f4f2ee]', surface: 'bg-white', border: 'border-[#e4e0d8]', sidebar: 'bg-white border-[#e4e0d8]',
+    heading: 'text-[#1a1a1a]', text: 'text-[#26262a]', muted: 'text-[#57575e]', faint: 'text-[#6f6f77]',
+    hover: 'hover:bg-[#f2f0ec]',
+    // nav-item selected: tinted green wash + brand left-accent (NOT a solid fill)
+    itemActive: 'bg-[var(--mq-accent-deep)]/10 text-[var(--mq-accent-deeper)]', itemActiveBar: 'bg-[var(--mq-accent-deep)]',
+    itemIdle: 'text-[#33333a]', itemNum: 'bg-[#eceae4] text-[#57575e]', itemNumActive: 'bg-[var(--mq-accent-deep)] text-white',
+    navBg: 'bg-white/90 border-[#e4e0d8]', divider: 'border-[#e4e0d8]', quizBg: 'bg-[#f4f2ee]',
+    chip: 'bg-[#eceae4] text-[#33333a]',
   },
   sepia: {
-    bg: 'bg-[#e7ddc9]', surface: 'bg-[#f5f1e8]', border: 'border-[#d4c9b8]', sidebar: 'bg-[#f5f1e8] border-[#d4c9b8]',
-    heading: 'text-[#3d3229]', text: 'text-[#3d3229]', muted: 'text-[#5a4a3a]', faint: 'text-[#8a7a6a]',
-    hover: 'hover:bg-[#ede5d6]',
-    itemActive: 'bg-[#e3d8c2] text-[#3d3229]', itemActiveBar: 'bg-emerald-700',
-    itemIdle: 'text-[#5a4a3a]', itemNum: 'bg-[#e3d8c2] text-[#8a7a6a]', itemNumActive: 'bg-emerald-700 text-white',
-    navBg: 'bg-[#f5f1e8]/90 border-[#d4c9b8]', divider: 'border-[#d4c9b8]', quizBg: 'bg-[#ebe4d8]',
-    chip: 'bg-[#e3d8c2] text-[#5a4a3a]',
+    bg: 'bg-[#e5dac2]', surface: 'bg-[#f6f1e5]', border: 'border-[#d8ccb4]', sidebar: 'bg-[#f6f1e5] border-[#d8ccb4]',
+    heading: 'text-[#332a1e]', text: 'text-[#3a3025]', muted: 'text-[#5c4c38]', faint: 'text-[#7a6850]',
+    hover: 'hover:bg-[#efe7d6]',
+    itemActive: 'bg-[#e6d9bd] text-[#2f2415]', itemActiveBar: 'bg-[var(--mq-accent-deeper)]',
+    itemIdle: 'text-[#4a3c2a]', itemNum: 'bg-[#e6d9bd] text-[#5c4c38]', itemNumActive: 'bg-[var(--mq-accent-deeper)] text-white',
+    navBg: 'bg-[#f6f1e5]/90 border-[#d8ccb4]', divider: 'border-[#d8ccb4]', quizBg: 'bg-[#ece2ce]',
+    chip: 'bg-[#e6d9bd] text-[#4a3c2a]',
   },
   dark: {
-    bg: 'bg-slate-950', surface: 'bg-slate-900', border: 'border-slate-800', sidebar: 'bg-slate-900 border-slate-800',
-    heading: 'text-slate-100', text: 'text-slate-300', muted: 'text-slate-400', faint: 'text-slate-500',
-    hover: 'hover:bg-slate-800',
-    itemActive: 'bg-emerald-950/60 text-emerald-100', itemActiveBar: 'bg-emerald-500',
-    itemIdle: 'text-slate-400', itemNum: 'bg-slate-800 text-slate-400', itemNumActive: 'bg-emerald-600 text-white',
-    navBg: 'bg-slate-900/90 border-slate-800', divider: 'border-slate-800', quizBg: 'bg-slate-800/50',
-    chip: 'bg-slate-800 text-slate-300',
+    // The on-world default: chalk on the black glass. Surface is a barely-lifted
+    // panel so the article reads as a sheet on the board.
+    bg: 'bg-[var(--mq-paper)]', surface: 'bg-[var(--mq-paper-raised)]', border: 'border-[var(--mq-rule)]', sidebar: 'bg-[var(--mq-paper)] border-[var(--mq-rule)]',
+    heading: 'text-[var(--mq-ink)]', text: 'text-[var(--mq-ink-soft)]', muted: 'text-[var(--mq-ink-faint)]', faint: 'text-[var(--mq-ink-faint)]',
+    hover: 'hover:bg-[var(--mq-paper-tint)]',
+    itemActive: 'bg-[var(--mq-accent)]/12 text-[var(--mq-accent)]', itemActiveBar: 'bg-[var(--mq-accent)]',
+    itemIdle: 'text-[var(--mq-ink-faint)]', itemNum: 'bg-[var(--mq-paper-tint)] text-[var(--mq-ink-faint)]', itemNumActive: 'bg-[var(--mq-accent)] text-[var(--mq-on-accent)]',
+    navBg: 'bg-[var(--mq-paper)]/90 border-[var(--mq-rule)]', divider: 'border-[var(--mq-rule)]', quizBg: 'bg-[var(--mq-paper-raised)]/50',
+    chip: 'bg-[var(--mq-paper-raised)] text-[var(--mq-ink-soft)]',
   },
 };
 
@@ -64,9 +69,9 @@ const proseTheme = {
   // which wins over the inline background — leaving white-on-pale (invisible)
   // in light/sepia. The [&_th]:text-* below overrides the header text colour
   // to stay legible on whatever background the theme actually renders.
-  light: 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-li:text-gray-700 prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-gray-300 prose-blockquote:text-gray-600 prose-th:bg-gray-50 [&_th]:!text-gray-900 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.verse]:bg-emerald-600/5 [&_.verse]:text-gray-900',
-  sepia: 'prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-a:text-[#2c5f7f] prose-strong:text-[#3d3229] prose-li:text-[#3d3229] prose-li:marker:text-[#8a7a6a] prose-hr:border-[#d4c9b8] prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-[#8a7a6a] prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] [&_th]:!text-[#3d3229] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.verse]:bg-[#ebe4d8] [&_.verse]:text-[#3d3229]',
-  dark: 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-800 prose-pre:bg-gray-800 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-800 [&_th]:!text-gray-100 prose-th:border prose-th:border-gray-700 prose-td:border prose-td:border-gray-700 [&_.verse]:bg-emerald-500/10 [&_.verse]:text-gray-100',
+  light: 'prose-headings:text-[#161616] prose-p:text-[#26262a] prose-a:text-[var(--mq-accent-deeper)] prose-strong:text-[#0f0f0f] prose-li:text-[#26262a] prose-li:marker:text-[#8a8a90] prose-hr:border-[#e4e0d8] prose-code:bg-[#f0eee9] prose-code:text-[#26262a] prose-pre:bg-[#f7f5f1] prose-pre:border prose-pre:border-[#e4e0d8] prose-blockquote:border-[var(--mq-accent-deep)] prose-blockquote:text-[#3a3a40] prose-th:bg-[#f0eee9] [&_th]:!text-[#161616] prose-th:border prose-th:border-[#dcd8d0] prose-td:border prose-td:border-[#e4e0d8] [&_.verse]:bg-[var(--mq-accent-deep)]/[0.06] [&_.verse]:text-[#161616]',
+  sepia: 'prose-headings:text-[#2f2415] prose-p:text-[#3a3025] prose-a:text-[#8a5a1a] prose-strong:text-[#241b0f] prose-li:text-[#3a3025] prose-li:marker:text-[#7a6850] prose-hr:border-[#d8ccb4] prose-code:bg-[#ece2ce] prose-code:text-[#3a3025] prose-pre:bg-[#ece2ce] prose-pre:border prose-pre:border-[#d8ccb4] prose-blockquote:border-[#a8895a] prose-blockquote:text-[#5c4c38] prose-th:bg-[#ece2ce] [&_th]:!text-[#2f2415] prose-th:border prose-th:border-[#d8ccb4] prose-td:border prose-td:border-[#d8ccb4] [&_.verse]:bg-[#ece2ce] [&_.verse]:text-[#2f2415]',
+  dark: 'prose-invert prose-headings:text-[var(--mq-ink)] prose-p:text-[var(--mq-ink-soft)] prose-a:text-[var(--mq-accent)] prose-strong:text-[var(--mq-ink)] prose-li:text-[var(--mq-ink-soft)] prose-code:bg-[var(--mq-paper-sunk)] prose-pre:bg-[var(--mq-paper-sunk)] prose-pre:border prose-pre:border-[var(--mq-rule)] prose-blockquote:border-[var(--mq-accent)] prose-blockquote:text-[var(--mq-ink-soft)] prose-th:bg-[var(--mq-paper-sunk)] [&_th]:!text-[var(--mq-ink)] prose-th:border prose-th:border-[var(--mq-rule)] prose-td:border prose-td:border-[var(--mq-rule)] [&_.verse]:bg-[var(--mq-accent)]/[0.08] [&_.verse]:text-[var(--mq-ink)]',
 };
 
 export default function StudentLessons({
@@ -108,7 +113,10 @@ export default function StudentLessons({
   // user toggles are stored and always win.
   const [expandedSections, setExpandedSections] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'light');
+  // Default to 'dark' so the reader arrives coherent with the (dark) portal;
+  // light/sepia stay available as opt-in reading-comfort modes. A previously
+  // saved explicit choice is still honoured.
+  const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'dark');
   const [viewMode, setViewMode] = useState('milestones'); // 'milestones' | 'courses'
   const contentRef = useRef(null);
 
@@ -476,32 +484,32 @@ export default function StudentLessons({
     return (
       <button
         onClick={() => openChapter(ch)}
-        className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
+        className="w-full text-left px-4 py-3 hover:bg-[var(--mq-paper-sunk)] transition-colors border-b border-[var(--mq-rule-soft)] last:border-0"
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-start gap-2.5 min-w-0">
             {done ? (
-              <CheckCircle className="h-4 w-4 mt-0.5 text-emerald-500 flex-shrink-0" />
+              <CheckCircle className="h-4 w-4 mt-0.5 text-[var(--mq-accent)] flex-shrink-0" />
             ) : drill ? (
-              <Circle className="h-4 w-4 mt-0.5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
+              <Circle className="h-4 w-4 mt-0.5 text-[var(--mq-ink-soft)] flex-shrink-0" />
             ) : null}
             <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{ch.title}</p>
+              <p className="text-sm font-medium text-[var(--mq-ink)] truncate">{ch.title}</p>
               <div className="flex items-center gap-2 mt-0.5">
-                {ch.week_number && <span className="text-xs text-gray-600 dark:text-gray-400">Week {ch.week_number}</span>}
+                {ch.week_number && <span className="text-xs text-[var(--mq-ink-soft)]">Week {ch.week_number}</span>}
                 {drill?.done && (
-                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Drill {drill.score}/{drill.total}</span>
+                  <span className="text-xs text-[var(--mq-accent)] font-medium">Drill {drill.score}/{drill.total}</span>
                 )}
                 {courses.length > 1 && course && (
-                  <span className="text-xs text-gray-600 dark:text-gray-400 truncate">{course.title}</span>
+                  <span className="text-xs text-[var(--mq-ink-soft)] truncate">{course.title}</span>
                 )}
               </div>
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0">
-            {ch.video_url && <Video className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />}
-            {drill && !drill.done && <HelpCircle className="h-3.5 w-3.5 text-gray-400 dark:text-gray-500" />}
-            {ch.content_type === 'full_html' && <span className="text-[10px] text-gray-500 dark:text-gray-400">HTML</span>}
+            {ch.video_url && <Video className="h-3.5 w-3.5 text-[var(--mq-ink-faint)]" />}
+            {drill && !drill.done && <HelpCircle className="h-3.5 w-3.5 text-[var(--mq-ink-faint)]" />}
+            {ch.content_type === 'full_html' && <span className="text-[10px] text-[var(--mq-ink-faint)]">HTML</span>}
           </div>
         </div>
       </button>
@@ -518,7 +526,7 @@ export default function StudentLessons({
             {uniquePrograms.map(p => (
               <button key={p} onClick={() => setSelectedProgram(p)}
                 className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                  selectedProgram === p ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  selectedProgram === p ? 'bg-[var(--mq-accent)] text-white' : 'bg-[var(--mq-paper-tint)] text-[var(--mq-ink-soft)] hover:bg-[var(--mq-rule)]'
                 }`}
               >
                 {PROGRAMS[p]?.shortName || p}
@@ -533,7 +541,7 @@ export default function StudentLessons({
           </div>
         ) : fetchError ? (
           <div className="text-center py-12">
-            <p className="text-sm text-slate-700 dark:text-gray-300">Couldn't load your lessons.</p>
+            <p className="text-sm text-[var(--mq-ink-soft)]">Couldn't load your lessons.</p>
             <button onClick={() => setReloadKey(k => k + 1)} className={`${BTN_SECONDARY} mt-3`}>
               Try again
             </button>
@@ -548,20 +556,22 @@ export default function StudentLessons({
           <div className="space-y-3">
             {/* View toggle */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-[var(--mq-ink)] dark:text-white">
                 {PROGRAMS[selectedProgram]?.shortName || selectedProgram} Lessons
               </h2>
               {milestones.length > 0 && (
-                <div className="flex text-xs border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
+                <div className="inline-flex items-stretch rounded-[3px] border border-[var(--mq-rule-strong)] overflow-hidden" role="tablist" aria-label="Group lessons">
                   <button
+                    role="tab" aria-selected={viewMode === 'milestones'}
                     onClick={() => setViewMode('milestones')}
-                    className={`px-3 py-1.5 transition-colors ${viewMode === 'milestones' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                    className={`px-3 py-1.5 font-['JetBrains_Mono',monospace] text-[11px] uppercase tracking-[0.1em] transition-colors mashq-focus ${viewMode === 'milestones' ? 'bg-[var(--mq-accent)] text-[var(--mq-on-accent)]' : 'text-[var(--mq-ink-faint)] hover:bg-[var(--mq-paper-tint)] hover:text-[var(--mq-ink)]'}`}
                   >
                     By Milestone
                   </button>
                   <button
+                    role="tab" aria-selected={viewMode === 'courses'}
                     onClick={() => setViewMode('courses')}
-                    className={`px-3 py-1.5 transition-colors ${viewMode === 'courses' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                    className={`px-3 py-1.5 border-l border-[var(--mq-rule-strong)] font-['JetBrains_Mono',monospace] text-[11px] uppercase tracking-[0.1em] transition-colors mashq-focus ${viewMode === 'courses' ? 'bg-[var(--mq-accent)] text-[var(--mq-on-accent)]' : 'text-[var(--mq-ink-faint)] hover:bg-[var(--mq-paper-tint)] hover:text-[var(--mq-ink)]'}`}
                   >
                     By Course
                   </button>
@@ -576,30 +586,30 @@ export default function StudentLessons({
                   const chaps = milestoneGroups.groups[m.id] || [];
                   const isOpen = expandedMilestones[m.id];
                   return (
-                    <div key={m.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                    <div key={m.id} className="border border-[var(--mq-rule)] rounded-lg overflow-hidden">
                       <button
                         onClick={() => toggleMilestone(m.id)}
-                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--mq-paper-sunk)] transition-colors"
                       >
                         <div className="text-left">
-                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          <p className="text-sm font-medium text-[var(--mq-ink)]">
                             {m.name}
                           </p>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                          <p className="text-xs text-[var(--mq-ink-soft)] mt-0.5">
                             Weeks {m.weekStart}–{m.weekEnd}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
                           {chaps.length > 0 ? (
-                            <span className="text-xs text-gray-600 dark:text-gray-400">{chaps.length}</span>
+                            <span className="text-xs text-[var(--mq-ink-soft)]">{chaps.length}</span>
                           ) : (
-                            <span className="text-xs text-gray-500 dark:text-gray-500">Coming soon</span>
+                            <span className="text-xs text-[var(--mq-ink-faint)]">Coming soon</span>
                           )}
-                          <ChevronDown className={`h-4 w-4 text-gray-600 dark:text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`h-4 w-4 text-[var(--mq-ink-soft)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                         </div>
                       </button>
                       {isOpen && chaps.length > 0 && (
-                        <div className="border-t border-gray-100 dark:border-gray-700">
+                        <div className="border-t border-[var(--mq-rule-soft)]">
                           {courses
                             .filter(c => chaps.some(ch => ch.course_id === c.id))
                             .map(c => {
@@ -609,8 +619,8 @@ export default function StudentLessons({
                               return (
                                 <div key={c.id}>
                                   {courses.length > 1 && (
-                                    <div className="px-4 py-2 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700">
-                                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{c.title}</p>
+                                    <div className="px-4 py-2 bg-[var(--mq-paper-sunk)] border-b border-[var(--mq-rule-soft)]">
+                                      <p className="text-xs font-medium text-[var(--mq-ink-faint)] uppercase tracking-wide">{c.title}</p>
                                     </div>
                                   )}
                                   {courseChaps.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
@@ -625,19 +635,19 @@ export default function StudentLessons({
 
                 {/* Ungrouped chapters */}
                 {milestoneGroups.ungrouped.length > 0 && (
-                  <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                  <div className="border border-[var(--mq-rule)] rounded-lg overflow-hidden">
                     <button
                       onClick={() => toggleMilestone('general')}
-                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--mq-paper-sunk)] transition-colors"
                     >
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">General</p>
+                      <p className="text-sm font-medium text-[var(--mq-ink)]">General</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-600 dark:text-gray-400">{milestoneGroups.ungrouped.length}</span>
-                        <ChevronDown className={`h-4 w-4 text-gray-600 dark:text-gray-400 transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
+                        <span className="text-xs text-[var(--mq-ink-soft)]">{milestoneGroups.ungrouped.length}</span>
+                        <ChevronDown className={`h-4 w-4 text-[var(--mq-ink-soft)] transition-transform ${expandedMilestones['general'] ? 'rotate-180' : ''}`} />
                       </div>
                     </button>
                     {expandedMilestones['general'] && (
-                      <div className="border-t border-gray-100 dark:border-gray-700">
+                      <div className="border-t border-[var(--mq-rule-soft)]">
                         {milestoneGroups.ungrouped.map(ch => <ChapterItem key={ch.id} ch={ch} />)}
                       </div>
                     )}
@@ -651,11 +661,11 @@ export default function StudentLessons({
                   const chaps = courseGroups[course.id] || [];
                   if (chaps.length === 0) return null;
                   return (
-                    <div key={course.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                      <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-100 dark:border-gray-600">
-                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{course.title}</p>
+                    <div key={course.id} className="border border-[var(--mq-rule)] rounded-lg overflow-hidden">
+                      <div className="px-4 py-3 bg-[var(--mq-paper-sunk)] border-b border-[var(--mq-rule-soft)]">
+                        <p className="text-sm font-medium text-[var(--mq-ink)]">{course.title}</p>
                         {course.description && (
-                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 line-clamp-1">{course.description}</p>
+                          <p className="text-xs text-[var(--mq-ink-soft)] mt-0.5 line-clamp-1">{course.description}</p>
                         )}
                       </div>
                       <div>
@@ -747,7 +757,7 @@ export default function StudentLessons({
                       {section.label}
                     </span>
                     <span className="flex items-center gap-2 flex-shrink-0">
-                      <span className={`text-xs font-medium tabular-nums ${doneInSection === section.chapters.length && section.chapters.length > 0 ? 'text-emerald-500' : t.faint}`}>
+                      <span className={`text-xs font-medium tabular-nums ${doneInSection === section.chapters.length && section.chapters.length > 0 ? 'text-[var(--mq-accent)]' : t.faint}`}>
                         {doneInSection}/{section.chapters.length}
                       </span>
                       <ChevronDown className={`h-4 w-4 ${t.faint} transition-transform motion-reduce:transition-none ${isOpen ? 'rotate-180' : ''}`} />
@@ -769,7 +779,7 @@ export default function StudentLessons({
                         >
                           {isActive && <span className={`absolute left-0 top-1.5 bottom-1.5 w-1 rounded-full ${t.itemActiveBar}`} />}
                           {done ? (
-                            <CheckCircle className="mt-0.5 flex-shrink-0 h-5 w-5 text-emerald-500" />
+                            <CheckCircle className="mt-0.5 flex-shrink-0 h-5 w-5 text-[var(--mq-accent)]" />
                           ) : (
                             <span className={`mt-0.5 flex-shrink-0 h-5 w-5 rounded-md text-[11px] font-semibold flex items-center justify-center ${
                               isActive ? t.itemNumActive : t.itemNum
@@ -812,7 +822,7 @@ export default function StudentLessons({
                       <span className={`text-xs tabular-nums ${t.faint}`}>{readCount}/{allChapters.length}</span>
                     </div>
                     <div className={`h-1.5 rounded-full overflow-hidden ${t.itemNum.split(' ')[0]}`}>
-                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${Math.round((readCount / allChapters.length) * 100)}%` }} />
+                      <div className="h-full bg-[var(--mq-accent)] rounded-full transition-all" style={{ width: `${Math.round((readCount / allChapters.length) * 100)}%` }} />
                     </div>
                   </div>
                 )}
@@ -823,7 +833,7 @@ export default function StudentLessons({
                       <span className={`text-xs tabular-nums ${t.faint}`}>{cls.completed}/{cls.total} · {cls.pct}%</span>
                     </div>
                     <div className={`h-1.5 rounded-full overflow-hidden ${t.itemNum.split(' ')[0]}`}>
-                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${cls.pct}%` }} />
+                      <div className="h-full bg-[var(--mq-accent)] rounded-full transition-all" style={{ width: `${cls.pct}%` }} />
                     </div>
                   </div>
                 )}
@@ -834,14 +844,14 @@ export default function StudentLessons({
                       <span className={`text-xs tabular-nums ${t.faint}`}>{drillsDone}/{quizIds.length}</span>
                     </div>
                     <div className={`h-1.5 rounded-full overflow-hidden ${t.itemNum.split(' ')[0]}`}>
-                      <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${quizIds.length ? Math.round((drillsDone / quizIds.length) * 100) : 0}%` }} />
+                      <div className="h-full bg-[var(--mq-accent)] rounded-full transition-all" style={{ width: `${quizIds.length ? Math.round((drillsDone / quizIds.length) * 100) : 0}%` }} />
                     </div>
                   </div>
                 )}
                 {onOpenResults && (
                   <button
                     onClick={onOpenResults}
-                    className="w-full text-left text-xs font-medium text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
+                    className="w-full text-left text-xs font-medium text-[var(--mq-accent)] hover:text-[var(--mq-accent)] transition-colors"
                   >
                     Tests &amp; results →
                   </button>
@@ -938,7 +948,7 @@ export default function StudentLessons({
               <div className={`border-t px-5 sm:px-10 py-6 text-center ${t.divider} ${t.quizBg}`}>
                 <button
                   onClick={() => window.open(`/student/drill/${chapterQuizId}`, '_blank')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--mq-accent)] text-white text-sm font-medium hover:bg-[var(--mq-accent-deep)] transition-colors"
                 >
                   <HelpCircle className="h-4 w-4" />
                   Let's Go and Drill
@@ -961,10 +971,10 @@ export default function StudentLessons({
                 {nextChapter ? (
                   <button
                     onClick={() => navigateChapter('next')}
-                    className="group inline-flex items-center gap-3 pl-4 pr-3 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition-colors text-left max-w-[70%]"
+                    className="group inline-flex items-center gap-3 pl-4 pr-3 py-2.5 rounded-xl bg-[var(--mq-accent)] text-white hover:bg-[var(--mq-accent-deep)] transition-colors text-left max-w-[70%]"
                   >
                     <span className="min-w-0">
-                      <span className="block text-[10px] uppercase tracking-wider text-emerald-100">Next lesson</span>
+                      <span className="block text-[10px] uppercase tracking-wider text-[var(--mq-on-accent)]">Next lesson</span>
                       <span className="block text-sm font-semibold truncate">{nextChapter.title}</span>
                     </span>
                     <ChevronRight className="h-5 w-5 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" />
@@ -1012,6 +1022,26 @@ export default function StudentLessons({
           line-height: 2 !important;
           direction: rtl;
           text-align: right;
+        }
+
+        /* Reading font: in the light/sepia reading modes the Latin body reads
+           as book text — a proper serif (Lora), not the UI sans. Arabic keeps
+           Amiri via the !important rules above; RTL nodes are excluded here so
+           the override never touches them. Dark mode stays on the crisp sans
+           (a serif muddies on near-black). */
+        .lesson-theme-light p, .lesson-theme-light li, .lesson-theme-light blockquote, .lesson-theme-light figcaption,
+        .lesson-theme-sepia p, .lesson-theme-sepia li, .lesson-theme-sepia blockquote, .lesson-theme-sepia figcaption {
+          font-family: 'Lora', Georgia, Cambria, 'Times New Roman', serif;
+        }
+        .lesson-theme-light [dir="rtl"], .lesson-theme-sepia [dir="rtl"],
+        .lesson-theme-light .verse, .lesson-theme-sepia .verse,
+        .lesson-theme-light .arabic-prose, .lesson-theme-sepia .arabic-prose,
+        .lesson-theme-light code, .lesson-theme-light pre, .lesson-theme-sepia code, .lesson-theme-sepia pre {
+          font-family: revert;
+        }
+        .lesson-theme-light .verse, .lesson-theme-sepia .verse,
+        .lesson-theme-light .arabic-prose, .lesson-theme-sepia .arabic-prose {
+          font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
         }
 
         /* ── Typed callouts ───────────────────────────────────────────
@@ -1066,6 +1096,25 @@ export default function StudentLessons({
         .lesson-theme-dark .tip { --c-tint: rgba(16, 185, 129, 0.10); --c-accent: #34d399; --c-label: #6ee7b7; }
         .lesson-theme-dark .tip.tip-key { --c-tint: rgba(148, 163, 184, 0.12); --c-accent: #94a3b8; --c-label: #cbd5e1; }
         .lesson-theme-dark .tip.tip-warning { --c-tint: rgba(245, 158, 11, 0.12); --c-accent: #fbbf24; --c-label: #fcd34d; }
+
+        /* Authored schematic tables carry pale-green cell fills as INLINE styles
+           (#ecfdf5 / #d1fae5) with no inline text colour, so in dark mode the
+           prose forces chalk-white text ONTO those pale fills — white-on-light,
+           the cells the reader flagged. Force dark ink back onto exactly those
+           authored-green cells (and their spans/links) so the header/label rows
+           read. Cells with no authored fill keep the theme's chalk ink. */
+        .lesson-theme-dark td[style*="#ecfdf5"],
+        .lesson-theme-dark th[style*="#ecfdf5"],
+        .lesson-theme-dark td[style*="#d1fae5"],
+        .lesson-theme-dark th[style*="#d1fae5"] {
+          color: #08301f !important;
+        }
+        .lesson-theme-dark td[style*="#ecfdf5"] *,
+        .lesson-theme-dark th[style*="#ecfdf5"] *,
+        .lesson-theme-dark td[style*="#d1fae5"] *,
+        .lesson-theme-dark th[style*="#d1fae5"] * {
+          color: #08301f !important;
+        }
       `}</style>
 
       {/* Image lightbox: any <img> inside the prose body opens here on tap. */}

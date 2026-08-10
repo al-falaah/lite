@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../services/supabase';
 import { toast } from 'sonner';
-import { Mic, Send } from 'lucide-react';
-import { BTN_PRIMARY } from '../../design/ui';
-import { EmptyState } from '../common/DataStates';
+import { Mic, Send, Square, RotateCcw, Clock, Check } from 'lucide-react';
+import * as M from '../../design/mashq';
+import { SpecLabel } from './mashq/Sheet';
+import { normalizeUthmani } from '../../utils/uthmani';
 import VoiceNote from '../common/VoiceNote';
+
+// Number of bars in the live input-level meter (the drilled-strokes motif).
+const METER_BARS = 28;
 
 const GRADE_LABELS = {
   excellent: 'Excellent',
@@ -22,10 +26,12 @@ const MAX_SECONDS = 900;
  * records a reading, and submits. Teacher reviews on their end. Once reviewed,
  * the student sees their grade + written feedback + optional voice note.
  *
- * Design: card-based with a header strip showing the current state
- * (no active practice / awaiting / pending review / reviewed). Status
- * shown as plain text in the header subtitle, not as decorative pills.
- * Single emerald accent on primary actions (Start / Record / Submit).
+ * Design (Mashq world): a paper "recitation sheet", one station per state —
+ * ready → reading & recording (the passage in Amirī Qurʾān, front and centre,
+ * with a live input-level meter + mono timer docked below) → review-before-send
+ * → awaiting teacher → reviewed (grade, written feedback, voice notes). Status
+ * is a mono specimen readout; the one teal accent sits on each station's
+ * primary action. The record indicator is a calm inked pulse, never flashing red.
  */
 export default function RecitationPractice({ studentId, programId, teacherId }) {
   const [rec, setRec] = useState(null);
@@ -43,10 +49,15 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const [_feedbackSeen, setFeedbackSeen] = useState(false);
   const [teacherRecording, setTeacherRecording] = useState(false);
 
+  const [level, setLevel] = useState(0); // 0..1 live input level for the meter
+
   const mrRef = useRef(null);
   const chunks = useRef([]);
   const timer = useRef(null);
   const broadcastRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  const analyserRef = useRef(null);
+  const rafRef = useRef(null);
 
   // Broadcast the recording flag. Uses httpSend (REST) when available — send()
   // silently falls back to REST with a deprecation warning when the socket
@@ -175,6 +186,29 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
         setBlobUrl(URL.createObjectURL(b));
       };
       mrRef.current = mr;
+
+      // Live input-level meter via Web Audio (drives the drilled-strokes bars).
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new Ctx();
+        const src = ctx.createMediaStreamSource(stream);
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 256;
+        src.connect(analyser);
+        audioCtxRef.current = ctx;
+        analyserRef.current = analyser;
+        const buf = new Uint8Array(analyser.frequencyBinCount);
+        const tick = () => {
+          analyser.getByteTimeDomainData(buf);
+          let sum = 0;
+          for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; sum += v * v; }
+          const rms = Math.sqrt(sum / buf.length);
+          setLevel(Math.min(1, rms * 3.2)); // scale so normal speech reads well
+          rafRef.current = requestAnimationFrame(tick);
+        };
+        tick();
+      } catch { /* meter is decorative; recording still works without it */ }
+
       mr.start(1000);
       setRecording(true);
       setElapsed(0);
@@ -193,6 +227,10 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
   const stopRec = () => {
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
     if (mrRef.current?.state === 'recording') mrRef.current.stop();
+    if (rafRef.current) { cancelAnimationFrame(rafRef.current); rafRef.current = null; }
+    if (audioCtxRef.current) { audioCtxRef.current.close().catch(() => {}); audioCtxRef.current = null; }
+    analyserRef.current = null;
+    setLevel(0);
     setRecording(false);
     sendRecordingFlag(false);
   };
@@ -257,154 +295,160 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
 
   const fmt = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
 
+  // Is the passage Arabic? (render it in Amirī Qurʾān, RTL, when so)
+  const isArabic = (t) => /[؀-ۿ]/.test(t || '');
+  const PassageText = ({ text, size = 'text-2xl sm:text-[1.9rem]' }) => (
+    isArabic(text) ? (
+      <p dir="rtl" className={`${size} leading-[1.9] text-[var(--mq-ink)]`} style={{ fontFamily: "'Amiri Quran', 'Amiri', serif" }}>
+        {normalizeUthmani(text)}
+      </p>
+    ) : (
+      <p className="text-base font-semibold text-[var(--mq-ink)]">{text}</p>
+    )
+  );
+
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-3">
-        <div className="h-4 w-32 bg-slate-100 dark:bg-gray-700 rounded animate-pulse" />
-        <div className="h-12 bg-slate-100 dark:bg-gray-700 rounded animate-pulse" />
-      </div>
+      <section className={`${M.SHEET} ${M.SHEET_PAD} space-y-3`}>
+        <div className="h-3 w-28 bg-[var(--mq-rule-soft)] rounded animate-pulse" />
+        <div className="h-16 bg-[var(--mq-paper-tint)] rounded animate-pulse" />
+      </section>
     );
   }
 
   const status = rec?.status;
 
-  // Status text shown in the card header strip
-  let statusText = null;
-  let statusClass = 'text-slate-500 dark:text-gray-400';
-  if (!rec) {
-    statusText = 'Ready when you are';
-  } else if (showStart) {
-    statusText = 'New practice';
-  } else if (status === 'assigned') {
-    statusText = 'Ready to record';
-    statusClass = 'text-emerald-700 dark:text-emerald-400';
-  } else if (status === 'submitted') {
-    statusText = 'Awaiting teacher review';
-    statusClass = 'text-amber-700 dark:text-amber-400';
-  } else if (status === 'reviewed') {
-    statusText = 'Reviewed';
-    statusClass = 'text-emerald-700 dark:text-emerald-400';
-  }
+  // Header status readout (mono specimen label + measured state)
+  let statusText = 'Ready when you are';
+  let statusTone = 'text-[var(--mq-ink-faint)]';
+  if (showStart) { statusText = 'New practice'; }
+  else if (status === 'assigned') { statusText = recording ? 'Recording' : (blob ? 'Review your reading' : 'Ready to record'); statusTone = 'text-[var(--mq-accent)]'; }
+  else if (status === 'submitted') { statusText = 'With your teacher'; statusTone = 'text-[var(--mq-warn)]'; }
+  else if (status === 'reviewed') { statusText = 'Reviewed'; statusTone = 'text-[var(--mq-accent)]'; }
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+    <section className={`${M.SHEET} overflow-hidden`}>
 
-      {/* Card header */}
-      <div className="px-5 py-4 border-b border-slate-100 dark:border-gray-700 flex items-baseline justify-between gap-3">
-        <div>
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Reading practice</h3>
-          {statusText && <p className={`text-xs mt-0.5 ${statusClass}`}>{statusText}</p>}
+      {/* Header — mono status readout on the sheet's ruled top */}
+      <div className="px-5 sm:px-6 py-3.5 border-b border-[var(--mq-rule-soft)] flex items-center justify-between gap-3">
+        <div className="flex items-baseline gap-2.5 min-w-0">
+                    <span className="font-['JetBrains_Mono',monospace] text-[11px] uppercase tracking-[0.16em] text-[var(--mq-ink-faint)]">Reading practice</span>
+          <span className="text-[var(--mq-rule-strong)]">·</span>
+          <span className={`font-['JetBrains_Mono',monospace] text-[11px] uppercase tracking-[0.12em] ${statusTone}`}>{statusText}</span>
         </div>
         {status === 'reviewed' && !showStart && (
-          <button
-            onClick={() => setShowStart(true)}
-            className="inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
+          <button onClick={() => setShowStart(true)} className={M.BTN_SECONDARY + ' !py-1.5 !px-3'}>
             New practice
           </button>
         )}
       </div>
 
-      {/* Empty / Start state */}
+      {/* Screen-reader live announcement of the recording/state moment */}
+      <p className="sr-only" aria-live="polite">
+        {recording ? `Recording, ${fmt(elapsed)}` : blob ? 'Recording ready to review' : statusText}
+      </p>
+
+      {/* === Ready / Start station === */}
       {(!rec || showStart) && !recording && !blob && (
-        <div className="px-5 py-5">
+        <div className="px-5 sm:px-6 py-8">
           {!showStart ? (
-            <EmptyState
-              icon={Mic}
-              title="No active practice yet"
-              description="Pick something to read aloud and we'll send it to your teacher when you're ready."
-              action={
-                <button onClick={() => setShowStart(true)} className={BTN_PRIMARY}>
-                  <Mic className="h-4 w-4 mr-1.5" /> Start practice
-                </button>
-              }
-            />
+            <div className="text-center">
+              <div className="mx-auto mb-4 h-14 w-14 rounded-[6px] bg-[var(--mq-paper-sunk)] border border-[var(--mq-rule)] flex items-center justify-center">
+                <Mic className="h-6 w-6 text-[var(--mq-ink-ghost)]" strokeWidth={1.75} />
+              </div>
+              <h3 className="font-sans font-semibold text-[var(--mq-ink)]">No active practice</h3>
+              <p className="mt-1.5 text-sm text-[var(--mq-ink-soft)] max-w-sm mx-auto">
+                Choose a passage to read aloud; record it, and it goes to your teacher for review.
+              </p>
+              <button onClick={() => setShowStart(true)} className={`${M.BTN_PRIMARY} mt-5`}>
+                <Mic className="h-4 w-4" /> Start a reading
+              </button>
+            </div>
           ) : (
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium text-slate-700 dark:text-gray-300 block mb-1.5">What are you reading?</label>
+            <div className="max-w-lg mx-auto space-y-3">
+              <label className="block">
+                <SpecLabel>What are you reading?</SpecLabel>
                 <input
                   type="text"
                   value={passage}
                   onChange={(e) => setPassage(e.target.value)}
-                  placeholder="e.g. Surah Al-Fātiḥah, Hadeeth 1, Page 12"
+                  placeholder="e.g. Surah Al-Fātiḥah, or paste the āyah"
                   onKeyDown={(e) => e.key === 'Enter' && handleStart()}
-                  className="w-full text-sm text-slate-900 placeholder-slate-400 border border-slate-300 rounded-md px-3 py-2 bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="mt-1.5 w-full text-sm text-[var(--mq-ink)] placeholder-[var(--mq-ink-ghost)] border border-[var(--mq-rule-strong)] rounded-[3px] px-3 py-2.5 bg-[var(--mq-paper-raised)] focus:border-[var(--mq-accent)] focus:outline-none mashq-focus"
                 />
-              </div>
+              </label>
               <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => { setShowStart(false); setPassage(''); }}
-                  className="inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 hover:border-slate-400 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleStart}
-                  disabled={!passage.trim()}
-                  className={BTN_PRIMARY}
-                >
-                  Start
-                </button>
+                <button onClick={() => { setShowStart(false); setPassage(''); }} className={M.BTN_SECONDARY}>Cancel</button>
+                <button onClick={handleStart} disabled={!passage.trim()} className={M.BTN_PRIMARY}>Set passage</button>
               </div>
             </div>
           )}
         </div>
       )}
 
-      {/* Assigned — record state */}
+      {/* === Reading & recording station === */}
       {status === 'assigned' && !showStart && (
-        <div className="px-5 py-5 space-y-4">
-          <div className="flex items-baseline justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-slate-900 dark:text-white">{rec.passage}</p>
-              {rec.notes && <p className="text-sm text-slate-600 dark:text-gray-300 mt-0.5">{rec.notes}</p>}
+        <div className="px-5 sm:px-6 py-6">
+          {/* The passage — the hero the student reads from */}
+          <div className="mb-6">
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <SpecLabel>Recite</SpecLabel>
+              {!recording && !blob && (
+                <button onClick={deleteAll} className="font-['JetBrains_Mono',monospace] text-[10px] uppercase tracking-[0.1em] text-[var(--mq-ink-ghost)] hover:text-[var(--mq-bad)] transition-colors mashq-focus">
+                  Discard
+                </button>
+              )}
             </div>
-            <button onClick={deleteAll} className="text-xs text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0">
-              Cancel
-            </button>
+            <div className="rounded-[4px] bg-[var(--mq-paper-sunk)] border border-[var(--mq-rule)] px-5 py-6 text-center">
+              <PassageText text={rec.passage} />
+              {rec.notes && <p className="mt-3 text-sm text-[var(--mq-ink-soft)]">{rec.notes}</p>}
+            </div>
           </div>
 
-          {!recording && !blob && (
-            <button
-              onClick={startRec}
-              className={`w-full ${BTN_PRIMARY}`}
-            >
-              <Mic className="h-4 w-4 mr-1.5" /> Start recording
-            </button>
-          )}
-
-          {recording && (
-            <div className="flex items-center justify-between gap-3 px-3 py-2.5 border border-slate-200 dark:border-gray-600 rounded-md bg-slate-50 dark:bg-gray-700/50">
-              <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-gray-200">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="font-mono tabular-nums">{fmt(elapsed)}</span>
-                <span className="text-slate-500 dark:text-gray-400">recording…</span>
+          {/* The instrument — level meter + timer, docked below the passage */}
+          {!blob && (
+            <div className="rounded-[4px] border border-[var(--mq-rule)] bg-[var(--mq-paper-raised)] px-5 py-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className={`inline-flex h-2 w-2 rounded-full ${recording ? 'bg-[var(--mq-accent)] mashq-rec-pulse' : 'bg-[var(--mq-rule-strong)]'}`} />
+                  <span className="font-['JetBrains_Mono',monospace] tabular-nums text-sm text-[var(--mq-ink)]">{fmt(elapsed)}</span>
+                  <span className="font-['JetBrains_Mono',monospace] text-[11px] text-[var(--mq-ink-ghost)]">/ {fmt(MAX_SECONDS)}</span>
+                </div>
+                {/* live input-level meter — the drilled-strokes motif */}
+                <div className="mashq-strokes h-5 flex-1 justify-center max-w-[220px]" aria-hidden="true">
+                  {Array.from({ length: METER_BARS }).map((_, i) => {
+                    const threshold = (i + 1) / METER_BARS;
+                    const on = recording && level >= threshold * 0.85;
+                    const h = 6 + ((i * 31) % 14);
+                    return <span key={i} className={`mashq-stroke ${on ? 'is-done' : ''}`} style={{ height: h, width: 3 }} />;
+                  })}
+                </div>
               </div>
-              {/* Stop is a secondary in-context action, not the primary CTA of this state — leave hand-rolled for visual distinction */}
-              <button
-                onClick={stopRec}
-                className="inline-flex items-center justify-center px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 transition-colors"
-              >
-                Stop
-              </button>
+              <div className="mt-4 flex justify-center">
+                {!recording ? (
+                  <button onClick={startRec} className={M.BTN_PRIMARY}>
+                    <Mic className="h-4 w-4" /> Start recording
+                  </button>
+                ) : (
+                  <button onClick={stopRec} className={M.BTN_SECONDARY}>
+                    <Square className="h-3.5 w-3.5 fill-current" /> Stop
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
+          {/* Recorded — review before sending */}
           {blob && blobUrl && !recording && (
-            <div className="space-y-3">
-              <VoiceNote audioUrl={blobUrl} onDelete={discard} />
-              <div className="flex justify-end">
-                <button
-                  onClick={submit}
-                  disabled={uploading}
-                  className={BTN_PRIMARY}
-                >
-                  {uploading ? 'Sending…' : (
-                    <>
-                      <Send className="h-4 w-4 mr-1.5" /> Submit to teacher
-                    </>
-                  )}
+            <div className="rounded-[4px] border border-[var(--mq-rule)] bg-[var(--mq-paper-raised)] px-5 py-4 space-y-4">
+              <SpecLabel>Your reading</SpecLabel>
+              <VoiceNote audioUrl={blobUrl} onDelete={discard} color="mashq" />
+              <div className="flex justify-end gap-2">
+                <button onClick={discard} className={M.BTN_SECONDARY}>
+                  <RotateCcw className="h-3.5 w-3.5" /> Re-record
+                </button>
+                <button onClick={submit} disabled={uploading} className={M.BTN_PRIMARY}>
+                  {uploading ? 'Sending…' : (<><Send className="h-4 w-4" /> Submit to teacher</>)}
                 </button>
               </div>
             </div>
@@ -412,63 +456,73 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
         </div>
       )}
 
-      {/* Submitted — awaiting review */}
+      {/* === Awaiting teacher station === */}
       {status === 'submitted' && !showStart && (
-        <div className="px-5 py-5 space-y-3">
-          <div>
-            <p className="text-sm font-medium text-slate-900 dark:text-white">{rec.passage}</p>
-            <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
-              Sent {rec.submitted_at ? new Date(rec.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
-            </p>
+        <div className="px-5 sm:px-6 py-6 space-y-5">
+          <div className="rounded-[4px] bg-[var(--mq-paper-sunk)] border border-[var(--mq-rule)] px-5 py-5 text-center">
+            <PassageText text={rec.passage} size="text-xl sm:text-2xl" />
           </div>
-
+          <div className="flex items-center gap-2.5 text-[var(--mq-warn)]">
+            <Clock className="h-4 w-4" />
+            <span className="text-sm font-medium">With your teacher for review</span>
+            <span className="font-['JetBrains_Mono',monospace] text-[11px] text-[var(--mq-ink-ghost)] ml-auto">
+              {rec.submitted_at ? new Date(rec.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
+            </span>
+          </div>
           {studentUrl && (
             <div>
-              <p className="text-xs font-medium text-slate-500 dark:text-gray-400 mb-1.5">Your recording</p>
-              <VoiceNote audioUrl={studentUrl} onDelete={deleteMyAudio} />
+              <SpecLabel>Your recording</SpecLabel>
+              <div className="mt-2"><VoiceNote audioUrl={studentUrl} onDelete={deleteMyAudio} color="mashq" /></div>
             </div>
           )}
-
           {teacherRecording && (
-            <p className="text-xs text-emerald-700 dark:text-emerald-400 inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-pulse" />
+            <p className="text-xs text-[var(--mq-accent)] inline-flex items-center gap-1.5" aria-live="polite">
+              <span className="h-1.5 w-1.5 bg-[var(--mq-accent)] rounded-full mashq-rec-pulse" />
               Your teacher is recording feedback…
             </p>
           )}
         </div>
       )}
 
-      {/* Reviewed */}
+      {/* === Reviewed station — the payoff === */}
       {status === 'reviewed' && !showStart && (
-        <div className="px-5 py-5 space-y-3">
-          <div className="flex items-baseline justify-between gap-3">
-            <p className="text-sm font-medium text-slate-900 dark:text-white">{rec.passage}</p>
-            {rec.grade && (
-              <span className="text-sm font-medium px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                {GRADE_LABELS[rec.grade] || rec.grade}
-              </span>
-            )}
+        <div className="px-5 sm:px-6 py-6 space-y-5">
+          <div className="rounded-[4px] bg-[var(--mq-paper-sunk)] border border-[var(--mq-rule)] px-5 py-5 text-center">
+            <PassageText text={rec.passage} size="text-xl sm:text-2xl" />
           </div>
 
-          {rec.feedback && (
-            <p className="text-sm text-slate-700 dark:text-gray-300 italic">"{rec.feedback}"</p>
+          {rec.grade && (
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex h-8 w-8 rounded-full bg-[var(--mq-accent)]/10 items-center justify-center">
+                <Check className="h-4 w-4 text-[var(--mq-accent)]" />
+              </span>
+              <div>
+                <SpecLabel>Grade</SpecLabel>
+                <p className="font-sans font-semibold text-[var(--mq-accent)] leading-tight">{GRADE_LABELS[rec.grade] || rec.grade}</p>
+              </div>
+            </div>
           )}
 
-          {studentUrl && (
-            <div>
-              <p className="text-xs font-medium text-slate-500 dark:text-gray-400 mb-1.5">Your recording</p>
-              <VoiceNote audioUrl={studentUrl} compact />
-            </div>
+          {rec.feedback && (
+            <blockquote className="border-l-2 border-[var(--mq-accent)] pl-4 text-[var(--mq-ink-soft)]">
+              {rec.feedback}
+            </blockquote>
           )}
 
           {teacherUrl && (
             <div>
-              <p className="text-xs font-medium text-slate-500 dark:text-gray-400 mb-1.5">Teacher feedback</p>
-              <VoiceNote audioUrl={teacherUrl} compact />
+              <SpecLabel>Teacher's voice note</SpecLabel>
+              <div className="mt-2"><VoiceNote audioUrl={teacherUrl} compact color="mashq" /></div>
+            </div>
+          )}
+          {studentUrl && (
+            <div>
+              <SpecLabel>Your recording</SpecLabel>
+              <div className="mt-2"><VoiceNote audioUrl={studentUrl} compact color="mashq" /></div>
             </div>
           )}
         </div>
       )}
-    </div>
+    </section>
   );
 }
