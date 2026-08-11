@@ -115,7 +115,7 @@ const LandingPage = () => {
       {/* Navigation - Clean professional design */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${
         isScrolled
-          ? 'bg-white border-b border-gray-200'
+          ? 'bg-white border-b border-[#e6e0d3]'
           : 'bg-transparent'
       }`}>
         <div className={`px-3 sm:px-6 lg:px-8 ${!isScrolled ? 'bg-transparent' : ''}`}>
@@ -130,10 +130,10 @@ const LandingPage = () => {
                 {/* Brand name - hidden on mobile, shown on desktop */}
                 <div className="hidden lg:flex flex-col justify-center leading-tight">
                   <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
-                    isScrolled ? 'text-gray-900' : 'text-white'
+                    isScrolled ? 'text-[#1f1b16]' : 'text-white'
                   }`} style={{letterSpacing: "0.005em"}}>The FastTrack</span>
                   <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
-                    isScrolled ? 'text-gray-900' : 'text-white'
+                    isScrolled ? 'text-[#1f1b16]' : 'text-white'
                   }`} style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
               </Link>
@@ -144,16 +144,16 @@ const LandingPage = () => {
                 <Link to="/mission">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Our Mission
                   </button>
                 </Link>
-                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Programs
@@ -162,7 +162,7 @@ const LandingPage = () => {
                 <Link to="/blog">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Blog
@@ -171,7 +171,7 @@ const LandingPage = () => {
                 <Link to="/tools">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Tools
@@ -180,7 +180,7 @@ const LandingPage = () => {
                 <Link to="/store">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Store
@@ -189,7 +189,7 @@ const LandingPage = () => {
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Donate
@@ -198,7 +198,7 @@ const LandingPage = () => {
                 <Link to="/login">
                   <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
                     isScrolled
-                      ? 'text-gray-700 hover:text-emerald-600'
+                      ? 'text-[#3d372e] hover:text-emerald-600'
                       : 'text-white/90 hover:text-emerald-600'
                   }`}>
                     Login
@@ -216,7 +216,7 @@ const LandingPage = () => {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className={`lg:hidden p-2 rounded-lg transition-colors ${
                   isScrolled
-                    ? 'text-gray-900 hover:bg-gray-100'
+                    ? 'text-[#1f1b16] hover:bg-[#efe9dd]'
                     : 'text-white hover:bg-white/10'
                 }`}
                 aria-label="Toggle menu"
@@ -300,18 +300,23 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section - Full Screen with Background */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden bg-black">
+      <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0a0f0c]">
         {/* Background Image with Overlay */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url("${bgImageUrl}")`,
           }}
         >
-          {/* Simple dark overlay with alpha to show background */}
-          <div className="absolute inset-0"></div>
-          {/* Diagonal gradient: light top-left to dark bottom-right */}
-          <div className="absolute inset-0 bg-gradient-to-bl from-black/100 via-black/95 to-black/40"></div>
+          {/* Base wash: warm emerald-black, kept light enough that the library
+              stays legible as atmosphere behind the headline. */}
+          <div className="absolute inset-0 bg-[#0a0f0c]/55"></div>
+          {/* Grounding gradient: darker at the foot (where the diagonal seam and
+              floating card meet) lifting toward a visible top third. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0c]/20 via-[#0a0f0c]/45 to-[#0a0f0c]/90"></div>
+          {/* Readability scrim: a soft radial pool centred on the headline so the
+              text sits on contrast without flattening the whole frame. */}
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 50% at 50% 42%, rgba(4,8,6,0.62), transparent 78%)' }}></div>
         </div>
 
         {/* Centered Hero Content with CTA (hadith slider lives in the floating card below) */}
@@ -322,7 +327,7 @@ const LandingPage = () => {
               <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
                 Learn What Truly Matters in the Time You Have
               </h1>
-              <p className="text-sm md:text-lg lg:text-xl text-gray-200 mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
+              <p className="text-sm md:text-lg lg:text-xl text-[#e6e0d3] mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
                 From reading the Qur'an accurately to understanding Arabic and Islamic sciences—
                 <span className="text-emerald-400 font-semibold">structured programs</span> for
                 <span className="text-emerald-400 font-semibold"> everyone</span> ready to connect with the Book of Allah.
@@ -421,10 +426,10 @@ const LandingPage = () => {
                 <p className="text-emerald-700 font-semibold text-sm sm:text-base mb-2 font-arabic">
                   قال رسول الله ﷺ
                 </p>
-                <p className="text-lg sm:text-xl lg:text-2xl text-gray-900 font-serif leading-relaxed mb-3">
+                <p className="text-lg sm:text-xl lg:text-2xl text-[#1f1b16] font-serif leading-relaxed mb-3">
                   "{quotes[currentQuote].text}"
                 </p>
-                <p className="text-xs sm:text-sm text-gray-500 mb-5">
+                <p className="text-xs sm:text-sm text-[#6b6353] mb-5">
                   {quotes[currentQuote].source}
                 </p>
                 <div className="flex justify-center sm:justify-start items-center">
@@ -439,7 +444,7 @@ const LandingPage = () => {
                         <div className={`h-1 w-10 md:w-14 rounded-full transition-all duration-500 ${
                           idx === currentQuote
                             ? 'bg-emerald-600'
-                            : 'bg-gray-200 group-hover:bg-gray-300'
+                            : 'bg-[#e6e0d3] group-hover:bg-[#d9d2c4]'
                         }`} />
                       </button>
                     ))}
@@ -455,18 +460,18 @@ const LandingPage = () => {
       <section id="experience" className="bg-white py-10 sm:py-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#1f1b16] mb-4">
               Your Student Experience
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              A modern platform with everything you need to master the Qur'an
+            <p className="text-lg text-[#57503f] max-w-3xl mx-auto">
+              Lessons, drills, recitation feedback, and progress tracking — in one place
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
             {/* HERO — Recitation Practice: the teacher feedback loop */}
-            <div className="lg:col-span-2 lg:row-span-2 bg-gray-950 rounded-2xl p-6 sm:p-10 relative overflow-hidden">
+            <div className="lg:col-span-2 lg:row-span-2 bg-[#14120e] rounded-2xl p-6 sm:p-10 relative overflow-hidden">
               <div className="grid md:grid-cols-2 gap-8 items-center h-full">
                 <div className="text-center md:text-left">
                   <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wide mb-4">
@@ -475,13 +480,13 @@ const LandingPage = () => {
                   <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
                     Recite. A real teacher listens.
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+                  <p className="text-sm sm:text-base text-[#8a8172] leading-relaxed">
                     Record your recitation and send it straight to your teacher. You get graded,
                     personal feedback on your tajweed every week — not just at exam time.
                   </p>
                 </div>
                 <div className="flex flex-col items-center justify-center py-4">
-                  <p className="text-[10px] text-gray-500 mb-2 uppercase tracking-wider">Recording</p>
+                  <p className="text-[10px] text-[#6b6353] mb-2 uppercase tracking-wider">Recording</p>
                   <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-6 leading-relaxed px-2">
                     ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
                   </p>
@@ -497,14 +502,14 @@ const LandingPage = () => {
                     style={{ animation: 'record-pulse 2s ease-in-out infinite' }}>
                     <div className="w-5 h-5 bg-white rounded-sm" />
                   </div>
-                  <p className="text-gray-500 text-xs mt-3 font-mono">0:12 / 5:00</p>
+                  <p className="text-[#6b6353] text-xs mt-3 font-mono">0:12 / 5:00</p>
                 </div>
               </div>
             </div>
 
             {/* Tile — Daily practice drills */}
             <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <div className="bg-gray-950 rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col">
+              <div className="bg-[#14120e] rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col">
                 {/* Flash overlay */}
                 {drillPreviewStep === 1 && (
                   <div className="absolute inset-0 bg-emerald-500/10 animate-drill-flash z-10 pointer-events-none rounded-2xl" />
@@ -512,33 +517,33 @@ const LandingPage = () => {
                 {/* Mode tabs */}
                 <div className="flex items-center gap-2 mb-3">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Tajweed</span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-gray-500 border border-gray-700">Arabiyyah</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-[#6b6353] border border-[#3d372e]">Arabiyyah</span>
                   <div className="ml-auto flex items-center gap-1">
                     <InfinityIcon className="w-3.5 h-3.5 text-emerald-400" strokeWidth={2.5} />
                     <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wide">Endless</span>
                   </div>
                 </div>
                 {/* Arabic Text */}
-                <div className="bg-gray-800/60 rounded-xl p-3 mb-3">
+                <div className="bg-[#2a251d]/60 rounded-xl p-3 mb-3">
                   <p dir="rtl" className="text-base sm:text-lg font-arabic text-white text-center leading-relaxed">
                     سَمِيعٌۢ <span className="bg-amber-500/30 text-amber-300 px-1 rounded border-b-2 border-amber-500/60">بَ</span>صِيرٌ
                   </p>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-300 text-center mb-3">What rule applies to the tanween before ب?</p>
+                <p className="text-xs sm:text-sm text-[#d9d2c4] text-center mb-3">What rule applies to the tanween before ب?</p>
                 {/* Options */}
                 <div className="space-y-1.5">
                   {['Idghaam', 'Ikhfa', 'Iqlab', 'Izhar'].map((opt, i) => {
                     const LETTERS = ['A', 'B', 'C', 'D'];
                     const isCorrectOpt = i === 2;
-                    let optStyle = 'border-gray-700 text-gray-400';
+                    let optStyle = 'border-[#3d372e] text-[#8a8172]';
                     if (drillPreviewStep >= 1 && isCorrectOpt) optStyle = 'border-emerald-500 bg-emerald-500/20 text-emerald-300';
-                    else if (drillPreviewStep >= 1) optStyle = 'border-gray-800 text-gray-600';
+                    else if (drillPreviewStep >= 1) optStyle = 'border-[#2a251d] text-[#57503f]';
                     return (
                       <div key={i} className={`py-1.5 px-3 rounded-lg border text-xs flex items-center gap-2 transition-all duration-300 ${optStyle}`}>
                         <span className={`w-4 h-4 rounded flex items-center justify-center text-[9px] font-bold flex-shrink-0 ${
                           drillPreviewStep >= 1 && isCorrectOpt ? 'bg-emerald-500/30 text-emerald-300'
-                          : drillPreviewStep >= 1 ? 'bg-gray-800/30 text-gray-600'
-                          : 'bg-gray-700/50 text-gray-500'
+                          : drillPreviewStep >= 1 ? 'bg-[#2a251d]/30 text-[#57503f]'
+                          : 'bg-[#3d372e]/50 text-[#6b6353]'
                         }`}>{LETTERS[i]}</span>
                         <span>{opt}</span>
                       </div>
@@ -553,8 +558,8 @@ const LandingPage = () => {
                 )}
               </div>
               <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Practice Drills</h3>
-                <p className="text-sm text-gray-600">Curated and endless auto-generated drills for Tajweed and Arabiyyah. Earn XP, build combos, and compete on the leaderboard.</p>
+                <h3 className="text-lg font-semibold text-[#1f1b16] mb-2">Practice Drills</h3>
+                <p className="text-sm text-[#57503f]">Curated and endless auto-generated drills for Tajweed and Arabiyyah. Earn XP, build combos, and compete on the leaderboard.</p>
               </div>
             </div>
 
@@ -569,7 +574,7 @@ const LandingPage = () => {
                   </div>
                   {/* SAMPLE watermark */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                    <span className="text-5xl sm:text-6xl font-black text-gray-300/20 uppercase tracking-[0.2em] -rotate-12 select-none">SAMPLE</span>
+                    <span className="text-5xl sm:text-6xl font-black text-[#d9d2c4]/20 uppercase tracking-[0.2em] -rotate-12 select-none">SAMPLE</span>
                   </div>
                   {/* Borders matching real template */}
                   <div className="absolute" style={{ inset: '6px', border: '2px solid #059669', borderRadius: '2px' }} />
@@ -578,19 +583,19 @@ const LandingPage = () => {
                   <div className="text-center relative z-20 py-4 px-3">
                     <img src="/favicon.svg" alt="" className="w-8 h-8 mx-auto mb-1" />
                     <p className="text-[9px] font-brand font-semibold text-emerald-800" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
-                    <p className="text-[7px] text-gray-400 uppercase tracking-[0.15em] mb-2">New Zealand</p>
+                    <p className="text-[7px] text-[#8a8172] uppercase tracking-[0.15em] mb-2">New Zealand</p>
                     <h4 className="text-sm sm:text-base font-serif font-bold uppercase text-emerald-800 tracking-wide mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
-                    <p className="text-[8px] uppercase tracking-[0.12em] text-gray-400 mb-3">Tajweed Mastery Program</p>
-                    <p className="text-[8px] uppercase tracking-wider text-gray-400 mb-1">This is to certify that</p>
+                    <p className="text-[8px] uppercase tracking-[0.12em] text-[#8a8172] mb-3">Tajweed Mastery Program</p>
+                    <p className="text-[8px] uppercase tracking-wider text-[#8a8172] mb-1">This is to certify that</p>
                     <p className="text-sm font-serif font-semibold italic text-emerald-800 mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
-                    <p className="text-[8px] text-gray-500 mb-2">has successfully completed the</p>
+                    <p className="text-[8px] text-[#6b6353] mb-2">has successfully completed the</p>
                     <p className="text-[9px] font-serif font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>TMP — Tajweed Mastery Program</p>
-                    <p dir="rtl" className="text-[10px] font-arabic text-gray-400 mt-0.5 mb-2">برنامج إتقان التجويد</p>
+                    <p dir="rtl" className="text-[10px] font-arabic text-[#8a8172] mt-0.5 mb-2">برنامج إتقان التجويد</p>
                     {/* Scores */}
                     <div className="flex justify-center gap-4 mb-2">
                       {[{ l: 'Milestones', v: '82.5%' }, { l: 'Final Exam', v: '88.0%' }, { l: 'Total', v: '85.3%' }].map(s => (
                         <div key={s.l} className="text-center">
-                          <p className="text-[6px] uppercase tracking-wide text-gray-400">{s.l}</p>
+                          <p className="text-[6px] uppercase tracking-wide text-[#8a8172]">{s.l}</p>
                           <p className="text-xs font-serif font-bold text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
                         </div>
                       ))}
@@ -599,43 +604,43 @@ const LandingPage = () => {
                     <div className="flex justify-center gap-8">
                       {['Program Director', 'Instructor'].map(t => (
                         <div key={t} className="text-center">
-                          <div className="w-12 border-b border-gray-300 mb-0.5 mx-auto" />
-                          <p className="text-[6px] text-gray-400">{t}</p>
+                          <div className="w-12 border-b border-[#d9d2c4] mb-0.5 mx-auto" />
+                          <p className="text-[6px] text-[#8a8172]">{t}</p>
                         </div>
                       ))}
                     </div>
                   </div>
                   {/* Click hint */}
-                  <div className="absolute bottom-2 right-2 bg-gray-900/70 text-white text-[8px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-30">Click to preview</div>
+                  <div className="absolute bottom-2 right-2 bg-[#1f1b16]/70 text-white text-[8px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-30">Click to preview</div>
                 </div>
               </button>
               <div className="pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Tests & Certificates</h3>
-                <p className="text-sm text-gray-600">Milestone tests and a final exam lead to a verifiable Certificate of Completion for every program you finish.</p>
+                <h3 className="text-lg font-semibold text-[#1f1b16] mb-2">Tests & Certificates</h3>
+                <p className="text-sm text-[#57503f]">Milestone tests and a final exam lead to a verifiable Certificate of Completion for every program you finish.</p>
               </div>
             </div>
 
             {/* Free tools strip */}
-            <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-200 p-5 sm:p-6">
+            <div className="lg:col-span-3 bg-white rounded-2xl border border-[#e6e0d3] p-5 sm:p-6">
               <div className="flex flex-col lg:flex-row lg:items-center gap-5">
                 <div className="lg:flex-1 min-w-0">
                   <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
-                  <h3 className="text-base font-semibold text-gray-900 mt-2 mb-1">Study tools, free for everyone</h3>
-                  <p className="text-sm text-gray-600">No account needed — open to every student of the Qur'an.</p>
+                  <h3 className="text-base font-semibold text-[#1f1b16] mt-2 mb-1">Study tools, free for everyone</h3>
+                  <p className="text-sm text-[#57503f]">No account needed — open to every student of the Qur'an.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="/tools/examples" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-emerald-300 hover:shadow-sm transition-all">
+                  <a href="/tools/examples" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
                     <Search className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900">Shawaahid</p>
-                      <p className="text-xs text-gray-500 truncate">Qur'anic Examples Finder</p>
+                      <p className="text-sm font-semibold text-[#1f1b16]">Shawaahid</p>
+                      <p className="text-xs text-[#6b6353] truncate">Qur'anic Examples Finder</p>
                     </div>
                   </a>
-                  <a href="/tools/roots" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-emerald-300 hover:shadow-sm transition-all">
+                  <a href="/tools/roots" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
                     <BookOpen className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900">Tasreef</p>
-                      <p className="text-xs text-gray-500 truncate">Root Word Explorer</p>
+                      <p className="text-sm font-semibold text-[#1f1b16]">Tasreef</p>
+                      <p className="text-xs text-[#6b6353] truncate">Root Word Explorer</p>
                     </div>
                   </a>
                   <a href="/tools" className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors whitespace-nowrap">
@@ -649,7 +654,7 @@ const LandingPage = () => {
 
           {/* Section CTA */}
           <div className="mt-10 sm:mt-14 text-center">
-            <p className="text-base sm:text-lg text-gray-600 mb-5">This is what your first week looks like.</p>
+            <p className="text-base sm:text-lg text-[#57503f] mb-5">This is what your first week looks like.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/apply">
                 <Button variant="emerald" size="lg" className="w-full sm:w-auto">Apply Now</Button>
@@ -667,8 +672,8 @@ const LandingPage = () => {
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowCertPreview(false)}>
           <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-[900px] w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Sample Certificate Preview</h3>
-              <button onClick={() => setShowCertPreview(false)} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+              <h3 className="text-lg font-semibold text-[#1f1b16]">Sample Certificate Preview</h3>
+              <button onClick={() => setShowCertPreview(false)} className="p-2 text-[#8a8172] hover:text-[#57503f] hover:bg-[#efe9dd] rounded-lg transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -689,19 +694,19 @@ const LandingPage = () => {
               <div className="absolute flex flex-col items-center justify-center text-center p-8" style={{ inset: '30px' }}>
                 <img src="/favicon.svg" alt="" className="w-10 h-10 mb-1" />
                 <p className="text-xs font-brand font-semibold text-emerald-800 mb-0.5" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
-                <p className="text-[8px] text-gray-400 uppercase tracking-[0.15em] mb-4">New Zealand</p>
+                <p className="text-[8px] text-[#8a8172] uppercase tracking-[0.15em] mb-4">New Zealand</p>
                 <h4 className="text-xl sm:text-2xl font-bold uppercase text-emerald-800 tracking-wider mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
-                <p className="text-[10px] uppercase tracking-[0.12em] text-gray-400 mb-5">Tajweed Mastery Program</p>
-                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">This is to certify that</p>
+                <p className="text-[10px] uppercase tracking-[0.12em] text-[#8a8172] mb-5">Tajweed Mastery Program</p>
+                <p className="text-[10px] uppercase tracking-wider text-[#8a8172] mb-2">This is to certify that</p>
                 <p className="text-2xl font-semibold italic text-emerald-800 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
-                <p className="text-xs text-gray-500 mb-1">has successfully completed the</p>
+                <p className="text-xs text-[#6b6353] mb-1">has successfully completed the</p>
                 <p className="text-sm font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>TMP — Tajweed Mastery Program</p>
-                <p dir="rtl" className="text-base font-arabic text-gray-400 mt-1 mb-4">برنامج إتقان التجويد</p>
+                <p dir="rtl" className="text-base font-arabic text-[#8a8172] mt-1 mb-4">برنامج إتقان التجويد</p>
                 {/* Scores */}
                 <div className="flex gap-8 mb-5">
                   {[{ l: 'Milestone Average', v: '82.5%' }, { l: 'Final Exam', v: '88.0%' }, { l: 'Weighted Total', v: '85.3%' }].map(s => (
                     <div key={s.l} className="text-center">
-                      <p className="text-[7px] uppercase tracking-wider text-gray-400">{s.l}</p>
+                      <p className="text-[7px] uppercase tracking-wider text-[#8a8172]">{s.l}</p>
                       <p className="text-lg font-bold text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
                     </div>
                   ))}
@@ -711,7 +716,7 @@ const LandingPage = () => {
                   {[{ name: 'Dr Abdulquadri Alaka', title: 'Program Director' }, { name: 'Ustadh Ibrahim', title: 'Instructor' }].map(sig => (
                     <div key={sig.title} className="text-center min-w-[120px]">
                       <p className="text-lg text-emerald-800" style={{ fontFamily: "'Great Vibes', cursive" }}>{sig.name}</p>
-                      <div className="w-28 border-b border-gray-300 mb-1 mx-auto" />
+                      <div className="w-28 border-b border-[#d9d2c4] mb-1 mx-auto" />
                       <p className="text-[9px] font-semibold tracking-wider">{sig.title}</p>
                     </div>
                   ))}
@@ -719,45 +724,47 @@ const LandingPage = () => {
               </div>
               {/* Footer */}
               <div className="absolute bottom-3 left-0 right-0 text-center">
-                <p className="text-[8px] text-gray-400">Issued: 15 March 2026</p>
-                <p className="text-[7px] text-gray-300">Verification ID: TMP-2026-00042 · Verify at thefasttrackmadrasah.com/verify</p>
+                <p className="text-[8px] text-[#8a8172]">Sample — issued on completion</p>
+                <p className="text-[7px] text-[#d9d2c4]">Each certificate carries a verification ID, checkable at tftmadrasah.nz</p>
               </div>
             </div>
-            <p className="text-center text-xs text-gray-400 mt-4">This is a sample certificate. Actual certificates are issued upon program completion.</p>
+            <p className="text-center text-xs text-[#8a8172] mt-4">This is a sample certificate. Actual certificates are issued upon program completion.</p>
           </div>
         </div>
       )}
 
       {/* Diagonal seam into Who We Serve */}
-      <DiagonalSeam from="bg-white" to="bg-gray-50" direction="up" />
+      <DiagonalSeam from="bg-white" to="bg-[#0d3b2c]" direction="up" />
 
-      {/* Who We Serve - Target Audience Cards */}
-      <section className="bg-gray-50 pb-10 pt-4 sm:pb-24 sm:pt-12">
+      {/* Who We Serve — the one deep-green feature band. The brand colour as a
+          full-bleed ground reads as a deliberate POV; white cards sit crisply on
+          it. Ink inverts to chalk/mint. */}
+      <section className="bg-[#0d3b2c] pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">
               Who We Serve
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Our programs are designed for Muslims at every stage of their Qur'anic journey
+            <p className="text-lg text-emerald-100/80 max-w-3xl mx-auto">
+              Programs for every stage of reading and understanding the Qurʾān — from your first letters to teaching your own children.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {/* Absolute Beginners & New Muslims */}
-            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
                     01
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Absolute Beginners</h3>
-                  <p className="text-sm text-gray-500 font-medium">& New Muslims</p>
+                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Absolute Beginners</h3>
+                  <p className="text-sm text-[#6b6353] font-medium">& New Muslims</p>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  Never read Arabic before? Our <span className="font-semibold text-gray-900">QARI program</span> takes you from zero to fluent Qur'an reading in {PROGRAMS[PROGRAM_IDS.QARI].duration.display}.
+                <p className="text-sm text-[#57503f] leading-relaxed mb-6">
+                  Never read Arabic before? Our <span className="font-semibold text-[#1f1b16]">QARI program</span> takes you from zero to fluent Qur'an reading in {PROGRAMS[PROGRAM_IDS.QARI].duration.display}.
                 </p>
-                <Link to="/programs#qari" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs#qari" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <span>Learn about QARI</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -765,19 +772,19 @@ const LandingPage = () => {
             </div>
 
             {/* Can Read but No Tajweed */}
-            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
                     02
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Can Read</h3>
-                  <p className="text-sm text-gray-500 font-medium">But Don't Know Tajweed</p>
+                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Can Read</h3>
+                  <p className="text-sm text-[#6b6353] font-medium">But Don't Know Tajweed</p>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  Completed Qur'an but can't apply proper rules? Our <span className="font-semibold text-gray-900">Tajweed Mastery Program</span> perfects your recitation in {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}.
+                <p className="text-sm text-[#57503f] leading-relaxed mb-6">
+                  Completed Qur'an but can't apply proper rules? Our <span className="font-semibold text-[#1f1b16]">Tajweed Mastery Program</span> perfects your recitation in {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}.
                 </p>
-                <Link to="/programs#tajweed" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs#tajweed" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <span>Learn about TMP</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -785,19 +792,19 @@ const LandingPage = () => {
             </div>
 
             {/* Want to Understand */}
-            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
                     03
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Want to Understand</h3>
-                  <p className="text-sm text-gray-500 font-medium">What You're Reading</p>
+                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Want to Understand</h3>
+                  <p className="text-sm text-[#6b6353] font-medium">What You're Reading</p>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  Bridge the gap between reading and understanding. Our <span className="font-semibold text-gray-900">EASI program</span> teaches Arabic grammar and Islamic sciences in {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}.
+                <p className="text-sm text-[#57503f] leading-relaxed mb-6">
+                  Bridge the gap between reading and understanding. Our <span className="font-semibold text-[#1f1b16]">EASI program</span> teaches Arabic grammar and Islamic sciences in {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}.
                 </p>
-                <Link to="/programs#easi" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs#easi" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <span>Learn about EASI</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -805,19 +812,19 @@ const LandingPage = () => {
             </div>
 
             {/* Parents & Children */}
-            <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-emerald-600/15 group-hover:text-emerald-600/30 transition-colors select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
                     04
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Parents & Children</h3>
-                  <p className="text-sm text-gray-500 font-medium">Learning Together</p>
+                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Parents & Children</h3>
+                  <p className="text-sm text-[#6b6353] font-medium">Learning Together</p>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  For children who can read Qur'an, combining <span className="font-semibold text-gray-900">Tajweed + EASI</span> deepens their understanding and connection with what they recite.
+                <p className="text-sm text-[#57503f] leading-relaxed mb-6">
+                  For children who can read Qur'an, combining <span className="font-semibold text-[#1f1b16]">Tajweed + EASI</span> deepens their understanding and connection with what they recite.
                 </p>
-                <Link to="/programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <span>View all programs</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -827,36 +834,36 @@ const LandingPage = () => {
 
           {/* CTA with Application and Contact Info */}
           <div className="mt-12 sm:mt-16">
-            <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
-                Ready to Begin Your Journey?
+            <div className="text-center p-8 bg-white rounded-lg border border-[#e6e0d3]">
+              <h3 className="text-xl sm:text-2xl font-semibold text-[#1f1b16] mb-3">
+                Not sure where you fit?
               </h3>
-              <p className="text-gray-600 mb-4">
-                Reclaim your connection to the Qur'an and Sunnah through a structured, time-bound methodology that meets you where you are.
+              <p className="text-[#57503f] mb-4">
+                Each program has a clear start point and a fixed length, grounded in the Qur'an and Sunnah. Tell us where you are and we'll place you.
               </p>
-              <p className="text-gray-600 mb-6 text-sm">
-                Not sure which program is right for you? We're here to help.
+              <p className="text-[#57503f] mb-6 text-sm">
+                Still deciding? Message us and we'll help you choose.
               </p>
               <div className="flex flex-col gap-4">
-                 <Link to="/apply#select-your-program" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+                 <Link to="/apply#select-your-program" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
                   <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm mx-auto">
                     <span>Start Your Application</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </Link>
-                <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-2 border-t border-gray-200">
-                  <p className="text-sm text-gray-500">Have questions?</p>
-                  <a href="mailto:salam@tftmadrasah.nz" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-2 border-t border-[#e6e0d3]">
+                  <p className="text-sm text-[#6b6353]">Have questions?</p>
+                  <a href="mailto:salam@tftmadrasah.nz" className="text-[#3d372e] font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
                     <Mail className="h-4 w-4" />
                     salam@tftmadrasah.nz
                   </a>
-                  <span className="hidden sm:inline text-gray-300">|</span>
-                  <a href="tel:+64272131486" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                  <span className="hidden sm:inline text-[#d9d2c4]">|</span>
+                  <a href="tel:+64272131486" className="text-[#3d372e] font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
                     <Phone className="h-4 w-4" />
                     +6427 213 1486
                   </a>
-                  <span className="hidden sm:inline text-gray-300">|</span>
-                  <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-700 font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                  <span className="hidden sm:inline text-[#d9d2c4]">|</span>
+                  <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-[#3d372e] font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
                     <MessageCircle className="h-4 w-4" />
                     +6422 465 3509
                   </a>
@@ -867,23 +874,26 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Diagonal seam out of the green feature band */}
+      <DiagonalSeam from="bg-[#0d3b2c]" to="bg-white" direction="down" />
+
       {/* Our Approach Section */}
       <section className="bg-white py-10 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#1f1b16] text-center mb-8 sm:mb-16">
             Our Approach
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Card 1 */}
-            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 0 ? null : 0)}
                 className="w-full p-6 text-left md:cursor-default"
               >
                 <div>
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
                       Flexible & Personalized Learning
                     </h3>
                     {/* Mobile toggle icon */}
@@ -891,14 +901,14 @@ const LandingPage = () => {
                       {openApproachCard === 0 ? (
                         <Minus className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Plus className="h-5 w-5 text-gray-400" />
+                        <Plus className="h-5 w-5 text-[#8a8172]" />
                       )}
                     </div>
                   </div>
 
                   {/* Content - hidden on mobile unless expanded, always visible on desktop */}
                   <div className={`${openApproachCard === 0 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
                       Everyone learns at their own pace. We adapt to your schedule and pace, whether you're studying solo or with family members. When it makes sense, we group students with similar backgrounds to build peer support while keeping you accountable.
                     </p>
                   </div>
@@ -907,7 +917,7 @@ const LandingPage = () => {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 1 ? null : 1)}
                 className="w-full p-6 text-left md:cursor-default"
@@ -915,20 +925,20 @@ const LandingPage = () => {
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
                       Islamic Values at the Core
                     </h3>
                     <div className="md:hidden flex-shrink-0 mt-1">
                       {openApproachCard === 1 ? (
                         <Minus className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Plus className="h-5 w-5 text-gray-400" />
+                        <Plus className="h-5 w-5 text-[#8a8172]" />
                       )}
                     </div>
                   </div>
 
                   <div className={`${openApproachCard === 1 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
+                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
                       We don't just teach Arabic - we cultivate Islamic character rooted in the Qur'an and Sunnah. You'll learn to read, understand, and embody what you're learning through proper Islamic manners and devotion.
                     </p>
                   </div>
@@ -937,7 +947,7 @@ const LandingPage = () => {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 2 ? null : 2)}
                 className="w-full p-6 text-left md:cursor-default"
@@ -945,21 +955,21 @@ const LandingPage = () => {
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
                       Classical Script & Traditional Pedagogy
                     </h3>
                     <div className="md:hidden flex-shrink-0 mt-1">
                       {openApproachCard === 2 ? (
                         <Minus className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Plus className="h-5 w-5 text-gray-400" />
+                        <Plus className="h-5 w-5 text-[#8a8172]" />
                       )}
                     </div>
                   </div>
 
                   <div className={`${openApproachCard === 2 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      We use authentic Islamic texts that have educated students for centuries. During Arabic and Tajweed classes, teachers write on the board live and students take physical notes. This traditional method develops your Arabic handwriting and helps knowledge stick better than passive learning.
+                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
+                      We teach from established Islamic texts. In Arabic and Tajweed classes, teachers write on the board live and students take notes by hand — practising Arabic handwriting as they learn.
                     </p>
                   </div>
                 </div>
@@ -967,7 +977,7 @@ const LandingPage = () => {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 3 ? null : 3)}
                 className="w-full p-6 text-left md:cursor-default"
@@ -975,21 +985,21 @@ const LandingPage = () => {
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
                       Anywhere, Anytime Accessibility
                     </h3>
                     <div className="md:hidden flex-shrink-0 mt-1">
                       {openApproachCard === 3 ? (
                         <Minus className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Plus className="h-5 w-5 text-gray-400" />
+                        <Plus className="h-5 w-5 text-[#8a8172]" />
                       )}
                     </div>
                   </div>
 
                   <div className={`${openApproachCard === 3 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      All classes run online via secure video conferencing. Whether you're in Auckland, Wellington, or anywhere in New Zealand, quality Islamic education is just a click away. No geographical barriers, no compromising on traditional standards.
+                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
+                      All classes run online over video, so you can study from anywhere in New Zealand or abroad without relocating.
                     </p>
                   </div>
                 </div>
@@ -997,7 +1007,7 @@ const LandingPage = () => {
             </div>
 
             {/* Card 5 */}
-            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 4 ? null : 4)}
                 className="w-full p-6 text-left md:cursor-default"
@@ -1005,21 +1015,21 @@ const LandingPage = () => {
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      Rigorous Assessment Framework
+                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
+                      Assessment You Can Trust
                     </h3>
                     <div className="md:hidden flex-shrink-0 mt-1">
                       {openApproachCard === 4 ? (
                         <Minus className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Plus className="h-5 w-5 text-gray-400" />
+                        <Plus className="h-5 w-5 text-[#8a8172]" />
                       )}
                     </div>
                   </div>
 
                   <div className={`${openApproachCard === 4 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      Regular milestone tests and a final exam ensure you truly grasp what you're learning. Our platform tracks your scores, weighted totals, and progress — giving you and your teacher clear visibility. Pass all assessments to earn a verifiable program certificate.
+                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
+                      Milestone tests and a final exam check your understanding as you go. Scores and weighted totals are visible to you and your teacher. Pass every assessment to earn a verifiable certificate.
                     </p>
                   </div>
                 </div>
@@ -1027,7 +1037,7 @@ const LandingPage = () => {
             </div>
 
             {/* Card 6 */}
-            <div className="bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
               <button
                 onClick={() => setOpenApproachCard(openApproachCard === 5 ? null : 5)}
                 className="w-full p-6 text-left md:cursor-default"
@@ -1035,21 +1045,21 @@ const LandingPage = () => {
 
                 <div className="relative z-10">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
                       Holistic Mentorship
                     </h3>
                     <div className="md:hidden flex-shrink-0 mt-1">
                       {openApproachCard === 5 ? (
                         <Minus className="h-5 w-5 text-emerald-600" />
                       ) : (
-                        <Plus className="h-5 w-5 text-gray-400" />
+                        <Plus className="h-5 w-5 text-[#8a8172]" />
                       )}
                     </div>
                   </div>
 
                   <div className={`${openApproachCard === 5 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-gray-600 leading-relaxed text-justify">
-                      You get a dedicated mentor who follows up with you personally, supports your learning, and helps you navigate life's challenges through an Islamic lens. We're in this with you beyond just the classroom.
+                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
+                      A dedicated mentor follows your progress, checks in regularly, and offers guidance rooted in the Qur'an and Sunnah.
                     </p>
                   </div>
                 </div>
@@ -1060,13 +1070,10 @@ const LandingPage = () => {
       </section>
 
 
-      {/* Diagonal seam into The Path to Mastery */}
-      <DiagonalSeam from="bg-white" to="bg-gray-50" direction="down" />
-
       {/* How Admission Works Section */}
-      <section className="bg-gray-50 pb-10 pt-4 sm:pb-24 sm:pt-12">
+      <section className="bg-white pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-gray-900 text-center mb-8 sm:mb-16">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#1f1b16] text-center mb-8 sm:mb-16">
             The Path to Mastery
           </h2>
 
@@ -1080,8 +1087,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">1</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Online Application</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Submit your details through our streamlined portal to begin the selection process.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Online Application</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Submit your details online to begin the selection process.</p>
                 </div>
               </div>
 
@@ -1089,8 +1096,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">2</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Evaluation & Interview</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Our team reviews your background and conducts a brief interview to discuss your goals.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Evaluation & Interview</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Our team reviews your background and conducts a brief interview to discuss your goals.</p>
                 </div>
               </div>
 
@@ -1098,8 +1105,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">3</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Selection & Enrollment</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Receive your offer and secure your place through our secure payment gateway.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Selection & Enrollment</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Receive your offer and secure your place through our secure payment gateway.</p>
                 </div>
               </div>
 
@@ -1107,8 +1114,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">4</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Onboarding & Mentorship</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Get your Student ID and be matched with an expert mentor for guidance.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Onboarding & Mentorship</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Get your Student ID and be matched with an expert mentor for guidance.</p>
                 </div>
               </div>
 
@@ -1116,8 +1123,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">5</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Guided Execution</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Engage in intensive instruction and regular assessments with consistent follow-up.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Study & Drills</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Attend lectures, work through drills, and sit regular assessments with your mentor following up.</p>
                 </div>
               </div>
 
@@ -1125,8 +1132,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">6</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Final Validation</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Complete your final evaluation to demonstrate mastery of the program objectives.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Final Exam</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Sit the final exam to complete the program.</p>
                 </div>
               </div>
 
@@ -1134,8 +1141,8 @@ const LandingPage = () => {
               <div className="relative flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">7</div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">Certification & Alumni</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">Graduate with a Certificate of Completion and join our alumni network.</p>
+                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Certification & Alumni</h3>
+                  <p className="text-xs text-[#57503f] leading-relaxed">Graduate with a Certificate of Completion and join our alumni network.</p>
                 </div>
               </div>
             </div>
@@ -1150,8 +1157,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Online Application</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Submit your details through our streamlined portal.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Online Application</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Submit your details online to apply.</p>
                   </div>
                 </div>
               </div>
@@ -1161,8 +1168,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Evaluation & Interview</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Our team reviews your background and discusses your goals.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Evaluation & Interview</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Our team reviews your background and discusses your goals.</p>
                   </div>
                 </div>
               </div>
@@ -1172,8 +1179,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Selection & Enrollment</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Receive your offer and secure your place.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Selection & Enrollment</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Receive your offer and secure your place.</p>
                   </div>
                 </div>
               </div>
@@ -1183,8 +1190,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Onboarding & Mentorship</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Get your Student ID and be matched with an expert mentor.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Onboarding & Mentorship</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Get your Student ID and be matched with an expert mentor.</p>
                   </div>
                 </div>
               </div>
@@ -1197,8 +1204,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Guided Execution</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Engage in intensive instruction and regular assessments.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Study & Drills</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Attend lectures, work through drills, and sit regular assessments.</p>
                   </div>
                 </div>
               </div>
@@ -1208,8 +1215,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Final Validation</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Complete your final evaluation to demonstrate mastery.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Final Exam</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Sit the final exam to complete the program.</p>
                   </div>
                 </div>
               </div>
@@ -1219,8 +1226,8 @@ const LandingPage = () => {
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">7</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-gray-900 mb-1">Certification & Alumni</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">Graduate with a Certificate and join our alumni network.</p>
+                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Certification & Alumni</h3>
+                    <p className="text-xs text-[#57503f] leading-relaxed">Graduate with a Certificate and join our alumni network.</p>
                   </div>
                 </div>
               </div>
@@ -1230,59 +1237,59 @@ const LandingPage = () => {
       </section>
 
       {/* Flexible Learning for Every Lifestyle */}
-      <section className="bg-gradient-to-b from-white to-gray-50 py-10 sm:py-20">
+      <section className="bg-white py-10 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-3">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#1f1b16] mb-3">
               Designed for Your Life
             </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-[#57503f] max-w-2xl mx-auto">
               Whether you're working full-time, raising children, studying, or retired—our programs adapt to your schedule and commitments
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {/* Working Professionals */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="mb-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Evening & Weekend Classes</h3>
-                <p className="text-xs text-gray-500">For Working Professionals</p>
+                <h3 className="font-semibold text-[#1f1b16] mb-2">Evening & Weekend Classes</h3>
+                <p className="text-xs text-[#6b6353]">For Working Professionals</p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-sm text-[#57503f] leading-relaxed">
                 Classes scheduled outside work hours so you can pursue Qur'anic education without compromising your career. Learn at your own pace with dedicated mentorship.
               </p>
             </div>
 
             {/* Parents & Homemakers */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="mb-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Daytime Sessions</h3>
-                <p className="text-xs text-gray-500">For Parents & Homemakers</p>
+                <h3 className="font-semibold text-[#1f1b16] mb-2">Daytime Sessions</h3>
+                <p className="text-xs text-[#6b6353]">For Parents & Homemakers</p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Morning and afternoon options while children are at school or napping. Learn alongside your family and guide them with confidence in their own Qur'anic journey.
+              <p className="text-sm text-[#57503f] leading-relaxed">
+                Morning and afternoon options while children are at school or napping. Learn alongside your family and help guide their reading at home.
               </p>
             </div>
 
             {/* Seniors & Beginners */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="mb-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Patient Instruction</h3>
-                <p className="text-xs text-gray-500">For Seniors & Beginners</p>
+                <h3 className="font-semibold text-[#1f1b16] mb-2">Patient Instruction</h3>
+                <p className="text-xs text-[#6b6353]">For Seniors & Beginners</p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                It's never too late to start. Our teachers provide age-appropriate, patient guidance with small class sizes ensuring personal attention at a comfortable pace.
+              <p className="text-sm text-[#57503f] leading-relaxed">
+                Age-appropriate teaching in small classes, so seniors and first-time learners get personal attention and can work at their own pace.
               </p>
             </div>
 
             {/* Students & Youth */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg hover:border-gray-300 transition-all duration-300">
+            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="mb-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Structured Timelines</h3>
-                <p className="text-xs text-gray-500">For Students & Youth</p>
+                <h3 className="font-semibold text-[#1f1b16] mb-2">Structured Timelines</h3>
+                <p className="text-xs text-[#6b6353]">For Students & Youth</p>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Clear goals and accountability to keep you on track between lectures and assignments. Online format fits seamlessly into your digital lifestyle with mentorship support.
+              <p className="text-sm text-[#57503f] leading-relaxed">
+                Clear milestones and assignments between lectures keep you on track, with a mentor following your progress.
               </p>
             </div>
           </div>
@@ -1290,16 +1297,16 @@ const LandingPage = () => {
       </section>
 
       {/* FAQ Link Section */}
-      <section className="py-10 md:py-24 bg-gray-100">
+      <section className="py-10 md:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-lg border border-gray-200 p-8 sm:p-12 text-center shadow-sm">
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+          <div className="bg-white rounded-lg border border-[#e6e0d3] p-8 sm:p-12 text-center shadow-sm">
+            <h2 className="text-2xl md:text-4xl font-bold text-[#1f1b16] mb-3 sm:mb-4">
               Have Questions?
             </h2>
-            <p className="text-sm sm:text-lg text-gray-600 mb-6 sm:mb-8">
-              Check out our comprehensive FAQ page for answers about programs, admission process, materials, and more
+            <p className="text-sm sm:text-lg text-[#57503f] mb-6 sm:mb-8">
+              Answers on programs, admission, fees, and how classes run.
             </p>
-             <Link to="/faqs#frequently-asked-questions" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-emerald-600 group-hover:gap-3 transition-all">
+             <Link to="/faqs#frequently-asked-questions" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
               <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors">
                 <span>View FAQs</span>
                 <ArrowRight className="h-4 w-4" />
@@ -1311,15 +1318,15 @@ const LandingPage = () => {
 
       {/* CTA Section */}
       {/* Diagonal seam into the closing CTA */}
-      <DiagonalSeam from="bg-gray-100" to="bg-emerald-900" direction="up" height="h-12 sm:h-20" />
+      <DiagonalSeam from="bg-white" to="bg-emerald-900" direction="up" height="h-12 sm:h-20" />
 
       <section className="py-12 md:py-24 bg-emerald-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">
-            Begin Your Learning Journey
+            Apply for the next intake
           </h2>
           <p className="text-lg text-emerald-200 mb-8 max-w-2xl mx-auto">
-            Join students worldwide in authentic Islamic education
+            Submit an application, and we'll match you to the right program.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/apply">
@@ -1359,10 +1366,10 @@ const LandingPage = () => {
                     <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
                     <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
-                  {/* <div className="text-xs text-gray-400 font-arabic">الفلاح</div> */}
+                  {/* <div className="text-xs text-emerald-100/70 font-arabic">الفلاح</div> */}
                 </div>
               </div>
-              <p className="text-gray-400 text-sm mb-4">
+              <p className="text-emerald-100/70 text-sm mb-4">
                 Flexible. Structured. Tailored.
               </p>
               <div className="flex items-center gap-2">
@@ -1371,7 +1378,7 @@ const LandingPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-gray-300 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-emerald-50 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
                 >
                   <Facebook className="h-4 w-4" />
                 </a>
@@ -1380,7 +1387,7 @@ const LandingPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-gray-300 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-emerald-50 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
                 >
                   <Instagram className="h-4 w-4" />
                 </a>
@@ -1391,18 +1398,18 @@ const LandingPage = () => {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/mission" className="text-gray-400 hover:text-white">Our Mission</Link></li>
-                <li><a href="/programs" className="text-gray-400 hover:text-white">Programs</a></li>
-                <li><Link to="/apply" className="text-gray-400 hover:text-white">Apply Now</Link></li>
+                <li><Link to="/mission" className="text-emerald-100/70 hover:text-white">Our Mission</Link></li>
+                <li><a href="/programs" className="text-emerald-100/70 hover:text-white">Programs</a></li>
+                <li><Link to="/apply" className="text-emerald-100/70 hover:text-white">Apply Now</Link></li>
                 <li>
-                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 flex items-center gap-1.5">
+                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-emerald-100/70 hover:text-rose-400 flex items-center gap-1.5">
                     <Heart className="h-3.5 w-3.5" />
                     Support Our Mission
                   </a>
                 </li>
-                <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
+                <li><Link to="/vacancies" className="text-emerald-100/70 hover:text-white">Careers</Link></li>
                 <li className="pt-2 border-t border-emerald-900">
-                  <Link to="/login" className="text-gray-500 hover:text-gray-300 text-xs">Sign In</Link>
+                  <Link to="/login" className="text-emerald-200/50 hover:text-emerald-100 text-xs">Sign In</Link>
                 </li>
               </ul>
             </div>
@@ -1410,19 +1417,19 @@ const LandingPage = () => {
             {/* Contact */}
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
-              <p className="text-gray-400 text-sm mb-4">
+              <p className="text-emerald-100/70 text-sm mb-4">
                 Questions about our programs?
               </p>
               <div className="space-y-2">
-                <a href="mailto:salam@tftmadrasah.nz" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-50 hover:text-white text-sm flex items-center gap-2">
                   <Mail className="h-4 w-4" />
                   salam@tftmadrasah.nz
                 </a>
-                <a href="tel:+64272131486" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
+                <a href="tel:+64272131486" className="text-emerald-50 hover:text-white text-sm flex items-center gap-2">
                   <Phone className="h-4 w-4" />
                   +6427 213 1486
                 </a>
-                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-50 hover:text-white text-sm flex items-center gap-2">
                   <MessageCircle className="h-4 w-4" />
                   +6422 465 3509
                 </a>
