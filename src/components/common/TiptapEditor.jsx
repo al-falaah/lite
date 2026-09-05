@@ -36,8 +36,10 @@ import {
   Trash2,
   PaintBucket,
   BadgeCheck,
+  Image as ImageIcon,
 } from 'lucide-react';
 import VersePicker from './VersePicker';
+import { storage } from '../../services/supabase';
 import {
   TipCallout,
   VerseBlock,
@@ -101,8 +103,10 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
   const [lossWarning, setLossWarning] = useState(false);
   const [showBar, setShowBar] = useState(false); // floating toolbar visibility
   const [showVersePicker, setShowVersePicker] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const checkedInitialLoad = useRef(false);
   const blurTimer = useRef(null);
+  const fileInputRef = useRef(null);
 
   const editor = useEditor({
     extensions: [
@@ -200,6 +204,38 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
     editor.chain().focus().updateAttributes('superscript', { 'data-footnote': note }).run();
   };
 
+  const addImage = () => { if (!uploading) fileInputRef.current?.click(); };
+
+  const handleImageFile = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // reset so the same file can be re-picked
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      window.alert('Please choose an image file (JPEG, PNG, WebP or GIF).');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      window.alert('Image is too large. Please choose a file under 5 MB.');
+      return;
+    }
+    const alt = window.prompt('Describe this image (alt text, optional)', '') || '';
+    setUploading(true);
+    try {
+      const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+      const safe = file.name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/gi, '-').slice(0, 40) || 'image';
+      const path = `lessons/${Date.now()}-${safe}.${ext}`;
+      const { error } = await storage.upload('lesson-images', path, file);
+      if (error) {
+        window.alert(`Upload failed: ${error.message || 'please try again.'}`);
+        return;
+      }
+      const url = storage.getPublicUrl('lesson-images', path);
+      editor.chain().focus().setImage({ src: url, alt }).run();
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const enterHtmlView = () => {
     setHtmlDraft(editor.getHTML());
     setShowHtml(true);
@@ -266,6 +302,16 @@ const TiptapEditor = ({ value, onChange, placeholder, useBlogStyle = false }) =>
         <ToolbarButton title="Link" active={editor.isActive('link')} onClick={setLink}>
           <LinkIcon className="h-4 w-4" />
         </ToolbarButton>
+        <ToolbarButton title={uploading ? 'Uploading…' : 'Insert image'} onClick={addImage}>
+          <ImageIcon className={`h-4 w-4 ${uploading ? 'opacity-40 animate-pulse' : ''}`} />
+        </ToolbarButton>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageFile}
+        />
         <span className="w-px h-5 bg-gray-200 mx-1" />
         <ToolbarButton title="Bullet list" active={editor.isActive('bulletList')}
           onClick={() => editor.chain().focus().toggleBulletList().run()}>

@@ -94,3 +94,7 @@ Thumbs.db
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Impeccable design-skill scratch artifacts
+.impeccable/questions/
+.impeccable/sketches/
