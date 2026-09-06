@@ -46,6 +46,7 @@ import ToolsLayout from './components/tools/ToolsLayout';
 import ToolsHome from './pages/tools/ToolsHome';
 import ExamplesFinder from './pages/tools/ExamplesFinder';
 import RootExplorer from './pages/tools/RootExplorer';
+import ArabiyyahWorkbench from './pages/tools/ArabiyyahWorkbench';
 import PageInsights from './pages/tools/PageInsights';
 import TajweedTest from './pages/tools/TajweedTest';
 
@@ -214,6 +215,7 @@ function AppRoutes() {
           <Route index element={<ToolsHome />} />
           <Route path="examples" element={<ExamplesFinder />} />
           <Route path="roots" element={<RootExplorer />} />
+          <Route path="arabiyyah" element={<ArabiyyahWorkbench />} />
           <Route path="pages" element={<PageInsights />} />
           <Route path="tajweed-test/*" element={<TajweedTest />} />
         </Route>

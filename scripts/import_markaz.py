@@ -13,6 +13,7 @@ Usage:
   - QURAN_DB defaults to scripts/data/quran.db if present.
   - Pass one or more logical table names to import a subset; omit to import all.
     Names: ayah_ref mukhtasar classical irab nozool word_grammar fawaed
+           qiraat word_root root_stats
 
 Requires (from .env or environment):
   VITE_SUPABASE_URL (or SUPABASE_URL)
@@ -40,10 +41,20 @@ def load_env():
                     os.environ.setdefault(k.strip(), v.strip())
 
 
+# Explicit upsert conflict target per table. Required when a table has more
+# than one unique constraint (else PostgREST picks an arbitrary arbiter and
+# merge-duplicates 409s). Tables absent here use PostgREST's default.
+ON_CONFLICT = {
+    "quran_word_qiraat": "sura_number,aya_number,word_number,content",
+}
+
+
 def supabase_upsert(url, key, table, rows):
     """Upsert a batch to {table}. Returns (status, body)."""
     body = json.dumps(rows, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(f"{url}/rest/v1/{table}", data=body, method="POST")
+    oc = ON_CONFLICT.get(table)
+    path = f"{table}?on_conflict={oc}" if oc else table
+    req = urllib.request.Request(f"{url}/rest/v1/{path}", data=body, method="POST")
     req.add_header("apikey", key)
     req.add_header("Authorization", f"Bearer {key}")
     req.add_header("Content-Type", "application/json")
@@ -151,6 +162,41 @@ def build_fawaed(con):
             if c is not None and c != ""]
 
 
+def build_qiraat(con):
+    """Per-word qira'at commentary; word text joined from word_content_rasm."""
+    return [{"sura_number": s, "aya_number": a, "word_number": w,
+             "word": (word or "").strip(), "content": content, "note": note}
+            for s, a, w, word, content, note in con.execute(
+                "SELECT q.surahNo, q.ayahNo, q.wordNo, r.word, q.content, q.note "
+                "FROM qeraat_info q "
+                "LEFT JOIN word_content_rasm r "
+                "  ON q.surahNo=r.surahNo AND q.ayahNo=r.ayahNo AND q.wordNo=r.wordNo "
+                "ORDER BY q.surahNo, q.ayahNo, q.wordNo")
+            if content is not None and content != ""]
+
+
+def build_word_root(con):
+    """Word -> root mapping from word_statistics."""
+    return [{"sura_number": s, "aya_number": a, "word_number": w,
+             "word": (word or "").strip(), "root": (root or "").strip(),
+             "sequence_in_root": seq}
+            for s, a, w, word, root, seq in con.execute(
+                "SELECT surahNo, ayahNo, wordNo, wordText, root, sequenceInSimilarRoots "
+                "FROM word_statistics ORDER BY surahNo, ayahNo, wordNo")
+            if root is not None and root != ""]
+
+
+def build_root_stats(con):
+    """Root dictionary / occurrence stats (one row per distinct root)."""
+    return [{"root": (root or "").strip(), "occurrence_count": occ,
+             "surah_count": sc, "ayah_count": ac}
+            for root, occ, sc, ac in con.execute(
+                "SELECT root, MAX(rootRepeatitionCount), MAX(surahCountWithRoot), "
+                "       MAX(ayahCountWithRoot) "
+                "FROM word_statistics WHERE root IS NOT NULL AND root <> '' "
+                "GROUP BY root ORDER BY root")]
+
+
 BUILDERS = {
     "ayah_ref":     ("quran_ayah_ref",        build_ayah_ref),
     "mukhtasar":    ("quran_tafsir_mukhtasar", build_mukhtasar),
@@ -159,6 +205,9 @@ BUILDERS = {
     "nozool":       ("quran_ayah_nozool",      build_nozool),
     "word_grammar": ("quran_word_grammar",     build_word_grammar),
     "fawaed":       ("quran_page_fawaed",      build_fawaed),
+    "qiraat":       ("quran_word_qiraat",      build_qiraat),
+    "word_root":    ("quran_word_root",        build_word_root),
+    "root_stats":   ("quran_root_stats",       build_root_stats),
 }
 
 

@@ -16,6 +16,12 @@ const TOOLS = [
     status: 'live',
   },
   {
+    path: '/tools/arabiyyah',
+    title: 'Arabiyyah Workbench (نحو)',
+    description: "Pick a grammar topic and find Qur'anic verses that demonstrate it — then tap any word to explore its root and its qirāʾāt (variant readings).",
+    status: 'live',
+  },
+  {
     path: '/tools/pages',
     title: 'Safha (صفحة)',
     description: "Qur'an Page Insights — Scholar-curated benefits and lessons from every page of the Qur'an (604 pages), with English translation.",
