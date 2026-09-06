@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import ToolSeo from '../../components/tools/ToolSeo';
 import { useState, useMemo, useCallback } from 'react';
 import { ChevronDown, ChevronRight, X, BookOpen, Layers } from 'lucide-react';
 import { supabase } from '../../services/supabase';
@@ -213,7 +213,12 @@ export default function ArabiyyahWorkbench() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Helmet><title>Arabiyyah Workbench — Qurʾān examples by grammar topic</title></Helmet>
+      <ToolSeo
+        path="/tools/arabiyyah"
+        title="Arabiyyah Workbench — Qur'an examples by grammar topic | The FastTrack Madrasah"
+        name="Arabiyyah Workbench"
+        description="Pick an Arabic grammar topic and find Qur'anic verses that demonstrate it, then tap any word to explore its root and its qirāʾāt (variant readings). Free tool by The FastTrack Madrasah."
+      />
 
       {/* Header */}
       <div className="mb-6">

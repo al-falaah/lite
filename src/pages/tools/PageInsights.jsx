@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import ToolSeo from '../../components/tools/ToolSeo';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, BookOpen, Globe, Languages } from 'lucide-react';
 
@@ -106,10 +106,12 @@ function PageInsights() {
 
   return (
     <>
-      <Helmet>
-        <title>Safha — Qur'an Page Insights | The FastTrack Madrasah</title>
-        <meta name="description" content="Browse scholar-curated benefits and lessons from every page of the Qur'an (604 pages) with English translation. Free tool by The FastTrack Madrasah." />
-      </Helmet>
+      <ToolSeo
+        path="/tools/pages"
+        title="Safha — Qur'an Page Insights | The FastTrack Madrasah"
+        name="Safha — Qur'an Page Insights"
+        description="Browse scholar-curated benefits and lessons from every page of the Qur'an (604 pages) with English translation. Free tool by The FastTrack Madrasah."
+      />
       {/* Header */}
       <div className="border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-14">

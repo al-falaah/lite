@@ -25,10 +25,12 @@
     <!-- Playfair Display + Great Vibes for Certificates -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
 
-    <!-- Primary Meta Tags -->
+    <!-- Primary Meta Tags. Per-route <title>/description/canonical/OG are set
+         by react-helmet (LandingPage for /, ToolSeo for /tools/*, BlogPost for
+         posts) so there is a single source per route and no duplicate tags.
+         Below are only the non-conflicting site-wide defaults + the pre-JS
+         title fallback. -->
     <title>Learn to Read & Understand the Qur'an | Islamic School NZ | The FastTrack Madrasah</title>
-    <meta name="title" content="Learn to Read & Understand the Qur'an | Islamic School NZ | The FastTrack Madrasah" />
-    <meta name="description" content="Online Qur'anic education for everyone. QARI program for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs with dedicated mentorship in New Zealand." />
 
     <!-- Keywords for NZ Islamic Education -->
     <meta name="keywords" content="learn to read Quran for beginners, can't read Arabic, online Quran classes for adults NZ, learn Arabic from scratch, QARI program, Tajweed Mastery, EASI program, Quran reading for beginners New Zealand, understand Quran in Arabic, Islamic education for everyone, online madrasah NZ, Arabic classes New Zealand, learn Tajweed online, Islamic studies NZ, new Muslim education, adult Quran classes, Arabic language course NZ, Islamic school Auckland, Islamic school Wellington, Islamic school Christchurch, structured Islamic program, Quran teacher NZ, absolute beginners Quran, proper recitation" />
@@ -39,24 +41,15 @@
     <meta name="geo.position" content="-41.2865;174.7762" />
     <meta name="ICBM" content="-41.2865, 174.7762" />
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://tftmadrasah.nz/" />
-    <meta property="og:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
-    <meta property="og:description" content="QARI for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs for everyone in New Zealand." />
+    <!-- Site-wide OG defaults (image + card type + site name). Per-route
+         og:title/description/url/canonical come from react-helmet. -->
     <meta property="og:image" content="https://tftmadrasah.nz/logo-og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="The FastTrack Madrasah - Islamic School New Zealand" />
-    <meta property="og:locale" content="en_NZ" />
     <meta property="og:site_name" content="The FastTrack Madrasah" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://tftmadrasah.nz/" />
-    <meta property="twitter:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
-    <meta property="twitter:description" content="QARI for beginners. Tajweed Mastery for proper recitation. EASI for understanding. Structured programs for everyone in New Zealand." />
-    <meta property="twitter:image" content="https://tftmadrasah.nz/logo-og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://tftmadrasah.nz/logo-og.png" />
 
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
@@ -138,7 +131,7 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="language" content="English" />
     <meta name="author" content="The FastTrack Madrasah" />
-    <link rel="canonical" href="https://tftmadrasah.nz/" />
+    <!-- canonical is set per-route via react-helmet (see LandingPage / ToolSeo / BlogPost) -->
 
     <!-- Cache Control -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
