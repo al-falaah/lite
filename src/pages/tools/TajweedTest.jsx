@@ -205,6 +205,8 @@ function Setup() {
       <Helmet>
         <title>Tajweed Test Runner | The FastTrack Madrasah</title>
         <meta name="description" content="Run a live tajweed quiz session. Configure topics, add students, and score answers on the fly — with printable results." />
+        {/* Live class-session tool, not a content page — keep out of the index. */}
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 to-white py-8">

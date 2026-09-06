@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import ToolSeo from '../../components/tools/ToolSeo';
 import { Link } from 'react-router-dom';
 import DiagonalSeam from '../../components/common/DiagonalSeam';
 
@@ -38,10 +38,12 @@ const TOOLS = [
 function ToolsHome() {
   return (
     <>
-      <Helmet>
-        <title>Free Qur'anic Learning Tools | The FastTrack Madrasah</title>
-        <meta name="description" content="Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), and Safha (page insights)." />
-      </Helmet>
+      <ToolSeo
+        path="/tools"
+        title="Free Qur'anic Learning Tools | The FastTrack Madrasah"
+        name="Qur'anic Learning Tools"
+        description="Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), Arabiyyah Workbench, and Safha (page insights)."
+      />
       {/* Header — matches Blog page pattern (dark band + diagonal seam) */}
       <div className="bg-gray-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

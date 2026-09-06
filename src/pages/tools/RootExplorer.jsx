@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import ToolSeo from '../../components/tools/ToolSeo';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, BookOpen } from 'lucide-react';
 
@@ -160,10 +160,12 @@ function RootExplorer() {
 
   return (
     <>
-      <Helmet>
-        <title>Tasreef — Root Word Explorer | The FastTrack Madrasah</title>
-        <meta name="description" content="Enter any Arabic word to discover its root, derived forms, verb patterns, and every Qur'anic occurrence. Free morphology tool by The FastTrack Madrasah." />
-      </Helmet>
+      <ToolSeo
+        path="/tools/roots"
+        title="Tasreef — Root Word Explorer | The FastTrack Madrasah"
+        name="Tasreef — Root Word Explorer"
+        description="Enter any Arabic word to discover its root, derived forms, verb patterns, and every Qur'anic occurrence. Free morphology tool by The FastTrack Madrasah."
+      />
       {/* Header */}
       <div className="border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">

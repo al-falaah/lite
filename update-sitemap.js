@@ -47,69 +47,29 @@ async function updateSitemap() {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 
-  <!-- Homepage -->
+${[
+  // Public, indexable routes only. Private areas (student/teacher/admin/blog-admin)
+  // are intentionally excluded (also Disallowed in robots.txt).
+  { loc: '/', changefreq: 'weekly', priority: '1.0', label: 'Homepage' },
+  { loc: '/programs', changefreq: 'monthly', priority: '0.9', label: 'Programs' },
+  { loc: '/apply', changefreq: 'monthly', priority: '0.9', label: 'Application Page' },
+  { loc: '/faqs', changefreq: 'monthly', priority: '0.8', label: 'FAQs' },
+  { loc: '/blog', changefreq: 'daily', priority: '0.8', label: 'Blog Main Page' },
+  { loc: '/store', changefreq: 'weekly', priority: '0.7', label: 'Store' },
+  { loc: '/vacancies', changefreq: 'weekly', priority: '0.6', label: 'Vacancies/Careers' },
+  // Free Qur'anic learning tools
+  { loc: '/tools', changefreq: 'monthly', priority: '0.8', label: 'Tools — home' },
+  { loc: '/tools/examples', changefreq: 'monthly', priority: '0.8', label: 'Tools — Shawaahid' },
+  { loc: '/tools/roots', changefreq: 'monthly', priority: '0.8', label: 'Tools — Tasreef' },
+  { loc: '/tools/arabiyyah', changefreq: 'monthly', priority: '0.8', label: 'Tools — Arabiyyah Workbench' },
+  { loc: '/tools/pages', changefreq: 'monthly', priority: '0.8', label: 'Tools — Safha' },
+].map(r => `  <!-- ${r.label} -->
   <url>
-    <loc>https://tftmadrasah.nz/</loc>
+    <loc>https://tftmadrasah.nz${r.loc}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <!-- Application Page -->
-  <url>
-    <loc>https://tftmadrasah.nz/apply</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Blog Main Page -->
-  <url>
-    <loc>https://tftmadrasah.nz/blog</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Student Portal -->
-  <url>
-    <loc>https://tftmadrasah.nz/student</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Teacher Portal -->
-  <url>
-    <loc>https://tftmadrasah.nz/teacher</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Vacancies/Careers -->
-  <url>
-    <loc>https://tftmadrasah.nz/vacancies</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Admin Portal -->
-  <url>
-    <loc>https://tftmadrasah.nz/admin</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Blog Admin -->
-  <url>
-    <loc>https://tftmadrasah.nz/blog/admin</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.2</priority>
-  </url>
+    <changefreq>${r.changefreq}</changefreq>
+    <priority>${r.priority}</priority>
+  </url>`).join('\n\n')}
 
   <!-- Blog Posts -->
 ${posts.map(post => `  <url>

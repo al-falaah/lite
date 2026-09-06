@@ -5,58 +5,50 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 
-  <!-- Homepage - Qur'anic education for absolute beginners, new Muslims, and advanced learners -->
+  <!-- Homepage -->
   <url>
     <loc>https://tftmadrasah.nz/</loc>
-    <lastmod>2026-01-25</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Programs - QARI (beginners), Tajweed Mastery, EASI (Arabic grammar & Islamic sciences) -->
+  <!-- Programs -->
   <url>
     <loc>https://tftmadrasah.nz/programs</loc>
-    <lastmod>2026-01-25</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Application Page - Online interview and enrollment process -->
+  <!-- Application Page -->
   <url>
     <loc>https://tftmadrasah.nz/apply</loc>
-    <lastmod>2026-01-25</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- FAQs - Programs, admission, materials, mentoring -->
+  <!-- FAQs -->
   <url>
     <loc>https://tftmadrasah.nz/faqs</loc>
-    <lastmod>2026-01-25</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Blog - Islamic education articles and insights -->
+  <!-- Blog Main Page -->
   <url>
     <loc>https://tftmadrasah.nz/blog</loc>
-    <lastmod>2026-01-25</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Resources - Lesson notes and course materials -->
-  <url>
-    <loc>https://tftmadrasah.nz/resources</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Store - Islamic learning materials and textbooks -->
+  <!-- Store -->
   <url>
     <loc>https://tftmadrasah.nz/store</loc>
-    <lastmod>2026-01-25</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -64,71 +56,133 @@
   <!-- Vacancies/Careers -->
   <url>
     <loc>https://tftmadrasah.nz/vacancies</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- Free Qur'anic Learning Tools -->
+  <!-- Tools — home -->
   <url>
     <loc>https://tftmadrasah.nz/tools</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Tools — Shawaahid -->
   <url>
     <loc>https://tftmadrasah.nz/tools/examples</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Tools — Tasreef -->
   <url>
     <loc>https://tftmadrasah.nz/tools/roots</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Tools — Arabiyyah Workbench -->
+  <url>
+    <loc>https://tftmadrasah.nz/tools/arabiyyah</loc>
+    <lastmod>2026-09-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Tools — Safha -->
   <url>
     <loc>https://tftmadrasah.nz/tools/pages</loc>
-    <lastmod>2026-04-16</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Blog Posts -->
   <url>
+    <loc>https://tftmadrasah.nz/blog/how-can-a-sinner-become-righteous</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/how-to-create-a-meaningful-ramadan-experience-for-your-family</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/al-tayammum-dry-ablution-part-1</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/five-key-tips-on-how-to-raise-righteous-children</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/when-you-help-people-allah-helps-you</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/how-can-a-woman-become-a-blessing-to-her-husband</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/a-brief-summary-of-how-the-prophet-performed-hajj</loc>
+    <lastmod>2026-07-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tftmadrasah.nz/blog/the-prophets-three-promises-of-forgiveness-in-ramadan</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://tftmadrasah.nz/blog/how-to-build-strong-muslim-character-in-youth</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tftmadrasah.nz/blog/why-translation-is-not-enough-tasting-the-sweetness-of-the-source</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tftmadrasah.nz/blog/and-humankind-was-created-weak</loc>
-    <lastmod>2026-01-12</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tftmadrasah.nz/blog/whoever-allah-has-blessed-immensely-must-show-gratitude-to-him-enormously</loc>
-    <lastmod>2026-01-06</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tftmadrasah.nz/blog/why-do-hearts-harden</loc>
-    <lastmod>2026-01-11</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tftmadrasah.nz/blog/what-staying-connected-to-the-quran-means</loc>
-    <lastmod>2026-01-07</lastmod>
+    <lastmod>2026-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

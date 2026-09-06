@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram, Languages } from 'lucide-react';
 import Button from '../components/common/Button';
 import DiagonalSeam from '../components/common/DiagonalSeam';
 import { storage } from '../services/supabase';
@@ -111,7 +111,24 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen">
-      <Helmet><title>The FastTrack Madrasah | Learn Quran Online</title></Helmet>
+      <Helmet>
+        <title>Learn to Read & Understand the Qur'an | Islamic School NZ | The FastTrack Madrasah</title>
+        <meta name="description" content="Online Qur'anic education for everyone. QARI program for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs with dedicated mentorship in New Zealand." />
+        <link rel="canonical" href="https://tftmadrasah.nz/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tftmadrasah.nz/" />
+        <meta property="og:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
+        <meta property="og:description" content="QARI for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs for everyone in New Zealand." />
+        <meta property="og:image" content="https://tftmadrasah.nz/logo-og.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="The FastTrack Madrasah" />
+        <meta property="og:locale" content="en_NZ" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
+        <meta name="twitter:description" content="QARI for beginners. Tajweed Mastery for proper recitation. EASI for understanding. Structured programs for everyone in New Zealand." />
+        <meta name="twitter:image" content="https://tftmadrasah.nz/logo-og.png" />
+      </Helmet>
       {/* Navigation - Clean professional design */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${
         isScrolled
@@ -629,23 +646,30 @@ const LandingPage = () => {
                   <p className="text-sm text-[#57503f]">No account needed — open to every student of the Qur'an.</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="/tools/examples" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
+                  <Link to="/tools/examples" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
                     <Search className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-[#1f1b16]">Shawaahid</p>
                       <p className="text-xs text-[#6b6353] truncate">Qur'anic Examples Finder</p>
                     </div>
-                  </a>
-                  <a href="/tools/roots" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
+                  </Link>
+                  <Link to="/tools/arabiyyah" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
+                    <Languages className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-[#1f1b16]">Arabiyyah</p>
+                      <p className="text-xs text-[#6b6353] truncate">Grammar examples + roots</p>
+                    </div>
+                  </Link>
+                  <Link to="/tools/roots" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
                     <BookOpen className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-[#1f1b16]">Tasreef</p>
                       <p className="text-xs text-[#6b6353] truncate">Root Word Explorer</p>
                     </div>
-                  </a>
-                  <a href="/tools" className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors whitespace-nowrap">
+                  </Link>
+                  <Link to="/tools" className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors whitespace-nowrap">
                     All tools <ArrowRight className="w-4 h-4" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
