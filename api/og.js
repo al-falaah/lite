@@ -16,8 +16,8 @@ const OG_IMAGE = `${SITE}/og-image.png`;
 
 const META = {
   '/': {
-    title: "A serious online madrasah — Qur'an, Tajwīd, Arabic & Islamic sciences | The FastTrack Madrasah",
-    description: "An online Islamic school that feels like a real physical class — structured learning, graded assessment, and self-paced & live classes in Qur'an reading, Tajwīd, Arabic, and the Islamic sciences. Based in New Zealand, open worldwide.",
+    title: "Join our dedicated student body and master Qur'an, Tajwīd, Arabic, & Islamic sciences from anywhere in the world.",
+    description: "A structured online madrasah that feels like a real physical class — live and self-paced classes, real teachers, and graded assessment. Based in New Zealand, open worldwide.",
   },
   '/programs': {
     title: 'Programs | The FastTrack Madrasah',
