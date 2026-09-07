@@ -119,15 +119,12 @@ const LandingPage = () => {
         <meta property="og:url" content="https://tftmadrasah.nz/" />
         <meta property="og:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
         <meta property="og:description" content="QARI for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs for everyone in New Zealand." />
-        <meta property="og:image" content="https://tftmadrasah.nz/logo-og.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="The FastTrack Madrasah" />
         <meta property="og:locale" content="en_NZ" />
+        {/* og:image / twitter:image are the site-wide default in index.html (single source) */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
         <meta name="twitter:description" content="QARI for beginners. Tajweed Mastery for proper recitation. EASI for understanding. Structured programs for everyone in New Zealand." />
-        <meta name="twitter:image" content="https://tftmadrasah.nz/logo-og.png" />
       </Helmet>
       {/* Navigation - Clean professional design */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${

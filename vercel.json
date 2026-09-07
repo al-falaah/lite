@@ -1,9 +1,18 @@
 {
   "rewrites": [
-    {
-      "source": "/blog/:slug",
-      "destination": "/api/blog/:slug"
-    },
+    { "source": "/blog/:slug", "destination": "/api/blog/:slug" },
+    { "source": "/", "destination": "/api/og?path=/" },
+    { "source": "/programs", "destination": "/api/og?path=/programs" },
+    { "source": "/apply", "destination": "/api/og?path=/apply" },
+    { "source": "/faqs", "destination": "/api/og?path=/faqs" },
+    { "source": "/mission", "destination": "/api/og?path=/mission" },
+    { "source": "/store", "destination": "/api/og?path=/store" },
+    { "source": "/vacancies", "destination": "/api/og?path=/vacancies" },
+    { "source": "/tools", "destination": "/api/og?path=/tools" },
+    { "source": "/tools/examples", "destination": "/api/og?path=/tools/examples" },
+    { "source": "/tools/roots", "destination": "/api/og?path=/tools/roots" },
+    { "source": "/tools/arabiyyah", "destination": "/api/og?path=/tools/arabiyyah" },
+    { "source": "/tools/pages", "destination": "/api/og?path=/tools/pages" },
     {
       "source": "/(.*)",
       "destination": "/index.html"

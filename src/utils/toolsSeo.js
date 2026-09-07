@@ -3,7 +3,7 @@
 // instead of copy-pasting per page.
 
 export const SITE_URL = 'https://tftmadrasah.nz';
-export const OG_IMAGE = `${SITE_URL}/logo-og.png`;
+export const OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const SITE_NAME = 'The FastTrack Madrasah';
 
 const PUBLISHER = {

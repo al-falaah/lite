@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { SITE_URL, OG_IMAGE, SITE_NAME, webApplicationLd, breadcrumbLd } from '../../utils/toolsSeo';
+import { SITE_URL, SITE_NAME, webApplicationLd, breadcrumbLd } from '../../utils/toolsSeo';
 
 /**
  * Full SEO head for a public /tools page: canonical (self-referential — fixes
@@ -25,17 +25,14 @@ export default function ToolSeo({ path, title, name, description }) {
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
-      <meta property="og:image" content={OG_IMAGE} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:locale" content="en_NZ" />
+      {/* og:image / twitter:image are the site-wide default in index.html (single source) */}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={OG_IMAGE} />
       <meta name="twitter:site" content="@tftmadrasah" />
 
       {/* Structured data */}
