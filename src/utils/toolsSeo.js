@@ -2,7 +2,7 @@
 // (via react-helmet). Keeps canonical/OG/JSON-LD consistent across tools
 // instead of copy-pasting per page.
 
-export const SITE_URL = 'https://tftmadrasah.nz';
+export const SITE_URL = 'https://www.tftmadrasah.nz';
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const SITE_NAME = 'The FastTrack Madrasah';
 

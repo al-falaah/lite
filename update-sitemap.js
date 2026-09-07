@@ -65,7 +65,7 @@ ${[
   { loc: '/tools/pages', changefreq: 'monthly', priority: '0.8', label: 'Tools — Safha' },
 ].map(r => `  <!-- ${r.label} -->
   <url>
-    <loc>https://tftmadrasah.nz${r.loc}</loc>
+    <loc>https://www.tftmadrasah.nz${r.loc}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority}</priority>
@@ -73,7 +73,7 @@ ${[
 
   <!-- Blog Posts -->
 ${posts.map(post => `  <url>
-    <loc>https://tftmadrasah.nz/blog/${post.slug}</loc>
+    <loc>https://www.tftmadrasah.nz/blog/${post.slug}</loc>
     <lastmod>${post.updated_at.split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
