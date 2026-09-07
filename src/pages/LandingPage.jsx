@@ -112,19 +112,19 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-        <title>Learn to Read & Understand the Qur'an | Islamic School NZ | The FastTrack Madrasah</title>
-        <meta name="description" content="Online Qur'anic education for everyone. QARI program for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs with dedicated mentorship in New Zealand." />
-        <link rel="canonical" href="https://tftmadrasah.nz/" />
+        <title>A serious online madrasah — Qur'an, Tajwīd, Arabic & Islamic sciences | The FastTrack Madrasah</title>
+        <meta name="description" content="An online Islamic school that feels like a real physical class — structured learning, graded assessment, and self-paced & live classes in Qur'an reading, Tajwīd, Arabic, and the Islamic sciences. Based in New Zealand, open worldwide." />
+        <link rel="canonical" href="https://www.tftmadrasah.nz/" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tftmadrasah.nz/" />
-        <meta property="og:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
-        <meta property="og:description" content="QARI for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs for everyone in New Zealand." />
+        <meta property="og:url" content="https://www.tftmadrasah.nz/" />
+        <meta property="og:title" content="A serious online madrasah — Qur'an, Tajwīd, Arabic & Islamic sciences" />
+        <meta property="og:description" content="An online Islamic school that feels like a real physical class — structured learning, graded assessment, and self-paced & live classes in Qur'an, Tajwīd, Arabic, and the Islamic sciences." />
         <meta property="og:site_name" content="The FastTrack Madrasah" />
         <meta property="og:locale" content="en_NZ" />
         {/* og:image / twitter:image are the site-wide default in index.html (single source) */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Learn to Read & Understand the Qur'an | Online Islamic Education NZ" />
-        <meta name="twitter:description" content="QARI for beginners. Tajweed Mastery for proper recitation. EASI for understanding. Structured programs for everyone in New Zealand." />
+        <meta name="twitter:title" content="A serious online madrasah — Qur'an, Tajwīd, Arabic & Islamic sciences" />
+        <meta name="twitter:description" content="An online Islamic school that feels like a real physical class — Qur'an, Tajwīd, Arabic & Islamic sciences, with structured learning and graded assessment." />
       </Helmet>
       {/* Navigation - Clean professional design */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${

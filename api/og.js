@@ -11,13 +11,13 @@ import path from 'path';
 // Copy is kept identical to each page's react-helmet values (single source of
 // truth) so server and client agree and there are no conflicting tags.
 
-const SITE = 'https://tftmadrasah.nz';
+const SITE = 'https://www.tftmadrasah.nz';
 const OG_IMAGE = `${SITE}/og-image.png`;
 
 const META = {
   '/': {
-    title: "Learn to Read & Understand the Qur'an | Islamic School NZ | The FastTrack Madrasah",
-    description: "Online Qur'anic education for everyone. QARI program for absolute beginners and new Muslims. Tajweed Mastery for proper recitation. EASI for Arabic grammar and Islamic sciences. Structured, time-bound programs with dedicated mentorship in New Zealand.",
+    title: "A serious online madrasah — Qur'an, Tajwīd, Arabic & Islamic sciences | The FastTrack Madrasah",
+    description: "An online Islamic school that feels like a real physical class — structured learning, graded assessment, and self-paced & live classes in Qur'an reading, Tajwīd, Arabic, and the Islamic sciences. Based in New Zealand, open worldwide.",
   },
   '/programs': {
     title: 'Programs | The FastTrack Madrasah',
