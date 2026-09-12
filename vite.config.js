@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon.png', 'favicon-maskable-512.png'],
       manifest: {
         name: 'The FastTrack Madrasah',
         short_name: 'TFT Madrasah',
@@ -30,7 +30,7 @@ export default defineConfig({
             type: 'image/png'
           },
           {
-            src: '/favicon-512x512.png',
+            src: '/favicon-maskable-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'
