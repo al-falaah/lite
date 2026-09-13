@@ -49,7 +49,7 @@ const StudentClassEtiquette = () => {
             <li>
               Thank your teacher and make duʿā for them — even a simple <em>"Jazākumullāhu khayran"</em> goes a long way.
               The Prophet ﷺ said: <em>"Whoever does not thank people has not thanked Allāh."</em>
-              <span className="text-[var(--mq-ink-ghost)]"> — Sunan al-Tirmidhī 1954</span>
+              <span className="text-[var(--mq-ink-faint)]"> — Sunan al-Tirmidhī 1954</span>
             </li>
             <li>Revise what you learned and practise before the next class.</li>
             <li>Finish any homework on time.</li>

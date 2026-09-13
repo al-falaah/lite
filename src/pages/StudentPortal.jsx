@@ -28,9 +28,6 @@ import {
   CONTEXT_STRIP_TEXT,
   CONTEXT_PROGRAM_PILL,
   CONTEXT_PROGRAM_PILL_ACTIVE,
-  CARD_DARK,
-  CARD_HEADER_DARK,
-  CARD_BODY_DARK,
   HEADING_LG_DARK,
   TEXT_MUTED_DARK,
   TABLE_HEADER_CELL,
@@ -126,9 +123,13 @@ const getCurrentMilestone = (currentWeek, isTajweed) => {
 const StudentPortal = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false); // data-load failure → in-world error sheet
   const [student, setStudent] = useState(null);
   const [enrollments, setEnrollments] = useState([]);
   const [schedules, setSchedules] = useState([]);
+  // Best milestone-test % per program (auth-user keyed). Feeds the blended
+  // "mastery" the hero glyph shows — graded standing, not just attendance.
+  const [testMasteryByProgram, setTestMasteryByProgram] = useState({});
   const [certificates, setCertificates] = useState([]);
   const [recitationPrompt, setRecitationPrompt] = useState(null); // {kind:'reviewed'|'assigned'} | null
   const [processingPayment, setProcessingPayment] = useState(null);
@@ -248,6 +249,7 @@ const StudentPortal = () => {
 
   const loadStudentData = async (studentId) => {
     console.log('Loading student data for ID:', studentId);
+    setLoadError(false);
     try {
       // Load enrollments (only active ones)
       const { data: enrollmentsData, error: enrollmentsError } = await supabase
@@ -308,6 +310,43 @@ const StudentPortal = () => {
         console.error('Certificates fetch failed (non-fatal):', e);
       }
 
+      // Milestone test standing per program — the best % per milestone, averaged
+      // over the milestones actually attempted. Drives the blended mastery the
+      // hero glyph shows, so "mastery" reflects graded work, not only attendance.
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && activePrograms.length) {
+          const { data: attempts } = await supabase
+            .from('test_attempts')
+            .select('program_id, milestone_index, percentage, type, status')
+            .eq('student_id', user.id)
+            .in('program_id', activePrograms)
+            .eq('type', 'milestone');
+          const bestByKey = {}; // `${program}:${milestone}` -> best %
+          (attempts || []).forEach(a => {
+            if (a.percentage == null) return;
+            const k = `${a.program_id}:${a.milestone_index}`;
+            if (!(k in bestByKey) || a.percentage > bestByKey[k]) bestByKey[k] = a.percentage;
+          });
+          const sums = {}; // program -> { total, n }
+          Object.entries(bestByKey).forEach(([k, pct]) => {
+            const program = k.split(':')[0];
+            (sums[program] ||= { total: 0, n: 0 });
+            sums[program].total += pct;
+            sums[program].n += 1;
+          });
+          const map = {};
+          Object.entries(sums).forEach(([program, { total, n }]) => {
+            map[program] = n ? { pct: Math.round(total / n), count: n } : null;
+          });
+          setTestMasteryByProgram(map);
+        } else {
+          setTestMasteryByProgram({});
+        }
+      } catch (e) {
+        console.error('Test standing fetch failed (non-fatal):', e);
+      }
+
       // Reading-practice status (drives the Home prompt): does the student have
       // a reviewed practice waiting to be seen, or one assigned to record?
       try {
@@ -348,7 +387,7 @@ const StudentPortal = () => {
       }
     } catch (error) {
       console.error('Error loading student data:', error);
-      toast.error('Failed to load student data');
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -465,6 +504,7 @@ const StudentPortal = () => {
       setStudent(null);
       setEnrollments([]);
       setSchedules([]);
+      setTestMasteryByProgram({});
       setCertificates([]);
       setRecitationPrompt(null);
       navigate('/login', { replace: true });
@@ -568,14 +608,17 @@ const StudentPortal = () => {
   };
 
   const getStatusBadge = (status) => {
+    // Status-in-Text Rule (the Lightboard world): status is a marker dot + a
+    // mono specimen label, never a filled pill. Green = active/live, faint = past.
     const badges = {
-      active: { bg: 'bg-[var(--mq-accent)]/12', text: 'text-[var(--mq-accent-deeper)]', label: 'Active' },
-      completed: { bg: 'bg-[var(--mq-paper-tint)]', text: 'text-[var(--mq-ink)]', label: 'Completed' },
-      withdrawn: { bg: 'bg-[var(--mq-paper-tint)]', text: 'text-[var(--mq-ink)]', label: 'Withdrawn' },
+      active: { dot: 'bg-[var(--mq-accent)]', text: 'text-[var(--mq-accent)]', label: 'Active' },
+      completed: { dot: 'bg-[var(--mq-ink-faint)]', text: 'text-[var(--mq-ink-faint)]', label: 'Completed' },
+      withdrawn: { dot: 'bg-[var(--mq-ink-faint)]', text: 'text-[var(--mq-ink-faint)]', label: 'Withdrawn' },
     };
     const badge = badges[status] || badges.active;
     return (
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${badge.bg} ${badge.text}`}>
+      <span className={`inline-flex items-center gap-1.5 font-['JetBrains_Mono',monospace] text-[10px] sm:text-[11px] uppercase tracking-[0.14em] ${badge.text}`}>
+        <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} aria-hidden="true" />
         {badge.label}
       </span>
     );
@@ -598,6 +641,23 @@ const StudentPortal = () => {
     });
     return map;
   }, [enrollments, schedules]);
+
+  // Blended "mastery" per program — what the hero glyph actually claims.
+  // Where the student has sat milestone tests, mastery weights graded work and
+  // attendance equally; before any test is taken it falls back to attendance so
+  // early-weeks students aren't pinned at 0. Attendance alone lives (honestly
+  // labelled) in the strip; the glyph shows this blended standing.
+  const masteryByProgram = useMemo(() => {
+    const map = {};
+    Object.entries(classProgressByProgram).forEach(([program, attend]) => {
+      const test = testMasteryByProgram[program];
+      const pct = test && test.count
+        ? Math.round(0.5 * attend.pct + 0.5 * test.pct)
+        : attend.pct;
+      map[program] = { pct, hasTest: !!(test && test.count) };
+    });
+    return map;
+  }, [classProgressByProgram, testMasteryByProgram]);
 
   if (shouldRedirect) {
     return <Navigate to="/login" replace />;
@@ -753,6 +813,26 @@ const StudentPortal = () => {
 
       {/* Main Content */}
       <div className={`${M.CONTAINER} py-6 sm:py-9 pb-28 sm:pb-12`}>
+        {loadError ? (
+          /* A sheet that failed to load — kept in-world (pink hairline, a real
+             retry), and distinct from the genuine "No active programs" empty
+             state so a flaky connection never looks like an empty account. */
+          <Sheet className="text-center py-14 border-[var(--mq-pink)]/40">
+            <div className="mx-auto mb-4 h-14 w-14 rounded-[6px] bg-[var(--mq-pink)]/[0.08] border border-[var(--mq-pink)]/40 flex items-center justify-center">
+              <span className="font-['Amiri',serif] text-2xl text-[var(--mq-pink)] leading-none pb-0.5">؟</span>
+            </div>
+            <h2 className="font-sans font-semibold text-[var(--mq-ink)] text-lg">This sheet didn’t load</h2>
+            <p className="mt-1.5 text-sm text-[var(--mq-ink-soft)] max-w-sm mx-auto">
+              Something interrupted the connection. Your work is safe — try loading it again.
+            </p>
+            <button
+              onClick={() => { if (student?.id) loadStudentData(student.id); }}
+              className={`${M.BTN_SECONDARY} mt-5`}
+            >
+              Retry
+            </button>
+          </Sheet>
+        ) : (
         <div className="space-y-6">
           {/* === HOME TAB === */}
           <div className={activeTab !== 'home' ? 'hidden' : ''}>
@@ -763,8 +843,8 @@ const StudentPortal = () => {
               const active = enrollments.filter(e => e.status === 'active');
               const resumeEnrollment = active.find(e => e.program === activeProgram) || active[0];
               const contextInfo = resumeEnrollment ? getProgramContextInfo(resumeEnrollment, schedules) : null;
-              const prog = resumeEnrollment ? classProgressByProgram[resumeEnrollment.program] : null;
-              const fill = prog ? prog.pct / 100 : (contextInfo && contextInfo.totalWeeks ? (contextInfo.currentWeek - 1) / contextInfo.totalWeeks : 0);
+              const mastery = resumeEnrollment ? masteryByProgram[resumeEnrollment.program] : null;
+              const fill = mastery ? mastery.pct / 100 : (contextInfo && contextInfo.totalWeeks ? (contextInfo.currentWeek - 1) / contextInfo.totalWeeks : 0);
               return (
                 <HomeHero
                   firstName={student?.full_name?.split(' ')[0]}
@@ -821,10 +901,12 @@ const StudentPortal = () => {
                 </Link>
               </Sheet>
             ) : (
-              /* Your programs — mastery drilled stroke by stroke */
+              /* Your programs — classes attended, drilled stroke by stroke.
+                 Attendance is its own honest cut here; the hero glyph above
+                 carries blended mastery, so the two no longer say the same %. */
               <Sheet className="mb-6">
                 <div className="flex items-baseline justify-between mb-5">
-                  <SpecLabel>Mastery · by program</SpecLabel>
+                  <SpecLabel>Attendance · by program</SpecLabel>
                   <SpecLabel>classes attended</SpecLabel>
                 </div>
                 <div className="space-y-6">
@@ -936,7 +1018,7 @@ const StudentPortal = () => {
             <div className="space-y-5">
             {enrollments.length === 0 && (
               <EmptyState
-                icon={Calendar}
+                icon={CalendarDays}
                 title="No classes yet"
                 description="Your class schedule will appear here once you're enrolled in a program."
               />
@@ -950,8 +1032,8 @@ const StudentPortal = () => {
               // Inactive enrolment — disabled card
               if (enrollment.status !== 'active') {
                 return (
-                  <div key={enrollment.id} className={`${CARD_DARK} overflow-hidden`}>
-                    <div className={CARD_HEADER_DARK}>
+                  <div key={enrollment.id} className={`${M.SHEET} overflow-hidden`}>
+                    <div className={M.SHEET_HEADER}>
                       <h2 className="text-base font-semibold text-[var(--mq-ink)]">{programName}</h2>
                       <p className="text-sm text-red-700 mt-0.5">
                         Enrollment {enrollment.status}
@@ -971,12 +1053,12 @@ const StudentPortal = () => {
               // No schedule yet
               if (programSchedules.length === 0) {
                 return (
-                  <div key={enrollment.id} className={`${CARD_DARK} overflow-hidden`}>
-                    <div className={CARD_HEADER_DARK}>
+                  <div key={enrollment.id} className={`${M.SHEET} overflow-hidden`}>
+                    <div className={M.SHEET_HEADER}>
                       <h2 className="text-base font-semibold text-[var(--mq-ink)]">{programName}</h2>
                     </div>
                     <EmptyState
-                      icon={Calendar}
+                      icon={CalendarDays}
                       title="Schedule coming soon"
                       description="Your class schedule will appear here once it's been created."
                     />
@@ -1023,7 +1105,7 @@ const StudentPortal = () => {
               const completionPercent = totalClasses > 0 ? Math.round((completedClasses / totalClasses) * 100) : 0;
 
               return (
-                <div key={enrollment.id} className={`${CARD_DARK} overflow-hidden`}>
+                <div key={enrollment.id} className={`${M.SHEET} overflow-hidden`}>
                   {/* Card header */}
                   <div className="px-5 py-4 border-b border-[var(--mq-rule-soft)] flex items-baseline justify-between gap-3">
                     <div>
@@ -1239,8 +1321,7 @@ const StudentPortal = () => {
           {/* === PROGRESS TAB (Results + Rankings) === */}
           <div className={activeTab !== 'progress' ? 'hidden' : ''}>
             <div className="mb-5">
-              <SpecLabel>How you're doing</SpecLabel>
-              <h1 className="mt-1 text-xl sm:text-2xl font-semibold text-[var(--mq-ink)] tracking-[-0.01em]">Progress</h1>
+              <h1 className="text-xl sm:text-2xl font-semibold text-[var(--mq-ink)] tracking-[-0.01em]">Progress</h1>
               <p className="text-sm text-[var(--mq-ink-faint)] mt-1">
                 {progressView === 'results'
                   ? "Test progress and certificates for each program you're enrolled in."
@@ -1291,6 +1372,7 @@ const StudentPortal = () => {
             )}
           </div>
         </div>
+        )}
       </div>
 
       {/* Mobile bottom tab bar — the specimen index, ruled along the foot */}

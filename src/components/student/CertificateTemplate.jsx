@@ -74,7 +74,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
           transform: 'translate(-50%, -50%)', opacity: 0.03,
           width: '300px', height: '300px',
         }}>
-          <img src="/favicon.svg" style={{ width: '100%', height: '100%' }} crossOrigin="anonymous" />
+          <img src="/favicon.svg" alt="" style={{ width: '100%', height: '100%' }} crossOrigin="anonymous" />
         </div>
 
         {/* Borders */}
@@ -111,7 +111,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
           textAlign: 'center', padding: '20px',
         }}>
           {/* Logo */}
-          <img src="/favicon.svg" style={{ width: '56px', height: '56px', marginBottom: '6px' }} crossOrigin="anonymous" />
+          <img src="/favicon.svg" alt="" style={{ width: '56px', height: '56px', marginBottom: '6px' }} crossOrigin="anonymous" />
           <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '14px', fontWeight: 600, letterSpacing: '0.02em', color: '#065f46', marginBottom: '4px' }}>
             The FastTrack Madrasah
           </div>
