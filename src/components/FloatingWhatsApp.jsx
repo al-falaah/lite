@@ -3,8 +3,11 @@ import { useLocation } from 'react-router-dom';
 const FloatingWhatsApp = () => {
   const { pathname } = useLocation();
 
-  // Hide on student/teacher portals on mobile — overlaps bottom tab bar
+  // Hide on the authenticated portals entirely. WhatsApp is a prospective-
+  // student support affordance; inside the student/teacher app it only
+  // overlaps content (bottom tab bar on mobile, the lesson column on desktop).
   const isPortal = pathname.startsWith('/student') || pathname.startsWith('/teacher') || pathname.startsWith('/drills');
+  if (isPortal) return null;
 
   const whatsappNumber = '64224653509'; // +64 22 465 3509
   const message = encodeURIComponent('Assalamu alaykum! I have a question about The FastTrack Madrasah programs.');
@@ -15,7 +18,7 @@ const FloatingWhatsApp = () => {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`fixed bottom-20 sm:bottom-6 left-6 z-50 bg-[#25D366] hover:bg-[#20BA5A] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group ${isPortal ? 'hidden sm:flex' : ''}`}
+      className="fixed bottom-20 sm:bottom-6 left-6 z-50 bg-[#25D366] hover:bg-[#20BA5A] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
     >
