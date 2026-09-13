@@ -396,7 +396,13 @@ html {
    Mashq — student-portal design world (scoped to .mashq)
    Ink on warm paper, one deep accent, specimen-sheet grammar.
    ============================================================ */
-.mashq {
+/* Variable definitions live on BOTH .mashq (the full dark world, painted) and
+   .mashq-vars (a paint-free scope that only supplies the --mq-* tokens). Use
+   .mashq-vars to host a component that references --mq-* but paints its own
+   background — e.g. StudentLessons reused inside the light Teacher portal,
+   where a bare .mashq would wrongly paint the whole reader black. */
+.mashq,
+.mashq-vars {
   /* Palette variables — the single source of truth. Swap these to re-theme.
      World: "Lightboard" — a real illuminated glass board: near-black glass,
      written on with bright fluorescent markers (green, pink, yellow, cyan)
@@ -430,7 +436,10 @@ html {
   --mq-rule: #26302f;           /* hairline (faint marker residue on glass) */
   --mq-rule-soft: #1a2221;      /* faint divider */
   --mq-rule-strong: #34423f;    /* stronger rule / secondary border */
+}
 
+/* The painted dark world — .mashq only (not .mashq-vars). */
+.mashq {
   background-color: var(--mq-paper);
   color: var(--mq-ink);
   /* The glass: neutral near-black with a faint cool sheen top-left (overhead
