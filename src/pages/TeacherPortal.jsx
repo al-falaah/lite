@@ -480,7 +480,7 @@ export default function TeacherPortal() {
             <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0" />
             <div className="flex flex-col leading-none">
               <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900">The FastTrack</span>
-              <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900" style={{ letterSpacing: '0.28em' }}>Madrasah</span>
+              <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900" style={{ letterSpacing: '0.44em', marginRight: '-0.44em' }}>Madrasah</span>
             </div>
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">

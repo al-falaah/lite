@@ -712,7 +712,7 @@ const StudentPortal = () => {
             <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0" />
             <div className="flex flex-col leading-none">
               <span className="text-xs sm:text-sm font-semibold text-[var(--mq-ink)]">The FastTrack</span>
-              <span className="text-[10px] sm:text-xs font-['JetBrains_Mono',monospace] uppercase text-[var(--mq-ink-faint)]" style={{ letterSpacing: '0.28em' }}>Madrasah</span>
+              <span className="text-[10px] sm:text-xs font-['JetBrains_Mono',monospace] uppercase text-[var(--mq-ink-faint)]" style={{ letterSpacing: '0.44em', marginRight: '-0.44em' }}>Madrasah</span>
             </div>
           </Link>
 

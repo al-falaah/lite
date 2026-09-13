@@ -64,7 +64,7 @@ const PaymentSuccessPage = () => {
                 <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>
                   The FastTrack
                 </span>
-                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>
+                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>
                   Madrasah
                 </span>
               </div>
