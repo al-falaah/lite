@@ -519,7 +519,7 @@ export default function StudentLessons({
   // Browse view (milestone accordion or course list)
   if (!selectedChapter) {
     return (
-      <div className="space-y-4">
+      <div className="mashq-vars space-y-4">
         {/* Program selector */}
         {uniquePrograms.length > 1 && (
           <div className="flex gap-2">
@@ -688,7 +688,7 @@ export default function StudentLessons({
     ? flatChapters[readerFlatIdx + 1] : null;
 
   return (
-    <div className={`-mx-4 sm:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 -mb-24 sm:-mb-8 min-h-screen ${t.bg} transition-colors`}>
+    <div className={`mashq-vars -mx-4 sm:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 -mb-24 sm:-mb-8 min-h-screen ${t.bg} transition-colors`}>
       {/* Top bar */}
       <div className={`sticky top-0 z-40 border-b backdrop-blur ${t.navBg} transition-colors`}>
         <div className="flex items-center justify-between h-14 px-3 sm:px-5">
@@ -948,7 +948,7 @@ export default function StudentLessons({
               <div className={`border-t px-5 sm:px-10 py-6 text-center ${t.divider} ${t.quizBg}`}>
                 <button
                   onClick={() => window.open(`/student/drill/${chapterQuizId}`, '_blank')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--mq-accent)] text-white text-sm font-medium hover:bg-[var(--mq-accent-deep)] transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--mq-accent,#16c476)] text-white text-sm font-medium hover:bg-[var(--mq-accent-deep,#0fa863)] transition-colors"
                 >
                   <HelpCircle className="h-4 w-4" />
                   Let's Go and Drill
