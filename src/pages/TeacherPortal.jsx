@@ -695,6 +695,7 @@ export default function TeacherPortal() {
           <div className="mt-14">
             <StudentLessons
             programs={[...new Set(assignedStudents.map(a => a.program).filter(Boolean))]}
+            forceTheme="light"
           />
           </div>
         </div>

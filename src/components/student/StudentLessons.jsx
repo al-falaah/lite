@@ -84,6 +84,8 @@ export default function StudentLessons({
   onReaderChange,           // (isOpen: bool) => void — portal hides its chrome while reading
   classProgressByProgram,   // { [program]: { completed, total, pct } } — teacher-marked class progress
   onOpenResults,            // () => void — jump to the Results tab from the reader footer
+  forceTheme,               // 'light'|'sepia'|'dark' — lock the reader theme (teacher portal
+                            //   is a light UI, so it forces 'light'; ignores the saved pref)
 }) {
   // Accept either a direct programs array (teacher use) or derive from enrollments (student use)
   const derivedPrograms = programsProp
@@ -116,7 +118,7 @@ export default function StudentLessons({
   // Default to 'dark' so the reader arrives coherent with the (dark) portal;
   // light/sepia stay available as opt-in reading-comfort modes. A previously
   // saved explicit choice is still honoured.
-  const [theme, setTheme] = useState(() => localStorage.getItem('lessonTheme') || 'dark');
+  const [theme, setTheme] = useState(() => forceTheme || localStorage.getItem('lessonTheme') || 'dark');
   const [viewMode, setViewMode] = useState('milestones'); // 'milestones' | 'courses'
   const contentRef = useRef(null);
 
@@ -130,7 +132,9 @@ export default function StudentLessons({
     return () => window.removeEventListener('keydown', onKey);
   }, [lightboxSrc]);
 
-  useEffect(() => { localStorage.setItem('lessonTheme', theme); }, [theme]);
+  // Persist the reader-comfort choice — but NOT when a host locks the theme
+  // (e.g. teacher portal forcing 'light'), so it never clobbers the student's pref.
+  useEffect(() => { if (!forceTheme) localStorage.setItem('lessonTheme', theme); }, [theme, forceTheme]);
 
   const milestones = PROGRAMS[selectedProgram]?.milestones || [];
 
@@ -359,8 +363,8 @@ export default function StudentLessons({
     const isFullHtml = selectedChapter?.content_type === 'full_html' ||
       selectedChapter?.content?.trim().startsWith('<!DOCTYPE') ||
       selectedChapter?.content?.trim().startsWith('<html');
-    if (isFullHtml) setTheme('sepia');
-  }, [selectedChapter]);
+    if (isFullHtml && !forceTheme) setTheme('sepia');
+  }, [selectedChapter, forceTheme]);
 
   // Check quiz
   useEffect(() => {
@@ -519,7 +523,7 @@ export default function StudentLessons({
   // Browse view (milestone accordion or course list)
   if (!selectedChapter) {
     return (
-      <div className="mashq-vars space-y-4">
+      <div className={`${forceTheme === 'light' ? 'mashq-vars-light' : 'mashq-vars'} space-y-4`}>
         {/* Program selector */}
         {uniquePrograms.length > 1 && (
           <div className="flex gap-2">
@@ -712,10 +716,12 @@ export default function StudentLessons({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={cycleTheme}
-              className={`px-2.5 py-1.5 text-xs font-medium rounded-md border ${t.border} ${t.muted} ${t.hover} transition-colors`}>
-              {theme === 'light' ? 'Light' : theme === 'sepia' ? 'Sepia' : 'Dark'}
-            </button>
+            {!forceTheme && (
+              <button onClick={cycleTheme}
+                className={`px-2.5 py-1.5 text-xs font-medium rounded-md border ${t.border} ${t.muted} ${t.hover} transition-colors`}>
+                {theme === 'light' ? 'Light' : theme === 'sepia' ? 'Sepia' : 'Dark'}
+              </button>
+            )}
             <button
               onClick={() => setShowSidebar(!showSidebar)}
               className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md border lg:hidden ${t.border} ${t.muted}`}
