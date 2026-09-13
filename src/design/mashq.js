@@ -67,6 +67,8 @@ export const BODY = 'font-sans text-[var(--mq-ink-soft)]';
 export const SHEET =
   'bg-[var(--mq-paper-raised)] border border-[var(--mq-rule)] rounded-[4px] mashq-sheet';
 export const SHEET_PAD = 'p-5 sm:p-6';
+// A ruled header strip inside a Sheet (hairline foot), for card-with-header use.
+export const SHEET_HEADER = 'px-5 py-4 border-b border-[var(--mq-rule-soft)]';
 
 // ── Controls ───────────────────────────────────────────────────
 // Primary action — inked accent, the one assertive surface.

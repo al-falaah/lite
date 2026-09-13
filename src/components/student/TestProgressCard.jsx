@@ -241,7 +241,7 @@ export default function TestProgressCard({ programId, currentWeek }) {
                 <span className="text-xs text-[var(--mq-warn)] font-medium whitespace-nowrap flex-shrink-0">Awaiting teacher</span>
               )}
               {!unlocked && !completed && (
-                <span className="text-xs text-[var(--mq-ink-ghost)] whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
+                <span className="text-xs text-[var(--mq-ink-faint)] whitespace-nowrap flex-shrink-0">Week {m.weekEnd}+</span>
               )}
               </div>
               {completed && renderBreakdown(test)}
