@@ -450,6 +450,28 @@ html {
   background-attachment: fixed;
 }
 
+/* Light re-map of the --mq-* tokens. StudentLessons' browse view hardcodes the
+   dark-world ink/paper/rule tokens; hosting it on a LIGHT surface (the Teacher
+   portal) would render near-white text on white. .mashq-vars-light overrides
+   just the surface/ink/rule tokens with light-appropriate values so that whole
+   subtree reads correctly, with no per-element edits. Accent markers are kept —
+   the brand green still works on light. Paint-free (no background/color set). */
+.mashq-vars-light {
+  --mq-paper: #ffffff;          /* card surface */
+  --mq-paper-raised: #ffffff;   /* raised panel */
+  --mq-paper-sunk: #f4f2ee;     /* section header / recessed row (warm off-white) */
+  --mq-paper-tint: #f2f0ec;     /* hover fill */
+  --mq-paper-hover: #eceae4;    /* stronger hover */
+  --mq-ink: #1a1a1a;            /* primary text — near-black */
+  --mq-ink-soft: #57575e;       /* secondary text */
+  --mq-ink-faint: #6f6f77;      /* labels / captions */
+  --mq-ink-dim: #6f6f77;        /* de-emphasised content */
+  --mq-ink-ghost: #b4b1aa;      /* disabled / placeholder */
+  --mq-rule: #e4e0d8;           /* hairline */
+  --mq-rule-soft: #edeae3;      /* faint divider */
+  --mq-rule-strong: #d8d3c9;    /* stronger rule / border */
+}
+
 /* A specimen sheet: a lit panel of the lightboard. Depth from a soft cast
    shadow into the dark ground + a faint top edge-light (glass catching light). */
 .mashq .mashq-sheet {
