@@ -86,11 +86,17 @@ export default function StudentLessons({
   onOpenResults,            // () => void — jump to the Results tab from the reader footer
   forceTheme,               // 'light'|'sepia'|'dark' — lock the reader theme (teacher portal
                             //   is a light UI, so it forces 'light'; ignores the saved pref)
+  previewProgram,           // teacher preview: force the program to load (skip enrollment derive)
+  previewChapterId,         // teacher preview: open straight into the reader for this chapter
+  onPreviewClose,           // () => void — reader "All lessons" returns to the teacher list
 }) {
-  // Accept either a direct programs array (teacher use) or derive from enrollments (student use)
-  const derivedPrograms = programsProp
-    ? programsProp
-    : (enrollments || []).filter(e => e.status === 'active').map(e => e.program);
+  // Accept a single preview program (teacher preview), a direct programs array
+  // (teacher use), or derive from enrollments (student use).
+  const derivedPrograms = previewProgram
+    ? [previewProgram]
+    : programsProp
+      ? programsProp
+      : (enrollments || []).filter(e => e.status === 'active').map(e => e.program);
   const uniquePrograms = [...new Set(derivedPrograms.filter(Boolean))];
 
   const [selectedProgram, setSelectedProgram] = useState(uniquePrograms[0] || null);
@@ -298,6 +304,17 @@ export default function StudentLessons({
     if (target) openChapter(target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resumeSignal, loading, allChapters, selectedProgram]);
+
+  // Teacher preview: open straight into the reader for a given chapter once
+  // its data has loaded. Honoured once per id.
+  const handledPreviewRef = useRef(null);
+  useEffect(() => {
+    if (!previewChapterId || loading || !allChapters.length) return;
+    if (handledPreviewRef.current === previewChapterId) return;
+    const target = allChapters.find(ch => ch.id === previewChapterId);
+    if (target) { handledPreviewRef.current = previewChapterId; openChapter(target); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previewChapterId, loading, allChapters]);
 
   // Drill status for a chapter: null = no quiz; {done:false} = quiz not yet
   // played; {done:true, score, total} = played (last attempt counts).
@@ -703,7 +720,7 @@ export default function StudentLessons({
               className="h-5 w-5 flex-shrink-0"
             />
             <button
-              onClick={() => { setSelectedChapter(null); setSelectedCourse(null); }}
+              onClick={() => { setSelectedChapter(null); setSelectedCourse(null); onPreviewClose?.(); }}
               className={`inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1.5 rounded-md ${t.muted} ${t.hover} transition-colors`}
             >
               <ChevronLeft className="h-4 w-4" />

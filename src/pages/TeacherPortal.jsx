@@ -6,7 +6,7 @@ import { BookOpen, LogOut, Users, UserX, Calendar, X, Mail, Send, Settings, Mic,
 import { supabase, teachers, teacherAssignments, students, classSchedules } from '../services/supabase';
 import { usePullToRefresh, PullIndicator } from '../hooks/usePullToRefresh.jsx';
 import TeacherClassGuidelines from '../components/admin/TeacherClassGuidelines';
-import StudentLessons from '../components/student/StudentLessons';
+import TeacherLessons from '../components/teacher/TeacherLessons';
 import { PROGRAMS } from '../config/programs';
 import {
   PAGE, CARD, CARD_OVERFLOW, CARD_HEADER, CARD_BODY, CARD_FOOTER,
@@ -17,6 +17,17 @@ import {
   BOTTOM_TAB_ACTIVE, BOTTOM_TAB_INACTIVE,
   HEADING_LG, HEADING, LABEL, LABEL_TINY,
 } from '../design/ui';
+
+// Greet by given name, not by a leading honorific — "Dr Abdulquadri Alaka"
+// should greet "Abdulquadri", not "Dr". Falls back to the full name.
+const HONORIFICS = new Set(['dr', 'dr.', 'sh', 'sh.', 'shaykh', 'sheikh', 'ustadh', 'ustaadh', 'ustadha', 'imam', 'mr', 'mr.', 'mrs', 'mrs.', 'ms', 'ms.', 'prof', 'prof.', 'hafiz', 'qari', 'mufti', 'mawlana', 'maulana']);
+function greetingName(fullName) {
+  const parts = (fullName || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return 'there';
+  const first = parts[0].toLowerCase().replace(/[.,]/g, '');
+  if (HONORIFICS.has(first) && parts.length > 1) return parts[1];
+  return parts[0];
+}
 
 export default function TeacherPortal() {
   const navigate = useNavigate();
@@ -521,7 +532,7 @@ export default function TeacherPortal() {
         <div className={teacherTab !== 'home' ? 'hidden' : ''}>
           {/* Greeting */}
           <div className="mb-5 sm:mb-6">
-            <h1 className={HEADING_LG}>Welcome, {teacher.full_name.split(' ')[0]}</h1>
+            <h1 className={HEADING_LG}>Welcome, {greetingName(teacher.full_name)}</h1>
             <p className="text-sm text-slate-500 mt-1">Here's a snapshot of your classroom.</p>
           </div>
 
@@ -692,11 +703,10 @@ export default function TeacherPortal() {
             <h1 className={HEADING_LG}>Lessons</h1>
             <p className="text-sm text-slate-500 mt-1">Review the chapters and quizzes for the programs you teach.</p>
           </div>
-          <div className="mt-14">
-            <StudentLessons
-            programs={[...new Set(assignedStudents.map(a => a.program).filter(Boolean))]}
-            forceTheme="light"
-          />
+          <div className="mt-8">
+            <TeacherLessons
+              programs={[...new Set(assignedStudents.map(a => a.program).filter(Boolean))]}
+            />
           </div>
         </div>
 
