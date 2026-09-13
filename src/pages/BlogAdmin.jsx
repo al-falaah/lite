@@ -651,7 +651,7 @@ const BlogAdmin = () => {
               <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-10 w-10" />
               <div className="flex flex-col leading-none -space-y-1">
                 <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
+                <span className="text-base sm:text-lg font-bold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <h2 className="text-2xl font-bold text-gray-900 mt-4">Blog Admin</h2>
@@ -783,7 +783,7 @@ const BlogAdmin = () => {
               <div className="flex flex-col leading-none -space-y-1">
                 <div className="flex flex-col leading-none -space-y-1">
                   <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                  <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
+                  <span className="text-xs sm:text-sm font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
                 <span className="text-xs text-gray-500 mt-0.5">Blog Admin</span>
               </div>

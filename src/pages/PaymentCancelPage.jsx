@@ -37,7 +37,7 @@ const PaymentCancelPage = () => {
               />
               <div className="flex flex-col leading-tight -space-y-0.5">
                 <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
+                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link to="/" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">

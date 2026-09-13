@@ -235,7 +235,7 @@ const Resources = () => {
               <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-7 w-7" />
               <div className="flex flex-col justify-center leading-tight">
                 <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
+                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link

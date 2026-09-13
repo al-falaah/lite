@@ -44,7 +44,7 @@ const Programs = () => {
               <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-7 w-7 md:h-8 md:w-8" />
               <div className="flex flex-col justify-center leading-tight">
                 <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
+                <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link
@@ -1060,7 +1060,7 @@ const Programs = () => {
                 <div>
                   <div className="flex flex-col leading-none -space-y-1">
                     <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
+                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                   </div>
                 </div>
               </div>
