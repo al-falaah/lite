@@ -148,7 +148,7 @@ const LandingPage = () => {
                   }`} style={{letterSpacing: "0.005em"}}>The FastTrack</span>
                   <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
                     isScrolled ? 'text-[#1f1b16]' : 'text-white'
-                  }`} style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  }`} style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
                 </div>
               </Link>
 
@@ -247,7 +247,7 @@ const LandingPage = () => {
                   <Link to="/" onClick={() => setMobileMenuOpen(false)} className="mb-2 pb-3 border-b border-white/10">
                     <div className="flex flex-col leading-none -space-y-1 px-4">
                       <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                      <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                      <span className="text-lg font-brand font-semibold text-white" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
                     </div>
                   </Link>
 
@@ -1385,7 +1385,7 @@ const LandingPage = () => {
                 <div>
                   <div className="flex flex-col leading-none -space-y-1">
                     <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                    <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.44em", marginRight: "-0.44em"}}>Madrasah</span>
                 </div>
                   {/* <div className="text-xs text-emerald-100/70 font-arabic">الفلاح</div> */}
                 </div>
