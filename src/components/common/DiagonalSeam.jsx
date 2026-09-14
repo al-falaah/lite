@@ -13,7 +13,9 @@ export default function DiagonalSeam({
   height = 'h-10 sm:h-16',
 }) {
   return (
-    <div aria-hidden="true" className={from}>
+    // The wrapper bleeds 1px into the sections above and below so the clipped
+    // wedge never leaves a hairline seam against the adjacent solid colour.
+    <div aria-hidden="true" className={`${from} -mt-px -mb-px`}>
       <div
         className={`${height} ${to}`}
         style={{

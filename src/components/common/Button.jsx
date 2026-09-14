@@ -13,6 +13,8 @@ const Button = ({
   const variants = {
     primary: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm',
     emerald: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm',
+    wine: 'bg-wine-600 hover:bg-wine-700 text-white shadow-sm',
+    wineOutline: 'border border-[#d8ccbe] text-[#2a1e1a] hover:bg-[#efe9dd]',
     secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-900',
     outline: 'border border-emerald-600 text-emerald-600 hover:bg-emerald-50',
     danger: 'bg-red-600 hover:bg-red-700 text-white'

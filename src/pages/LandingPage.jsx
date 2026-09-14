@@ -1,9 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram, Languages } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, Mic, CheckCircle, Menu, X, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram, Youtube, Languages } from 'lucide-react';
 import Button from '../components/common/Button';
-import DiagonalSeam from '../components/common/DiagonalSeam';
 import { storage } from '../services/supabase';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
 
@@ -128,99 +127,65 @@ const LandingPage = () => {
         <meta name="twitter:description" content="A structured online madrasah that feels like a real physical class — live and self-paced classes, real teachers, and graded assessment. Based in New Zealand, open worldwide." />
       </Helmet>
       {/* Navigation - Clean professional design */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors pb-3 ${
-        isScrolled
-          ? 'bg-white border-b border-[#e6e0d3]'
-          : 'bg-transparent'
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-shadow pb-3 bg-[#fbf9f4] border-b border-[#e6e0d3] ${
+        isScrolled ? 'shadow-sm' : ''
       }`}>
         <div className={`px-3 sm:px-6 lg:px-8 ${!isScrolled ? 'bg-transparent' : ''}`}>
             <div className={`flex justify-between items-center h-14 lg:h-16 ${!isScrolled ? 'bg-transparent' : ''}`}>
               {/* Logo only on mobile, Logo + Brand name on desktop */}
               <Link to="/" className="flex items-center gap-2.5">
                 <img
-                  src={isScrolled ? "/favicon.svg" : "/favicon-white.svg"}
+                  src="/favicon-wine.svg"
                   alt="The FastTrack Madrasah Logo"
                   className="h-7 w-7 lg:h-9 lg:w-9 transition-all duration-300"
                 />
                 {/* Brand name - hidden on mobile, shown on desktop */}
                 <div className="hidden lg:flex flex-col justify-center leading-tight">
-                  <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
-                    isScrolled ? 'text-[#1f1b16]' : 'text-white'
-                  }`} style={{letterSpacing: "0.005em"}}>The FastTrack</span>
-                  <span className={`text-sm font-brand font-semibold transition-colors duration-300 ${
-                    isScrolled ? 'text-[#1f1b16]' : 'text-white'
-                  }`} style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                  <span className="text-sm font-brand font-semibold text-[#2a1e1a]" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
+                  <span className="text-sm font-brand font-semibold text-[#2a1e1a]" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
               </Link>
 
               {/* Desktop Navigation - all links on the right */}
               <div className="hidden lg:flex items-center gap-1">
-                {/* Navigation links - hover changes text color to emerald-600 */}
+                {/* Navigation links - hover changes text color to wine-600 */}
                 <Link to="/mission">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Our Mission
                   </button>
                 </Link>
-                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                 <Link to="/programs#our-programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Programs
                   </button>
                 </Link>
                 <Link to="/blog">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Blog
                   </button>
                 </Link>
                 <Link to="/tools">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Tools
                   </button>
                 </Link>
                 <Link to="/store">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Store
                   </button>
                 </Link>
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Donate
                   </button>
                 </a>
                 <Link to="/login">
-                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors ${
-                    isScrolled
-                      ? 'text-[#3d372e] hover:text-emerald-600'
-                      : 'text-white/90 hover:text-emerald-600'
-                  }`}>
+                  <button className={`px-3 lg:px-4 py-2 text-sm font-medium transition-colors text-[#3d372e] hover:text-wine-600`}>
                     Login
                   </button>
                 </Link>
                 <Link to="/apply">
-                  <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded transition-colors">
+                  <button className="px-5 py-2 ml-2 text-sm font-medium text-white bg-wine-600 hover:bg-wine-700 rounded transition-colors">
                     Apply Now
                   </button>
                 </Link>
@@ -231,7 +196,7 @@ const LandingPage = () => {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className={`lg:hidden p-2 rounded-lg transition-colors ${
                   isScrolled
-                    ? 'text-[#1f1b16] hover:bg-[#efe9dd]'
+                    ? 'text-[#2a1e1a] hover:bg-[#efe9dd]'
                     : 'text-white hover:bg-white/10'
                 }`}
                 aria-label="Toggle menu"
@@ -242,7 +207,7 @@ const LandingPage = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-              <div className="lg:hidden border-t border-emerald-800/50 bg-emerald-950 mt-3">
+              <div className="lg:hidden border-t border-wine-800/50 bg-wine-950 mt-3">
                 <div className="flex flex-col gap-1 py-3 px-3">
                   {/* Brand name - shown in mobile menu with larger font */}
                   <Link to="/" onClick={() => setMobileMenuOpen(false)} className="mb-2 pb-3 border-b border-white/10">
@@ -294,7 +259,7 @@ const LandingPage = () => {
                     </button>
                   </Link>
                   <Link to="/apply" onClick={() => setMobileMenuOpen(false)}>
-                    <button className="w-full px-4 py-2.5 mt-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded transition-colors">
+                    <button className="w-full px-4 py-2.5 mt-2 text-sm font-medium text-white bg-wine-600 hover:bg-wine-700 rounded transition-colors">
                       Apply Now
                     </button>
                   </Link>
@@ -314,169 +279,98 @@ const LandingPage = () => {
           </div>
       </nav>
 
-      {/* Hero Section - Full Screen with Background */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0a0f0c]">
-        {/* Background Image with Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url("${bgImageUrl}")`,
-          }}
-        >
-          <div className="absolute inset-0 bg-[#0a0f0c]/55"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0c]/20 via-[#0a0f0c]/45 to-[#0a0f0c]/90"></div>
-          <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 50% at 50% 42%, rgba(4,8,6,0.62), transparent 78%)' }}></div>
-        </div>
+      {/* Hero — split: a burgundy scripture panel beside the cream welcome. */}
+      <section className="relative bg-[#faf6f0] overflow-hidden">
+        <div className="grid lg:grid-cols-2 min-h-[560px] lg:min-h-[calc(100vh-72px)]">
 
-        {/* Centered Hero Content with CTA (hadith slider lives in the floating card below) */}
-        <div className="relative flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
-          <div className="max-w-4xl mx-auto w-full text-center">
-            {/* Hero Content */}
-            <div>
-              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
-                Learn What Truly Matters in the Time You Have
-              </h1>
-              <p className="text-sm md:text-lg lg:text-xl text-[#e6e0d3] mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                Qur&apos;an, Tajwīd, Arabic, and the Islamic sciences —
-                <span className="text-emerald-400 font-semibold"> structured programs</span> for
-                <span className="text-emerald-400 font-semibold"> everyone</span>, taught by real teachers.
+          {/* Left — burgundy feature panel with the rotating hadith */}
+          <div className="relative bg-gradient-to-br from-wine-700 to-wine-900 overflow-hidden flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-14 lg:py-0 order-2 lg:order-1">
+            {/* faint brand mark watermark */}
+            <img src="/tftmadrasah-logo-white.svg" alt="" aria-hidden="true"
+                 className="absolute -right-16 top-1/2 -translate-y-1/2 h-[110%] opacity-[0.06] pointer-events-none" />
+            <div className="relative max-w-md">
+              <img src="/tftmadrasah-logo-white.svg" alt="" className="h-12 sm:h-14 mb-8" />
+              <blockquote key={currentQuote} className="animate-[fadeIn_0.6s_ease]">
+                <p className="font-display text-xl sm:text-2xl lg:text-[28px] leading-snug text-[#f4d9a8] font-semibold">
+                  &ldquo;{quotes[currentQuote].text}&rdquo;
+                </p>
+                <cite className="not-italic block mt-5 text-[13px] sm:text-sm tracking-[0.12em] uppercase text-[#e6c9cd]">
+                  {quotes[currentQuote].source}
+                </cite>
+              </blockquote>
+              {/* rotation dots */}
+              <div className="flex gap-2 mt-8">
+                {quotes.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentQuote(idx)}
+                    aria-label={`Show narration ${idx + 1}`}
+                    className={`h-1.5 rounded-full transition-all ${idx === currentQuote ? 'w-7 bg-[#f4d9a8]' : 'w-3 bg-white/25 hover:bg-white/40'}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right — welcome + call to action */}
+          <div className="flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-14 lg:py-0 order-1 lg:order-2">
+            <div className="max-w-xl">
+              <p className="text-xs sm:text-[13px] font-semibold tracking-[0.22em] uppercase text-wine-700 mb-5">
+                Online · New Zealand · Worldwide
               </p>
-
-              <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-[#2a1e1a] tracking-tight leading-[1.04] mb-6">
+                A real madrasah,<br />wherever you are
+              </h1>
+              <p className="text-base sm:text-lg text-[#584c44] leading-relaxed mb-8">
+                Qur&apos;an, Tajwīd, Arabic, and the Islamic sciences — structured programs
+                with real teachers who know your name, live classes and self-paced courses,
+                and progress you can see.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-10">
                 <Link to="/apply">
-                  <Button variant="emerald" size="lg" className="w-full sm:w-auto">
-                    Apply Now
-                  </Button>
+                  <Button variant="wine" size="lg" className="w-full sm:w-auto">Apply for the next intake</Button>
                 </Link>
                 <Link to="/programs">
-                  <Button variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/20 w-full sm:w-auto">
-                    View Programs
-                  </Button>
+                  <Button variant="wineOutline" size="lg" className="w-full sm:w-auto">See programs</Button>
                 </Link>
               </div>
-
-              {/* Latest Articles Link - Animated */}
-              {latestArticles.length > 0 && (
-                <div className="mt-8 md:mt-10">
-                  <Link
-                    to="/blog"
-                    className="group inline-flex items-center gap-3 px-6 py-3 bg-white/10 border border-white/20 rounded-full hover:bg-white/20 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <Newspaper className="h-5 w-5 text-emerald-400 animate-pulse" />
-                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span>
-                      </div>
-                      <span className="text-white font-medium text-sm md:text-base">
-                        Latest Articles & Insights
-                      </span>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+              {/* program chips */}
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-3 max-w-md">
+                {[
+                  { t: 'QARI', d: 'Read from zero' },
+                  { t: 'Tajwīd', d: 'Recite correctly' },
+                  { t: 'Arabic & Islam', d: 'Understand the dīn' },
+                ].map((c) => (
+                  <Link key={c.t} to="/programs"
+                    className="rounded-xl bg-white border border-[#ece3d8] px-3 py-3 hover:border-wine-300 hover:shadow-sm transition-all">
+                    <div className="font-semibold text-[#2a1e1a] text-sm leading-tight">{c.t}</div>
+                    <div className="text-[#8a7d72] text-xs mt-0.5">{c.d}</div>
                   </Link>
-                </div>
+                ))}
+              </div>
+              {latestArticles.length > 0 && (
+                <Link to="/blog" className="group inline-flex items-center gap-2 mt-8 text-sm font-semibold text-wine-700 hover:text-wine-800">
+                  <Newspaper className="h-4 w-4" />
+                  Latest articles & insights
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               )}
             </div>
           </div>
         </div>
-
-        {/* Fixed Scroll Indicator - Visible only at top of page */}
-        {showScrollIndicator && (
-          <a
-            href="#experience"
-            className="fixed right-4 sm:right-8 bottom-8 z-40 flex flex-col items-center gap-2 group cursor-pointer animate-bounce-slow transition-opacity duration-300"
-            aria-label="Scroll down to learn more"
-          >
-            {/* Vertical Line */}
-            <div className="w-0.5 h-12 sm:h-16 bg-emerald-400/30"></div>
-
-            {/* Animated Chevron */}
-            <div className="bg-emerald-500 rounded-full p-2 group-hover:bg-emerald-400 transition-colors">
-              <ChevronDown className="h-4 w-4 text-white" />
-            </div>
-
-            {/* Optional text hint - hidden on very small screens */}
-            <span className="hidden sm:block text-[10px] font-medium text-white/80 group-hover:text-white transition-colors tracking-widest uppercase rotate-90 origin-center mt-8">
-              Scroll
-            </span>
-          </a>
-        )}
       </section>
 
-      {/* Transition: dark band with diagonal bottom edge + floating hadith card */}
-      <div className="relative bg-white">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-emerald-950"
-          style={{ clipPath: 'polygon(0 0, 100% 0, 100% 45%, 0 92%)' }}
-        />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
-          <div className="bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 p-6 sm:p-10">
-            <div className="sm:flex items-center gap-8 lg:gap-10">
-              {/* Arch-cropped image with dotted accent */}
-              <div className="relative hidden sm:block flex-shrink-0">
-                <div
-                  aria-hidden="true"
-                  className="absolute -top-4 -left-4 w-20 h-20"
-                  style={{
-                    backgroundImage: 'radial-gradient(circle, rgb(5 150 105 / 0.35) 1.5px, transparent 1.5px)',
-                    backgroundSize: '11px 11px',
-                  }}
-                />
-                <img
-                  src={bgImageUrl}
-                  alt=""
-                  loading="lazy"
-                  className="relative w-40 h-56 object-cover rounded-t-full rounded-b-xl shadow-lg"
-                />
-              </div>
-
-              {/* Quote slider */}
-              <div className="text-center sm:text-left min-w-0">
-                <p className="text-emerald-700 font-semibold text-sm sm:text-base mb-2 font-arabic">
-                  قال رسول الله ﷺ
-                </p>
-                <p className="text-lg sm:text-xl lg:text-2xl text-[#1f1b16] font-serif leading-relaxed mb-3">
-                  "{quotes[currentQuote].text}"
-                </p>
-                <p className="text-xs sm:text-sm text-[#6b6353] mb-5">
-                  {quotes[currentQuote].source}
-                </p>
-                <div className="flex justify-center sm:justify-start items-center">
-                  <div className="flex gap-1.5 md:gap-2">
-                    {quotes.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentQuote(idx)}
-                        className="group relative"
-                        aria-label={`Go to quote ${idx + 1}`}
-                      >
-                        <div className={`h-1 w-10 md:w-14 rounded-full transition-all duration-500 ${
-                          idx === currentQuote
-                            ? 'bg-emerald-600'
-                            : 'bg-[#e6e0d3] group-hover:bg-[#d9d2c4]'
-                        }`} />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Real teaching band — a class on the e-glass lightboard, before the product mockups */}
       {/* Student Experience — opens with the real class, then the tools that carry it */}
       <section id="experience" className="bg-white overflow-hidden">
         {/* Lead: a real class in session */}
-        <div className="relative bg-[#0a0f0c]">
+        <div className="relative bg-[#4a1d25]">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-stretch">
             {/* Copy */}
             <div className="px-4 sm:px-6 lg:px-10 py-12 sm:py-20 lg:py-28 flex flex-col justify-center order-2 lg:order-1">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.1] mb-5">
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white leading-[1.1] mb-5">
                 A real teacher,<br className="hidden sm:block" /> at your own pace
               </h2>
-              <p className="text-base sm:text-lg text-[#b9c2bd] leading-relaxed max-w-xl mb-8">
+              <p className="text-base sm:text-lg text-[#e8d5d8] leading-relaxed max-w-xl mb-8">
                 Every rule is taught in front of you, and a teacher hears you recite and
                 corrects you. Join a live class or follow the same lessons at your own pace —
                 either way you are known by name, guided, and held to a clear standard.
@@ -488,8 +382,8 @@ const LandingPage = () => {
                   { Icon: CheckCircle, text: 'Graded checkpoints along the way, so you always know where you stand' },
                 ].map(({ Icon, text }, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <Icon className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                    <span className="text-sm sm:text-base text-[#d9ded9]">{text}</span>
+                    <Icon className="w-5 h-5 text-wine-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                    <span className="text-sm sm:text-base text-[#f0e5e7]">{text}</span>
                   </li>
                 ))}
               </ul>
@@ -509,219 +403,38 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* The tools that carry the class */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#1f1b16] mb-4">
+        {/* What you get — the tools that carry the class, as a clean feature grid */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="text-center mb-14 sm:mb-16 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-[13px] font-semibold tracking-[0.22em] uppercase text-wine-700 mb-4">More than lectures</p>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-[#2a1e1a] mb-4">
               Everything you need to keep going
             </h2>
-            <p className="text-lg text-[#57503f] max-w-3xl mx-auto">
-              Between classes, the practice, feedback, and progress that turn a lesson into mastery
+            <p className="text-lg text-[#584c44]">
+              Between classes, the practice, feedback, and progress that turn a lesson into real mastery.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-
-            {/* HERO — Recitation Practice: the teacher feedback loop */}
-            <div className="lg:col-span-2 lg:row-span-2 bg-[#14120e] rounded-2xl p-6 sm:p-10 relative overflow-hidden">
-              <div className="grid md:grid-cols-2 gap-8 items-center h-full">
-                <div className="text-center md:text-left">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wide mb-4">
-                    Teacher feedback
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
-                    Recite. A real teacher listens.
-                  </h3>
-                  <p className="text-sm sm:text-base text-[#8a8172] leading-relaxed">
-                    Record your recitation and send it straight to your teacher. You get graded,
-                    personal feedback on your tajweed every week — not just at exam time.
-                  </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { Icon: Mic, title: 'Weekly recitation feedback', body: 'Record your recitation and send it to your teacher. Get graded, personal notes on your tajwīd every week — not only at exam time.' },
+              { Icon: InfinityIcon, title: 'Practice drills', body: 'Endless, curated drills for Tajwīd and Arabic. Build streaks, earn points, and see your accuracy climb between lessons.' },
+              { Icon: GraduationCap, title: 'Tests & certificates', body: 'Milestone tests and a final exam lead to a verifiable Certificate of Completion for every program you finish.' },
+              { Icon: BookOpen, title: 'Free study tools', body: 'A Qur’anic examples finder, root-word explorer, and grammar tools — open to everyone, no account needed.' },
+            ].map(({ Icon, title, body }) => (
+              <div key={title} className="bg-white rounded-2xl border border-[#ece3d8] p-6 hover:shadow-[0_20px_40px_-24px_rgba(74,29,37,0.4)] hover:border-wine-200 transition-all duration-300">
+                <div className="w-11 h-11 rounded-xl bg-wine-50 flex items-center justify-center mb-5">
+                  <Icon className="w-5 h-5 text-wine-700" strokeWidth={1.9} />
                 </div>
-                <div className="flex flex-col items-center justify-center py-4">
-                  <p className="text-[10px] text-[#6b6353] mb-2 uppercase tracking-wider">Recording</p>
-                  <p dir="rtl" className="text-lg sm:text-xl font-arabic text-white text-center mb-6 leading-relaxed px-2">
-                    ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ
-                  </p>
-                  {/* Waveform bars */}
-                  <div className="flex items-center justify-center gap-[3px] mb-6 h-10">
-                    {Array.from({ length: 16 }).map((_, i) => (
-                      <div key={i} className="w-[3px] bg-emerald-500 rounded-full h-full"
-                        style={{ animation: `waveform-bar ${0.8 + (i % 4) * 0.2}s ease-in-out ${i * 0.08}s infinite`, transformOrigin: 'center' }} />
-                    ))}
-                  </div>
-                  {/* Record button */}
-                  <div className="w-14 h-14 rounded-full bg-red-500 flex items-center justify-center"
-                    style={{ animation: 'record-pulse 2s ease-in-out infinite' }}>
-                    <div className="w-5 h-5 bg-white rounded-sm" />
-                  </div>
-                  <p className="text-[#6b6353] text-xs mt-3 font-mono">0:12 / 5:00</p>
-                </div>
+                <h3 className="font-display text-xl font-semibold text-[#2a1e1a] mb-2 leading-snug">{title}</h3>
+                <p className="text-sm text-[#6b6055] leading-relaxed">{body}</p>
               </div>
-            </div>
-
-            {/* Tile — Daily practice drills */}
-            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <div className="bg-[#14120e] rounded-2xl p-5 sm:p-6 relative overflow-hidden min-h-[280px] flex flex-col">
-                {/* Flash overlay */}
-                {drillPreviewStep === 1 && (
-                  <div className="absolute inset-0 bg-emerald-500/10 animate-drill-flash z-10 pointer-events-none rounded-2xl" />
-                )}
-                {/* Mode tabs */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Tajweed</span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-[#6b6353] border border-[#3d372e]">Arabiyyah</span>
-                  <div className="ml-auto flex items-center gap-1">
-                    <InfinityIcon className="w-3.5 h-3.5 text-emerald-400" strokeWidth={2.5} />
-                    <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-wide">Endless</span>
-                  </div>
-                </div>
-                {/* Arabic Text */}
-                <div className="bg-[#2a251d]/60 rounded-xl p-3 mb-3">
-                  <p dir="rtl" className="text-base sm:text-lg font-arabic text-white text-center leading-relaxed">
-                    سَمِيعٌۢ <span className="bg-amber-500/30 text-amber-300 px-1 rounded border-b-2 border-amber-500/60">بَ</span>صِيرٌ
-                  </p>
-                </div>
-                <p className="text-xs sm:text-sm text-[#d9d2c4] text-center mb-3">What rule applies to the tanween before ب?</p>
-                {/* Options */}
-                <div className="space-y-1.5">
-                  {['Idghaam', 'Ikhfa', 'Iqlab', 'Izhar'].map((opt, i) => {
-                    const LETTERS = ['A', 'B', 'C', 'D'];
-                    const isCorrectOpt = i === 2;
-                    let optStyle = 'border-[#3d372e] text-[#8a8172]';
-                    if (drillPreviewStep >= 1 && isCorrectOpt) optStyle = 'border-emerald-500 bg-emerald-500/20 text-emerald-300';
-                    else if (drillPreviewStep >= 1) optStyle = 'border-[#2a251d] text-[#57503f]';
-                    return (
-                      <div key={i} className={`py-1.5 px-3 rounded-lg border text-xs flex items-center gap-2 transition-all duration-300 ${optStyle}`}>
-                        <span className={`w-4 h-4 rounded flex items-center justify-center text-[9px] font-bold flex-shrink-0 ${
-                          drillPreviewStep >= 1 && isCorrectOpt ? 'bg-emerald-500/30 text-emerald-300'
-                          : drillPreviewStep >= 1 ? 'bg-[#2a251d]/30 text-[#57503f]'
-                          : 'bg-[#3d372e]/50 text-[#6b6353]'
-                        }`}>{LETTERS[i]}</span>
-                        <span>{opt}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                {/* Floating XP */}
-                {drillPreviewStep === 2 && (
-                  <div className="absolute top-1/4 left-1/2 -translate-x-1/2 animate-xp-float pointer-events-none z-20">
-                    <span className="text-2xl font-black text-amber-400">+10 XP</span>
-                  </div>
-                )}
-              </div>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-[#1f1b16] mb-2">Practice Drills</h3>
-                <p className="text-sm text-[#57503f]">Curated and endless auto-generated drills for Tajweed and Arabiyyah. Earn XP, build combos, and compete on the leaderboard.</p>
-              </div>
-            </div>
-
-            {/* Tile — Tests → verifiable certificate */}
-            <div className="grid" style={{ gridTemplateRows: '1fr auto' }}>
-              <button onClick={() => setShowCertPreview(true)} className="w-full text-left group">
-                <div className="rounded-2xl relative overflow-hidden min-h-[280px] h-full flex items-center justify-center cursor-pointer" style={{ background: '#fffdf7', border: '1px solid #d4a574' }}>
-                  {/* Shine sweep */}
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-white/50 to-transparent"
-                      style={{ animation: 'cert-shine 5s ease-in-out infinite' }} />
-                  </div>
-                  {/* SAMPLE watermark */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                    <span className="text-5xl sm:text-6xl font-black text-[#d9d2c4]/20 uppercase tracking-[0.2em] -rotate-12 select-none">SAMPLE</span>
-                  </div>
-                  {/* Borders matching real template */}
-                  <div className="absolute" style={{ inset: '6px', border: '2px solid #059669', borderRadius: '2px' }} />
-                  <div className="absolute" style={{ inset: '10px', border: '1px solid #a7f3d0', borderRadius: '2px' }} />
-                  {/* Certificate content matching real template */}
-                  <div className="text-center relative z-20 py-4 px-3">
-                    <img src="/favicon.svg" alt="" className="w-8 h-8 mx-auto mb-1" />
-                    <p className="text-[9px] font-brand font-semibold text-emerald-800" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
-                    <p className="text-[7px] text-[#8a8172] uppercase tracking-[0.15em] mb-2">New Zealand</p>
-                    <h4 className="text-sm sm:text-base font-serif font-bold uppercase text-emerald-800 tracking-wide mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
-                    <p className="text-[8px] uppercase tracking-[0.12em] text-[#8a8172] mb-3">Tajweed Mastery Program</p>
-                    <p className="text-[8px] uppercase tracking-wider text-[#8a8172] mb-1">This is to certify that</p>
-                    <p className="text-sm font-serif font-semibold italic text-emerald-800 mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
-                    <p className="text-[8px] text-[#6b6353] mb-2">has successfully completed the</p>
-                    <p className="text-[9px] font-serif font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>TMP — Tajweed Mastery Program</p>
-                    <p dir="rtl" className="text-[10px] font-arabic text-[#8a8172] mt-0.5 mb-2">برنامج إتقان التجويد</p>
-                    {/* Scores */}
-                    <div className="flex justify-center gap-4 mb-2">
-                      {[{ l: 'Milestones', v: '82.5%' }, { l: 'Final Exam', v: '88.0%' }, { l: 'Total', v: '85.3%' }].map(s => (
-                        <div key={s.l} className="text-center">
-                          <p className="text-[6px] uppercase tracking-wide text-[#8a8172]">{s.l}</p>
-                          <p className="text-xs font-serif font-bold text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
-                        </div>
-                      ))}
-                    </div>
-                    {/* Signatures */}
-                    <div className="flex justify-center gap-8">
-                      {['Program Director', 'Instructor'].map(t => (
-                        <div key={t} className="text-center">
-                          <div className="w-12 border-b border-[#d9d2c4] mb-0.5 mx-auto" />
-                          <p className="text-[6px] text-[#8a8172]">{t}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Click hint */}
-                  <div className="absolute bottom-2 right-2 bg-[#1f1b16]/70 text-white text-[8px] px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-30">Click to preview</div>
-                </div>
-              </button>
-              <div className="pt-6">
-                <h3 className="text-lg font-semibold text-[#1f1b16] mb-2">Tests & Certificates</h3>
-                <p className="text-sm text-[#57503f]">Milestone tests and a final exam lead to a verifiable Certificate of Completion for every program you finish.</p>
-              </div>
-            </div>
-
-            {/* Free tools strip */}
-            <div className="lg:col-span-3 bg-white rounded-2xl border border-[#e6e0d3] p-5 sm:p-6">
-              <div className="flex flex-col lg:flex-row lg:items-center gap-5">
-                <div className="lg:flex-1 min-w-0">
-                  <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full uppercase">Free</span>
-                  <h3 className="text-base font-semibold text-[#1f1b16] mt-2 mb-1">Study tools, free for everyone</h3>
-                  <p className="text-sm text-[#57503f]">No account needed — open to every student of the Qur'an.</p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link to="/tools/examples" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
-                    <Search className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-[#1f1b16]">Shawaahid</p>
-                      <p className="text-xs text-[#6b6353] truncate">Qur'anic Examples Finder</p>
-                    </div>
-                  </Link>
-                  <Link to="/tools/arabiyyah" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
-                    <Languages className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-[#1f1b16]">Arabiyyah</p>
-                      <p className="text-xs text-[#6b6353] truncate">Grammar examples + roots</p>
-                    </div>
-                  </Link>
-                  <Link to="/tools/roots" className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-[#e6e0d3] hover:border-emerald-300 hover:shadow-sm transition-all">
-                    <BookOpen className="w-5 h-5 text-emerald-600 flex-shrink-0" strokeWidth={2} />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-[#1f1b16]">Tasreef</p>
-                      <p className="text-xs text-[#6b6353] truncate">Root Word Explorer</p>
-                    </div>
-                  </Link>
-                  <Link to="/tools" className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-sm font-medium text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors whitespace-nowrap">
-                    All tools <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
+            ))}
           </div>
 
-          {/* Section CTA */}
-          <div className="mt-10 sm:mt-14 text-center">
-            <p className="text-base sm:text-lg text-[#57503f] mb-5">This is what your first week looks like.</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/apply">
-                <Button variant="emerald" size="lg" className="w-full sm:w-auto">Apply Now</Button>
-              </Link>
-              <Link to="/programs">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">View Programs</Button>
-              </Link>
-            </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-12">
+            <Link to="/apply"><Button variant="wine" size="lg" className="w-full sm:w-auto">Apply for the next intake</Button></Link>
+            <Link to="/tools"><Button variant="wineOutline" size="lg" className="w-full sm:w-auto">Try the free tools</Button></Link>
           </div>
         </div>
       </section>
@@ -731,7 +444,7 @@ const LandingPage = () => {
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowCertPreview(false)}>
           <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-[900px] w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[#1f1b16]">Sample Certificate Preview</h3>
+              <h3 className="text-lg font-semibold text-[#2a1e1a]">Sample Certificate Preview</h3>
               <button onClick={() => setShowCertPreview(false)} className="p-2 text-[#8a8172] hover:text-[#57503f] hover:bg-[#efe9dd] rounded-lg transition-colors">
                 <X className="h-5 w-5" />
               </button>
@@ -747,17 +460,17 @@ const LandingPage = () => {
               <div className="absolute" style={{ inset: '14px', border: '1px solid #a7f3d0', borderRadius: '2px' }} />
               {/* Watermark logo */}
               <div className="absolute" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.03 }}>
-                <img src="/favicon.svg" alt="" className="w-48 h-48" />
+                <img src="/favicon-wine.svg" alt="" className="w-48 h-48" />
               </div>
               {/* Content */}
               <div className="absolute flex flex-col items-center justify-center text-center p-8" style={{ inset: '30px' }}>
-                <img src="/favicon.svg" alt="" className="w-10 h-10 mb-1" />
-                <p className="text-xs font-brand font-semibold text-emerald-800 mb-0.5" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
+                <img src="/favicon-wine.svg" alt="" className="w-10 h-10 mb-1" />
+                <p className="text-xs font-brand font-semibold text-wine-800 mb-0.5" style={{ letterSpacing: '0.02em' }}>The FastTrack Madrasah</p>
                 <p className="text-[8px] text-[#8a8172] uppercase tracking-[0.15em] mb-4">New Zealand</p>
-                <h4 className="text-xl sm:text-2xl font-bold uppercase text-emerald-800 tracking-wider mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
+                <h4 className="text-xl sm:text-2xl font-bold uppercase text-wine-800 tracking-wider mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Certificate of Completion</h4>
                 <p className="text-[10px] uppercase tracking-[0.12em] text-[#8a8172] mb-5">Tajweed Mastery Program</p>
                 <p className="text-[10px] uppercase tracking-wider text-[#8a8172] mb-2">This is to certify that</p>
-                <p className="text-2xl font-semibold italic text-emerald-800 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
+                <p className="text-2xl font-semibold italic text-wine-800 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>Aminah Rahman</p>
                 <p className="text-xs text-[#6b6353] mb-1">has successfully completed the</p>
                 <p className="text-sm font-bold" style={{ fontFamily: "'Playfair Display', serif" }}>TMP — Tajweed Mastery Program</p>
                 <p dir="rtl" className="text-base font-arabic text-[#8a8172] mt-1 mb-4">برنامج إتقان التجويد</p>
@@ -766,7 +479,7 @@ const LandingPage = () => {
                   {[{ l: 'Milestone Average', v: '82.5%' }, { l: 'Final Exam', v: '88.0%' }, { l: 'Weighted Total', v: '85.3%' }].map(s => (
                     <div key={s.l} className="text-center">
                       <p className="text-[7px] uppercase tracking-wider text-[#8a8172]">{s.l}</p>
-                      <p className="text-lg font-bold text-emerald-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
+                      <p className="text-lg font-bold text-wine-600" style={{ fontFamily: "'Playfair Display', serif" }}>{s.v}</p>
                     </div>
                   ))}
                 </div>
@@ -774,7 +487,7 @@ const LandingPage = () => {
                 <div className="flex gap-16">
                   {[{ name: 'Dr Abdulquadri Alaka', title: 'Program Director' }, { name: 'Ustadh Ibrahim', title: 'Instructor' }].map(sig => (
                     <div key={sig.title} className="text-center min-w-[120px]">
-                      <p className="text-lg text-emerald-800" style={{ fontFamily: "'Great Vibes', cursive" }}>{sig.name}</p>
+                      <p className="text-lg text-wine-800" style={{ fontFamily: "'Great Vibes', cursive" }}>{sig.name}</p>
                       <div className="w-28 border-b border-[#d9d2c4] mb-1 mx-auto" />
                       <p className="text-[9px] font-semibold tracking-wider">{sig.title}</p>
                     </div>
@@ -792,20 +505,18 @@ const LandingPage = () => {
         </div>
       )}
 
-      {/* Diagonal seam into Who We Serve */}
-      <DiagonalSeam from="bg-white" to="bg-[#0d3b2c]" direction="up" />
 
       {/* Who We Serve — the one deep-green feature band. The brand colour as a
           full-bleed ground reads as a deliberate POV; white cards sit crisply on
           it. Ink inverts to chalk/mint. */}
-      <section className="bg-[#0d3b2c] pb-10 pt-4 sm:pb-24 sm:pt-12">
+      <section className="bg-[#57202a] pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4">
               Who We Serve
             </h2>
-            <p className="text-lg text-emerald-100/80 max-w-3xl mx-auto">
-              Programs for every stage of reading and understanding the Qurʾān — from your first letters to teaching your own children.
+            <p className="text-lg text-wine-100/80 max-w-3xl mx-auto">
+              Programs for every stage — from your first Arabic letters to reading the Qurʾān, understanding the language, and studying the Islamic sciences.
             </p>
           </div>
 
@@ -814,16 +525,16 @@ const LandingPage = () => {
             <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-wine-600 transition-colors duration-300 select-none mb-3">
                     01
                   </div>
-                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Absolute Beginners</h3>
+                  <h3 className="text-lg font-semibold text-[#2a1e1a] mb-1">Absolute Beginners</h3>
                   <p className="text-sm text-[#6b6353] font-medium">& New Muslims</p>
                 </div>
                 <p className="text-sm text-[#57503f] leading-relaxed mb-6">
-                  Never read Arabic before? Our <span className="font-semibold text-[#1f1b16]">QARI program</span> takes you from zero to fluent Qur'an reading in {PROGRAMS[PROGRAM_IDS.QARI].duration.display}.
+                  Never read Arabic before? Our <span className="font-semibold text-[#2a1e1a]">QARI program</span> takes you from zero to fluent Qur'an reading in {PROGRAMS[PROGRAM_IDS.QARI].duration.display}.
                 </p>
-                <Link to="/programs#qari" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs#qari" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
                   <span>Learn about QARI</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -834,16 +545,16 @@ const LandingPage = () => {
             <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-wine-600 transition-colors duration-300 select-none mb-3">
                     02
                   </div>
-                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Can Read</h3>
+                  <h3 className="text-lg font-semibold text-[#2a1e1a] mb-1">Can Read</h3>
                   <p className="text-sm text-[#6b6353] font-medium">But Don't Know Tajweed</p>
                 </div>
                 <p className="text-sm text-[#57503f] leading-relaxed mb-6">
-                  Completed Qur'an but can't apply proper rules? Our <span className="font-semibold text-[#1f1b16]">Tajweed Mastery Program</span> perfects your recitation in {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}.
+                  Completed Qur'an but can't apply proper rules? Our <span className="font-semibold text-[#2a1e1a]">Tajweed Mastery Program</span> perfects your recitation in {PROGRAMS[PROGRAM_IDS.TAJWEED].duration.display}.
                 </p>
-                <Link to="/programs#tajweed" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs#tajweed" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
                   <span>Learn about TMP</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -854,16 +565,16 @@ const LandingPage = () => {
             <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-wine-600 transition-colors duration-300 select-none mb-3">
                     03
                   </div>
-                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Want to Understand</h3>
+                  <h3 className="text-lg font-semibold text-[#2a1e1a] mb-1">Want to Understand</h3>
                   <p className="text-sm text-[#6b6353] font-medium">What You're Reading</p>
                 </div>
                 <p className="text-sm text-[#57503f] leading-relaxed mb-6">
-                  Bridge the gap between reading and understanding. Our <span className="font-semibold text-[#1f1b16]">EASI program</span> teaches Arabic grammar and Islamic sciences in {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}.
+                  Bridge the gap between reading and understanding. Our <span className="font-semibold text-[#2a1e1a]">EASI program</span> teaches Arabic grammar and Islamic sciences in {PROGRAMS[PROGRAM_IDS.ESSENTIALS].duration.display}.
                 </p>
-                <Link to="/programs#easi" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs#easi" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
                   <span>Learn about EASI</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -874,16 +585,16 @@ const LandingPage = () => {
             <div className="group bg-white border border-[#e6e0d3] rounded-lg overflow-hidden hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
               <div className="p-6">
                 <div className="mb-4">
-                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-emerald-600 transition-colors duration-300 select-none mb-3">
+                  <div className="text-5xl sm:text-6xl font-extrabold leading-none tracking-tighter text-[#cfc6b4] group-hover:text-wine-600 transition-colors duration-300 select-none mb-3">
                     04
                   </div>
-                  <h3 className="text-lg font-semibold text-[#1f1b16] mb-1">Parents & Children</h3>
+                  <h3 className="text-lg font-semibold text-[#2a1e1a] mb-1">Parents & Children</h3>
                   <p className="text-sm text-[#6b6353] font-medium">Learning Together</p>
                 </div>
                 <p className="text-sm text-[#57503f] leading-relaxed mb-6">
-                  For children who can read Qur'an, combining <span className="font-semibold text-[#1f1b16]">Tajweed + EASI</span> deepens their understanding and connection with what they recite.
+                  For children who can read Qur'an, combining <span className="font-semibold text-[#2a1e1a]">Tajweed + EASI</span> deepens their understanding and connection with what they recite.
                 </p>
-                <Link to="/programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
+                <Link to="/programs" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
                   <span>View all programs</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -894,7 +605,7 @@ const LandingPage = () => {
           {/* CTA with Application and Contact Info */}
           <div className="mt-12 sm:mt-16">
             <div className="text-center p-8 bg-white rounded-lg border border-[#e6e0d3]">
-              <h3 className="text-xl sm:text-2xl font-semibold text-[#1f1b16] mb-3">
+              <h3 className="text-xl sm:text-2xl font-semibold text-[#2a1e1a] mb-3">
                 Not sure where you fit?
               </h3>
               <p className="text-[#57503f] mb-4">
@@ -904,25 +615,25 @@ const LandingPage = () => {
                 Still deciding? Message us and we'll help you choose.
               </p>
               <div className="flex flex-col gap-4">
-                 <Link to="/apply#select-your-program" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm mx-auto">
+                 <Link to="/apply#select-your-program" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-wine-600 hover:bg-wine-700 text-white font-medium rounded transition-colors text-sm mx-auto">
                     <span>Start Your Application</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </Link>
                 <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-2 border-t border-[#e6e0d3]">
                   <p className="text-sm text-[#6b6353]">Have questions?</p>
-                  <a href="mailto:salam@tftmadrasah.nz" className="text-[#3d372e] font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                  <a href="mailto:salam@tftmadrasah.nz" className="text-[#3d372e] font-medium hover:text-wine-600 flex items-center gap-2 transition-colors text-sm">
                     <Mail className="h-4 w-4" />
                     salam@tftmadrasah.nz
                   </a>
                   <span className="hidden sm:inline text-[#d9d2c4]">|</span>
-                  <a href="tel:+64272131486" className="text-[#3d372e] font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                  <a href="tel:+64272131486" className="text-[#3d372e] font-medium hover:text-wine-600 flex items-center gap-2 transition-colors text-sm">
                     <Phone className="h-4 w-4" />
                     +6427 213 1486
                   </a>
                   <span className="hidden sm:inline text-[#d9d2c4]">|</span>
-                  <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-[#3d372e] font-medium hover:text-emerald-600 flex items-center gap-2 transition-colors text-sm">
+                  <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-[#3d372e] font-medium hover:text-wine-600 flex items-center gap-2 transition-colors text-sm">
                     <MessageCircle className="h-4 w-4" />
                     +6422 465 3509
                   </a>
@@ -933,81 +644,79 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Diagonal seam out of the green feature band */}
-      <DiagonalSeam from="bg-[#0d3b2c]" to="bg-white" direction="down" />
 
       {/* How Admission Works Section */}
       <section className="bg-white pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#1f1b16] text-center mb-8 sm:mb-16">
+          <h2 className="font-display text-2xl sm:text-4xl font-semibold tracking-tight text-[#2a1e1a] text-center mb-8 sm:mb-16">
             The Path to Mastery
           </h2>
 
           {/* Mobile: Timeline Layout */}
           <div className="md:hidden relative">
             {/* Vertical line */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-emerald-200"></div>
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-wine-200"></div>
 
             <div className="space-y-6">
               {/* Step 1 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">1</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">1</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Online Application</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Online Application</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Submit your details online to begin the selection process.</p>
                 </div>
               </div>
 
               {/* Step 2 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">2</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">2</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Evaluation & Interview</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Evaluation & Interview</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Our team reviews your background and conducts a brief interview to discuss your goals.</p>
                 </div>
               </div>
 
               {/* Step 3 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">3</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">3</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Selection & Enrollment</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Selection & Enrollment</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Receive your offer and secure your place through our secure payment gateway.</p>
                 </div>
               </div>
 
               {/* Step 4 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">4</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">4</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Onboarding & Mentorship</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Onboarding & Mentorship</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Get your Student ID and be matched with an expert mentor for guidance.</p>
                 </div>
               </div>
 
               {/* Step 5 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">5</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">5</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Study & Drills</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Study & Drills</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Attend lectures, work through drills, and sit regular assessments with your mentor following up.</p>
                 </div>
               </div>
 
               {/* Step 6 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">6</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">6</div>
                 <div className="flex-1 pb-2">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Final Exam</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Final Exam</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Sit the final exam to complete the program.</p>
                 </div>
               </div>
 
               {/* Step 7 */}
               <div className="relative flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">7</div>
+                <div className="flex-shrink-0 w-8 h-8 bg-wine-600 text-white rounded-full flex items-center justify-center text-xs font-bold z-10">7</div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Certification & Alumni</h3>
+                  <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Certification & Alumni</h3>
                   <p className="text-xs text-[#57503f] leading-relaxed">Graduate with a Certificate of Completion and join our alumni network.</p>
                 </div>
               </div>
@@ -1021,9 +730,9 @@ const LandingPage = () => {
               {/* Step 1 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Online Application</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Online Application</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Submit your details online to apply.</p>
                   </div>
                 </div>
@@ -1032,9 +741,9 @@ const LandingPage = () => {
               {/* Step 2 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Evaluation & Interview</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Evaluation & Interview</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Our team reviews your background and discusses your goals.</p>
                   </div>
                 </div>
@@ -1043,9 +752,9 @@ const LandingPage = () => {
               {/* Step 3 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Selection & Enrollment</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Selection & Enrollment</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Receive your offer and secure your place.</p>
                   </div>
                 </div>
@@ -1054,9 +763,9 @@ const LandingPage = () => {
               {/* Step 4 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Onboarding & Mentorship</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Onboarding & Mentorship</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Get your Student ID and be matched with an expert mentor.</p>
                   </div>
                 </div>
@@ -1068,9 +777,9 @@ const LandingPage = () => {
               {/* Step 5 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Study & Drills</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Study & Drills</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Attend lectures, work through drills, and sit regular assessments.</p>
                   </div>
                 </div>
@@ -1079,9 +788,9 @@ const LandingPage = () => {
               {/* Step 6 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">6</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Final Exam</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Final Exam</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Sit the final exam to complete the program.</p>
                   </div>
                 </div>
@@ -1090,9 +799,9 @@ const LandingPage = () => {
               {/* Step 7 */}
               <div className="relative group">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-bold">7</div>
+                  <div className="flex-shrink-0 w-10 h-10 bg-wine-600 text-white rounded-full flex items-center justify-center text-sm font-bold">7</div>
                   <div className="flex-1 pt-1">
-                    <h3 className="text-sm font-semibold text-[#1f1b16] mb-1">Certification & Alumni</h3>
+                    <h3 className="text-sm font-semibold text-[#2a1e1a] mb-1">Certification & Alumni</h3>
                     <p className="text-xs text-[#57503f] leading-relaxed">Graduate with a Certificate and join our alumni network.</p>
                   </div>
                 </div>
@@ -1105,14 +814,14 @@ const LandingPage = () => {
       <section className="py-10 md:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg border border-[#e6e0d3] p-8 sm:p-12 text-center shadow-sm">
-            <h2 className="text-2xl md:text-4xl font-bold text-[#1f1b16] mb-3 sm:mb-4">
+            <h2 className="font-display text-2xl md:text-4xl font-semibold text-[#2a1e1a] mb-3 sm:mb-4">
               Have Questions?
             </h2>
             <p className="text-sm sm:text-lg text-[#57503f] mb-6 sm:mb-8">
               Answers on programs, admission, fees, and how classes run.
             </p>
-             <Link to="/faqs#frequently-asked-questions" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#1f1b16] hover:text-emerald-600 group-hover:gap-3 transition-all">
-              <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors">
+             <Link to="/faqs#frequently-asked-questions" onClick={() => window.scrollTo(0, 0)} className="inline-flex items-center gap-2 text-sm font-medium text-[#2a1e1a] hover:text-wine-600 group-hover:gap-3 transition-all">
+              <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-wine-600 hover:bg-wine-700 text-white font-medium rounded transition-colors">
                 <span>View FAQs</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
@@ -1122,31 +831,29 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      {/* Diagonal seam into the closing CTA */}
-      <DiagonalSeam from="bg-white" to="bg-emerald-900" direction="up" height="h-12 sm:h-20" />
 
-      <section className="py-12 md:py-24 bg-emerald-900 text-white">
+      <section className="py-12 md:py-24 bg-wine-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-semibold mb-4">
+          <h2 className="font-display text-3xl md:text-4xl font-semibold mb-4">
             Apply for the next intake
           </h2>
-          <p className="text-lg text-emerald-200 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-wine-200 mb-8 max-w-2xl mx-auto">
             Submit an application, and we'll match you to the right program.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/apply">
-              <Button variant="secondary" size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50 w-full sm:w-auto">
+              <Button variant="secondary" size="lg" className="bg-white text-wine-900 hover:bg-wine-50 w-full sm:w-auto">
                 Apply Now
               </Button>
             </Link>
             <a href={donationLink} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-emerald-800 hover:border-white w-full sm:w-auto flex items-center justify-center gap-2">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-wine-800 hover:border-white w-full sm:w-auto flex items-center justify-center gap-2">
                 <Heart className="h-5 w-5" />
                 Support Us
               </Button>
             </a>
             <Link to="/login">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-emerald-800 hover:border-white w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-wine-800 hover:border-white w-full sm:w-auto">
                 Sign In
               </Button>
             </Link>
@@ -1155,7 +862,7 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-emerald-950 text-white py-12">
+      <footer className="bg-wine-950 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             {/* Brand */}
@@ -1171,10 +878,10 @@ const LandingPage = () => {
                     <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
                     <span className="text-sm font-brand font-semibold text-white" style={{letterSpacing: "0.28em"}}>Madrasah</span>
                 </div>
-                  {/* <div className="text-xs text-emerald-100/70 font-arabic">الفلاح</div> */}
+                  {/* <div className="text-xs text-wine-100/70 font-arabic">الفلاح</div> */}
                 </div>
               </div>
-              <p className="text-emerald-100/70 text-sm mb-4">
+              <p className="text-wine-100/70 text-sm mb-4">
                 Flexible. Structured. Tailored.
               </p>
               <div className="flex items-center gap-2">
@@ -1183,7 +890,7 @@ const LandingPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-emerald-50 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-wine-800 text-wine-50 hover:text-white hover:border-wine-700 hover:bg-wine-900 transition-colors"
                 >
                   <Facebook className="h-4 w-4" />
                 </a>
@@ -1192,9 +899,18 @@ const LandingPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-emerald-800 text-emerald-50 hover:text-white hover:border-emerald-700 hover:bg-emerald-900 transition-colors"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-wine-800 text-wine-50 hover:text-white hover:border-wine-700 hover:bg-wine-900 transition-colors"
                 >
                   <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.youtube.com/@tftmadrasah"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                  className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-wine-800 text-wine-50 hover:text-white hover:border-wine-700 hover:bg-wine-900 transition-colors"
+                >
+                  <Youtube className="h-4 w-4" />
                 </a>
               </div>
             </div>
@@ -1203,18 +919,18 @@ const LandingPage = () => {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/mission" className="text-emerald-100/70 hover:text-white">Our Mission</Link></li>
-                <li><a href="/programs" className="text-emerald-100/70 hover:text-white">Programs</a></li>
-                <li><Link to="/apply" className="text-emerald-100/70 hover:text-white">Apply Now</Link></li>
+                <li><Link to="/mission" className="text-wine-100/70 hover:text-white">Our Mission</Link></li>
+                <li><a href="/programs" className="text-wine-100/70 hover:text-white">Programs</a></li>
+                <li><Link to="/apply" className="text-wine-100/70 hover:text-white">Apply Now</Link></li>
                 <li>
-                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-emerald-100/70 hover:text-rose-400 flex items-center gap-1.5">
+                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-wine-100/70 hover:text-rose-400 flex items-center gap-1.5">
                     <Heart className="h-3.5 w-3.5" />
                     Support Our Mission
                   </a>
                 </li>
-                <li><Link to="/vacancies" className="text-emerald-100/70 hover:text-white">Careers</Link></li>
-                <li className="pt-2 border-t border-emerald-900">
-                  <Link to="/login" className="text-emerald-200/50 hover:text-emerald-100 text-xs">Sign In</Link>
+                <li><Link to="/vacancies" className="text-wine-100/70 hover:text-white">Careers</Link></li>
+                <li className="pt-2 border-t border-wine-900">
+                  <Link to="/login" className="text-wine-200/50 hover:text-wine-100 text-xs">Sign In</Link>
                 </li>
               </ul>
             </div>
@@ -1222,19 +938,19 @@ const LandingPage = () => {
             {/* Contact */}
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
-              <p className="text-emerald-100/70 text-sm mb-4">
+              <p className="text-wine-100/70 text-sm mb-4">
                 Questions about our programs?
               </p>
               <div className="space-y-2">
-                <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-50 hover:text-white text-sm flex items-center gap-2">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-wine-50 hover:text-white text-sm flex items-center gap-2">
                   <Mail className="h-4 w-4" />
                   salam@tftmadrasah.nz
                 </a>
-                <a href="tel:+64272131486" className="text-emerald-50 hover:text-white text-sm flex items-center gap-2">
+                <a href="tel:+64272131486" className="text-wine-50 hover:text-white text-sm flex items-center gap-2">
                   <Phone className="h-4 w-4" />
                   +6427 213 1486
                 </a>
-                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-50 hover:text-white text-sm flex items-center gap-2">
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-wine-50 hover:text-white text-sm flex items-center gap-2">
                   <MessageCircle className="h-4 w-4" />
                   +6422 465 3509
                 </a>
@@ -1242,7 +958,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <div className="border-t border-emerald-900 pt-8 text-center text-sm text-emerald-200/60">
+          <div className="border-t border-wine-900 pt-8 text-center text-sm text-wine-200/60">
             <p>© {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.</p>
           </div>
         </div>
@@ -1252,7 +968,7 @@ const LandingPage = () => {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full border border-emerald-700 transition-colors"
+          className="fixed bottom-8 right-8 z-50 p-3 bg-wine-600 hover:bg-wine-700 text-white rounded-full border border-wine-700 transition-colors"
           aria-label="Back to top"
         >
           <ArrowUp className="h-5 w-5" />
