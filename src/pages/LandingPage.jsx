@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Plus, Minus, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram, Languages } from 'lucide-react';
+import { BookOpen, Calendar, Video, Users, GraduationCap, CheckCircle, Menu, X, Heart, ChevronDown, ArrowUp, Rocket, ArrowRight, Mail, Phone, MessageCircle, ShoppingBag, Newspaper, Clock, Infinity as InfinityIcon, Search, Facebook, Instagram, Languages } from 'lucide-react';
 import Button from '../components/common/Button';
 import DiagonalSeam from '../components/common/DiagonalSeam';
 import { storage } from '../services/supabase';
@@ -12,7 +12,6 @@ const LandingPage = () => {
   const [currentQuote, setCurrentQuote] = useState(0);
   const [expandedProgram, setExpandedProgram] = useState(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [openApproachCard, setOpenApproachCard] = useState(null);
   const [latestArticles, setLatestArticles] = useState([]);
 
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
@@ -473,59 +472,61 @@ const LandingPage = () => {
       </div>
 
       {/* Real teaching band — a class on the e-glass lightboard, before the product mockups */}
-      <section className="relative bg-[#0a0f0c] overflow-hidden">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-stretch">
-          {/* Copy */}
-          <div className="px-4 sm:px-6 lg:px-10 py-12 sm:py-20 lg:py-28 flex flex-col justify-center order-2 lg:order-1">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.08] mb-5">
-              A real class,<br className="hidden sm:block" /> taught live on the board
-            </h2>
-            <p className="text-base sm:text-lg text-[#b9c2bd] leading-relaxed max-w-xl mb-8">
-              Our teachers write on an illuminated e-glass lightboard, facing you the whole
-              time — the way tajwīd and Arabic are taught in a real classroom. It is a class
-              you attend, not a video you watch alone.
-            </p>
-            <ul className="space-y-3">
-              {[
-                { Icon: Video, text: 'Live lessons on the lightboard — see every stroke as it is written' },
-                { Icon: Users, text: 'Real teachers who know your name and mark your recitation' },
-                { Icon: CheckCircle, text: 'Recorded lessons to revisit, coming soon in shā’a Allāh' },
-              ].map(({ Icon, text }, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <Icon className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
-                  <span className="text-sm sm:text-base text-[#d9ded9]">{text}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {/* Photo — bleeds to the right edge on desktop, full-width on mobile */}
-          <div className="relative order-1 lg:order-2 min-h-[240px] sm:min-h-[340px] lg:min-h-full">
-            <img
-              src={lightboardImageUrl}
-              alt="A FastTrack Madrasah teacher writing tajwīd rules on an illuminated e-glass lightboard"
-              loading="lazy"
-              width="1536"
-              height="886"
-              className="absolute inset-0 w-full h-full object-cover animate-lightboard-in"
-            />
-            {/* Seam: fade the photo into the band's black ground on the copy side */}
-            <div className="absolute inset-0 pointer-events-none hidden lg:block"
-              style={{ background: 'linear-gradient(90deg, #0a0f0c 0%, rgba(10,15,12,0.35) 22%, transparent 55%)' }} />
-            <div className="absolute inset-0 pointer-events-none lg:hidden"
-              style={{ background: 'linear-gradient(180deg, transparent 55%, #0a0f0c 100%)' }} />
+      {/* Student Experience — opens with the real class, then the tools that carry it */}
+      <section id="experience" className="bg-white overflow-hidden">
+        {/* Lead: a real class in session */}
+        <div className="relative bg-[#0a0f0c]">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-stretch">
+            {/* Copy */}
+            <div className="px-4 sm:px-6 lg:px-10 py-12 sm:py-20 lg:py-28 flex flex-col justify-center order-2 lg:order-1">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.1] mb-5">
+                A class you attend,<br className="hidden sm:block" /> not a video you watch
+              </h2>
+              <p className="text-base sm:text-lg text-[#b9c2bd] leading-relaxed max-w-xl mb-8">
+                You sit in a live lesson with a teacher who faces you, writes out every rule
+                in front of you, and hears you recite. You are known by name, corrected as
+                you go, and expected to show up — the way learning has always worked best.
+              </p>
+              <ul className="space-y-3.5">
+                {[
+                  { Icon: Video, text: 'Live lessons you follow step by step, not a recording playing at you' },
+                  { Icon: Users, text: 'Teachers who know your name, hear your recitation, and correct it' },
+                  { Icon: CheckCircle, text: 'Graded checkpoints along the way, so you always know where you stand' },
+                ].map(({ Icon, text }, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <Icon className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                    <span className="text-sm sm:text-base text-[#d9ded9]">{text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Photo — the writing must stay readable; contain on the dark ground, no edge crop */}
+            <div className="relative order-1 lg:order-2 min-h-[280px] sm:min-h-[400px] lg:min-h-full flex items-center justify-center">
+              <img
+                src={lightboardImageUrl}
+                alt="A FastTrack Madrasah teacher writing Arabic rules in glowing marker during a live lesson"
+                loading="lazy"
+                width="1536"
+                height="886"
+                className="w-full h-full object-contain lg:object-cover lg:object-left animate-lightboard-in"
+              />
+              {/* Seam: fade the photo into the section's dark ground on the copy side */}
+              <div className="absolute inset-0 pointer-events-none hidden lg:block"
+                style={{ background: 'linear-gradient(90deg, #0a0f0c 0%, rgba(10,15,12,0.25) 18%, transparent 42%)' }} />
+              <div className="absolute inset-0 pointer-events-none lg:hidden"
+                style={{ background: 'linear-gradient(180deg, transparent 70%, #0a0f0c 100%)' }} />
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Student Experience Preview Section */}
-      <section id="experience" className="bg-white py-10 sm:py-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* The tools that carry the class */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#1f1b16] mb-4">
-              Your Student Experience
+              Everything you need to keep going
             </h2>
             <p className="text-lg text-[#57503f] max-w-3xl mx-auto">
-              Lessons, drills, recitation feedback, and progress tracking — in one place
+              Between classes, the practice, feedback, and progress that turn a lesson into mastery
             </p>
           </div>
 
@@ -945,199 +946,6 @@ const LandingPage = () => {
       {/* Diagonal seam out of the green feature band */}
       <DiagonalSeam from="bg-[#0d3b2c]" to="bg-white" direction="down" />
 
-      {/* Our Approach Section */}
-      <section className="bg-white py-10 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#1f1b16] text-center mb-8 sm:mb-16">
-            Our Approach
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
-              <button
-                onClick={() => setOpenApproachCard(openApproachCard === 0 ? null : 0)}
-                className="w-full p-6 text-left md:cursor-default"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
-                      Flexible & Personalized Learning
-                    </h3>
-                    {/* Mobile toggle icon */}
-                    <div className="md:hidden flex-shrink-0 mt-1">
-                      {openApproachCard === 0 ? (
-                        <Minus className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#8a8172]" />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Content - hidden on mobile unless expanded, always visible on desktop */}
-                  <div className={`${openApproachCard === 0 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
-                      Everyone learns at their own pace. We adapt to your schedule and pace, whether you're studying solo or with family members. When it makes sense, we group students with similar backgrounds to build peer support while keeping you accountable.
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
-              <button
-                onClick={() => setOpenApproachCard(openApproachCard === 1 ? null : 1)}
-                className="w-full p-6 text-left md:cursor-default"
-              >
-
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
-                      Islamic Values at the Core
-                    </h3>
-                    <div className="md:hidden flex-shrink-0 mt-1">
-                      {openApproachCard === 1 ? (
-                        <Minus className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#8a8172]" />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={`${openApproachCard === 1 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
-                      We don't just teach Arabic - we cultivate Islamic character rooted in the Qur'an and Sunnah. You'll learn to read, understand, and embody what you're learning through proper Islamic manners and devotion.
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
-              <button
-                onClick={() => setOpenApproachCard(openApproachCard === 2 ? null : 2)}
-                className="w-full p-6 text-left md:cursor-default"
-              >
-
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
-                      Classical Script & Traditional Pedagogy
-                    </h3>
-                    <div className="md:hidden flex-shrink-0 mt-1">
-                      {openApproachCard === 2 ? (
-                        <Minus className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#8a8172]" />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={`${openApproachCard === 2 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
-                      We teach from established Islamic texts. In Arabic and Tajweed classes, teachers write on the board live and students take notes by hand — practising Arabic handwriting as they learn.
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Card 4 */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
-              <button
-                onClick={() => setOpenApproachCard(openApproachCard === 3 ? null : 3)}
-                className="w-full p-6 text-left md:cursor-default"
-              >
-
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
-                      Anywhere, Anytime Accessibility
-                    </h3>
-                    <div className="md:hidden flex-shrink-0 mt-1">
-                      {openApproachCard === 3 ? (
-                        <Minus className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#8a8172]" />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={`${openApproachCard === 3 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
-                      All classes run online over video, so you can study from anywhere in New Zealand or abroad without relocating.
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Card 5 */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
-              <button
-                onClick={() => setOpenApproachCard(openApproachCard === 4 ? null : 4)}
-                className="w-full p-6 text-left md:cursor-default"
-              >
-
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
-                      Assessment You Can Trust
-                    </h3>
-                    <div className="md:hidden flex-shrink-0 mt-1">
-                      {openApproachCard === 4 ? (
-                        <Minus className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#8a8172]" />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={`${openApproachCard === 4 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
-                      Milestone tests and a final exam check your understanding as you go. Scores and weighted totals are visible to you and your teacher. Pass every assessment to earn a verifiable certificate.
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* Card 6 */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg hover:border-[#d9d2c4] transition-colors">
-              <button
-                onClick={() => setOpenApproachCard(openApproachCard === 5 ? null : 5)}
-                className="w-full p-6 text-left md:cursor-default"
-              >
-
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-[#1f1b16] mb-3">
-                      Holistic Mentorship
-                    </h3>
-                    <div className="md:hidden flex-shrink-0 mt-1">
-                      {openApproachCard === 5 ? (
-                        <Minus className="h-5 w-5 text-emerald-600" />
-                      ) : (
-                        <Plus className="h-5 w-5 text-[#8a8172]" />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className={`${openApproachCard === 5 ? 'block' : 'hidden'} md:block`}>
-                    <p className="text-sm text-[#57503f] leading-relaxed text-justify">
-                      A dedicated mentor follows your progress, checks in regularly, and offers guidance rooted in the Qur'an and Sunnah.
-                    </p>
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
       {/* How Admission Works Section */}
       <section className="bg-white pb-10 pt-4 sm:pb-24 sm:pt-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1303,67 +1111,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
-      {/* Flexible Learning for Every Lifestyle */}
-      <section className="bg-white py-10 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#1f1b16] mb-3">
-              Designed for Your Life
-            </h2>
-            <p className="text-base sm:text-lg text-[#57503f] max-w-2xl mx-auto">
-              Whether you're working full-time, raising children, studying, or retired—our programs adapt to your schedule and commitments
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {/* Working Professionals */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
-              <div className="mb-4">
-                <h3 className="font-semibold text-[#1f1b16] mb-2">Evening & Weekend Classes</h3>
-                <p className="text-xs text-[#6b6353]">For Working Professionals</p>
-              </div>
-              <p className="text-sm text-[#57503f] leading-relaxed">
-                Classes scheduled outside work hours so you can pursue Qur'anic education without compromising your career. Learn at your own pace with dedicated mentorship.
-              </p>
-            </div>
-
-            {/* Parents & Homemakers */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
-              <div className="mb-4">
-                <h3 className="font-semibold text-[#1f1b16] mb-2">Daytime Sessions</h3>
-                <p className="text-xs text-[#6b6353]">For Parents & Homemakers</p>
-              </div>
-              <p className="text-sm text-[#57503f] leading-relaxed">
-                Morning and afternoon options while children are at school or napping. Learn alongside your family and help guide their reading at home.
-              </p>
-            </div>
-
-            {/* Seniors & Beginners */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
-              <div className="mb-4">
-                <h3 className="font-semibold text-[#1f1b16] mb-2">Patient Instruction</h3>
-                <p className="text-xs text-[#6b6353]">For Seniors & Beginners</p>
-              </div>
-              <p className="text-sm text-[#57503f] leading-relaxed">
-                Age-appropriate teaching in small classes, so seniors and first-time learners get personal attention and can work at their own pace.
-              </p>
-            </div>
-
-            {/* Students & Youth */}
-            <div className="bg-white border border-[#e6e0d3] rounded-lg p-6 hover:shadow-lg hover:border-[#d9d2c4] transition-all duration-300">
-              <div className="mb-4">
-                <h3 className="font-semibold text-[#1f1b16] mb-2">Structured Timelines</h3>
-                <p className="text-xs text-[#6b6353]">For Students & Youth</p>
-              </div>
-              <p className="text-sm text-[#57503f] leading-relaxed">
-                Clear milestones and assignments between lectures keep you on track, with a mentor following your progress.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Link Section */}
       <section className="py-10 md:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
