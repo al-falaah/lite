@@ -62,7 +62,7 @@ const FAQs = () => {
     <div className="min-h-screen bg-white">
       <Helmet><title>FAQs | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
-      <div className="bg-gray-900 text-white py-16 md:py-24">
+      <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors text-sm">
             <ArrowLeft className="h-4 w-4" />
@@ -78,7 +78,7 @@ const FAQs = () => {
       </div>
 
       {/* Diagonal seam out of the header */}
-      <DiagonalSeam from="bg-gray-900" to="bg-gray-50" direction="up" />
+      <DiagonalSeam from="bg-wine-900" to="bg-gray-50" direction="up" />
 
       {/* FAQ Content */}
       <div className="py-16 md:py-24 bg-gray-50">
@@ -122,7 +122,7 @@ const FAQs = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/apply" className="w-full sm:w-auto">
-                <button className="w-full px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded transition-colors">
+                <button className="w-full px-8 py-3 bg-wine-900 hover:bg-wine-800 text-white font-medium rounded transition-colors">
                   Apply Now
                 </button>
               </Link>

@@ -154,7 +154,7 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6 group">
-            <img src="/favicon.svg" alt="TFT Madrasah" className="h-10 w-10" />
+            <img src="/favicon-wine.svg" alt="TFT Madrasah" className="h-10 w-10" />
             <div className="flex flex-col leading-none -space-y-1">
               <span className="text-base font-bold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
               <span className="text-base font-bold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
@@ -179,7 +179,7 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-9 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="pl-9 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="your.email@example.com"
                   disabled={loading}
                   autoComplete="email"
@@ -199,7 +199,7 @@ export default function Login() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-9 pr-9 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="pl-9 pr-9 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="Enter your password"
                   disabled={loading}
                   autoComplete="current-password"
@@ -219,7 +219,7 @@ export default function Login() {
             <div className="text-right">
               <Link
                 to="/forgot-password"
-                className="text-sm text-emerald-600 hover:text-emerald-700"
+                className="text-sm text-wine-600 hover:text-wine-700"
               >
                 Forgot password?
               </Link>
@@ -229,7 +229,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-600 text-white py-2.5 px-4 rounded-md font-medium hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-wine-600 text-white py-2.5 px-4 rounded-md font-medium hover:bg-wine-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -250,7 +250,7 @@ export default function Login() {
             Back to home
           </Link>
           <p className="text-sm text-gray-500 mt-3">
-            Need help? <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700">Contact us</a>
+            Need help? <a href="mailto:admin@tftmadrasah.nz" className="text-wine-600 hover:text-wine-700">Contact us</a>
           </p>
         </div>
       </div>

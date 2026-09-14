@@ -300,7 +300,7 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent"></div>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-wine-600 border-r-transparent"></div>
           <p className="mt-4 text-gray-600">Loading article...</p>
         </div>
       </div>
@@ -432,7 +432,7 @@ const BlogPost = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Madrasah"
                 className="h-8 w-8"
               />
@@ -447,14 +447,14 @@ const BlogPost = () => {
             <div className="flex items-center gap-4">
               <Link
                 to="/blog"
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-wine-600 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">All Articles</span>
               </Link>
               <Link
                 to="/"
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-wine-600 transition-colors"
               >
                 <Home className="h-4 w-4" />
                 <span className="hidden sm:inline">Home</span>
@@ -539,7 +539,7 @@ const BlogPost = () => {
               title={copySuccess ? 'Copied!' : 'Copy Link'}
             >
               {copySuccess ? (
-                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-wine-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               ) : (
@@ -581,7 +581,7 @@ const BlogPost = () => {
             prose-headings:font-sans prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
             prose-h2:text-[32px] prose-h2:leading-[1.25] prose-h2:mt-12 prose-h2:mb-4
             prose-h3:text-[24px] prose-h3:leading-[1.35] prose-h3:mt-10 prose-h3:mb-3
-            prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:underline
+            prose-a:text-wine-600 prose-a:no-underline hover:prose-a:underline
             prose-strong:font-semibold prose-strong:text-gray-900
             prose-em:italic prose-em:font-serif
             prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-700
@@ -595,8 +595,8 @@ const BlogPost = () => {
         <div className="mt-20 pt-12 border-t border-gray-200">
           <div className="flex flex-col sm:flex-row gap-6 items-start">
             <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
-                <span className="text-2xl font-bold text-emerald-700">
+              <div className="w-16 h-16 bg-wine-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl font-bold text-wine-700">
                   {post.author_name.charAt(0)}
                 </span>
               </div>
@@ -612,7 +612,7 @@ const BlogPost = () => {
               )}
               <Link
                 to="/apply"
-                className="inline-flex items-center gap-2 text-emerald-600 font-medium hover:text-emerald-700 transition-colors"
+                className="inline-flex items-center gap-2 text-wine-600 font-medium hover:text-wine-700 transition-colors"
               >
                 Start Your Learning Journey →
               </Link>
@@ -650,11 +650,11 @@ const BlogPost = () => {
                     )}
                     <div className="flex-1 min-w-0">
                       {relatedPost.category && (
-                        <span className="inline-block px-2 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 rounded mb-2">
+                        <span className="inline-block px-2 py-1 text-xs font-medium text-wine-700 bg-wine-50 rounded mb-2">
                           {relatedPost.category}
                         </span>
                       )}
-                      <h4 className="text-base font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors line-clamp-2 mb-1">
+                      <h4 className="text-base font-semibold text-gray-900 group-hover:text-wine-600 transition-colors line-clamp-2 mb-1">
                         {relatedPost.title}
                       </h4>
                       {relatedPost.excerpt && (
@@ -691,11 +691,11 @@ const BlogPost = () => {
                     )}
                     <div className="flex-1">
                       {relatedPost.category && (
-                        <span className="inline-block px-2.5 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 rounded mb-3">
+                        <span className="inline-block px-2.5 py-1 text-xs font-medium text-wine-700 bg-wine-50 rounded mb-3">
                           {relatedPost.category}
                         </span>
                       )}
-                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors line-clamp-2 mb-2">
+                      <h4 className="text-lg font-semibold text-gray-900 group-hover:text-wine-600 transition-colors line-clamp-2 mb-2">
                         {relatedPost.title}
                       </h4>
                       {relatedPost.excerpt && (
@@ -712,7 +712,7 @@ const BlogPost = () => {
             <div className="mt-8 text-center md:text-left">
               <Link
                 to="/blog"
-                className="inline-flex items-center gap-2 text-emerald-600 font-medium hover:text-emerald-700 transition-colors"
+                className="inline-flex items-center gap-2 text-wine-600 font-medium hover:text-wine-700 transition-colors"
               >
                 View All Articles →
               </Link>

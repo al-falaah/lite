@@ -410,9 +410,9 @@ const ApplicationPage = () => {
               <p className="text-gray-600 mb-6">
                 We've received your application and will review it shortly.
               </p>
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6">
-                <h3 className="font-semibold text-emerald-900 mb-2">What's Next?</h3>
-                <ul className="text-sm text-emerald-800 text-left space-y-1">
+              <div className="bg-wine-50 border border-wine-200 rounded-lg p-4 mb-6">
+                <h3 className="font-semibold text-wine-900 mb-2">What's Next?</h3>
+                <ul className="text-sm text-wine-800 text-left space-y-1">
                   <li>• Our admin team will review your application</li>
                   <li>• Once approved, you'll be enrolled as a student</li>
                   <li>• You'll receive an email at <strong>{formData.email}</strong> with your student details</li>
@@ -440,7 +440,7 @@ const ApplicationPage = () => {
             Back
           </Link>
           <Link to="/" className="flex items-center gap-2">
-            <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
+            <img src="/favicon-wine.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
             <span className="text-sm font-semibold text-gray-900 hidden sm:inline">The FastTrack Madrasah</span>
           </Link>
           <div className="text-sm text-gray-500">
@@ -454,7 +454,7 @@ const ApplicationPage = () => {
         <div className="mb-8">
           <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-emerald-600 transition-all duration-300"
+              className="h-full bg-wine-600 transition-all duration-300"
               style={{ width: `${(currentStep / steps.length) * 100}%` }}
             />
           </div>
@@ -477,8 +477,8 @@ const ApplicationPage = () => {
                     <label
                       className={`relative flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
                         formData.program === PROGRAM_IDS.QARI
-                          ? 'border-emerald-600 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300 bg-white'
+                          ? 'border-wine-600 bg-wine-50'
+                          : 'border-gray-200 hover:border-wine-300 bg-white'
                       }`}
                     >
                       <input
@@ -491,7 +491,7 @@ const ApplicationPage = () => {
                       />
                       <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
                         formData.program === PROGRAM_IDS.QARI
-                          ? 'border-emerald-600 bg-emerald-600'
+                          ? 'border-wine-600 bg-wine-600'
                           : 'border-gray-300'
                       }`}>
                         {formData.program === PROGRAM_IDS.QARI && (
@@ -513,8 +513,8 @@ const ApplicationPage = () => {
                     <label
                       className={`relative flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
                         formData.program === PROGRAM_IDS.TAJWEED
-                          ? 'border-emerald-600 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300 bg-white'
+                          ? 'border-wine-600 bg-wine-50'
+                          : 'border-gray-200 hover:border-wine-300 bg-white'
                       }`}
                     >
                       <input
@@ -527,7 +527,7 @@ const ApplicationPage = () => {
                       />
                       <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
                         formData.program === PROGRAM_IDS.TAJWEED
-                          ? 'border-emerald-600 bg-emerald-600'
+                          ? 'border-wine-600 bg-wine-600'
                           : 'border-gray-300'
                       }`}>
                         {formData.program === PROGRAM_IDS.TAJWEED && (
@@ -549,8 +549,8 @@ const ApplicationPage = () => {
                     <label
                       className={`relative flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
                         formData.program === PROGRAM_IDS.ESSENTIALS
-                          ? 'border-emerald-600 bg-emerald-50'
-                          : 'border-gray-200 hover:border-emerald-300 bg-white'
+                          ? 'border-wine-600 bg-wine-50'
+                          : 'border-gray-200 hover:border-wine-300 bg-white'
                       }`}
                     >
                       <input
@@ -563,7 +563,7 @@ const ApplicationPage = () => {
                       />
                       <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
                         formData.program === PROGRAM_IDS.ESSENTIALS
-                          ? 'border-emerald-600 bg-emerald-600'
+                          ? 'border-wine-600 bg-wine-600'
                           : 'border-gray-300'
                       }`}>
                         {formData.program === PROGRAM_IDS.ESSENTIALS && (
@@ -582,7 +582,7 @@ const ApplicationPage = () => {
                     </label>
                   </div>
                   <p className="text-xs text-gray-500 mt-3">
-                    <a href="/programs" target="_blank" className="text-emerald-600 hover:text-emerald-700 underline">View program details</a> to learn more about each track.
+                    <a href="/programs" target="_blank" className="text-wine-600 hover:text-wine-700 underline">View program details</a> to learn more about each track.
                   </p>
                 </div>
 
@@ -758,7 +758,7 @@ const ApplicationPage = () => {
                       name="tajweedLevel"
                       value={formData.tajweedLevel}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
                     >
                       <option value="">Select level</option>
                       <option value="basic">Basic</option>
@@ -807,7 +807,7 @@ const ApplicationPage = () => {
                       name="arabicLevel"
                       value={formData.arabicLevel}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
                     >
                       <option value="">Select level</option>
                       <option value="basic">Basic</option>
@@ -899,8 +899,8 @@ const ApplicationPage = () => {
                         key={day}
                         className={`flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-colors ${
                           formData.preferredDays.includes(day)
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-900'
-                            : 'border-gray-300 hover:border-emerald-300'
+                            ? 'border-wine-600 bg-wine-50 text-wine-900'
+                            : 'border-gray-300 hover:border-wine-300'
                         }`}
                       >
                         <input
@@ -941,8 +941,8 @@ const ApplicationPage = () => {
                           key={time.value}
                           className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
                             isSelected
-                              ? 'border-emerald-600 bg-emerald-50'
-                              : 'border-gray-200 hover:border-emerald-300 bg-white'
+                              ? 'border-wine-600 bg-wine-50'
+                              : 'border-gray-200 hover:border-wine-300 bg-white'
                           }`}
                         >
                           <input
@@ -953,7 +953,7 @@ const ApplicationPage = () => {
                           />
                           <div className={`w-5 h-5 rounded border-2 flex-shrink-0 flex items-center justify-center ${
                             isSelected
-                              ? 'border-emerald-600 bg-emerald-600'
+                              ? 'border-wine-600 bg-wine-600'
                               : 'border-gray-300'
                           }`}>
                             {isSelected && (
@@ -993,7 +993,7 @@ const ApplicationPage = () => {
           <div className="mt-8 pt-6 border-t border-gray-100">
             <div className="flex gap-3">
               {currentStep > 1 && (
-                <Button type="button" variant="outline" onClick={prevStep} className="flex-1 sm:flex-none">
+                <Button type="button" variant="wineOutline" onClick={prevStep} className="flex-1 sm:flex-none">
                   Back
                 </Button>
               )}

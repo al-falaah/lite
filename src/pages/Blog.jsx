@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 import { Calendar, ArrowRight, Home, Filter, Mail } from 'lucide-react';
-import DiagonalSeam from '../components/common/DiagonalSeam';
 import BlogSubscribe from '../components/blog/BlogSubscribe';
 
 const CATEGORIES = [
@@ -21,7 +20,7 @@ const CATEGORIES = [
 ];
 
 const CATEGORY_COLORS = {
-  'Quran & Tafsir': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'Quran & Tafsir': 'bg-wine-100 text-wine-700 border-wine-200',
   'Hadith & Sunnah': 'bg-blue-100 text-blue-700 border-blue-200',
   'Aqeedah': 'bg-purple-100 text-purple-700 border-purple-200',
   'Fiqh': 'bg-amber-100 text-amber-700 border-amber-200',
@@ -287,7 +286,7 @@ const Blog = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Logo"
                 className="h-8 w-8"
               />
@@ -300,7 +299,7 @@ const Blog = () => {
             </Link>
             <Link
               to="/"
-              className="flex items-center gap-2 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-wine-600 transition-colors"
             >
               <Home className="h-4 w-4" />
               <span className="hidden sm:inline">Back to Home</span>
@@ -310,7 +309,7 @@ const Blog = () => {
       </nav>
 
       {/* Header */}
-      <div className="bg-gray-900 text-white py-16 md:py-24">
+      <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             The FastTrack Journal
@@ -322,8 +321,6 @@ const Blog = () => {
       </div>
 
       {/* Diagonal seam out of the header */}
-      <DiagonalSeam from="bg-gray-900" to="bg-white" direction="up" />
-
       {/* Main Content with Sidebar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="lg:grid lg:grid-cols-12 lg:gap-16">
@@ -343,7 +340,7 @@ const Blog = () => {
                       onClick={() => setSelectedCategory(category)}
                       className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center justify-between text-sm ${
                         isActive
-                          ? 'bg-gray-900 text-white font-medium'
+                          ? 'bg-wine-900 text-white font-medium'
                           : 'text-gray-700 hover:bg-gray-50 font-normal'
                       }`}
                     >
@@ -376,7 +373,7 @@ const Blog = () => {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-emerald-600 border-r-transparent"></div>
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-wine-600 border-r-transparent"></div>
                 <p className="mt-4 text-gray-600">Loading articles...</p>
               </div>
             ) : filteredPosts.length === 0 ? (
@@ -464,7 +461,7 @@ const Blog = () => {
             <div className="mt-8 text-center">
               <Link
                 to="/blog/admin"
-                className="text-sm text-gray-400 hover:text-emerald-600 transition-colors"
+                className="text-sm text-gray-400 hover:text-wine-600 transition-colors"
               >
                 Admin
               </Link>
@@ -494,7 +491,7 @@ const Blog = () => {
       {showSubscribeButton && !showSlideInBanner && (
         <button
           onClick={scrollToSubscribe}
-          className="fixed bottom-6 right-6 z-40 bg-gray-900 text-white px-4 py-2.5 rounded-md shadow-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+          className="fixed bottom-6 right-6 z-40 bg-wine-900 text-white px-4 py-2.5 rounded-md shadow-lg hover:bg-wine-800 transition-colors flex items-center gap-2"
           aria-label="Subscribe to newsletter"
         >
           <Mail className="h-4 w-4" />

@@ -2,8 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ArrowRight, ArrowLeft, X } from 'lucide-react';
-import DiagonalSeam from '../components/common/DiagonalSeam';
-
 const OurMission = () => {
   const [founderBioExpanded, setFounderBioExpanded] = useState(false);
 
@@ -14,7 +12,7 @@ const OurMission = () => {
       <Helmet><title>Our Mission | The FastTrack Madrasah</title></Helmet>
 
       {/* Header */}
-      <div className="bg-gray-900 text-white py-16 md:py-24">
+      <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors text-sm">
             <ArrowLeft className="h-4 w-4" />
@@ -27,8 +25,6 @@ const OurMission = () => {
       </div>
 
       {/* Diagonal seam out of the header */}
-      <DiagonalSeam from="bg-gray-900" to="bg-white" direction="up" />
-
       <section className="bg-white py-10 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -173,7 +169,7 @@ const OurMission = () => {
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                 <a href={donationLink} target="_blank" rel="noopener noreferrer">
-                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded transition-colors">
+                  <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-wine-900 hover:bg-wine-800 text-white font-medium rounded transition-colors">
                     <Heart className="h-4 w-4" />
                     <span>Support our Mission</span>
                   </button>

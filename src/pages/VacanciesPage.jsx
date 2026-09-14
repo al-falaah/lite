@@ -20,25 +20,25 @@ const VacanciesPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-wine-50 via-white to-wine-50/30 flex flex-col">
       <Helmet><title>Vacancies | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
-      <nav className="bg-white shadow-sm border-b border-emerald-100">
+      <nav className="bg-white shadow-sm border-b border-wine-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 md:h-16">
             <Link to="/" className="flex items-center gap-2">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Madrasah"
                 className="h-8 w-8 md:h-10 md:w-10"
               />
               <div className="flex flex-col leading-none -space-y-1">
-                <span className="text-sm md:text-base font-semibold text-emerald-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-sm md:text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                <span className="text-sm md:text-base font-semibold text-wine-600" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
+                <span className="text-sm md:text-base font-semibold text-wine-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link to="/">
-              <button className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors rounded-lg hover:bg-emerald-50 flex items-center gap-2">
+              <button className="px-4 py-2 text-sm font-medium text-wine-600 hover:text-wine-700 transition-colors rounded-lg hover:bg-wine-50 flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Home
               </button>
@@ -52,8 +52,8 @@ const VacanciesPage = () => {
         <div className="max-w-4xl mx-auto">
           {/* Page Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-4">
-              <Briefcase className="h-8 w-8 text-emerald-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-wine-100 rounded-full mb-4">
+              <Briefcase className="h-8 w-8 text-wine-600" />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Career Opportunities
@@ -69,7 +69,7 @@ const VacanciesPage = () => {
               {vacancies.map((vacancy) => (
                 <div
                   key={vacancy.id}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden border border-emerald-100 hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden border border-wine-100 hover:shadow-xl transition-shadow"
                 >
                   <div className="p-6 md:p-8">
                     {/* Role */}
@@ -96,7 +96,7 @@ const VacanciesPage = () => {
                         <ul className="space-y-2">
                           {vacancy.responsibilities.map((responsibility, index) => (
                             <li key={index} className="flex items-start gap-2">
-                              <span className="text-emerald-600 mt-1">•</span>
+                              <span className="text-wine-600 mt-1">•</span>
                               <span className="text-gray-600">{responsibility}</span>
                             </li>
                           ))}
@@ -112,7 +112,7 @@ const VacanciesPage = () => {
                       >
                         <Button
                           variant="primary"
-                          className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-2"
+                          className="bg-wine-600 hover:bg-wine-700 flex items-center gap-2"
                         >
                           <Mail className="h-5 w-5" />
                           Apply Now
@@ -125,9 +125,9 @@ const VacanciesPage = () => {
             </div>
           ) : (
             // No vacancies available
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center border border-emerald-100">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-full mb-6">
-                <Briefcase className="h-10 w-10 text-emerald-600" />
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center border border-wine-100">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-wine-100 rounded-full mb-6">
+                <Briefcase className="h-10 w-10 text-wine-600" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 No Current Vacancies
@@ -142,7 +142,7 @@ const VacanciesPage = () => {
               >
                 <Button
                   variant="primary"
-                  className="bg-emerald-600 hover:bg-emerald-700 flex items-center gap-2"
+                  className="bg-wine-600 hover:bg-wine-700 flex items-center gap-2"
                 >
                   <Mail className="h-5 w-5" />
                   Send General Application
@@ -158,7 +158,7 @@ const VacanciesPage = () => {
             </p>
             <a
               href="mailto:admin@tftmadrasah.nz"
-              className="text-emerald-600 hover:text-emerald-700 font-medium"
+              className="text-wine-600 hover:text-wine-700 font-medium"
             >
               admin@tftmadrasah.nz
             </a>

@@ -118,7 +118,7 @@ const StorePage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link to="/" className="flex items-center gap-2.5 group">
-                <ShoppingBag className="h-6 w-6 text-emerald-600 transition-transform group-hover:scale-105" />
+                <ShoppingBag className="h-6 w-6 text-wine-600 transition-transform group-hover:scale-105" />
                 <div className="flex flex-col leading-tight -space-y-0.5">
                   <span className="text-sm font-semibold text-gray-900">Store</span>
                   <span className="text-xs text-gray-500">Books & Souvenirs</span>
@@ -131,12 +131,12 @@ const StorePage = () => {
                 </Link>
                 <button
                   onClick={goToCheckout}
-                  className="relative inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all font-medium shadow-sm hover:shadow-md"
+                  className="relative inline-flex items-center gap-2 px-5 py-2.5 bg-wine-900 text-white rounded-lg hover:bg-wine-800 transition-all font-medium shadow-sm hover:shadow-md"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   <span className="hidden sm:inline">Cart</span>
                   {getCartCount() > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center ring-2 ring-white">
+                    <span className="absolute -top-2 -right-2 bg-wine-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center ring-2 ring-white">
                       {getCartCount()}
                     </span>
                   )}
@@ -166,7 +166,7 @@ const StorePage = () => {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
                     selectedCategory === category
-                      ? 'bg-gray-900 text-white shadow-sm'
+                      ? 'bg-wine-900 text-white shadow-sm'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white'
                   }`}
                 >
@@ -191,7 +191,7 @@ const StorePage = () => {
                     cy="40"
                   />
                   <circle
-                    className="text-emerald-600"
+                    className="text-wine-600"
                     strokeWidth="6"
                     strokeDasharray={213.628}
                     strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -231,7 +231,7 @@ const StorePage = () => {
               {selectedCategory !== 'All' && (
                 <button
                   onClick={() => setSelectedCategory('All')}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-semibold transition-all shadow-sm"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-wine-900 text-white rounded-lg hover:bg-wine-800 font-semibold transition-all shadow-sm"
                 >
                   View all products
                 </button>
@@ -268,7 +268,7 @@ const StorePage = () => {
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-emerald-600 transition-colors">
+                        <h3 className="text-base font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:text-wine-600 transition-colors">
                           {product.name}
                         </h3>
                         {product.description && (
@@ -299,7 +299,7 @@ const StorePage = () => {
                         className={`px-5 py-2.5 rounded-lg font-semibold transition-all shadow-sm ${
                           product.stock_quantity === 0
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                            : 'bg-gray-900 text-white hover:bg-gray-800 hover:shadow-md'
+                            : 'bg-wine-900 text-white hover:bg-wine-800 hover:shadow-md'
                         }`}
                       >
                         {product.stock_quantity === 0 ? 'Sold Out' : 'Add'}

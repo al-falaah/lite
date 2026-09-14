@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, CheckCircle, ChevronDown, Mail, Phone, MessageCircle, Heart } from 'lucide-react';
 import { PROGRAMS, PROGRAM_IDS } from '../config/programs';
-import DiagonalSeam from '../components/common/DiagonalSeam';
 import usePricing from '../hooks/usePricing';
 import SubsidizedPrice from '../components/common/SubsidizedPrice';
 
@@ -41,7 +40,7 @@ const Programs = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-7 w-7 md:h-8 md:w-8" />
+              <img src="/favicon-wine.svg" alt="The FastTrack Madrasah" className="h-7 w-7 md:h-8 md:w-8" />
               <div className="flex flex-col justify-center leading-tight">
                 <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.005em"}}>The FastTrack</span>
                 <span className="text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
@@ -58,7 +57,7 @@ const Programs = () => {
       </nav>
 
       {/* Header */}
-      <div className="bg-gray-900 text-white py-16 md:py-24">
+      <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             Our Programs
@@ -70,8 +69,6 @@ const Programs = () => {
       </div>
 
       {/* Diagonal seam out of the header */}
-      <DiagonalSeam from="bg-gray-900" to="bg-gray-50" direction="up" />
-
       {/* Programs Section */}
       <section id="our-programs" className="bg-gray-50 pb-16 pt-4 sm:pb-24 sm:pt-10 min-h-screen scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,7 +82,7 @@ const Programs = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-semibold">QARI</span>
-                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">Beginner</span>
+                    <span className="px-2 py-0.5 bg-wine-100 text-wine-700 rounded text-xs font-medium">Beginner</span>
                   </div>
                   <span className="text-xs text-gray-500">Track 1</span>
                 </div>
@@ -119,17 +116,17 @@ const Programs = () => {
                 {expandedProgram === 'qari-mobile' && (
                   <div className="border-t border-gray-200 pt-5 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
                     {/* Program Header */}
-                    <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
+                    <div className="bg-gradient-to-br from-wine-50 to-white rounded-lg p-4 border border-wine-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">{qari.name}</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
+                      <p className="text-base text-wine-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
                         {qari.arabicName}
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
                         {qari.description}
                       </p>
-                      <div className="bg-white rounded-md p-3 border border-emerald-200">
+                      <div className="bg-white rounded-md p-3 border border-wine-200">
                         <p className="text-xs text-gray-700 leading-relaxed">
-                          <span className="font-semibold text-emerald-700">💡 Our Edge:</span> {qari.ourEdge}
+                          <span className="font-semibold text-wine-700">💡 Our Edge:</span> {qari.ourEdge}
                         </p>
                       </div>
                     </div>
@@ -137,20 +134,20 @@ const Programs = () => {
                     {/* Program Objectives */}
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-emerald-600">🎯</span>
+                        <span className="text-wine-600">🎯</span>
                         <h4 className="font-semibold text-gray-900 text-xs">Program Objectives</h4>
                       </div>
                       <div className="space-y-2.5">
                         {qari.objectives.map((obj, idx) => (
                           <div key={idx} className="flex gap-2">
-                            <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                            <span className="text-wine-500 text-xs mt-0.5">▪</span>
                             <p className="text-xs text-gray-700 flex-1">
                               <span className="font-semibold text-gray-900">{obj.title}:</span> {obj.description}
                             </p>
                           </div>
                         ))}
                         <div className="flex gap-2 pt-1">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm font-arabic">{qari.primaryText.arabic}</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">{qari.primaryText.transliteration}</span>
                           </p>
@@ -196,7 +193,7 @@ const Programs = () => {
 
                     <div className="pt-3 border-t border-gray-100">
                       <Link to="/apply">
-                        <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                        <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                           <span>Apply for QARI</span>
                           <ArrowRight className="h-4 w-4" />
                         </button>
@@ -242,17 +239,17 @@ const Programs = () => {
                 {expandedProgram === 'tmp-mobile' && (
                   <div className="border-t border-gray-200 pt-5 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
                     {/* Program Header */}
-                    <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
+                    <div className="bg-gradient-to-br from-wine-50 to-white rounded-lg p-4 border border-wine-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">Tajweed Mastery Program (TMP)</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
+                      <p className="text-base text-wine-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
                         برنامج إتقان التجويد
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
                         An intensive 24-week sprint to transform basic reading into expert-level precision. Through a structured curriculum, we focus on mastering Tajweed rules through immediate oral application and rigorous precision drills.
                       </p>
-                      <div className="bg-white rounded-md p-3 border border-emerald-200">
+                      <div className="bg-white rounded-md p-3 border border-wine-200">
                         <p className="text-xs text-gray-700 leading-relaxed">
-                          <span className="font-semibold text-emerald-700">💡 Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic">ʿUlūm al-Qurʾān</span>), grounding your recitation in authentic scholarly context.
+                          <span className="font-semibold text-wine-700">💡 Our Edge:</span> We go beyond rules by integrating a vital introduction to the Sciences of the Qur'an (<span className="italic">ʿUlūm al-Qurʾān</span>), grounding your recitation in authentic scholarly context.
                         </p>
                       </div>
                     </div>
@@ -260,24 +257,24 @@ const Programs = () => {
                     {/* Program Objectives */}
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-emerald-600">🎯</span>
+                        <span className="text-wine-600">🎯</span>
                         <h4 className="font-semibold text-gray-900 text-xs">Program Objectives</h4>
                       </div>
                       <div className="space-y-2.5">
                         <div className="flex gap-2">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Mastery from A to Z:</span> Complete command over Tajweed rules through effective, focused instruction.
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Scholarly Foundation:</span> Attain essential knowledge of <span className="italic font-serif tracking-wide">&lsquo;Ulūm al-Qur&rsquo;ān</span>.
                           </p>
                         </div>
                         <div className="flex gap-2 pt-1">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Primary Text:</span> <span className="text-sm font-arabic">الفتح الرباني في تيسير تلاوة القرآن</span> <span className="text-gray-500">|</span> <span className="italic font-serif tracking-wide text-gray-600">Al-Fatḥ ar-Rabbānī fī Taysīr Tilāwat al-Qur'ān</span> <span className="text-gray-600">(ʿAbd al-Raḥmān Bakr)</span>
                           </p>
@@ -323,7 +320,7 @@ const Programs = () => {
 
                     <div className="pt-3 border-t border-gray-100">
                       <Link to="/apply">
-                        <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                        <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                           <span>Apply for TMP</span>
                           <ArrowRight className="h-4 w-4" />
                         </button>
@@ -372,17 +369,17 @@ const Programs = () => {
                 {expandedProgram === 'easi-mobile' && (
                   <div className="border-t border-gray-200 pt-5 space-y-5 animate-in fade-in slide-in-from-top-4 duration-300">
                     {/* Program Header */}
-                    <div className="bg-gradient-to-br from-emerald-50 to-white rounded-lg p-4 border border-emerald-100">
+                    <div className="bg-gradient-to-br from-wine-50 to-white rounded-lg p-4 border border-wine-100">
                       <h4 className="font-bold text-gray-900 mb-2 text-sm">Essential Arabic & Islamic Studies (EASI)</h4>
-                      <p className="text-base text-emerald-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
+                      <p className="text-base text-wine-900 mb-3 leading-loose font-arabic" style={{direction: 'rtl'}}>
                         الدراسات الأساسية في اللغة العربية والعلوم الإسلامية
                       </p>
                       <p className="text-xs text-gray-700 leading-relaxed mb-3">
                         A comprehensive 2-year accelerator designed for students ready to bridge the gap between reading script and true comprehension. We structured our curriculum to deliver a rigorous foundation in Arabic linguistics and essential Islamic sciences.
                       </p>
-                      <div className="bg-white rounded-md p-3 border border-emerald-200">
+                      <div className="bg-white rounded-md p-3 border border-wine-200">
                         <p className="text-xs text-gray-700 leading-relaxed">
-                          <span className="font-semibold text-emerald-700">💡 Our Edge:</span> Beyond isolated language study, we integrate Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Expert mentoring for direct engagement with the Qur'an and Sunnah.
+                          <span className="font-semibold text-wine-700">💡 Our Edge:</span> Beyond isolated language study, we integrate Creed (<span className="italic">ʿAqīdah</span>), Jurisprudence (<span className="italic">Fiqh</span>), and Ethics (<span className="italic">Ādāb</span>). Expert mentoring for direct engagement with the Qur'an and Sunnah.
                         </p>
                       </div>
                     </div>
@@ -390,24 +387,24 @@ const Programs = () => {
                     {/* Program Objectives */}
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-emerald-600">🎯</span>
+                        <span className="text-wine-600">🎯</span>
                         <h4 className="font-semibold text-gray-900 text-xs">Program Objectives</h4>
                       </div>
                       <div className="space-y-2.5">
                         <div className="flex gap-2">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Linguistic Mastery:</span> Achieve intermediate Arabic proficiency through structured study of Grammar (<span className="italic font-serif tracking-wide">An-Naḥw</span>), Morphology (<span className="italic font-serif tracking-wide">Aṣ-Ṣarf</span>), and Spelling (<span className="italic font-serif tracking-wide">Al-Imlā&rsquo;</span>).
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Scholarly Foundation:</span> Build sound Islamic knowledge in Creed (<span className="italic font-serif tracking-wide">&lsquo;Aqīdah</span>), Jurisprudence (<span className="italic font-serif tracking-wide">Fiqh</span>), and Ethics (<span className="italic font-serif tracking-wide">Ādāb</span>).
                           </p>
                         </div>
                         <div className="flex gap-2 pt-1">
-                          <span className="text-emerald-500 text-xs mt-0.5">▪</span>
+                          <span className="text-wine-500 text-xs mt-0.5">▪</span>
                           <p className="text-xs text-gray-700 flex-1">
                             <span className="font-semibold text-gray-900">Primary Texts:</span> Engage with classical works including <span className="text-sm font-arabic">ألفية ابن مالك</span> (<span className="italic font-serif tracking-wide text-gray-600">Alfiyyat Ibn Mālik</span>), <span className="text-sm font-arabic">النحو الواضح</span> (<span className="italic font-serif tracking-wide text-gray-600">An-Naḥw al-Wāḍiḥ</span>), and more.
                           </p>
@@ -453,7 +450,7 @@ const Programs = () => {
 
                     <div className="pt-3 border-t border-gray-100">
                       <Link to="/apply">
-                        <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                        <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                           <span>Apply for EASI</span>
                           <ArrowRight className="h-4 w-4" />
                         </button>
@@ -598,7 +595,7 @@ const Programs = () => {
                 {['QARI', 'TMP', 'EASI'].map((code) => (
                   <div key={code} className="p-5 border-l border-gray-200 flex items-center justify-center">
                     <Link to="/apply" className="w-full max-w-[180px]">
-                      <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded transition-colors text-sm flex items-center justify-center gap-1.5">
+                      <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2 rounded transition-colors text-sm flex items-center justify-center gap-1.5">
                         <span>Apply</span>
                         <ArrowRight className="h-3.5 w-3.5" />
                       </button>
@@ -618,7 +615,7 @@ const Programs = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Track 1</span>
                   <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{qari.duration.display}</span>
-                  <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-xs font-medium">Beginner</span>
+                  <span className="px-2 py-0.5 bg-wine-100 text-wine-700 rounded text-xs font-medium">Beginner</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                   {qari.name} ({qari.shortName})
@@ -700,7 +697,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for QARI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -796,7 +793,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for TMP</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -892,7 +889,7 @@ const Programs = () => {
                 {/* CTA Button */}
                 <div className="px-6 py-4 border-t border-gray-100">
                   <Link to="/apply">
-                    <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
+                    <button className="w-full bg-wine-600 hover:bg-wine-700 text-white font-medium py-2.5 rounded transition-colors text-sm flex items-center justify-center gap-2">
                       <span>Apply for EASI</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
@@ -909,7 +906,7 @@ const Programs = () => {
               Not sure which program is right for you?
             </p>
             <Link to="/apply">
-              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded transition-colors text-sm">
+              <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-wine-600 hover:bg-wine-700 text-white font-medium rounded transition-colors text-sm">
                 <span>Start Your Application</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
@@ -930,7 +927,7 @@ const Programs = () => {
             {/* Selection Cards */}
             <div className="space-y-4">
               {/* Option 1: Absolute Beginner */}
-              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-emerald-300 transition-colors">
+              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-wine-300 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -943,7 +940,7 @@ const Programs = () => {
                   </div>
                   <div className="ml-11 sm:ml-0">
                     <Link to="/apply">
-                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white text-sm font-medium rounded transition-colors">
+                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-wine-950 hover:bg-wine-900 text-white text-sm font-medium rounded transition-colors">
                         Start with {qari.shortName}
                         <ArrowRight className="h-4 w-4" />
                       </button>
@@ -953,7 +950,7 @@ const Programs = () => {
               </div>
 
               {/* Option 2: Can Read, No Tajweed */}
-              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-emerald-300 transition-colors">
+              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-wine-300 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -966,7 +963,7 @@ const Programs = () => {
                   </div>
                   <div className="ml-11 sm:ml-0">
                     <Link to="/apply">
-                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white text-sm font-medium rounded transition-colors">
+                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-wine-950 hover:bg-wine-900 text-white text-sm font-medium rounded transition-colors">
                         Start with {tajweed.shortName}
                         <ArrowRight className="h-4 w-4" />
                       </button>
@@ -976,7 +973,7 @@ const Programs = () => {
               </div>
 
               {/* Option 3: Has Tajweed */}
-              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-emerald-300 transition-colors">
+              <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-6 hover:border-wine-300 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -989,7 +986,7 @@ const Programs = () => {
                   </div>
                   <div className="ml-11 sm:ml-0">
                     <Link to="/apply">
-                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-950 hover:bg-emerald-900 text-white text-sm font-medium rounded transition-colors">
+                      <button className="inline-flex items-center gap-2 px-5 py-2.5 bg-wine-950 hover:bg-wine-900 text-white text-sm font-medium rounded transition-colors">
                         Start with {essentials.shortName}
                         <ArrowRight className="h-4 w-4" />
                       </button>
@@ -1027,15 +1024,15 @@ const Programs = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600 mb-3">Need help deciding?</p>
               <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-                <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-wine-700 hover:text-wine-900 flex items-center gap-1.5">
                   <Mail className="h-4 w-4" />
                   salam@tftmadrasah.nz
                 </a>
-                <a href="tel:+64272131486" className="text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5">
+                <a href="tel:+64272131486" className="text-wine-700 hover:text-wine-900 flex items-center gap-1.5">
                   <Phone className="h-4 w-4" />
                   +64 27 213 1486
                 </a>
-                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5">
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-wine-700 hover:text-wine-900 flex items-center gap-1.5">
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp
                 </a>
@@ -1046,7 +1043,7 @@ const Programs = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-emerald-950 text-white py-12">
+      <footer className="bg-wine-950 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             {/* Brand */}
@@ -1084,7 +1081,7 @@ const Programs = () => {
                   </a>
                 </li>
                 <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
-                <li className="pt-2 border-t border-emerald-900">
+                <li className="pt-2 border-t border-wine-900">
                   <Link to="/login" className="text-gray-500 hover:text-gray-300 text-xs">Sign In</Link>
                 </li>
               </ul>
@@ -1113,7 +1110,7 @@ const Programs = () => {
             </div>
           </div>
 
-          <div className="border-t border-emerald-900 pt-8 text-center text-sm text-emerald-200/60">
+          <div className="border-t border-wine-900 pt-8 text-center text-sm text-wine-200/60">
             <p>© {new Date().getFullYear()} The FastTrack Madrasah. All rights reserved.</p>
           </div>
         </div>

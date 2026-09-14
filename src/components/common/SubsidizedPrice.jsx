@@ -34,7 +34,7 @@ export default function SubsidizedPrice({ fullPrice, price, previousPrice, suffi
         </span>
       )}
       {isSubsidized && (
-        <span className="text-[0.65em] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full leading-none align-middle whitespace-nowrap">
+        <span className="text-[0.65em] font-semibold text-wine-700 bg-wine-50 px-1.5 py-0.5 rounded-full leading-none align-middle whitespace-nowrap">
           Subsidized
         </span>
       )}
