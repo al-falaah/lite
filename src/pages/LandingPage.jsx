@@ -22,6 +22,8 @@ const LandingPage = () => {
 
   // Background image URL from Supabase with fallback to iStock
   const bgImageUrl = storage.getPublicUrl('payment-documents', 'public/landing-bg.jpg');
+  // Real lightboard teaching photo (a teacher writing tajwīd on the e-glass board)
+  const lightboardImageUrl = storage.getPublicUrl('lesson-images', 'public/landing-lightboard.webp');
 
   // Stripe donation link from environment variable
   const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/dRm28t3WQ4Jacmj6gocAo00.com';
@@ -469,6 +471,51 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Real teaching band — a class on the e-glass lightboard, before the product mockups */}
+      <section className="relative bg-[#0a0f0c] overflow-hidden">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-stretch">
+          {/* Copy */}
+          <div className="px-4 sm:px-6 lg:px-10 py-12 sm:py-20 lg:py-28 flex flex-col justify-center order-2 lg:order-1">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.08] mb-5">
+              A real class,<br className="hidden sm:block" /> taught live on the board
+            </h2>
+            <p className="text-base sm:text-lg text-[#b9c2bd] leading-relaxed max-w-xl mb-8">
+              Our teachers write on an illuminated e-glass lightboard, facing you the whole
+              time — the way tajwīd and Arabic are taught in a real classroom. It is a class
+              you attend, not a video you watch alone.
+            </p>
+            <ul className="space-y-3">
+              {[
+                { Icon: Video, text: 'Live lessons on the lightboard — see every stroke as it is written' },
+                { Icon: Users, text: 'Real teachers who know your name and mark your recitation' },
+                { Icon: CheckCircle, text: 'Recorded lessons to revisit, coming soon in shā’a Allāh' },
+              ].map(({ Icon, text }, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <Icon className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" strokeWidth={2} />
+                  <span className="text-sm sm:text-base text-[#d9ded9]">{text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Photo — bleeds to the right edge on desktop, full-width on mobile */}
+          <div className="relative order-1 lg:order-2 min-h-[240px] sm:min-h-[340px] lg:min-h-full">
+            <img
+              src={lightboardImageUrl}
+              alt="A FastTrack Madrasah teacher writing tajwīd rules on an illuminated e-glass lightboard"
+              loading="lazy"
+              width="1536"
+              height="886"
+              className="absolute inset-0 w-full h-full object-cover animate-lightboard-in"
+            />
+            {/* Seam: fade the photo into the band's black ground on the copy side */}
+            <div className="absolute inset-0 pointer-events-none hidden lg:block"
+              style={{ background: 'linear-gradient(90deg, #0a0f0c 0%, rgba(10,15,12,0.35) 22%, transparent 55%)' }} />
+            <div className="absolute inset-0 pointer-events-none lg:hidden"
+              style={{ background: 'linear-gradient(180deg, transparent 55%, #0a0f0c 100%)' }} />
+          </div>
+        </div>
+      </section>
 
       {/* Student Experience Preview Section */}
       <section id="experience" className="bg-white py-10 sm:py-24 overflow-hidden">
