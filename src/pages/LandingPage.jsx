@@ -316,20 +316,16 @@ const LandingPage = () => {
 
       {/* Hero Section - Full Screen with Background */}
       <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0a0f0c]">
-        {/* Crafted brand-green ground — confident and clean, not a dim stock photo.
-            Depth from a soft emerald glow toward the centre and a darker foot where
-            the diagonal seam and the hadith card meet. */}
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(120% 90% at 50% 34%, #0f5137 0%, #0b3626 46%, #072117 100%)'
-        }}>
-          {/* faint concentric rings echoing the open-book curve of the brand mark */}
-          <div className="absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.5]"
-            style={{
-              width: '1700px', height: '1700px',
-              background: 'radial-gradient(closest-side, transparent 66%, rgba(16,185,129,0.06) 66.4%, transparent 67.6%), radial-gradient(closest-side, transparent 78%, rgba(16,185,129,0.045) 78.4%, transparent 79.8%)'
-            }}></div>
-          {/* grounding gradient at the foot */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#061a12]/80"></div>
+        {/* Background Image with Overlay */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url("${bgImageUrl}")`,
+          }}
+        >
+          <div className="absolute inset-0 bg-[#0a0f0c]/55"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0c]/20 via-[#0a0f0c]/45 to-[#0a0f0c]/90"></div>
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 50% at 50% 42%, rgba(4,8,6,0.62), transparent 78%)' }}></div>
         </div>
 
         {/* Centered Hero Content with CTA (hadith slider lives in the floating card below) */}
@@ -337,13 +333,13 @@ const LandingPage = () => {
           <div className="max-w-4xl mx-auto w-full text-center">
             {/* Hero Content */}
             <div>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-[1.08]">
-                Learn the Qur&apos;an the way<br className="hidden md:block" /> it was meant to be taught
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
+                Learn What Truly Matters in the Time You Have
               </h1>
-              <p className="text-sm md:text-lg lg:text-xl text-[#cfe6db] mb-6 md:mb-9 max-w-2xl mx-auto leading-snug md:leading-normal">
-                Reading, Tajwīd, and Arabic — with <span className="text-emerald-300 font-semibold">real teachers</span>,
-                clear structure, and honest feedback. Join a <span className="text-emerald-300 font-semibold">live class</span> or
-                learn at your <span className="text-emerald-300 font-semibold">own pace</span>.
+              <p className="text-sm md:text-lg lg:text-xl text-[#e6e0d3] mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
+                Qur&apos;an, Tajwīd, Arabic, and the Islamic sciences —
+                <span className="text-emerald-400 font-semibold"> structured programs</span> for
+                <span className="text-emerald-400 font-semibold"> everyone</span>, taught by real teachers.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
