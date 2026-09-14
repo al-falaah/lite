@@ -72,7 +72,7 @@ function ContentRenderer({ content }) {
         part.type === 'quran' ? (
           <span
             key={i}
-            className="font-arabic text-emerald-700 font-semibold text-base sm:text-lg px-1"
+            className="font-arabic text-wine-700 font-semibold text-base sm:text-lg px-1"
             dir="rtl"
           >
             ﴿{part.value}﴾
@@ -326,7 +326,7 @@ function ResultCard({ result, topic, isPrimary }) {
   );
 
   const borderClass = isPrimary
-    ? 'border-emerald-300 ring-1 ring-emerald-200'
+    ? 'border-wine-300 ring-1 ring-wine-200'
     : isDisclaimer
     ? 'border-amber-200'
     : 'border-gray-200';
@@ -334,7 +334,7 @@ function ResultCard({ result, topic, isPrimary }) {
   return (
     <div className={`bg-white border rounded-lg overflow-hidden ${borderClass}`}>
       {/* Ayah header */}
-      <div className={`px-4 py-2 border-b border-gray-200 flex items-center gap-2 flex-wrap ${isPrimary ? 'bg-emerald-50' : 'bg-gray-50'}`}>
+      <div className={`px-4 py-2 border-b border-gray-200 flex items-center gap-2 flex-wrap ${isPrimary ? 'bg-wine-50' : 'bg-gray-50'}`}>
         <span className="text-sm font-medium text-gray-900">
           {result.sura_number}:{result.aya_number}
         </span>
@@ -343,7 +343,7 @@ function ResultCard({ result, topic, isPrimary }) {
           {result.sura_name}
         </span>
         {isPrimary && (
-          <span className="ml-auto text-xs px-2 py-0.5 bg-emerald-600 text-white rounded-full font-medium">
+          <span className="ml-auto text-xs px-2 py-0.5 bg-wine-600 text-white rounded-full font-medium">
             ★ Key example
           </span>
         )}
@@ -374,7 +374,7 @@ function TopicCard({ topic, onClick, isActive }) {
       onClick={() => onClick(topic)}
       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
         isActive
-          ? 'bg-emerald-100 text-emerald-800 font-medium'
+          ? 'bg-wine-100 text-wine-800 font-medium'
           : 'hover:bg-gray-100 text-gray-700'
       }`}
     >
@@ -588,7 +588,7 @@ function ExamplesFinder() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search in English or Arabic — e.g. 'idgham', 'إخفاء', 'past tense', 'مبتدأ'..."
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-transparent bg-white"
           dir="auto"
         />
         {query && (
@@ -651,7 +651,7 @@ function ExamplesFinder() {
               onClick={() => { setSubject('tajweed'); clearSelection(); }}
               className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 subject === 'tajweed'
-                  ? 'bg-white text-emerald-700 shadow-sm'
+                  ? 'bg-white text-wine-700 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -661,7 +661,7 @@ function ExamplesFinder() {
               onClick={() => { setSubject('nahw'); clearSelection(); }}
               className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 subject === 'nahw'
-                  ? 'bg-white text-emerald-700 shadow-sm'
+                  ? 'bg-white text-wine-700 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -738,7 +738,7 @@ function ExamplesFinder() {
                     <select
                       value={surahFilter || ''}
                       onChange={handleSurahFilter}
-                      className="flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 min-w-0"
+                      className="flex-1 sm:flex-none px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-wine-500 min-w-0"
                     >
                       <option value="">All Surahs</option>
                       {Array.from({ length: 114 }, (_, i) => i + 1).map((n) => (
@@ -757,8 +757,8 @@ function ExamplesFinder() {
                 </div>
                 {/* English explanation banner */}
                 {selectedTopic.explanation_en && (
-                  <div className="mt-3 px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-lg">
-                    <p className="text-sm text-emerald-800 leading-relaxed">
+                  <div className="mt-3 px-4 py-3 bg-wine-50 border border-wine-100 rounded-lg">
+                    <p className="text-sm text-wine-800 leading-relaxed">
                       {selectedTopic.explanation_en}
                     </p>
                   </div>

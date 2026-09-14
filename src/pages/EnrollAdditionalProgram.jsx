@@ -186,7 +186,7 @@ const EnrollAdditionalProgram = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-wine-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="relative w-24 h-24 inline-block">
             <svg className="w-24 h-24" viewBox="0 0 80 80">
@@ -200,7 +200,7 @@ const EnrollAdditionalProgram = () => {
                 cy="40"
               />
               <circle
-                className="text-emerald-600"
+                className="text-wine-600"
                 strokeWidth="6"
                 strokeDasharray={213.628}
                 strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -239,7 +239,7 @@ const EnrollAdditionalProgram = () => {
   const selectedProgramDetails = availablePrograms.find(p => p.id === selectedProgram);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-wine-50 via-white to-blue-50 py-12 px-4">
       <Helmet><title>Enrol in Additional Program | The FastTrack Madrasah</title></Helmet>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -315,7 +315,7 @@ const EnrollAdditionalProgram = () => {
             {enrollments.length > 0 ? (
               <div className="space-y-2">
                 {enrollments.map((enrollment, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-emerald-50 rounded-lg">
+                  <div key={idx} className="flex items-center justify-between p-3 bg-wine-50 rounded-lg">
                     <span className="font-medium text-gray-900">
                       {availablePrograms.find(p => p.id === enrollment.program)?.name}
                     </span>
@@ -349,8 +349,8 @@ const EnrollAdditionalProgram = () => {
                   onClick={() => handleProgramChange(program.id)}
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                     selectedProgram === program.id
-                      ? 'border-emerald-500 bg-emerald-50'
-                      : 'border-gray-200 hover:border-emerald-300'
+                      ? 'border-wine-500 bg-wine-50'
+                      : 'border-gray-200 hover:border-wine-300'
                   }`}
                 >
                   <div className="flex items-start justify-between">
@@ -367,7 +367,7 @@ const EnrollAdditionalProgram = () => {
                               value="monthly"
                               checked={selectedProgram === program.id && paymentType === 'monthly'}
                               onChange={() => setPaymentType('monthly')}
-                              className="text-emerald-600"
+                              className="text-wine-600"
                             />
                             <span className="text-sm">Monthly: ${pricing?.[program.id]?.current_price_monthly ?? program.pricing.monthly}/month</span>
                           </label>
@@ -378,7 +378,7 @@ const EnrollAdditionalProgram = () => {
                               value="annual"
                               checked={selectedProgram === program.id && paymentType === 'annual'}
                               onChange={() => setPaymentType('annual')}
-                              className="text-emerald-600"
+                              className="text-wine-600"
                             />
                             <span className="text-sm">Annual: ${pricing?.[program.id]?.current_price_annual ?? program.pricing.annual}/year</span>
                           </label>
@@ -394,7 +394,7 @@ const EnrollAdditionalProgram = () => {
 
                     <div className={`w-5 h-5 rounded-full border-2 ${
                       selectedProgram === program.id
-                        ? 'bg-emerald-500 border-emerald-500'
+                        ? 'bg-wine-500 border-wine-500'
                         : 'border-gray-300'
                     }`}>
                       {selectedProgram === program.id && (
@@ -430,7 +430,7 @@ const EnrollAdditionalProgram = () => {
                 </div>
                 <div className="flex justify-between text-lg font-semibold border-t pt-3">
                   <span>Amount Due Today:</span>
-                  <span className="text-emerald-600">
+                  <span className="text-wine-600">
                     ${selectedProgramDetails?.pricing.type === 'one-time'
                       ? (pricing?.[selectedProgram]?.current_price ?? selectedProgramDetails.pricing.oneTime)
                       : paymentType === 'monthly'
@@ -447,7 +447,7 @@ const EnrollAdditionalProgram = () => {
         {/* Action Buttons */}
         <div className="flex gap-4">
           <Button
-            variant="outline"
+            variant="wineOutline"
             onClick={() => navigate('/student')}
             className="flex-1"
           >

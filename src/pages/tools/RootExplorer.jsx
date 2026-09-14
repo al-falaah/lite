@@ -194,12 +194,12 @@ function RootExplorer() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Type a word (كتاب) or root (ك ت ب)..."
               dir="rtl"
-              className="w-full pl-12 pr-4 py-3 text-[16px] sm:text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full pl-12 pr-4 py-3 text-[16px] sm:text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
               style={{ lineHeight: '2.2' }}
             />
             <button
               type="submit"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-600 transition-colors"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-wine-600 transition-colors"
             >
               <Search className="h-5 w-5" />
             </button>
@@ -210,7 +210,7 @@ function RootExplorer() {
                 key={example}
                 type="button"
                 onClick={() => { setQuery(example); search(example); }}
-                className="text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 active:bg-emerald-50 active:text-emerald-700 sm:hover:bg-emerald-50 sm:hover:text-emerald-700 transition-colors font-arabic"
+                className="text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 active:bg-wine-50 active:text-wine-700 sm:hover:bg-wine-50 sm:hover:text-wine-700 transition-colors font-arabic"
               >
                 {example}
               </button>
@@ -234,9 +234,9 @@ function RootExplorer() {
               <button
                 key={m.root}
                 onClick={() => handleSelectRoot(m.root)}
-                className="w-full text-right bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:border-emerald-300 sm:hover:border-emerald-300 sm:hover:shadow-sm transition-all"
+                className="w-full text-right bg-white border border-gray-200 rounded-lg p-3 sm:p-4 active:border-wine-300 sm:hover:border-wine-300 sm:hover:shadow-sm transition-all"
               >
-                <span className="font-arabic text-lg sm:text-xl text-emerald-700 font-semibold">{m.root}</span>
+                <span className="font-arabic text-lg sm:text-xl text-wine-700 font-semibold">{m.root}</span>
                 <span className="text-xs sm:text-sm text-gray-500 mr-3">
                   {m.occurrences} occurrences, {Object.keys(m.lemmas).length} forms
                 </span>
@@ -256,13 +256,13 @@ function RootExplorer() {
                 </p>
               )}
               <div className="flex items-baseline gap-3 sm:gap-4 flex-wrap" dir="rtl">
-                <h2 className="font-arabic text-3xl sm:text-5xl text-emerald-700 font-bold tracking-wide">
+                <h2 className="font-arabic text-3xl sm:text-5xl text-wine-700 font-bold tracking-wide">
                   {result.root.split('').join(' ')}
                 </h2>
                 <span className="font-arabic text-base sm:text-lg text-gray-500">({result.root})</span>
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm text-gray-600">
-                <span className="bg-emerald-50 text-emerald-700 px-2 sm:px-2.5 py-0.5 rounded-full font-medium">
+                <span className="bg-wine-50 text-wine-700 px-2 sm:px-2.5 py-0.5 rounded-full font-medium">
                   {result.occurrences} occurrences
                 </span>
                 <span className="bg-gray-100 px-2 sm:px-2.5 py-0.5 rounded-full">
@@ -355,10 +355,10 @@ function RootExplorer() {
                       {ayah.words.map((w, j) => (
                         <span
                           key={j}
-                          className="inline-flex flex-col items-center gap-0.5 px-1.5 sm:px-2 py-1 rounded bg-emerald-50 border border-emerald-100"
+                          className="inline-flex flex-col items-center gap-0.5 px-1.5 sm:px-2 py-1 rounded bg-wine-50 border border-wine-100"
                         >
-                          <span className="font-arabic text-sm sm:text-lg text-emerald-800">{w.w}</span>
-                          <span className="text-[9px] sm:text-[10px] text-emerald-600">
+                          <span className="font-arabic text-sm sm:text-lg text-wine-800">{w.w}</span>
+                          <span className="text-[9px] sm:text-[10px] text-wine-600">
                             {POS_LABELS[w.pos] || w.pos}
                             {w.vf ? ` (${VERB_FORM_LABELS[w.vf]})` : ''}
                           </span>
@@ -371,7 +371,7 @@ function RootExplorer() {
               {result.ayahs.length > 10 && !showAllAyahs && (
                 <button
                   onClick={() => setShowAllAyahs(true)}
-                  className="w-full mt-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                  className="w-full mt-3 py-2 text-sm text-wine-600 hover:text-wine-700 font-medium transition-colors"
                 >
                   Show all {result.ayahs.length} ayahs
                 </button>

@@ -195,7 +195,7 @@ const StoreOrderPage = () => {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-10">
-            <Link to="/store" className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 mb-4 font-medium transition-colors">
+            <Link to="/store" className="inline-flex items-center gap-2 text-wine-600 hover:text-wine-700 mb-4 font-medium transition-colors">
               <ArrowLeft className="h-4 w-4" />
               Back to Store
             </Link>
@@ -235,7 +235,7 @@ const StoreOrderPage = () => {
                       {/* Product Info */}
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{item.productName}</h3>
-                        <p className="text-emerald-600 font-bold mt-1">${item.price.toFixed(2)}</p>
+                        <p className="text-wine-600 font-bold mt-1">${item.price.toFixed(2)}</p>
                       </div>
 
                       {/* Quantity Controls */}
@@ -281,7 +281,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.customerName}
                       onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-shadow"
                       placeholder="John Doe"
                     />
                   </div>
@@ -295,7 +295,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.customerEmail}
                       onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-shadow"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -309,7 +309,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.customerPhone}
                       onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-shadow"
                       placeholder="+64 21 234 5678"
                     />
                   </div>
@@ -322,7 +322,7 @@ const StoreOrderPage = () => {
                       type="tel"
                       value={formData.customerWhatsapp}
                       onChange={(e) => setFormData({ ...formData, customerWhatsapp: e.target.value })}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-shadow"
                       placeholder="Leave blank to use phone number"
                     />
                   </div>
@@ -342,7 +342,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.deliveryAddressLine1}
                       onChange={(e) => setFormData({ ...formData, deliveryAddressLine1: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                       placeholder="123 Main Street"
                     />
                   </div>
@@ -355,7 +355,7 @@ const StoreOrderPage = () => {
                       type="text"
                       value={formData.deliveryAddressLine2}
                       onChange={(e) => setFormData({ ...formData, deliveryAddressLine2: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                       placeholder="Apartment, suite, etc."
                     />
                   </div>
@@ -369,7 +369,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.deliveryCity}
                       onChange={(e) => setFormData({ ...formData, deliveryCity: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                       placeholder="Auckland"
                     />
                   </div>
@@ -383,7 +383,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.deliveryPostalCode}
                       onChange={(e) => setFormData({ ...formData, deliveryPostalCode: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                       placeholder="1010"
                     />
                   </div>
@@ -396,7 +396,7 @@ const StoreOrderPage = () => {
                       required
                       value={formData.deliveryCountry}
                       onChange={(e) => setFormData({ ...formData, deliveryCountry: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                     >
                       {COUNTRIES.map(country => (
                         <option key={country} value={country}>{country}</option>
@@ -414,7 +414,7 @@ const StoreOrderPage = () => {
                   value={formData.customerNotes}
                   onChange={(e) => setFormData({ ...formData, customerNotes: e.target.value })}
                   rows="4"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-shadow"
                   placeholder="e.g., Please leave at front door..."
                 />
               </div>
@@ -437,7 +437,7 @@ const StoreOrderPage = () => {
                   <div className="border-t border-gray-200 pt-3">
                     <div className="flex justify-between text-base font-bold text-gray-900">
                       <span>Total</span>
-                      <span className="text-emerald-600">${getSubtotal().toFixed(2)}*</span>
+                      <span className="text-wine-600">${getSubtotal().toFixed(2)}*</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1.5">*Excluding shipping cost</p>
                   </div>
@@ -463,7 +463,7 @@ const StoreOrderPage = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full bg-emerald-600 text-white py-3.5 rounded-lg font-semibold hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full bg-wine-600 text-white py-3.5 rounded-lg font-semibold hover:bg-wine-700 transition-all shadow-sm hover:shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Submitting...' : 'Submit Order Request'}
                 </button>

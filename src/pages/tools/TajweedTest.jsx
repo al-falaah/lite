@@ -209,11 +209,11 @@ function Setup() {
         <meta name="robots" content="noindex, follow" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-b from-emerald-50/40 to-white py-8">
+      <div className="min-h-screen bg-gradient-to-b from-wine-50/40 to-white py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <Link
             to="/tools"
-            className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:text-emerald-800 mb-4"
+            className="inline-flex items-center gap-1 text-sm text-wine-700 hover:text-wine-800 mb-4"
           >
             <ArrowLeft className="h-4 w-4" />
             All tools
@@ -228,15 +228,15 @@ function Setup() {
           </div>
 
           {/* How to use — collapsed by default */}
-          <details className="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 group">
-            <summary className="cursor-pointer text-sm font-semibold text-emerald-900 flex items-center gap-2 select-none">
+          <details className="mb-6 bg-wine-50 border border-wine-200 rounded-xl p-5 group">
+            <summary className="cursor-pointer text-sm font-semibold text-wine-900 flex items-center gap-2 select-none">
               <span className="inline-block transform transition-transform group-open:rotate-90">▸</span>
               How to use
             </summary>
-            <div className="mt-4 space-y-4 text-sm text-emerald-900">
+            <div className="mt-4 space-y-4 text-sm text-wine-900">
               <div>
                 <p className="font-semibold mb-1">1. Set up the session (this page)</p>
-                <ul className="list-disc pl-5 space-y-1 text-emerald-800">
+                <ul className="list-disc pl-5 space-y-1 text-wine-800">
                   <li>Give the session a class name (e.g. <em>Advanced Tajweed — Week 8</em>).</li>
                   <li>Pick the tajweed topics you want to test. You can select a whole category or individual topics.</li>
                   <li>Set the total number of questions, the questions each student should answer in a row, and the max points per question.</li>
@@ -246,10 +246,10 @@ function Setup() {
               </div>
               <div>
                 <p className="font-semibold mb-1">2. Run the session (next page)</p>
-                <p className="text-emerald-800 mb-2">
+                <p className="text-wine-800 mb-2">
                   The projected screen shows a grid of numbers and the current student's name. Ask the student to pick a number — you click it to open the ayah full-screen. You then have two ways to run the question:
                 </p>
-                <ul className="list-disc pl-5 space-y-1 text-emerald-800">
+                <ul className="list-disc pl-5 space-y-1 text-wine-800">
                   <li>
                     <strong>Option A — Recite whole, then rule on a chosen part.</strong>
                     Ask the student to recite the whole ayah. Then click one or more words to highlight the portion you want to ask about, and ask them to name the tajweed rule in that portion.
@@ -259,13 +259,13 @@ function Setup() {
                     Click words to highlight the portion first. Ask the student to recite only that highlighted portion aloud, and to name the tajweed rule in it.
                   </li>
                 </ul>
-                <p className="text-emerald-800 mt-2">
+                <p className="text-wine-800 mt-2">
                   When you're ready, use the score buttons (0 to your chosen max) to score the answer. The scoring panel has a "Reveal rule (teacher only)" toggle in case you need to check what topic the ayah matched.
                 </p>
               </div>
               <div>
                 <p className="font-semibold mb-1">3. Finish and export</p>
-                <p className="text-emerald-800">
+                <p className="text-wine-800">
                   When the session ends, click <strong>End session</strong> to go to the leaderboard. From there you can download a CSV or print the results.
                 </p>
               </div>
@@ -283,7 +283,7 @@ function Setup() {
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
                 placeholder="e.g. Advanced Tajweed — Week 8"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
               />
             </div>
 
@@ -297,7 +297,7 @@ function Setup() {
                 value={teacherName}
                 onChange={(e) => setTeacherName(e.target.value)}
                 placeholder="Ustadh / Ustadhah…"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
               />
             </div>
 
@@ -324,7 +324,7 @@ function Setup() {
                         <button
                           type="button"
                           onClick={() => toggleCategoryAll(cat)}
-                          className="text-xs text-emerald-700 hover:text-emerald-800 font-medium whitespace-nowrap"
+                          className="text-xs text-wine-700 hover:text-wine-800 font-medium whitespace-nowrap"
                         >
                           {allSel ? 'Deselect all' : someSel ? 'Select all' : 'Select all'}
                         </button>
@@ -336,14 +336,14 @@ function Setup() {
                             <label
                               key={topic.id}
                               className={`flex items-start gap-2 px-2 py-1.5 rounded cursor-pointer text-sm ${
-                                checked ? 'bg-emerald-50' : 'hover:bg-gray-50'
+                                checked ? 'bg-wine-50' : 'hover:bg-gray-50'
                               }`}
                             >
                               <input
                                 type="checkbox"
                                 checked={checked}
                                 onChange={() => toggleTopic(topic.id)}
-                                className="mt-0.5 h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                                className="mt-0.5 h-4 w-4 text-wine-600 border-gray-300 rounded focus:ring-wine-500"
                               />
                               <span>
                                 <span className="text-gray-800">{topic.name_en}</span>
@@ -373,7 +373,7 @@ function Setup() {
                   max={200}
                   value={questionCount}
                   onChange={(e) => setQuestionCount(Math.max(1, Math.min(200, Number(e.target.value) || 0)))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">The pool students pick from (1..N).</p>
               </div>
@@ -387,7 +387,7 @@ function Setup() {
                   max={50}
                   value={questionsPerStudent}
                   onChange={(e) => setQuestionsPerStudent(Math.max(1, Math.min(50, Number(e.target.value) || 0)))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">Questions each student answers in a row before rotating.</p>
               </div>
@@ -401,7 +401,7 @@ function Setup() {
                   max={10}
                   value={maxPoints}
                   onChange={(e) => setMaxPoints(Math.max(1, Math.min(10, Number(e.target.value) || 0)))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500"
                 />
                 <p className="text-xs text-gray-500 mt-1">Default 3 — one per recitation quality tier.</p>
               </div>
@@ -420,7 +420,7 @@ function Setup() {
                 onChange={(e) => setStudentsRaw(e.target.value)}
                 placeholder="One name per line (or comma-separated)"
                 rows={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500 font-mono text-sm"
               />
               <p className="text-xs text-gray-500 mt-1">Students take turns in this order.</p>
             </div>
@@ -437,7 +437,7 @@ function Setup() {
               onClick={handleStart}
               className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-white transition-colors ${
                 canStart && !starting
-                  ? 'bg-emerald-600 hover:bg-emerald-700'
+                  ? 'bg-wine-600 hover:bg-wine-700'
                   : 'bg-gray-300 cursor-not-allowed'
               }`}
             >
@@ -643,7 +643,7 @@ function Present() {
                 <div className="text-xs text-gray-500">
                   Student {currentStudentIdx + 1} of {studentNames.length}
                 </div>
-                <div className="text-emerald-700 font-bold text-lg">
+                <div className="text-wine-700 font-bold text-lg">
                   {currentStudent || '—'}
                 </div>
                 {(session.questions_per_student || 1) > 1 && (
@@ -669,7 +669,7 @@ function Present() {
               <button
                 type="button"
                 onClick={handleEndSession}
-                className="px-3 py-1.5 text-xs bg-gray-800 text-white rounded-lg hover:bg-gray-900"
+                className="px-3 py-1.5 text-xs bg-wine-800 text-white rounded-lg hover:bg-wine-900"
               >
                 End session
               </button>
@@ -699,7 +699,7 @@ function Present() {
             </div>
 
             {/* Ayah with tap-to-highlight words */}
-            <div className="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 sm:p-10 mb-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-wine-100 p-6 sm:p-10 mb-6">
               <div
                 dir="rtl"
                 className="font-arabic text-3xl sm:text-5xl text-gray-900 text-center select-none"
@@ -711,8 +711,8 @@ function Present() {
                     onClick={() => toggleWord(i)}
                     className={`inline-block px-2 py-1 mx-1 my-1 rounded cursor-pointer transition-colors ${
                       highlightedWordSet.has(i)
-                        ? 'bg-emerald-200 text-emerald-900'
-                        : 'hover:bg-emerald-50'
+                        ? 'bg-wine-200 text-wine-900'
+                        : 'hover:bg-wine-50'
                     }`}
                   >
                     {w}
@@ -756,8 +756,8 @@ function Present() {
                     onClick={() => setPointsPending(p)}
                     className={`px-5 py-3 rounded-lg font-bold text-lg border-2 transition-colors ${
                       pointsPending === p
-                        ? 'bg-emerald-600 text-white border-emerald-600'
-                        : 'bg-white text-gray-800 border-gray-300 hover:border-emerald-400'
+                        ? 'bg-wine-600 text-white border-wine-600'
+                        : 'bg-white text-gray-800 border-gray-300 hover:border-wine-400'
                     }`}
                   >
                     {p}
@@ -770,7 +770,7 @@ function Present() {
                 value={notesPending}
                 onChange={(e) => setNotesPending(e.target.value)}
                 placeholder="e.g. confused ghunnah with iẓhār"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500 text-sm"
               />
               <button
                 type="button"
@@ -778,7 +778,7 @@ function Present() {
                 onClick={handleSaveScore}
                 className={`mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-white transition-colors ${
                   pointsPending != null && !savingScore
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    ? 'bg-wine-600 hover:bg-wine-700'
                     : 'bg-gray-300 cursor-not-allowed'
                 }`}
               >
@@ -799,7 +799,7 @@ function Present() {
           <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8">
             <div className="mb-4 text-center">
               <div className="text-lg text-gray-800 mb-1">
-                Pick a number, <span className="font-bold text-emerald-700">{currentStudent}</span>.
+                Pick a number, <span className="font-bold text-wine-700">{currentStudent}</span>.
               </div>
               <div className="text-xs text-gray-500">
                 Answered {answers.length} of {pool.length} · Session ID: {sessionId.slice(0, 8)}…
@@ -818,7 +818,7 @@ function Present() {
                     className={`aspect-square rounded-xl text-xl sm:text-2xl font-bold transition-all ${
                       used
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-emerald-700 border-2 border-emerald-200 hover:bg-emerald-50 hover:border-emerald-500 shadow-sm'
+                        : 'bg-white text-wine-700 border-2 border-wine-200 hover:bg-wine-50 hover:border-wine-500 shadow-sm'
                     }`}
                   >
                     {q.number}
@@ -929,7 +929,7 @@ function Results() {
           <div className="flex items-center justify-between mb-6 print:hidden">
             <Link
               to={`/tools/tajweed-test/${sessionId}/present`}
-              className="inline-flex items-center gap-1 text-sm text-emerald-700 hover:text-emerald-800"
+              className="inline-flex items-center gap-1 text-sm text-wine-700 hover:text-wine-800"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to session
@@ -938,7 +938,7 @@ function Results() {
               <button
                 type="button"
                 onClick={handleDownloadCsv}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm bg-wine-600 text-white rounded-lg hover:bg-wine-700"
               >
                 <Download className="h-4 w-4" />
                 Download CSV
@@ -994,7 +994,7 @@ function Results() {
                     <tr key={s.name} className="border-b border-gray-100">
                       <td className="py-2 pr-2 font-semibold text-gray-500">{i + 1}</td>
                       <td className="py-2 pr-2 font-medium text-gray-900">{s.name}</td>
-                      <td className="py-2 pr-2 text-right font-bold text-emerald-700">{s.total}</td>
+                      <td className="py-2 pr-2 text-right font-bold text-wine-700">{s.total}</td>
                       <td className="py-2 pr-2 text-right">{s.score_percent}%</td>
                     </tr>
                   ))

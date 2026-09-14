@@ -89,7 +89,7 @@ function PageInsights() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-wine-600 border-t-transparent" />
       </div>
     );
   }
@@ -152,7 +152,7 @@ function PageInsights() {
                 defaultValue={currentPage}
                 key={currentPage}
                 onBlur={handleInputSubmit}
-                className="w-14 sm:w-16 text-center text-sm font-medium border border-gray-200 rounded-lg py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-[16px]"
+                className="w-14 sm:w-16 text-center text-sm font-medium border border-gray-200 rounded-lg py-1.5 focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-transparent text-[16px]"
               />
               <span className="text-xs sm:text-sm text-gray-400">/ {TOTAL_PAGES}</span>
             </form>
@@ -169,7 +169,7 @@ function PageInsights() {
 
         {/* Page info badges + language toggle */}
         <div className="flex items-center justify-center gap-2 sm:gap-3 mb-5 sm:mb-6 flex-wrap">
-          <span className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-medium">
+          <span className="bg-wine-50 text-wine-700 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-medium">
             Juz {juzNumber}
           </span>
           <span className="bg-gray-100 px-2.5 py-1 rounded-full text-[11px] sm:text-xs text-gray-500">
@@ -202,7 +202,7 @@ function PageInsights() {
                 {/* Arabic */}
                 {(lang === 'ar' || lang === 'both') && (
                   <div className="flex gap-2.5 sm:gap-3 p-3 sm:p-4" dir="rtl">
-                    <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-50 text-emerald-700 text-[10px] sm:text-xs font-bold flex items-center justify-center mt-1">
+                    <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-wine-50 text-wine-700 text-[10px] sm:text-xs font-bold flex items-center justify-center mt-1">
                       {i + 1}
                     </span>
                     <p className="text-sm sm:text-base font-arabic text-gray-800" style={{ lineHeight: '2.2' }}>
@@ -214,7 +214,7 @@ function PageInsights() {
                 {(lang === 'en' || lang === 'both') && item.en && (
                   <div className={`flex gap-2.5 sm:gap-3 p-3 sm:p-4 ${lang === 'both' ? 'border-t border-gray-50 bg-gray-50/50' : ''}`}>
                     {lang === 'en' && (
-                      <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-50 text-emerald-700 text-[10px] sm:text-xs font-bold flex items-center justify-center mt-0.5">
+                      <span className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-wine-50 text-wine-700 text-[10px] sm:text-xs font-bold flex items-center justify-center mt-0.5">
                         {i + 1}
                       </span>
                     )}
@@ -253,7 +253,7 @@ function PageInsights() {
                 onClick={() => goTo(JUZ_STARTS[j - 1])}
                 className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg text-xs font-medium transition-colors ${
                   juzNumber === j
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-wine-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:bg-gray-300'
                 }`}
               >

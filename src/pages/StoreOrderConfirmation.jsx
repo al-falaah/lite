@@ -22,7 +22,7 @@ const StoreOrderConfirmation = () => {
         <div className="max-w-3xl mx-auto">
           {/* Success Icon */}
           <div className="flex justify-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+            <div className="w-20 h-20 bg-gradient-to-br from-wine-400 to-wine-600 rounded-full flex items-center justify-center shadow-lg shadow-wine-200">
               <CheckCircle className="h-11 w-11 text-white" strokeWidth={2.5} />
             </div>
           </div>
@@ -40,7 +40,7 @@ const StoreOrderConfirmation = () => {
           <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6 shadow-sm">
             <div className="text-center mb-6">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Your Order Number</p>
-              <p className="text-4xl font-bold text-emerald-600 mb-2">{orderNumber}</p>
+              <p className="text-4xl font-bold text-wine-600 mb-2">{orderNumber}</p>
               <p className="text-sm text-gray-500">
                 Please save this number for your records
               </p>
@@ -59,12 +59,12 @@ const StoreOrderConfirmation = () => {
           {/* What Happens Next */}
           <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6 shadow-sm">
             <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Package className="h-5 w-5 text-emerald-600" />
+              <Package className="h-5 w-5 text-wine-600" />
               What Happens Next?
             </h2>
             <ol className="space-y-5">
               <li className="flex gap-4">
-                <span className="flex-shrink-0 w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+                <span className="flex-shrink-0 w-7 h-7 bg-wine-100 text-wine-600 rounded-full flex items-center justify-center text-sm font-bold">
                   1
                 </span>
                 <div>
@@ -73,7 +73,7 @@ const StoreOrderConfirmation = () => {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="flex-shrink-0 w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+                <span className="flex-shrink-0 w-7 h-7 bg-wine-100 text-wine-600 rounded-full flex items-center justify-center text-sm font-bold">
                   2
                 </span>
                 <div>
@@ -82,7 +82,7 @@ const StoreOrderConfirmation = () => {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="flex-shrink-0 w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+                <span className="flex-shrink-0 w-7 h-7 bg-wine-100 text-wine-600 rounded-full flex items-center justify-center text-sm font-bold">
                   3
                 </span>
                 <div>
@@ -91,7 +91,7 @@ const StoreOrderConfirmation = () => {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="flex-shrink-0 w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+                <span className="flex-shrink-0 w-7 h-7 bg-wine-100 text-wine-600 rounded-full flex items-center justify-center text-sm font-bold">
                   4
                 </span>
                 <div>
@@ -100,7 +100,7 @@ const StoreOrderConfirmation = () => {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="flex-shrink-0 w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+                <span className="flex-shrink-0 w-7 h-7 bg-wine-100 text-wine-600 rounded-full flex items-center justify-center text-sm font-bold">
                   5
                 </span>
                 <div>
@@ -130,7 +130,7 @@ const StoreOrderConfirmation = () => {
               <div className="border-t border-gray-200 pt-3">
                 <div className="flex justify-between font-bold text-gray-900">
                   <span>Subtotal</span>
-                  <span className="text-emerald-600">${subtotal?.toFixed(2)}</span>
+                  <span className="text-wine-600">${subtotal?.toFixed(2)}</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1.5 text-right">
                   Shipping cost will be added to your invoice
@@ -143,7 +143,7 @@ const StoreOrderConfirmation = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
             <Link
               to="/store"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all font-semibold shadow-sm hover:shadow-md"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-all font-semibold shadow-sm hover:shadow-md"
             >
               Continue Shopping
               <ArrowRight className="h-5 w-5" />
@@ -160,7 +160,7 @@ const StoreOrderConfirmation = () => {
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Questions about your order?{' '}
-              <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+              <a href="mailto:admin@tftmadrasah.nz" className="text-wine-600 hover:text-wine-700 font-semibold">
                 Contact us
               </a>
             </p>

@@ -52,8 +52,8 @@ export default function ForgotPassword() {
         <Helmet><title>Check your email | The FastTrack Madrasah</title></Helmet>
         <div className="w-full max-w-md">
           <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 sm:p-8 text-center">
-            <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-emerald-50 mb-5">
-              <CheckCircle className="h-7 w-7 text-emerald-600" />
+            <div className="inline-flex items-center justify-center h-14 w-14 rounded-full bg-wine-50 mb-5">
+              <CheckCircle className="h-7 w-7 text-wine-600" />
             </div>
             <h2 className="text-xl font-semibold text-slate-900 mb-2">Check your email</h2>
             <p className="text-sm text-slate-600 mb-1">
@@ -64,7 +64,7 @@ export default function ForgotPassword() {
             </p>
             <Link
               to="/login"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-wine-700 hover:text-wine-800"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to login
@@ -105,14 +105,14 @@ export default function ForgotPassword() {
                 disabled={loading}
                 autoComplete="email"
                 placeholder="you@example.com"
-                className="w-full text-sm text-slate-900 placeholder-slate-400 border border-slate-300 rounded-md px-3 py-2 bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500"
+                className="w-full text-sm text-slate-900 placeholder-slate-400 border border-slate-300 rounded-md px-3 py-2 bg-white focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none disabled:bg-slate-50 disabled:text-slate-500"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading || !email.trim()}
-              className="w-full inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:bg-emerald-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+              className="w-full inline-flex items-center justify-center px-4 py-2 bg-wine-600 text-white text-sm font-medium rounded-md hover:bg-wine-700 active:bg-wine-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? (
                 <>
@@ -137,7 +137,7 @@ export default function ForgotPassword() {
         </div>
 
         <p className="text-center text-xs text-slate-500 mt-6">
-          Need help? Email <a href="mailto:salam@tftmadrasah.nz" className="text-emerald-700 hover:text-emerald-800">salam@tftmadrasah.nz</a>
+          Need help? Email <a href="mailto:salam@tftmadrasah.nz" className="text-wine-700 hover:text-wine-800">salam@tftmadrasah.nz</a>
         </p>
       </div>
     </div>

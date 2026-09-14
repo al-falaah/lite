@@ -101,13 +101,13 @@ const StripePaymentPage = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2.5 group">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Madrasah"
                 className="h-9 w-9 transition-transform group-hover:scale-105"
               />
               <div className="flex flex-col leading-tight -space-y-0.5">
                 <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                <span className="text-base font-semibold text-wine-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link to="/" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
@@ -142,7 +142,7 @@ const StripePaymentPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your.email@example.com"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-shadow"
             />
           </div>
         )}
@@ -151,10 +151,10 @@ const StripePaymentPage = () => {
         {isOneTimePayment ? (
           /* One-time payment (QARI, Tajweed) */
           <div className="max-w-md mx-auto mb-10">
-            <div className="bg-white border-2 border-emerald-600 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+            <div className="bg-white border-2 border-wine-600 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
               <div className="text-center">
                 <div className="mb-6">
-                  <div className="text-sm font-semibold text-emerald-600 uppercase tracking-wide mb-3">{programConfig?.shortName || programConfig?.name} Program</div>
+                  <div className="text-sm font-semibold text-wine-600 uppercase tracking-wide mb-3">{programConfig?.shortName || programConfig?.name} Program</div>
                   <div className="flex items-baseline justify-center gap-2">
                     <span className="text-5xl font-bold text-gray-900">
                       <SubsidizedPrice fullPrice={fullPrice} price={oneTimePrice} />
@@ -167,15 +167,15 @@ const StripePaymentPage = () => {
                 </p>
                 <ul className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">One-time payment for full course</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">{programConfig?.duration.display || '1 year'} of comprehensive training</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">Certificate upon completion</span>
                   </li>
                 </ul>
@@ -183,7 +183,7 @@ const StripePaymentPage = () => {
                   onClick={() => handlePayment('oneTime')}
                   disabled={loading}
                   fullWidth
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-wine-600 hover:bg-wine-700"
                 >
                   {loading ? (
                     <>
@@ -204,7 +204,7 @@ const StripePaymentPage = () => {
           /* Essentials: Monthly or Annual plans */
           <div className="grid md:grid-cols-2 gap-6 mb-10">
             {/* Monthly Plan */}
-            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-emerald-500 hover:shadow-lg transition-all">
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-wine-500 hover:shadow-lg transition-all">
               <div className="text-center">
                 <div className="mb-6">
                   <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Monthly Plan</div>
@@ -220,15 +220,15 @@ const StripePaymentPage = () => {
                 </p>
                 <ul className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">Auto-renewing monthly subscription</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">Cancel anytime (non-refundable)</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">Total: ${monthlyPrice * (programConfig?.duration.months || 24)} over {programConfig?.duration.months || 24} months</span>
                   </li>
                 </ul>
@@ -254,13 +254,13 @@ const StripePaymentPage = () => {
             </div>
 
             {/* Annual Plan */}
-            <div className="bg-white border-2 border-emerald-600 rounded-2xl p-8 hover:shadow-lg transition-all relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-md">
+            <div className="bg-white border-2 border-wine-600 rounded-2xl p-8 hover:shadow-lg transition-all relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-wine-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-md">
                 Save ${(monthlyPrice * 12) - annualPrice}
               </div>
               <div className="text-center">
                 <div className="mb-6 pt-2">
-                  <div className="text-sm font-semibold text-emerald-600 uppercase tracking-wide mb-3">Annual Plan</div>
+                  <div className="text-sm font-semibold text-wine-600 uppercase tracking-wide mb-3">Annual Plan</div>
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-5xl font-bold text-gray-900">
                       <SubsidizedPrice fullPrice={fullAnnual} price={annualPrice} />
@@ -273,15 +273,15 @@ const StripePaymentPage = () => {
                 </p>
                 <ul className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">One-time annual payment</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">Pay for 2nd year next academic year</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-wine-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-gray-700 leading-relaxed">Total: ${annualPrice * (programConfig?.duration.years || 2)} over {programConfig?.duration.display || '2 years'} (save ${((monthlyPrice * 12) - annualPrice) * (programConfig?.duration.years || 2)}!)</span>
                   </li>
                 </ul>
@@ -308,28 +308,28 @@ const StripePaymentPage = () => {
         )}
 
         {/* Info Section */}
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200/60 rounded-xl p-6 shadow-sm">
-          <p className="font-semibold mb-4 text-emerald-900 text-sm">Important Information:</p>
-          <ul className="space-y-3 text-sm text-emerald-900/90">
+        <div className="bg-gradient-to-br from-wine-50 to-teal-50 border border-wine-200/60 rounded-xl p-6 shadow-sm">
+          <p className="font-semibold mb-4 text-wine-900 text-sm">Important Information:</p>
+          <ul className="space-y-3 text-sm text-wine-900/90">
             <li className="flex items-start gap-2.5">
-              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="h-4 w-4 text-wine-600 flex-shrink-0 mt-0.5" />
               <span className="leading-relaxed">All payments are processed securely through Stripe</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="h-4 w-4 text-wine-600 flex-shrink-0 mt-0.5" />
               <span className="leading-relaxed">You will be enrolled immediately after your first payment</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="h-4 w-4 text-wine-600 flex-shrink-0 mt-0.5" />
               <span className="leading-relaxed">You'll receive a welcome email with your student dashboard access</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="h-4 w-4 text-wine-600 flex-shrink-0 mt-0.5" />
               <span className="leading-relaxed">Monthly subscriptions can be cancelled anytime (non-refundable)</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <CheckCircle className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-              <span className="leading-relaxed">For questions, contact us at <a href="mailto:admin@tftmadrasah.nz" className="font-semibold text-emerald-700 hover:text-emerald-800 underline decoration-2 underline-offset-2">admin@tftmadrasah.nz</a></span>
+              <CheckCircle className="h-4 w-4 text-wine-600 flex-shrink-0 mt-0.5" />
+              <span className="leading-relaxed">For questions, contact us at <a href="mailto:admin@tftmadrasah.nz" className="font-semibold text-wine-700 hover:text-wine-800 underline decoration-2 underline-offset-2">admin@tftmadrasah.nz</a></span>
             </li>
           </ul>
         </div>

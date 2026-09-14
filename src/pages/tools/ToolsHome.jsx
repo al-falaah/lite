@@ -1,7 +1,5 @@
 import ToolSeo from '../../components/tools/ToolSeo';
 import { Link } from 'react-router-dom';
-import DiagonalSeam from '../../components/common/DiagonalSeam';
-
 const TOOLS = [
   {
     path: '/tools/examples',
@@ -45,7 +43,7 @@ function ToolsHome() {
         description="Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), Arabiyyah Workbench, and Safha (page insights)."
       />
       {/* Header — matches Blog page pattern (dark band + diagonal seam) */}
-      <div className="bg-gray-900 text-white py-16 md:py-24">
+      <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             Learning Tools
@@ -57,8 +55,6 @@ function ToolsHome() {
       </div>
 
       {/* Diagonal seam out of the header */}
-      <DiagonalSeam from="bg-gray-900" to="bg-gray-50" direction="up" />
-
       {/* Tools list */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -66,11 +62,11 @@ function ToolsHome() {
             <Link
               key={tool.path}
               to={tool.path}
-              className="block bg-white rounded-lg border border-gray-200 p-5 hover:border-emerald-300 hover:shadow-sm transition-all"
+              className="block bg-white rounded-lg border border-gray-200 p-5 hover:border-wine-300 hover:shadow-sm transition-all"
             >
               <h2 className="font-semibold text-gray-900 mb-1">{tool.title}</h2>
               <p className="text-sm text-gray-600">{tool.description}</p>
-              <span className="text-emerald-600 text-sm font-medium mt-3 inline-block">
+              <span className="text-wine-600 text-sm font-medium mt-3 inline-block">
                 Open &rarr;
               </span>
             </Link>

@@ -8,15 +8,15 @@ const NotFoundPage = () => {
   const donationLink = import.meta.env.VITE_STRIPE_DONATION_LINK || 'https://donate.stripe.com/your-link';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-wine-50 via-white to-wine-50/30 flex flex-col">
       <Helmet><title>Page Not Found | The FastTrack Madrasah</title></Helmet>
       {/* Header */}
-      <nav className="bg-white shadow-sm border-b border-emerald-100">
+      <nav className="bg-white shadow-sm border-b border-wine-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 md:h-16">
             <Link to="/" className="flex items-center gap-2">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Madrasah"
                 className="h-8 w-8 md:h-10 md:w-10"
               />
@@ -25,7 +25,7 @@ const NotFoundPage = () => {
               </div>
             </Link>
             <Link to="/">
-              <button className="px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors rounded-lg hover:bg-emerald-50">
+              <button className="px-4 py-2 text-sm font-medium text-wine-600 hover:text-wine-700 transition-colors rounded-lg hover:bg-wine-50">
                 Back to Home
               </button>
             </Link>
@@ -38,17 +38,17 @@ const NotFoundPage = () => {
         <div className="max-w-2xl w-full text-center">
           {/* 404 Number */}
           <div className="mb-8">
-            <h1 className="text-9xl md:text-[12rem] font-bold text-emerald-600/20 select-none">
+            <h1 className="text-9xl md:text-[12rem] font-bold text-wine-600/20 select-none">
               404
             </h1>
           </div>
 
           {/* Card */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-wine-100">
             <div className="px-8 py-12">
               {/* Icon */}
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-full mb-6">
-                <Search className="h-10 w-10 text-emerald-600" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-wine-100 rounded-full mb-6">
+                <Search className="h-10 w-10 text-wine-600" />
               </div>
 
               {/* Heading */}
@@ -67,7 +67,7 @@ const NotFoundPage = () => {
                   <Button
                     variant="primary"
                     size="lg"
-                    className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
+                    className="bg-wine-600 hover:bg-wine-700 w-full sm:w-auto"
                   >
                     <Home className="h-5 w-5 mr-2" />
                     Back to Home
@@ -76,9 +76,9 @@ const NotFoundPage = () => {
 
                 <Link to="/apply" className="inline-block">
                   <Button
-                    variant="outline"
+                    variant="wineOutline"
                     size="lg"
-                    className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 w-full sm:w-auto"
+                    className="border-wine-600 text-wine-600 hover:bg-wine-50 w-full sm:w-auto"
                   >
                     <BookOpen className="h-5 w-5 mr-2" />
                     Apply Now
@@ -92,21 +92,21 @@ const NotFoundPage = () => {
                 <div className="flex flex-wrap gap-3 justify-center">
                   <Link
                     to="/"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
+                    className="text-sm text-wine-600 hover:text-wine-700 hover:underline"
                   >
                     Home
                   </Link>
                   <span className="text-gray-300">•</span>
                   <Link
                     to="/apply"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
+                    className="text-sm text-wine-600 hover:text-wine-700 hover:underline"
                   >
                     Application
                   </Link>
                   <span className="text-gray-300">•</span>
                   <Link
                     to="/login"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
+                    className="text-sm text-wine-600 hover:text-wine-700 hover:underline"
                   >
                     Sign In
                   </Link>
@@ -123,7 +123,7 @@ const NotFoundPage = () => {
                   <span className="text-gray-300">•</span>
                   <Link
                     to="/admin"
-                    className="text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
+                    className="text-sm text-wine-600 hover:text-wine-700 hover:underline"
                   >
                     Admin
                   </Link>

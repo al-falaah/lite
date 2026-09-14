@@ -87,11 +87,11 @@ function TopicCard({ topic, active, onClick }) {
     <button
       onClick={onClick}
       className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-        active ? 'bg-emerald-600 text-white' : 'hover:bg-gray-100 text-gray-700'
+        active ? 'bg-wine-600 text-white' : 'hover:bg-gray-100 text-gray-700'
       }`}
     >
       <span className="block text-sm font-medium">{topic.name_en}</span>
-      <span className={`block text-xs font-arabic ${active ? 'text-emerald-50' : 'text-gray-500'}`} dir="rtl">
+      <span className={`block text-xs font-arabic ${active ? 'text-wine-50' : 'text-gray-500'}`} dir="rtl">
         {topic.name_ar}
       </span>
     </button>
@@ -282,7 +282,7 @@ export default function ArabiyyahWorkbench() {
               <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                 <div>
                   <h2 className="text-lg font-bold text-gray-900">
-                    {selectedTopic.name_en} <span className="font-arabic text-emerald-700" dir="rtl">{selectedTopic.name_ar}</span>
+                    {selectedTopic.name_en} <span className="font-arabic text-wine-700" dir="rtl">{selectedTopic.name_ar}</span>
                   </h2>
                   <p className="text-sm text-gray-500">{totalCount} example{totalCount === 1 ? '' : 's'} found</p>
                 </div>
@@ -299,7 +299,7 @@ export default function ArabiyyahWorkbench() {
               </div>
 
               {selectedTopic.explanation_en && (
-                <div className="mb-4 text-sm text-gray-700 bg-emerald-50 border border-emerald-100 rounded-lg px-4 py-3">
+                <div className="mb-4 text-sm text-gray-700 bg-wine-50 border border-wine-100 rounded-lg px-4 py-3">
                   {selectedTopic.explanation_en}
                 </div>
               )}
@@ -356,7 +356,7 @@ function VerseCard({ row, topic, activeWord, enrichment, onWordTap, rootVerses, 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-semibold text-emerald-700">
+        <span className="text-sm font-semibold text-wine-700">
           {SURAH_NAMES[sura]} {sura}:{aya}
         </span>
         <span className="text-xs text-gray-400">tap a word to explore</span>
@@ -374,13 +374,13 @@ function VerseCard({ row, topic, activeWord, enrichment, onWordTap, rootVerses, 
               <button
                 onClick={() => onWordTap(sura, aya, i)}
                 className={`inline rounded px-0.5 transition-colors ${
-                  on ? 'bg-emerald-600 text-white'
+                  on ? 'bg-wine-600 text-white'
                   : isHi ? 'bg-yellow-200 text-gray-900 hover:bg-yellow-300'
                   : 'hover:bg-gray-100 text-gray-900'
                 }`}
               >
                 {tok}
-                {hasVariant && <sup className="text-[0.5em] text-emerald-600 font-bold">◆</sup>}
+                {hasVariant && <sup className="text-[0.5em] text-wine-600 font-bold">◆</sup>}
               </button>
               {' '}
             </span>
@@ -418,10 +418,10 @@ function WordPanel({ word, wordNumber, enrichment, rootVerses, onLoadRootVerses 
         <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Root</span>
         {root ? (
           <div className="flex items-center flex-wrap gap-2 mt-1">
-            <span className="font-arabic text-lg text-emerald-700" dir="rtl">{root}</span>
+            <span className="font-arabic text-lg text-wine-700" dir="rtl">{root}</span>
             <button
               onClick={() => onLoadRootVerses(root)}
-              className="text-xs text-emerald-700 hover:text-emerald-800 underline underline-offset-2"
+              className="text-xs text-wine-700 hover:text-wine-800 underline underline-offset-2"
             >
               See other verses with this root
             </button>
@@ -462,7 +462,7 @@ function WordPanel({ word, wordNumber, enrichment, rootVerses, onLoadRootVerses 
               <div className="flex flex-wrap gap-1.5">
                 {rootVerses.rows.map((rv, i) => (
                   <span key={i} className="inline-flex items-center gap-1 text-xs bg-white border border-gray-200 rounded px-1.5 py-0.5">
-                    <span className="text-emerald-700">{rv.sura_number}:{rv.aya_number}</span>
+                    <span className="text-wine-700">{rv.sura_number}:{rv.aya_number}</span>
                     <span className="font-arabic text-gray-700" dir="rtl">{rv.word}</span>
                   </span>
                 ))}

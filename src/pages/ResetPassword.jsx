@@ -156,9 +156,9 @@ export default function ResetPassword() {
 
   if (checkingToken) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-wine-50 to-teal-50 flex items-center justify-center p-4">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 text-emerald-600 animate-spin mx-auto mb-4" />
+          <Loader2 className="h-12 w-12 text-wine-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Verifying your link...</p>
         </div>
       </div>
@@ -167,7 +167,7 @@ export default function ResetPassword() {
 
   if (!validToken) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-wine-50 to-teal-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-xl p-8 text-center max-w-md">
           <p className="text-gray-600 mb-4">Invalid or expired reset link</p>
           <p className="text-sm text-gray-500">Redirecting to forgot password page...</p>
@@ -177,12 +177,12 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-wine-50 to-teal-50 flex items-center justify-center p-4">
       <Helmet><title>Reset Password | The FastTrack Madrasah</title></Helmet>
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-900 mb-2">The FastTrack Madrasah</h1>
+          <h1 className="text-4xl font-bold text-wine-900 mb-2">The FastTrack Madrasah</h1>
           <p className="text-gray-600">{isFirstTime ? 'Create your password to get started' : 'Set your new password'}</p>
         </div>
 
@@ -208,7 +208,7 @@ export default function ResetPassword() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10 w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                  className="pl-10 pr-10 w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-colors"
                   placeholder="Enter new password (min 8 characters)"
                   disabled={loading}
                   autoComplete="new-password"
@@ -236,7 +236,7 @@ export default function ResetPassword() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="pl-10 pr-10 w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-colors"
+                  className="pl-10 pr-10 w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent transition-colors"
                   placeholder="Re-enter new password"
                   disabled={loading}
                   autoComplete="new-password"
@@ -256,7 +256,7 @@ export default function ResetPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-wine-600 text-white py-2.5 rounded-lg font-medium hover:bg-wine-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

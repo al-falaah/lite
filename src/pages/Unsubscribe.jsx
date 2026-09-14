@@ -69,7 +69,7 @@ const Unsubscribe = () => {
           </p>
           <Link
             to="/blog"
-            className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+            className="inline-block bg-wine-600 hover:bg-wine-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
           >
             Visit Blog
           </Link>
@@ -82,7 +82,7 @@ const Unsubscribe = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <CheckCircle className="w-16 h-16 text-emerald-600 mx-auto mb-4" />
+          <CheckCircle className="w-16 h-16 text-wine-600 mx-auto mb-4" />
           <h1 className="text-2xl font-brand font-bold text-gray-900 mb-2">Successfully Unsubscribed</h1>
           <p className="text-gray-600 mb-6">
             You've been removed from our blog mailing list. We're sorry to see you go!
@@ -93,7 +93,7 @@ const Unsubscribe = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               to="/blog"
-              className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+              className="inline-block bg-wine-600 hover:bg-wine-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
             >
               Visit Blog
             </Link>

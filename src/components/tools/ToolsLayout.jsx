@@ -13,7 +13,7 @@ function ToolsLayout() {
           <div className="flex justify-between items-center h-16">
             <Link to="/tools" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Logo"
                 className="h-8 w-8"
               />
@@ -26,14 +26,14 @@ function ToolsLayout() {
               {!isHome && (
                 <Link
                   to="/tools"
-                  className="text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+                  className="text-sm text-gray-600 hover:text-wine-600 transition-colors"
                 >
                   All Tools
                 </Link>
               )}
               <Link
                 to="/"
-                className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-emerald-600 transition-colors"
+                className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-wine-600 transition-colors"
               >
                 <Home className="h-4 w-4" />
                 <span className="hidden sm:inline">Main Site</span>
@@ -57,7 +57,7 @@ function ToolsLayout() {
               href="https://www.tftmadrasah.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-emerald-600 hover:underline"
+              className="text-wine-600 hover:underline"
             >
               The FastTrack Madrasah
             </a>

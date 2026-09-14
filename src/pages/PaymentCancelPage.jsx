@@ -31,13 +31,13 @@ const PaymentCancelPage = () => {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2.5 group">
               <img
-                src="/favicon.svg"
+                src="/favicon-wine.svg"
                 alt="The FastTrack Madrasah"
                 className="h-9 w-9 transition-transform group-hover:scale-105"
               />
               <div className="flex flex-col leading-tight -space-y-0.5">
                 <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>The FastTrack</span>
-                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
+                <span className="text-base font-semibold text-wine-600" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
             <Link to="/" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
@@ -94,7 +94,7 @@ const PaymentCancelPage = () => {
           <div className="space-y-3">
             <button
               onClick={() => navigate(`/payment?email=${email}&program=${program}`)}
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-all shadow-sm hover:shadow-md"
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-wine-600 hover:bg-wine-700 text-white font-semibold rounded-lg transition-all shadow-sm hover:shadow-md"
             >
               <CreditCard className="h-5 w-5" />
               Try Payment Again
@@ -114,7 +114,7 @@ const PaymentCancelPage = () => {
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
               <a 
                 href="mailto:salam@tftmadrasah.nz" 
-                className="text-emerald-600 hover:text-emerald-700 font-semibold"
+                className="text-wine-600 hover:text-wine-700 font-semibold"
               >
                 salam@tftmadrasah.nz
               </a>
@@ -123,7 +123,7 @@ const PaymentCancelPage = () => {
                 href="https://wa.me/64224653509" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-emerald-600 hover:text-emerald-700 font-semibold"
+                className="text-wine-600 hover:text-wine-700 font-semibold"
               >
                 WhatsApp: +64 22 465 3509
               </a>

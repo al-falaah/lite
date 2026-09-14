@@ -27,7 +27,7 @@ const PaymentSuccessPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link to="/" className="flex items-center gap-3">
-                <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
+                <img src="/favicon-wine.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8" />
                 <div className="flex flex-col">
                   <span className="text-base font-brand font-bold text-gray-900 leading-tight">
                     The FastTrack Madrasah
@@ -43,7 +43,7 @@ const PaymentSuccessPage = () => {
 
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <Loader2 className="w-12 h-12 text-emerald-600 animate-spin mx-auto mb-4" />
+            <Loader2 className="w-12 h-12 text-wine-600 animate-spin mx-auto mb-4" />
             <p className="text-gray-600">Confirming your enrollment...</p>
           </div>
         </div>
@@ -59,12 +59,12 @@ const PaymentSuccessPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center gap-2.5 group">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-9 w-9 transition-transform group-hover:scale-105" />
+              <img src="/favicon-wine.svg" alt="The FastTrack Madrasah Logo" className="h-9 w-9 transition-transform group-hover:scale-105" />
               <div className="flex flex-col leading-tight -space-y-0.5">
                 <span className="text-base font-semibold text-gray-900" style={{letterSpacing: "0.0005em"}}>
                   The FastTrack
                 </span>
-                <span className="text-base font-semibold text-emerald-600" style={{letterSpacing: "0.28em"}}>
+                <span className="text-base font-semibold text-wine-600" style={{letterSpacing: "0.28em"}}>
                   Madrasah
                 </span>
               </div>
@@ -84,7 +84,7 @@ const PaymentSuccessPage = () => {
         <div className="max-w-2xl w-full">
           {/* Success Indicator */}
           <div className="flex justify-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+            <div className="w-20 h-20 bg-gradient-to-br from-wine-400 to-wine-600 rounded-full flex items-center justify-center shadow-lg shadow-wine-200">
               <CheckCircle2 className="w-11 h-11 text-white" strokeWidth={2.5} />
             </div>
           </div>
@@ -116,22 +116,22 @@ const PaymentSuccessPage = () => {
 
               <ul className="space-y-2.5 ml-4">
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
+                  <span className="text-wine-600 font-bold mt-0.5">•</span>
                   <span>Student ID and portal access credentials</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
+                  <span className="text-wine-600 font-bold mt-0.5">•</span>
                   <span>Course schedule and program overview</span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="text-emerald-600 font-bold mt-0.5">•</span>
+                  <span className="text-wine-600 font-bold mt-0.5">•</span>
                   <span>Next steps to begin your studies</span>
                 </li>
               </ul>
 
               <p className="pt-4 border-t border-gray-200 text-xs text-gray-600">
                 If you don't receive the email within 10 minutes, please check your spam folder
-                or contact us at <a href="mailto:admin@tftmadrasah.nz" className="text-emerald-600 hover:text-emerald-700 font-semibold">admin@tftmadrasah.nz</a>
+                or contact us at <a href="mailto:admin@tftmadrasah.nz" className="text-wine-600 hover:text-wine-700 font-semibold">admin@tftmadrasah.nz</a>
               </p>
             </div>
           </div>
@@ -148,7 +148,7 @@ const PaymentSuccessPage = () => {
           <div className="flex justify-center">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all shadow-sm hover:shadow-md"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-wine-600 text-white font-semibold rounded-lg hover:bg-wine-700 transition-all shadow-sm hover:shadow-md"
             >
               Return to Home
               <ArrowRight className="h-4 w-4" />
