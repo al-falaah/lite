@@ -316,22 +316,20 @@ const LandingPage = () => {
 
       {/* Hero Section - Full Screen with Background */}
       <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0a0f0c]">
-        {/* Background Image with Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url("${bgImageUrl}")`,
-          }}
-        >
-          {/* Base wash: warm emerald-black, kept light enough that the library
-              stays legible as atmosphere behind the headline. */}
-          <div className="absolute inset-0 bg-[#0a0f0c]/55"></div>
-          {/* Grounding gradient: darker at the foot (where the diagonal seam and
-              floating card meet) lifting toward a visible top third. */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f0c]/20 via-[#0a0f0c]/45 to-[#0a0f0c]/90"></div>
-          {/* Readability scrim: a soft radial pool centred on the headline so the
-              text sits on contrast without flattening the whole frame. */}
-          <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 50% at 50% 42%, rgba(4,8,6,0.62), transparent 78%)' }}></div>
+        {/* Crafted brand-green ground — confident and clean, not a dim stock photo.
+            Depth from a soft emerald glow toward the centre and a darker foot where
+            the diagonal seam and the hadith card meet. */}
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(120% 90% at 50% 34%, #0f5137 0%, #0b3626 46%, #072117 100%)'
+        }}>
+          {/* faint concentric rings echoing the open-book curve of the brand mark */}
+          <div className="absolute left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.5]"
+            style={{
+              width: '1700px', height: '1700px',
+              background: 'radial-gradient(closest-side, transparent 66%, rgba(16,185,129,0.06) 66.4%, transparent 67.6%), radial-gradient(closest-side, transparent 78%, rgba(16,185,129,0.045) 78.4%, transparent 79.8%)'
+            }}></div>
+          {/* grounding gradient at the foot */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#061a12]/80"></div>
         </div>
 
         {/* Centered Hero Content with CTA (hadith slider lives in the floating card below) */}
@@ -339,13 +337,13 @@ const LandingPage = () => {
           <div className="max-w-4xl mx-auto w-full text-center">
             {/* Hero Content */}
             <div>
-              <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-3 md:mb-10 tracking-tight">
-                Learn What Truly Matters in the Time You Have
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight leading-[1.08]">
+                Learn the Qur&apos;an the way<br className="hidden md:block" /> it was meant to be taught
               </h1>
-              <p className="text-sm md:text-lg lg:text-xl text-[#e6e0d3] mb-4 md:mb-6 max-w-3xl mx-auto leading-snug md:leading-normal">
-                From reading the Qur'an accurately to understanding Arabic and Islamic sciences—
-                <span className="text-emerald-400 font-semibold">structured programs</span> for
-                <span className="text-emerald-400 font-semibold"> everyone</span> ready to connect with the Book of Allah.
+              <p className="text-sm md:text-lg lg:text-xl text-[#cfe6db] mb-6 md:mb-9 max-w-2xl mx-auto leading-snug md:leading-normal">
+                Reading, Tajwīd, and Arabic — with <span className="text-emerald-300 font-semibold">real teachers</span>,
+                clear structure, and honest feedback. Join a <span className="text-emerald-300 font-semibold">live class</span> or
+                learn at your <span className="text-emerald-300 font-semibold">own pace</span>.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center">
@@ -480,16 +478,16 @@ const LandingPage = () => {
             {/* Copy */}
             <div className="px-4 sm:px-6 lg:px-10 py-12 sm:py-20 lg:py-28 flex flex-col justify-center order-2 lg:order-1">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.1] mb-5">
-                A class you attend,<br className="hidden sm:block" /> not a video you watch
+                A real teacher,<br className="hidden sm:block" /> at your own pace
               </h2>
               <p className="text-base sm:text-lg text-[#b9c2bd] leading-relaxed max-w-xl mb-8">
-                You sit in a live lesson with a teacher who faces you, writes out every rule
-                in front of you, and hears you recite. You are known by name, corrected as
-                you go, and expected to show up — the way learning has always worked best.
+                Every rule is taught in front of you, and a teacher hears you recite and
+                corrects you. Join a live class or follow the same lessons at your own pace —
+                either way you are known by name, guided, and held to a clear standard.
               </p>
               <ul className="space-y-3.5">
                 {[
-                  { Icon: Video, text: 'Live lessons you follow step by step, not a recording playing at you' },
+                  { Icon: Video, text: 'Live classes and self-paced courses — learn the way that fits your week' },
                   { Icon: Users, text: 'Teachers who know your name, hear your recitation, and correct it' },
                   { Icon: CheckCircle, text: 'Graded checkpoints along the way, so you always know where you stand' },
                 ].map(({ Icon, text }, i) => (
@@ -500,21 +498,17 @@ const LandingPage = () => {
                 ))}
               </ul>
             </div>
-            {/* Photo — the writing must stay readable; contain on the dark ground, no edge crop */}
-            <div className="relative order-1 lg:order-2 min-h-[280px] sm:min-h-[400px] lg:min-h-full flex items-center justify-center">
+            {/* Photo — shown in full, never cropped; it sits on the section's dark
+                ground so the letterbox is invisible and the writing stays readable. */}
+            <div className="relative order-1 lg:order-2 min-h-[280px] sm:min-h-[400px] lg:min-h-full flex items-center justify-center py-4 lg:py-8">
               <img
                 src={lightboardImageUrl}
                 alt="A FastTrack Madrasah teacher writing Arabic rules in glowing marker during a live lesson"
                 loading="lazy"
                 width="1536"
                 height="886"
-                className="w-full h-full object-contain lg:object-cover lg:object-left animate-lightboard-in"
+                className="w-full h-full object-contain animate-lightboard-in"
               />
-              {/* Seam: fade the photo into the section's dark ground on the copy side */}
-              <div className="absolute inset-0 pointer-events-none hidden lg:block"
-                style={{ background: 'linear-gradient(90deg, #0a0f0c 0%, rgba(10,15,12,0.25) 18%, transparent 42%)' }} />
-              <div className="absolute inset-0 pointer-events-none lg:hidden"
-                style={{ background: 'linear-gradient(180deg, transparent 70%, #0a0f0c 100%)' }} />
             </div>
           </div>
         </div>
