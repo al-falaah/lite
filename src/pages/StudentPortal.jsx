@@ -667,7 +667,7 @@ const StudentPortal = () => {
     return (
       <div className={`${M.MASHQ_ROOT} min-h-screen flex items-center justify-center`}>
         <div className="text-center">
-          <img src="/favicon-white.svg" alt="The FastTrack Madrasah" className="h-11 w-11 mx-auto mb-4" />
+          <img src="/favicon-wine.svg" alt="The FastTrack Madrasah" className="h-11 w-11 mx-auto mb-4" />
           <Spinner className="mx-auto" />
           <p className="mt-3 font-['JetBrains_Mono',monospace] text-xs uppercase tracking-[0.15em] text-[var(--mq-ink-faint)]">Loading…</p>
         </div>
@@ -709,7 +709,7 @@ const StudentPortal = () => {
       <nav className={`sticky top-0 z-40 bg-[var(--mq-paper)]/85 backdrop-blur-sm border-b border-[var(--mq-rule)] ${immersive ? 'hidden' : ''}`}>
         <div className={`${M.CONTAINER} h-14 sm:h-16 flex items-center justify-between gap-4`}>
           <Link to="/" className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity mashq-focus flex-shrink-0">
-            <img src="/favicon-white.svg" alt="The FastTrack Madrasah" className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0" />
+            <img src="/favicon-wine.svg" alt="The FastTrack Madrasah" className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0" />
             <div className="flex flex-col leading-none">
               <span className="text-xs sm:text-sm font-semibold text-[var(--mq-ink)]">The FastTrack</span>
               <span className="text-[10px] sm:text-xs font-['JetBrains_Mono',monospace] uppercase text-[var(--mq-ink-faint)]" style={{ letterSpacing: '0.28em' }}>Madrasah</span>
