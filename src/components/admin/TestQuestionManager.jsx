@@ -237,11 +237,11 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
                 <p className="text-sm font-semibold text-gray-900 truncate">{m.name}</p>
                 <div className="flex items-center gap-1 mt-1.5">
                   {enough ? (
-                    <CheckCircle className="h-3 w-3 text-emerald-500" />
+                    <CheckCircle className="h-3 w-3 text-wine-500" />
                   ) : (
                     <AlertTriangle className="h-3 w-3 text-amber-500" />
                   )}
-                  <span className={`text-xs font-medium ${enough ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  <span className={`text-xs font-medium ${enough ? 'text-wine-600' : 'text-amber-600'}`}>
                     {count}/{needed} questions
                   </span>
                 </div>
@@ -253,11 +253,11 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
 
       {/* Status bar */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg ${
-        hasEnoughQuestions ? 'bg-emerald-50 border border-emerald-200' : 'bg-amber-50 border border-amber-200'
+        hasEnoughQuestions ? 'bg-wine-50 border border-wine-200' : 'bg-amber-50 border border-amber-200'
       }`}>
         <div className="flex items-center gap-2">
           {hasEnoughQuestions ? (
-            <CheckCircle className="h-4 w-4 text-emerald-600" />
+            <CheckCircle className="h-4 w-4 text-wine-600" />
           ) : (
             <AlertTriangle className="h-4 w-4 text-amber-600" />
           )}
@@ -354,7 +354,7 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
                 <div key={idx} className="flex items-center gap-2 mb-2">
                   <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                     editingQuestion.correct_answer === opt.letter
-                      ? 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-400'
+                      ? 'bg-wine-100 text-wine-700 ring-2 ring-wine-400'
                       : 'bg-gray-100 text-gray-600'
                   }`}>
                     {opt.letter}
@@ -371,8 +371,8 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
                     onClick={() => setEditingQuestion({ ...editingQuestion, correct_answer: opt.letter })}
                     className={`px-2 py-1.5 rounded-lg text-xs font-medium ${
                       editingQuestion.correct_answer === opt.letter
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-gray-200 text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+                        ? 'bg-wine-600 text-white'
+                        : 'bg-gray-200 text-gray-600 hover:bg-wine-50 hover:text-wine-700'
                     }`}
                   >
                     {editingQuestion.correct_answer === opt.letter ? 'Correct' : 'Set correct'}
@@ -423,7 +423,7 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
                     onClick={() => setEditingQuestion({ ...editingQuestion, correct_answer: letter })}
                     className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
                       editingQuestion.correct_answer === letter
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-wine-600 text-white'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
@@ -515,7 +515,7 @@ export default function TestQuestionManager({ selectedProgram, settings }) {
                         'bg-amber-100 text-amber-700'
                       }`}>{q.difficulty}</span>
                       {q.section_tag && <span className="text-xs text-gray-500">{q.section_tag}</span>}
-                      <span className="text-xs text-emerald-600 font-medium">Answer: {q.correct_answer}</span>
+                      <span className="text-xs text-wine-600 font-medium">Answer: {q.correct_answer}</span>
                     </div>
                   </div>
                 </div>

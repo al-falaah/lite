@@ -165,7 +165,7 @@ export default function CertificateManager() {
             {tab.label}
             {tab.count > 0 && (
               <span className={`ml-1.5 px-1.5 py-0.5 text-xs rounded-full ${
-                activeTab === tab.id ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-600'
+                activeTab === tab.id ? 'bg-wine-100 text-wine-700' : 'bg-gray-200 text-gray-600'
               }`}>
                 {tab.count}
               </span>
@@ -186,13 +186,13 @@ export default function CertificateManager() {
                 placeholder="Search by name or verification code..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
               />
             </div>
             <select
               value={filterProgram}
               onChange={e => setFilterProgram(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-wine-500"
             >
               <option value="all">All Programs</option>
               {Object.values(PROGRAMS).map(p => (
@@ -203,7 +203,7 @@ export default function CertificateManager() {
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 text-emerald-600 animate-spin" />
+              <Loader2 className="h-8 w-8 text-wine-600 animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
@@ -230,11 +230,11 @@ export default function CertificateManager() {
                       <tr key={cert.id} className="hover:bg-gray-50">
                         <td className="py-3 font-medium text-gray-900">{cert.student_name}</td>
                         <td className="py-3">
-                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
+                          <span className="px-2 py-0.5 bg-wine-100 text-wine-700 text-xs font-medium rounded-full">
                             {getProgramLabel(cert.program_id)}
                           </span>
                         </td>
-                        <td className="py-3 font-semibold text-emerald-600">{Number(cert.weighted_total).toFixed(1)}%</td>
+                        <td className="py-3 font-semibold text-wine-600">{Number(cert.weighted_total).toFixed(1)}%</td>
                         <td className="py-3 text-gray-500">
                           {new Date(cert.issued_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </td>
@@ -242,7 +242,7 @@ export default function CertificateManager() {
                         <td className="py-3">
                           <button
                             onClick={() => setPreviewCert(cert)}
-                            className="text-emerald-600 hover:text-emerald-700 text-xs font-medium"
+                            className="text-wine-600 hover:text-wine-700 text-xs font-medium"
                           >
                             <Eye className="h-4 w-4 inline mr-1" />
                             Preview
@@ -260,19 +260,19 @@ export default function CertificateManager() {
                   <div key={cert.id} className="bg-white border border-gray-200 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium text-gray-900 text-sm">{cert.student_name}</span>
-                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
+                      <span className="px-2 py-0.5 bg-wine-100 text-wine-700 text-xs font-medium rounded-full">
                         {getProgramLabel(cert.program_id)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                      <span>Score: <strong className="text-emerald-600">{Number(cert.weighted_total).toFixed(1)}%</strong></span>
+                      <span>Score: <strong className="text-wine-600">{Number(cert.weighted_total).toFixed(1)}%</strong></span>
                       <span>{new Date(cert.issued_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs text-gray-400">{cert.verification_code}</span>
                       <button
                         onClick={() => setPreviewCert(cert)}
-                        className="text-emerald-600 hover:text-emerald-700 text-xs font-medium"
+                        className="text-wine-600 hover:text-wine-700 text-xs font-medium"
                       >
                         <Eye className="h-3.5 w-3.5 inline mr-1" />Preview
                       </button>
@@ -290,7 +290,7 @@ export default function CertificateManager() {
         <div>
           {loadingEligible ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 text-emerald-600 animate-spin" />
+              <Loader2 className="h-8 w-8 text-wine-600 animate-spin" />
             </div>
           ) : eligibleStudents.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
@@ -310,14 +310,14 @@ export default function CertificateManager() {
                     <div>
                       <div className="font-medium text-gray-900 text-sm">{s.student_name}</div>
                       <div className="text-xs text-gray-500">{s.student_email}</div>
-                      <span className="inline-block mt-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-wine-100 text-wine-700 text-xs font-medium rounded-full">
                         {getProgramLabel(s.program_id)}
                       </span>
                     </div>
                     <button
                       onClick={() => issueCertificate(s.student_id, s.program_id)}
                       disabled={issuing === key}
-                      className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 w-full sm:w-auto justify-center"
+                      className="inline-flex items-center px-4 py-2 bg-wine-600 text-white text-sm font-medium rounded-lg hover:bg-wine-700 transition-colors disabled:opacity-50 w-full sm:w-auto justify-center"
                     >
                       {issuing === key ? (
                         <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Issuing...</>

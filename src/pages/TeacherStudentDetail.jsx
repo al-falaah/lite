@@ -84,7 +84,7 @@ function CopyableText({ value, label }) {
     >
       <span>{value}</span>
       {copied
-        ? <Check className="h-3.5 w-3.5 text-emerald-600 flex-shrink-0" />
+        ? <Check className="h-3.5 w-3.5 text-wine-600 flex-shrink-0" />
         : <Copy className="h-3.5 w-3.5 text-gray-300 group-hover:text-gray-500 flex-shrink-0" />}
     </button>
   );
@@ -215,7 +215,7 @@ export default function TeacherStudentDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-wine-600 border-t-transparent" />
       </div>
     );
   }
@@ -224,7 +224,7 @@ export default function TeacherStudentDetail() {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-3 px-4 text-center">
         <p className="text-slate-700">Student not found.</p>
-        <button onClick={goBackToStudents} className="text-sm font-medium text-emerald-700 hover:text-emerald-800">← Back to my students</button>
+        <button onClick={goBackToStudents} className="text-sm font-medium text-wine-700 hover:text-wine-800">← Back to my students</button>
       </div>
     );
   }
@@ -269,7 +269,7 @@ export default function TeacherStudentDetail() {
                 <select
                   value={program || ''}
                   onChange={(e) => setSearchParams({ program: e.target.value })}
-                  className="text-sm border border-slate-300 rounded-md px-2 py-1 bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none"
+                  className="text-sm border border-slate-300 rounded-md px-2 py-1 bg-white focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none"
                 >
                   {assignedPrograms.map(p => (
                     <option key={p} value={p}>{PROGRAMS[p]?.shortName || p}</option>
@@ -326,7 +326,7 @@ export default function TeacherStudentDetail() {
                               {dayLabel}{timeLabel ? ` · ${timeLabel}` : ''}
                             </p>
                           </div>
-                          <span className={`text-xs font-medium ${completed ? 'text-emerald-700' : 'text-slate-500'}`}>
+                          <span className={`text-xs font-medium ${completed ? 'text-wine-700' : 'text-slate-500'}`}>
                             {completed ? 'Completed' : 'Scheduled'}
                           </span>
                         </div>
@@ -336,7 +336,7 @@ export default function TeacherStudentDetail() {
                               href={formatMeetingLink(cls.meeting_link)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center px-3 py-1.5 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 transition-colors"
+                              className="inline-flex items-center justify-center px-3 py-1.5 bg-wine-600 text-white text-sm font-medium rounded-md hover:bg-wine-700 transition-colors"
                             >
                               Join class
                             </a>
@@ -376,7 +376,7 @@ export default function TeacherStudentDetail() {
                     <span className="tabular-nums font-medium text-slate-700">{completedClasses} / {totalClassCount}</span>
                   </div>
                   <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${overallPct}%` }} />
+                    <div className="h-full bg-wine-600 rounded-full transition-all" style={{ width: `${overallPct}%` }} />
                   </div>
                 </div>
               </div>

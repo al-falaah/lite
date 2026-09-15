@@ -16,13 +16,13 @@ const MAX_SECONDS = 900;
 const inputClass =
   'w-full text-sm text-slate-900 placeholder-slate-400 ' +
   'border border-slate-300 rounded-md px-3 py-2 bg-white ' +
-  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none ' +
   'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
 
 const btnPrimary =
   'inline-flex items-center justify-center px-4 py-2 ' +
-  'bg-emerald-600 text-white text-sm font-medium rounded-md ' +
-  'hover:bg-emerald-700 active:bg-emerald-800 ' +
+  'bg-wine-600 text-white text-sm font-medium rounded-md ' +
+  'hover:bg-wine-700 active:bg-wine-800 ' +
   'disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed ' +
   'transition-colors';
 
@@ -48,7 +48,7 @@ const btnGhost =
  *
  * Visual approach: standard card-based UI in slate + emerald palette.
  * Real bordered inputs, real buttons, status as text. Selected grade
- * uses an emerald-tinted chip — branded selection, not greyscale.
+ * uses an wine-tinted chip — branded selection, not greyscale.
  */
 export default function RecitationAssignments({ student, program, teacherId }) {
   const [rec, setRec] = useState(null);
@@ -284,7 +284,7 @@ export default function RecitationAssignments({ student, program, teacherId }) {
     statusClass = 'text-amber-700';
   } else if (status === 'assigned' && studentRecording) {
     statusText = 'Student is recording…';
-    statusClass = 'text-emerald-700';
+    statusClass = 'text-wine-700';
   } else if (status === 'assigned') {
     statusText = 'Awaiting student';
     statusClass = 'text-slate-500';
@@ -342,7 +342,7 @@ export default function RecitationAssignments({ student, program, teacherId }) {
                     onClick={() => setGrade(opt.value)}
                     className={`text-sm px-3 py-1.5 rounded-md border font-medium transition-colors ${
                       selected
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+                        ? 'bg-wine-50 text-wine-700 border-wine-300'
                         : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400'
                     }`}
                   >
@@ -423,7 +423,7 @@ export default function RecitationAssignments({ student, program, teacherId }) {
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-sm font-medium text-slate-900">{rec.passage}</p>
             {rec.grade && (
-              <span className="text-sm font-medium px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="text-sm font-medium px-2.5 py-1 rounded-md bg-wine-50 text-wine-700 border border-wine-200">
                 {GRADE_LABEL[rec.grade] || rec.grade}
               </span>
             )}

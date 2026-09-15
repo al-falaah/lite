@@ -295,7 +295,7 @@ export default function AdminTeachersList() {
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Teachers</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-1.5 sm:gap-2 bg-emerald-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-emerald-700 transition text-xs sm:text-sm"
+          className="flex items-center gap-1.5 sm:gap-2 bg-wine-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-wine-700 transition text-xs sm:text-sm"
         >
           <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
           <span className="hidden xs:inline">Add Teacher</span>
@@ -352,7 +352,7 @@ export default function AdminTeachersList() {
           onClick={() => setFilter('all')}
           className={`px-3 sm:px-4 py-2 rounded-md transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'all'
-              ? 'bg-emerald-600 text-white'
+              ? 'bg-wine-600 text-white'
               : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -362,7 +362,7 @@ export default function AdminTeachersList() {
           onClick={() => setFilter('male')}
           className={`px-3 sm:px-4 py-2 rounded-md transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'male'
-              ? 'bg-emerald-600 text-white'
+              ? 'bg-wine-600 text-white'
               : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -372,7 +372,7 @@ export default function AdminTeachersList() {
           onClick={() => setFilter('female')}
           className={`px-3 sm:px-4 py-2 rounded-md transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'female'
-              ? 'bg-emerald-600 text-white'
+              ? 'bg-wine-600 text-white'
               : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -382,7 +382,7 @@ export default function AdminTeachersList() {
           onClick={() => setFilter('active')}
           className={`px-3 sm:px-4 py-2 rounded-md transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'active'
-              ? 'bg-emerald-600 text-white'
+              ? 'bg-wine-600 text-white'
               : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -392,7 +392,7 @@ export default function AdminTeachersList() {
           onClick={() => setFilter('inactive')}
           className={`px-3 sm:px-4 py-2 rounded-md transition text-xs sm:text-sm whitespace-nowrap ${
             filter === 'inactive'
-              ? 'bg-emerald-600 text-white'
+              ? 'bg-wine-600 text-white'
               : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
           }`}
         >
@@ -415,7 +415,7 @@ export default function AdminTeachersList() {
                 cy="40"
               />
               <circle
-                className="text-emerald-600"
+                className="text-wine-600"
                 strokeWidth="6"
                 strokeDasharray={213.628}
                 strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -535,7 +535,7 @@ export default function AdminTeachersList() {
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                       placeholder="John Doe"
                     />
                   </div>
@@ -548,7 +548,7 @@ export default function AdminTeachersList() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -561,7 +561,7 @@ export default function AdminTeachersList() {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                       placeholder="+64 21 234 5678"
                     />
                   </div>
@@ -573,7 +573,7 @@ export default function AdminTeachersList() {
                     <select
                       value={formData.gender}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                     >
                       <option value="male">Male</option>
                       <option value="female">Female</option>
@@ -588,7 +588,7 @@ export default function AdminTeachersList() {
                       type="text"
                       value={formData.country_of_residence}
                       onChange={(e) => setFormData({ ...formData, country_of_residence: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                       placeholder="New Zealand"
                     />
                   </div>
@@ -609,7 +609,7 @@ export default function AdminTeachersList() {
                     <button
                       onClick={handleCreateTeacher}
                       disabled={loading}
-                      className="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50"
+                      className="flex-1 bg-wine-600 text-white px-4 py-2 rounded-lg hover:bg-wine-700 transition disabled:opacity-50"
                     >
                       {loading ? 'Creating...' : 'Create Teacher'}
                     </button>
@@ -644,7 +644,7 @@ export default function AdminTeachersList() {
                     type="text"
                     value={formData.full_name}
                     onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   />
                 </div>
 
@@ -656,7 +656,7 @@ export default function AdminTeachersList() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   />
                 </div>
 
@@ -668,7 +668,7 @@ export default function AdminTeachersList() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   />
                 </div>
 
@@ -679,7 +679,7 @@ export default function AdminTeachersList() {
                   <select
                     value={formData.gender}
                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   >
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -694,7 +694,7 @@ export default function AdminTeachersList() {
                     type="text"
                     value={formData.country_of_residence}
                     onChange={(e) => setFormData({ ...formData, country_of_residence: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   />
                 </div>
 
@@ -708,7 +708,7 @@ export default function AdminTeachersList() {
                   <button
                     onClick={handleEditTeacher}
                     disabled={loading}
-                    className="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50"
+                    className="flex-1 bg-wine-600 text-white px-4 py-2 rounded-lg hover:bg-wine-700 transition disabled:opacity-50"
                   >
                     {loading ? 'Saving...' : 'Save Changes'}
                   </button>

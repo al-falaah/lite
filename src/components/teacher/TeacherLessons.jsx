@@ -1,7 +1,7 @@
 /**
  * TeacherLessons — the teacher's lesson & quiz REVIEW surface.
  *
- * A purpose-built staff view (slate + emerald, from src/design/ui.js), not the
+ * A purpose-built staff view (slate + wine, from src/design/ui.js), not the
  * student's browse-and-resume list. It answers a teacher's actual questions:
  * which programs do I teach, what chapters and quizzes exist per milestone, and
  * let me preview exactly what my students see. It deliberately does NOT show the
@@ -17,7 +17,7 @@ import { PROGRAMS } from '../../config/programs';
 import StudentLessons from '../student/StudentLessons';
 import {
   CARD, CARD_OVERFLOW, HEADING_LG, HEADING_SM, LABEL_TINY,
-  CHIP, CHIP_SELECTED, BTN_GHOST, STATUS_OK,
+  CHIP, CHIP_SELECTED, BTN_GHOST,
 } from '../../design/ui';
 
 const isArabic = (s) => /[؀-ۿ]/.test(s || '');
@@ -156,7 +156,7 @@ export default function TeacherLessons({ programs = [] }) {
               {ch.title}
             </p>
             {quizId ? (
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-wine-700 bg-wine-50 border border-wine-200 rounded px-1.5 py-0.5">
                 <HelpCircle className="h-3 w-3" /> Quiz
               </span>
             ) : (
@@ -213,7 +213,7 @@ export default function TeacherLessons({ programs = [] }) {
           </div>
           <div className="flex items-center gap-3 shrink-0 text-xs text-slate-500">
             <span className="tabular-nums">{chaps.length} lesson{chaps.length === 1 ? '' : 's'}</span>
-            {withQuiz > 0 && <span className={`${STATUS_OK} tabular-nums`}>{withQuiz} quiz{withQuiz === 1 ? '' : 'zes'}</span>}
+            {withQuiz > 0 && <span className="text-wine-700 font-medium tabular-nums">{withQuiz} quiz{withQuiz === 1 ? '' : 'zes'}</span>}
             <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
           </div>
         </button>
@@ -257,7 +257,7 @@ export default function TeacherLessons({ programs = [] }) {
 
       {loading ? (
         <div className={`${CARD} px-6 py-16 flex justify-center`}>
-          <div className="animate-spin rounded-full h-6 w-6 border-2 border-emerald-600 border-t-transparent" />
+          <div className="animate-spin rounded-full h-6 w-6 border-2 border-wine-600 border-t-transparent" />
         </div>
       ) : error ? (
         <div className={`${CARD} px-6 py-12 text-center`}>

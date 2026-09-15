@@ -405,7 +405,7 @@ const AdminDashboard = () => {
             <div className="flex items-center gap-2 sm:gap-4">
               <button
                 onClick={() => navigate(-1)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm text-wine-600 hover:text-wine-700 hover:bg-wine-50 rounded-lg transition-colors font-medium"
               >
                 <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Back</span>
@@ -430,96 +430,96 @@ const AdminDashboard = () => {
               onClick={() => setActiveTab('applications')}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'applications'
-                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  ? 'bg-wine-50 text-wine-700 shadow-sm ring-1 ring-wine-600/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <FileText className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                activeTab === 'applications' ? 'text-emerald-600' : 'text-gray-400'
+                activeTab === 'applications' ? 'text-wine-600' : 'text-gray-400'
               }`} />
               <span className="font-semibold">Applications</span>
               {activeTab === 'applications' && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-wine-600 rounded-full"></span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('students')}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'students'
-                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  ? 'bg-wine-50 text-wine-700 shadow-sm ring-1 ring-wine-600/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <Users className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                activeTab === 'students' ? 'text-emerald-600' : 'text-gray-400'
+                activeTab === 'students' ? 'text-wine-600' : 'text-gray-400'
               }`} />
               <span className="font-semibold">Students</span>
               {activeTab === 'students' && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-wine-600 rounded-full"></span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('availability')}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'availability'
-                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  ? 'bg-wine-50 text-wine-700 shadow-sm ring-1 ring-wine-600/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <Calendar className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                activeTab === 'availability' ? 'text-emerald-600' : 'text-gray-400'
+                activeTab === 'availability' ? 'text-wine-600' : 'text-gray-400'
               }`} />
               <span className="font-semibold">Scheduling</span>
               {activeTab === 'availability' && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-wine-600 rounded-full"></span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('teachers')}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'teachers'
-                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  ? 'bg-wine-50 text-wine-700 shadow-sm ring-1 ring-wine-600/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <UserCheck className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                activeTab === 'teachers' ? 'text-emerald-600' : 'text-gray-400'
+                activeTab === 'teachers' ? 'text-wine-600' : 'text-gray-400'
               }`} />
               <span className="font-semibold">Teachers</span>
               {activeTab === 'teachers' && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-wine-600 rounded-full"></span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('calendar')}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'calendar'
-                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  ? 'bg-wine-50 text-wine-700 shadow-sm ring-1 ring-wine-600/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <Calendar className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                activeTab === 'calendar' ? 'text-emerald-600' : 'text-gray-400'
+                activeTab === 'calendar' ? 'text-wine-600' : 'text-gray-400'
               }`} />
               <span className="font-semibold">Calendar</span>
               {activeTab === 'calendar' && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-wine-600 rounded-full"></span>
               )}
             </button>
             <button
               onClick={() => setActiveTab('certificates')}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
                 activeTab === 'certificates'
-                  ? 'bg-emerald-50 text-emerald-700 shadow-sm ring-1 ring-emerald-600/10'
+                  ? 'bg-wine-50 text-wine-700 shadow-sm ring-1 ring-wine-600/10'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <Award className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                activeTab === 'certificates' ? 'text-emerald-600' : 'text-gray-400'
+                activeTab === 'certificates' ? 'text-wine-600' : 'text-gray-400'
               }`} />
               <span className="font-semibold">Certificates</span>
               {activeTab === 'certificates' && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-emerald-600 rounded-full"></span>
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-wine-600 rounded-full"></span>
               )}
             </button>
           </nav>
@@ -549,7 +549,7 @@ const AdminDashboard = () => {
 
               <div className="bg-white rounded-lg p-6 border border-gray-200">
                 <div className="flex items-center justify-between mb-4">
-                  <CheckCircle className="h-5 w-5 text-emerald-600" />
+                  <CheckCircle className="h-5 w-5 text-wine-600" />
                 </div>
                 <div className="text-sm text-gray-600 mb-1">Approved</div>
                 <div className="text-3xl font-semibold text-gray-900">{stats.approved}</div>
@@ -573,7 +573,7 @@ const AdminDashboard = () => {
                     onClick={() => setStatusFilter(filter)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
                       statusFilter === filter
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-wine-600 text-white'
                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
@@ -640,7 +640,7 @@ const AdminDashboard = () => {
                               app.program === 'tajweed'
                                 ? 'bg-purple-100 text-purple-700'
                                 : app.program === 'qari'
-                                ? 'bg-emerald-100 text-emerald-700'
+                                ? 'bg-wine-100 text-wine-700'
                                 : 'bg-blue-100 text-blue-700'
                             }`}>
                               {app.program === 'tajweed' ? 'Tajweed' : app.program === 'qari' ? 'QARI' : 'Essentials'}
@@ -783,7 +783,7 @@ const AdminDashboard = () => {
                   value={reviewNotes}
                   onChange={(e) => setReviewNotes(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   placeholder={
                     reviewAction === 'approved'
                       ? 'Add any notes for this applicant (optional)'
@@ -844,7 +844,7 @@ const AdminDashboard = () => {
                       selectedApplication.program === 'tajweed'
                         ? 'bg-purple-100 text-purple-800'
                         : selectedApplication.program === 'qari'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-wine-100 text-wine-800'
                         : 'bg-blue-100 text-blue-800'
                     }`}>
                       {selectedApplication.program === 'tajweed' ? 'Tajweed Track' : selectedApplication.program === 'qari' ? 'QARI Track' : 'Essential Islamic Studies Track'}
@@ -971,7 +971,7 @@ const AdminDashboard = () => {
                             {selectedApplication.preferred_days.map((day) => (
                               <span
                                 key={day}
-                                className="px-3 py-1 bg-emerald-100 text-emerald-800 text-sm rounded-md font-medium"
+                                className="px-3 py-1 bg-wine-100 text-wine-800 text-sm rounded-md font-medium"
                               >
                                 {day}
                               </span>

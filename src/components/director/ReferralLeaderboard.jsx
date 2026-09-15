@@ -119,7 +119,7 @@ export default function ReferralLeaderboard() {
             <CheckCircle2 className="h-4 w-4" />
             Paid out
           </div>
-          <div className="text-2xl font-semibold text-emerald-600">
+          <div className="text-2xl font-semibold text-wine-600">
             {paid.length}
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function ReferralLeaderboard() {
       {/* Leaderboard */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-          <Gift className="h-4 w-4 text-emerald-600" />
+          <Gift className="h-4 w-4 text-wine-600" />
           <h3 className="font-semibold text-gray-900">Leaderboard</h3>
         </div>
         {leaders.length === 0 ? (
@@ -210,7 +210,7 @@ export default function ReferralLeaderboard() {
                     <button
                       disabled={savingPayoutId === p.id}
                       onClick={() => markPaid(p)}
-                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded disabled:opacity-50"
+                      className="px-3 py-1 bg-wine-600 hover:bg-wine-700 text-white text-xs rounded disabled:opacity-50"
                     >
                       {savingPayoutId === p.id ? 'Saving…' : 'Mark paid'}
                     </button>
@@ -226,7 +226,7 @@ export default function ReferralLeaderboard() {
       {paid.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            <CheckCircle2 className="h-4 w-4 text-wine-600" />
             <h3 className="font-semibold text-gray-900">Paid history</h3>
           </div>
           <table className="w-full text-sm">

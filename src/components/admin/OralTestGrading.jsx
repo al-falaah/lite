@@ -66,20 +66,20 @@ function sourceLabel(source) {
 const inputClass =
   'w-full text-sm text-slate-900 placeholder-slate-400 ' +
   'border border-slate-200 rounded-md px-3 py-2 bg-white ' +
-  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none ' +
   'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
 
 // Compact variant for inline numerics
 const numInputClass =
   'text-sm tabular-nums text-slate-900 ' +
   'border border-slate-200 rounded-md px-2 py-1.5 bg-white ' +
-  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none ' +
   'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
 
 const btnPrimary =
   'inline-flex items-center justify-center px-4 py-2 ' +
-  'bg-emerald-600 text-white text-sm font-medium rounded-md ' +
-  'hover:bg-emerald-700 active:bg-emerald-800 ' +
+  'bg-wine-600 text-white text-sm font-medium rounded-md ' +
+  'hover:bg-wine-700 active:bg-wine-800 ' +
   'disabled:bg-gray-200 disabled:text-slate-400 disabled:cursor-not-allowed ' +
   'transition-colors';
 
@@ -341,7 +341,7 @@ export default function OralTestGrading({ student, program, currentWeek }) {
             </p>
           </div>
           <div className="text-right">
-            <div className={`text-lg font-semibold tabular-nums ${passed ? 'text-emerald-700' : 'text-red-700'}`}>
+            <div className={`text-lg font-semibold tabular-nums ${passed ? 'text-wine-700' : 'text-red-700'}`}>
               {Number(existing.percentage).toFixed(1)}%
             </div>
             <div className="text-xs text-slate-500 mt-0.5">{passed ? 'Passed' : 'Did not pass'}</div>

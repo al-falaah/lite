@@ -255,9 +255,9 @@ export default function MilestoneTest() {
         </Helmet>
         <div className="min-h-screen bg-[#fdf6e8] flex items-center justify-center p-4">
           <div className="max-w-lg w-full">
-            <div className={`rounded-2xl p-8 text-center ${passed ? 'bg-emerald-50 border-2 border-emerald-200' : 'bg-amber-50 border-2 border-amber-200'}`}>
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${passed ? 'bg-emerald-100' : 'bg-amber-100'}`}>
-                {passed ? <CheckCircle className="h-10 w-10 text-emerald-600" /> : <XCircle className="h-10 w-10 text-amber-600" />}
+            <div className={`rounded-2xl p-8 text-center ${passed ? 'bg-wine-50 border-2 border-wine-200' : 'bg-amber-50 border-2 border-amber-200'}`}>
+              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${passed ? 'bg-wine-100' : 'bg-amber-100'}`}>
+                {passed ? <CheckCircle className="h-10 w-10 text-wine-600" /> : <XCircle className="h-10 w-10 text-amber-600" />}
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-1">
                 {results.status === 'timed_out' ? 'Time\'s Up!' : passed ? 'Well Done!' : 'Keep Going!'}
@@ -288,7 +288,7 @@ export default function MilestoneTest() {
                       <div key={r.question_id} className="bg-white rounded-lg p-4 border border-gray-200">
                         <div className="flex items-start gap-2">
                           {r.is_correct ? (
-                            <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                            <CheckCircle className="h-4 w-4 text-wine-500 mt-0.5 flex-shrink-0" />
                           ) : (
                             <XCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                           )}
@@ -298,7 +298,7 @@ export default function MilestoneTest() {
                               <p className="text-xs text-red-600 mt-1">Your answer: {r.your_answer}</p>
                             )}
                             {results.show_correct_answers && r.correct_answer && (
-                              <p className="text-xs text-emerald-600 mt-0.5">Correct: {r.correct_answer}</p>
+                              <p className="text-xs text-wine-600 mt-0.5">Correct: {r.correct_answer}</p>
                             )}
                             {results.show_explanations && r.explanation && (
                               <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{r.explanation}</p>
@@ -487,7 +487,7 @@ export default function MilestoneTest() {
                     handleSubmit(false);
                   }}
                   disabled={submitting}
-                  className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 shadow-sm inline-flex items-center gap-2 transition-all disabled:opacity-50"
+                  className="px-6 py-2.5 bg-wine-600 text-white rounded-xl font-medium hover:bg-wine-700 shadow-sm inline-flex items-center gap-2 transition-all disabled:opacity-50"
                 >
                   {submitting ? 'Submitting...' : 'Submit Test'}
                 </button>
@@ -510,7 +510,7 @@ export default function MilestoneTest() {
                   idx === currentIndex
                     ? 'bg-amber-500 text-white ring-2 ring-amber-300'
                     : answers[q.id]
-                      ? 'bg-emerald-100 text-emerald-700'
+                      ? 'bg-wine-100 text-wine-700'
                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                 }`}
               >

@@ -312,7 +312,7 @@ const LessonNotes = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Course not found</h1>
-          <Link to="/resources" className="text-emerald-600 hover:text-emerald-700">
+          <Link to="/resources" className="text-wine-600 hover:text-wine-700">
             Back to Resources
           </Link>
         </div>
@@ -452,7 +452,7 @@ const LessonNotes = () => {
                     onClick={() => setSelectedChapter(chapter)}
                     className={`w-full text-left px-2.5 py-2 text-sm transition-colors ${
                       selectedChapter?.id === chapter.id
-                        ? 'bg-emerald-600 text-white'
+                        ? 'bg-wine-600 text-white'
                         : theme === 'dark'
                           ? 'text-gray-300 hover:bg-gray-700'
                           : theme === 'sepia'
@@ -463,7 +463,7 @@ const LessonNotes = () => {
                     <div className="flex items-start gap-2">
                       <span className={`text-xs font-medium mt-0.5 min-w-[18px] ${
                         selectedChapter?.id === chapter.id 
-                          ? 'text-emerald-100' 
+                          ? 'text-wine-100' 
                           : theme === 'dark' ? 'text-gray-500' : 
                             theme === 'sepia' ? 'text-[#8a7a6a]' :
                             'text-gray-400'
@@ -536,7 +536,7 @@ const LessonNotes = () => {
                   <div
                     className={`prose max-w-none transition-colors ${
                       theme === 'dark'
-                        ? 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-code:text-emerald-400 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border-gray-700 prose-td:border-gray-700 [&_.verse]:text-gray-100 [&_.tip]:bg-blue-950 [&_.tip]:border-blue-800 [&_.tip:before]:text-blue-400'
+                        ? 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-a:text-blue-400 hover:prose-a:text-blue-300 prose-strong:text-gray-100 prose-li:text-gray-300 prose-code:bg-gray-900 prose-code:text-wine-400 prose-pre:bg-gray-900 prose-pre:border-gray-700 prose-blockquote:border-gray-600 prose-blockquote:text-gray-400 prose-th:bg-gray-900 prose-th:border-gray-700 prose-td:border-gray-700 [&_.verse]:text-gray-100 [&_.tip]:bg-blue-950 [&_.tip]:border-blue-800 [&_.tip:before]:text-blue-400'
                         : theme === 'sepia'
                           ? 'prose-headings:font-normal prose-headings:text-[#3d3229] prose-p:text-[#3d3229] prose-p:leading-relaxed prose-a:text-[#2c5f7f] hover:prose-a:underline prose-strong:text-[#3d3229] prose-strong:font-semibold prose-li:text-[#3d3229] prose-code:text-sm prose-code:bg-[#ebe4d8] prose-pre:bg-[#ebe4d8] prose-pre:text-[#3d3229] prose-pre:border prose-pre:border-[#d4c9b8] prose-blockquote:border-l-2 prose-blockquote:border-[#8a7a6a] prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-[#5a4a3a] prose-th:bg-[#ebe4d8] prose-th:border prose-th:border-[#d4c9b8] prose-td:border prose-td:border-[#d4c9b8] [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-[#3d3229] [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4 [&_.tip]:bg-[#e8dcc8] [&_.tip]:border-l-2 [&_.tip]:border-[#8a7a6a] [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip:before]:content-[\"Tip:\"] [&_.tip:before]:font-semibold [&_.tip:before]:text-[#5a4a3a] [&_.tip:before]:block [&_.tip:before]:mb-1'
                           : 'prose-headings:font-normal prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:underline prose-strong:text-gray-900 prose-strong:font-semibold prose-li:text-gray-700 prose-code:text-sm prose-code:bg-gray-100 prose-pre:bg-gray-50 prose-pre:text-gray-900 prose-pre:border prose-pre:border-gray-200 prose-blockquote:border-l-2 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600 prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-td:border prose-td:border-gray-300 [&_.verse]:text-xl [&_.verse]:text-center [&_.verse]:my-8 [&_.verse]:text-gray-900 [&_.verse]:font-serif [&_.verse]:leading-relaxed [&_.verse]:py-4 [&_.tip]:bg-blue-50 [&_.tip]:border-l-2 [&_.tip]:border-blue-400 [&_.tip]:px-4 [&_.tip]:py-3 [&_.tip]:my-4 [&_.tip:before]:content-[\"Tip:\"] [&_.tip:before]:font-semibold [&_.tip:before]:text-blue-700 [&_.tip:before]:block [&_.tip:before]:mb-1'

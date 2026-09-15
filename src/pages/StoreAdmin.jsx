@@ -38,7 +38,7 @@ const statusConfig = {
   invoice_sent: { label: 'Invoice Sent', color: 'bg-blue-100 text-blue-800', icon: Send },
   paid: { label: 'Paid', color: 'bg-green-100 text-green-800', icon: CheckCircle },
   shipped: { label: 'Shipped', color: 'bg-purple-100 text-purple-800', icon: Truck },
-  delivered: { label: 'Delivered', color: 'bg-emerald-100 text-emerald-800', icon: CheckCircle },
+  delivered: { label: 'Delivered', color: 'bg-wine-100 text-wine-800', icon: CheckCircle },
   cancelled: { label: 'Cancelled', color: 'bg-red-100 text-red-800', icon: XCircle }
 };
 
@@ -450,12 +450,12 @@ const StoreAdmin = () => {
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-3 sm:gap-6">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600" />
+                  <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-wine-600" />
                   <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Store Admin</h1>
                 </div>
                 <button
                   onClick={() => navigate(-1)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm text-wine-600 hover:text-wine-700 hover:bg-wine-50 rounded-lg transition-colors font-medium"
                 >
                   <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Back</span>
@@ -480,7 +480,7 @@ const StoreAdmin = () => {
                 onClick={() => switchTab('products')}
                 className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'products'
-                    ? 'border-emerald-600 text-emerald-600'
+                    ? 'border-wine-600 text-wine-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -491,7 +491,7 @@ const StoreAdmin = () => {
                 onClick={() => switchTab('orders')}
                 className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'orders'
-                    ? 'border-emerald-600 text-emerald-600'
+                    ? 'border-wine-600 text-wine-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -525,7 +525,7 @@ const StoreAdmin = () => {
                         cy="40"
                       />
                       <circle
-                        className="text-emerald-600"
+                        className="text-wine-600"
                         strokeWidth="6"
                         strokeDasharray={213.628}
                         strokeDashoffset={213.628 - (213.628 * productsLoadingProgress) / 100}
@@ -569,7 +569,7 @@ const StoreAdmin = () => {
                             name="name"
                             value={productFormData.name}
                             onChange={handleProductFormChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                             required
                           />
                         </div>
@@ -583,7 +583,7 @@ const StoreAdmin = () => {
                             name="slug"
                             value={productFormData.slug}
                             onChange={handleProductFormChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                           />
                         </div>
 
@@ -596,7 +596,7 @@ const StoreAdmin = () => {
                             value={productFormData.description}
                             onChange={handleProductFormChange}
                             rows="3"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                           />
                         </div>
 
@@ -611,7 +611,7 @@ const StoreAdmin = () => {
                               name="price_nzd"
                               value={productFormData.price_nzd}
                               onChange={handleProductFormChange}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                               required
                             />
                           </div>
@@ -625,7 +625,7 @@ const StoreAdmin = () => {
                               name="stock_quantity"
                               value={productFormData.stock_quantity}
                               onChange={handleProductFormChange}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                             />
                           </div>
                         </div>
@@ -638,7 +638,7 @@ const StoreAdmin = () => {
                             name="category"
                             value={productFormData.category}
                             onChange={handleProductFormChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                           >
                             {CATEGORIES.map(cat => (
                               <option key={cat} value={cat}>{cat}</option>
@@ -655,7 +655,7 @@ const StoreAdmin = () => {
                             name="image_url"
                             value={productFormData.image_url}
                             onChange={handleProductFormChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                           />
                           {productFormData.image_url && (
                             <img
@@ -672,7 +672,7 @@ const StoreAdmin = () => {
                             name="is_active"
                             checked={productFormData.is_active}
                             onChange={handleProductFormChange}
-                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+                            className="h-4 w-4 text-wine-600 focus:ring-wine-500 border-gray-300 rounded"
                           />
                           <label className="text-sm font-medium text-gray-700">
                             Active (visible in store)
@@ -704,7 +704,7 @@ const StoreAdmin = () => {
                         {products.map(product => (
                           <div
                             key={product.id}
-                            className="border border-gray-200 rounded-lg p-3 hover:border-emerald-300 transition-colors"
+                            className="border border-gray-200 rounded-lg p-3 hover:border-wine-300 transition-colors"
                           >
                             <div className="flex gap-3">
                               {product.image_url && (
@@ -728,7 +728,7 @@ const StoreAdmin = () => {
                             <div className="flex gap-2 mt-3">
                               <button
                                 onClick={() => handleEditProduct(product)}
-                                className="flex-1 px-3 py-1.5 text-sm bg-emerald-50 text-emerald-700 rounded hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1"
+                                className="flex-1 px-3 py-1.5 text-sm bg-wine-50 text-wine-700 rounded hover:bg-wine-100 transition-colors flex items-center justify-center gap-1"
                               >
                                 <Edit2 className="h-3 w-3" />
                                 Edit
@@ -765,7 +765,7 @@ const StoreAdmin = () => {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                   >
                     <option value="all">All Orders</option>
                     <option value="pending">Pending Review</option>
@@ -795,7 +795,7 @@ const StoreAdmin = () => {
                         cy="40"
                       />
                       <circle
-                        className="text-emerald-600"
+                        className="text-wine-600"
                         strokeWidth="6"
                         strokeDasharray={213.628}
                         strokeDashoffset={213.628 - (213.628 * ordersLoadingProgress) / 100}
@@ -867,7 +867,7 @@ const StoreAdmin = () => {
                                   <Package className="h-4 w-4" />
                                   {order.items?.length || 0} items
                                 </div>
-                                <div className="flex items-center gap-2 font-semibold text-emerald-600">
+                                <div className="flex items-center gap-2 font-semibold text-wine-600">
                                   <DollarSign className="h-4 w-4" />
                                   {order.total_nzd ? formatCurrency(order.total_nzd) : formatCurrency(order.subtotal_nzd)}
                                 </div>
@@ -902,10 +902,10 @@ const StoreAdmin = () => {
                                         </p>
                                       </div>
                                     ))}
-                                    <div className="p-3 bg-emerald-50">
+                                    <div className="p-3 bg-wine-50">
                                       <div className="flex justify-between items-center font-semibold text-gray-900">
                                         <span>Subtotal</span>
-                                        <span className="text-emerald-600">{formatCurrency(order.subtotal_nzd)}</span>
+                                        <span className="text-wine-600">{formatCurrency(order.subtotal_nzd)}</span>
                                       </div>
                                       {order.shipping_cost_nzd && (
                                         <>
@@ -913,9 +913,9 @@ const StoreAdmin = () => {
                                             <span>Shipping</span>
                                             <span>{formatCurrency(order.shipping_cost_nzd)}</span>
                                           </div>
-                                          <div className="flex justify-between items-center font-bold text-gray-900 mt-2 pt-2 border-t border-emerald-200">
+                                          <div className="flex justify-between items-center font-bold text-gray-900 mt-2 pt-2 border-t border-wine-200">
                                             <span>Total</span>
-                                            <span className="text-emerald-600">{formatCurrency(order.total_nzd)}</span>
+                                            <span className="text-wine-600">{formatCurrency(order.total_nzd)}</span>
                                           </div>
                                         </>
                                       )}
@@ -931,7 +931,7 @@ const StoreAdmin = () => {
                                       <Mail className="h-5 w-5 text-gray-400 mt-0.5" />
                                       <div>
                                         <p className="text-xs text-gray-500">Email</p>
-                                        <a href={`mailto:${order.customer_email}`} className="text-sm text-emerald-600 hover:text-emerald-700">
+                                        <a href={`mailto:${order.customer_email}`} className="text-sm text-wine-600 hover:text-wine-700">
                                           {order.customer_email}
                                         </a>
                                       </div>
@@ -953,7 +953,7 @@ const StoreAdmin = () => {
                                           href={`https://wa.me/${order.customer_whatsapp.replace(/[^0-9]/g, '')}`}
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="text-sm text-emerald-600 hover:text-emerald-700"
+                                          className="text-sm text-wine-600 hover:text-wine-700"
                                         >
                                           {order.customer_whatsapp}
                                         </a>
@@ -996,7 +996,7 @@ const StoreAdmin = () => {
                                           step="0.01"
                                           value={editingOrder.shipping_cost_nzd}
                                           onChange={(e) => setEditingOrder({ ...editingOrder, shipping_cost_nzd: e.target.value })}
-                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                                           placeholder="0.00"
                                         />
                                       </div>
@@ -1008,7 +1008,7 @@ const StoreAdmin = () => {
                                         <select
                                           value={editingOrder.status}
                                           onChange={(e) => setEditingOrder({ ...editingOrder, status: e.target.value })}
-                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                                         >
                                           <option value="pending">Pending Review</option>
                                           <option value="invoice_sent">Invoice Sent</option>
@@ -1027,7 +1027,7 @@ const StoreAdmin = () => {
                                           type="text"
                                           value={editingOrder.payment_method}
                                           onChange={(e) => setEditingOrder({ ...editingOrder, payment_method: e.target.value })}
-                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                                           placeholder="e.g., Bank Transfer, Stripe"
                                         />
                                       </div>
@@ -1040,7 +1040,7 @@ const StoreAdmin = () => {
                                           type="text"
                                           value={editingOrder.payment_reference}
                                           onChange={(e) => setEditingOrder({ ...editingOrder, payment_reference: e.target.value })}
-                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                                           placeholder="Transaction ID"
                                         />
                                       </div>
@@ -1053,7 +1053,7 @@ const StoreAdmin = () => {
                                           type="text"
                                           value={editingOrder.tracking_number}
                                           onChange={(e) => setEditingOrder({ ...editingOrder, tracking_number: e.target.value })}
-                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                                           placeholder="Tracking number"
                                         />
                                       </div>
@@ -1065,7 +1065,7 @@ const StoreAdmin = () => {
                                         <textarea
                                           value={editingOrder.admin_notes}
                                           onChange={(e) => setEditingOrder({ ...editingOrder, admin_notes: e.target.value })}
-                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                                           rows="3"
                                           placeholder="Internal notes..."
                                         />
@@ -1074,7 +1074,7 @@ const StoreAdmin = () => {
                                       <div className="flex gap-2 pt-2">
                                         <button
                                           onClick={saveEditingOrder}
-                                          className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                                          className="flex-1 px-4 py-2 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-colors font-medium"
                                         >
                                           Save Changes
                                         </button>
@@ -1141,7 +1141,7 @@ const StoreAdmin = () => {
                                     <div className="space-y-2">
                                       <button
                                         onClick={() => startEditingOrder(order)}
-                                        className="w-full px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                                        className="w-full px-4 py-2 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-colors font-medium"
                                       >
                                         Edit Order Details
                                       </button>

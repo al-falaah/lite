@@ -675,7 +675,7 @@ const AdminStudentsList = () => {
               cy="40"
             />
             <circle
-              className="text-emerald-600"
+              className="text-wine-600"
               strokeWidth="6"
               strokeDasharray={213.628}
               strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -831,7 +831,7 @@ const AdminStudentsList = () => {
                   onClick={() => setStatusFilter(filter)}
                   className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium capitalize whitespace-nowrap transition-colors ${
                     statusFilter === filter
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-wine-600 text-white'
                       : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                   }`}
                 >
@@ -874,7 +874,7 @@ const AdminStudentsList = () => {
                 onClick={() => setProgramFilter(filter.value)}
                 className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
                   programFilter === filter.value
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-wine-600 text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -894,7 +894,7 @@ const AdminStudentsList = () => {
                 onClick={() => setGenderFilter(filter)}
                 className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium capitalize whitespace-nowrap transition-colors ${
                   genderFilter === filter
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-wine-600 text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -941,7 +941,7 @@ const AdminStudentsList = () => {
                       type="checkbox"
                       checked={selectedStudentIds.includes(student.id)}
                       onChange={() => handleToggleStudentSelection(student.id)}
-                      className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
+                      className="h-4 w-4 text-wine-600 focus:ring-wine-500 border-gray-300 rounded cursor-pointer"
                     />
                   </div>
 
@@ -954,7 +954,7 @@ const AdminStudentsList = () => {
                             type="checkbox"
                             checked={selectedStudentIds.includes(student.id)}
                             onChange={() => handleToggleStudentSelection(student.id)}
-                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
+                            className="h-4 w-4 text-wine-600 focus:ring-wine-500 border-gray-300 rounded cursor-pointer"
                           />
                         </div>
                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
@@ -1036,7 +1036,7 @@ const AdminStudentsList = () => {
                         variant="outline"
                         onClick={() => handleResendApprovalEmail(student)}
                         disabled={sendingEmail}
-                        className="flex-1 sm:flex-none flex items-center gap-1 text-emerald-600 hover:text-emerald-700 hover:border-emerald-600 text-xs sm:text-sm"
+                        className="flex-1 sm:flex-none flex items-center gap-1 text-wine-600 hover:text-wine-700 hover:border-wine-600 text-xs sm:text-sm"
                       >
                         <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
                         {sendingEmail ? 'Sending...' : <><span className="hidden xs:inline">Resend Approval</span><span className="xs:hidden">Approval</span></>}
@@ -1084,7 +1084,7 @@ const AdminStudentsList = () => {
                         onClick={() => setCurrentPage(page)}
                         className={`w-8 h-8 rounded-lg text-sm font-medium ${
                           currentPage === page
-                            ? 'bg-emerald-600 text-white'
+                            ? 'bg-wine-600 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                       >
@@ -1160,7 +1160,7 @@ const AdminStudentsList = () => {
               </div>
 
               {/* Enrollment Info */}
-              <div className="bg-emerald-50 rounded-lg p-3 sm:p-4">
+              <div className="bg-wine-50 rounded-lg p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3">
                   Student Status
                 </h3>
@@ -1196,7 +1196,7 @@ const AdminStudentsList = () => {
                           enrollment.program === PROGRAM_IDS.TAJWEED
                             ? 'bg-purple-50 border-purple-200'
                             : enrollment.program === PROGRAM_IDS.QARI
-                            ? 'bg-emerald-50 border-emerald-200'
+                            ? 'bg-wine-50 border-wine-200'
                             : 'bg-blue-50 border-blue-200'
                         }`}
                       >
@@ -1506,7 +1506,7 @@ const AdminStudentsList = () => {
                       }
                     }}
                     disabled={sendingEmail}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent bg-white"
                   >
                     <option value="">— Custom (plain text) —</option>
                     {MARKETING_TEMPLATES.map((t) => (
@@ -1529,7 +1529,7 @@ const AdminStudentsList = () => {
                     value={emailSubject}
                     onChange={(e) => setEmailSubject(e.target.value)}
                     placeholder="Enter email subject..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                     disabled={sendingEmail}
                   />
                 </div>
@@ -1543,7 +1543,7 @@ const AdminStudentsList = () => {
                     onChange={(e) => setEmailMessage(e.target.value)}
                     placeholder={emailTemplateKey ? 'Edit the HTML before sending...' : 'Enter your message...'}
                     rows={10}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none ${emailTemplateKey ? 'font-mono text-xs' : ''}`}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent resize-none ${emailTemplateKey ? 'font-mono text-xs' : ''}`}
                     disabled={sendingEmail}
                   />
                   <p className="mt-2 text-sm text-gray-500">
@@ -1607,8 +1607,8 @@ const AdminStudentsList = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="p-4 sm:p-6">
               <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <div className="p-2 sm:p-3 bg-emerald-100 rounded-full flex-shrink-0">
-                  <UserCheck className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
+                <div className="p-2 sm:p-3 bg-wine-100 rounded-full flex-shrink-0">
+                  <UserCheck className="h-5 w-5 sm:h-6 sm:w-6 text-wine-600" />
                 </div>
                 <div className="min-w-0">
                   <h2 className="text-lg sm:text-xl font-bold text-gray-900">Assign Teacher</h2>
@@ -1636,7 +1636,7 @@ const AdminStudentsList = () => {
                 <select
                   value={selectedTeacherId}
                   onChange={(e) => setSelectedTeacherId(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                 >
                   <option value="">-- Choose a teacher --</option>
                   {allTeachers

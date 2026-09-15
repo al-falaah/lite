@@ -612,7 +612,7 @@ const ClassScheduler = () => {
                 cy="40"
               />
               <circle
-                className="text-emerald-600"
+                className="text-wine-600"
                 strokeWidth="6"
                 strokeDasharray={213.628}
                 strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -691,7 +691,7 @@ const ClassScheduler = () => {
                 onClick={() => setScheduleFilter('all')}
                 className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'all'
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-wine-600 text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -701,7 +701,7 @@ const ClassScheduler = () => {
                 onClick={() => setScheduleFilter('with-schedules')}
                 className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'with-schedules'
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-wine-600 text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -711,7 +711,7 @@ const ClassScheduler = () => {
                 onClick={() => setScheduleFilter('without-schedules')}
                 className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   scheduleFilter === 'without-schedules'
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-wine-600 text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -800,7 +800,7 @@ const ClassScheduler = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search applicants..."
-                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                 />
                 {searchQuery && (
                   <button
@@ -1075,7 +1075,7 @@ const ClassScheduler = () => {
                                   onClick={() => setSelectedProgram(enrollment.program)}
                                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                                     selectedProgram === enrollment.program
-                                      ? 'bg-emerald-600 text-white'
+                                      ? 'bg-wine-600 text-white'
                                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                   }`}
                                 >
@@ -1131,7 +1131,7 @@ const ClassScheduler = () => {
 
                                     {/* Progress Fill */}
                                     <div
-                                      className="absolute top-3 left-0 h-0.5 bg-emerald-600 transition-all duration-500"
+                                      className="absolute top-3 left-0 h-0.5 bg-wine-600 transition-all duration-500"
                                       style={{
                                         width: `${((currentMilestone.id - 1) / (totalMilestones - 1)) * 100}%`
                                       }}
@@ -1149,9 +1149,9 @@ const ClassScheduler = () => {
                                             <div
                                               className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all ${
                                                 isCompleted
-                                                  ? 'bg-emerald-600 text-white'
+                                                  ? 'bg-wine-600 text-white'
                                                   : isCurrent
-                                                  ? 'bg-emerald-600 text-white'
+                                                  ? 'bg-wine-600 text-white'
                                                   : 'bg-white border-2 border-gray-300 text-gray-400'
                                               }`}
                                               title={milestone.subtitle}
@@ -1207,7 +1207,7 @@ const ClassScheduler = () => {
                                     </p>
                                   </div>
                                   <span className={`text-xs px-2 py-1 rounded font-medium ${
-                                    mainClass.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                                    mainClass.status === 'completed' ? 'bg-wine-100 text-wine-700' :
                                     mainClass.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
                                     'bg-gray-100 text-gray-600'
                                   }`}>
@@ -1238,7 +1238,7 @@ const ClassScheduler = () => {
                                   {mainClass.status === 'scheduled' && (
                                     <button
                                       onClick={() => handleMarkComplete(mainClass.id)}
-                                      className="text-sm text-emerald-700 hover:text-emerald-800 flex items-center font-medium ml-auto"
+                                      className="text-sm text-wine-700 hover:text-wine-800 flex items-center font-medium ml-auto"
                                     >
                                       <CheckCircle className="h-4 w-4 mr-1" />
                                       Mark Complete
@@ -1265,7 +1265,7 @@ const ClassScheduler = () => {
                                     </p>
                                   </div>
                                   <span className={`text-xs px-2 py-1 rounded font-medium ${
-                                    shortClass.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
+                                    shortClass.status === 'completed' ? 'bg-wine-100 text-wine-700' :
                                     shortClass.status === 'scheduled' ? 'bg-blue-100 text-blue-700' :
                                     'bg-gray-100 text-gray-600'
                                   }`}>
@@ -1296,7 +1296,7 @@ const ClassScheduler = () => {
                                   {shortClass.status === 'scheduled' && (
                                     <button
                                       onClick={() => handleMarkComplete(shortClass.id)}
-                                      className="text-sm text-emerald-700 hover:text-emerald-800 flex items-center font-medium ml-auto"
+                                      className="text-sm text-wine-700 hover:text-wine-800 flex items-center font-medium ml-auto"
                                     >
                                       <CheckCircle className="h-4 w-4 mr-1" />
                                       Mark Complete
@@ -1368,7 +1368,7 @@ const ClassScheduler = () => {
                 return (
                   <div className="bg-white p-4 rounded-lg border border-gray-200">
                     <div className="text-center py-12">
-                      <Calendar className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
+                      <Calendar className="h-16 w-16 mx-auto mb-4 text-wine-600" />
                       <p className="text-lg font-medium mb-2 text-gray-900">Generate Track Schedule</p>
                       <p className="text-sm mb-6 text-gray-600">
                         {unscheduledPrograms.length === 1
@@ -1377,7 +1377,7 @@ const ClassScheduler = () => {
                       </p>
                       <button
                         onClick={() => setShowGenerateModal(true)}
-                        className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                        className="inline-flex items-center px-6 py-3 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-colors font-medium"
                       >
                         <Zap className="h-5 w-5 mr-2" />
                         Generate Full Schedule
@@ -1422,15 +1422,15 @@ const ClassScheduler = () => {
 
             <form onSubmit={handleCreateSchedule} className="space-y-4">
               {/* Student Info */}
-              <div className="p-3 bg-emerald-50 rounded-lg">
-                <p className="text-sm font-medium text-emerald-900">
+              <div className="p-3 bg-wine-50 rounded-lg">
+                <p className="text-sm font-medium text-wine-900">
                   {selectedApplicant?.full_name}
                 </p>
-                <p className="text-xs text-emerald-700 mt-1">
+                <p className="text-xs text-wine-700 mt-1">
                   {selectedApplicant?.email}
                 </p>
                 {selectedApplicant?.student_id && (
-                  <p className="text-xs text-emerald-700">
+                  <p className="text-xs text-wine-700">
                     ID: {selectedApplicant.student_id}
                   </p>
                 )}
@@ -1444,7 +1444,7 @@ const ClassScheduler = () => {
                 <select
                   value={scheduleForm.day_of_week}
                   onChange={(e) => setScheduleForm({ ...scheduleForm, day_of_week: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   required
                 >
                   {days.map(day => (
@@ -1462,7 +1462,7 @@ const ClassScheduler = () => {
                   type="time"
                   value={scheduleForm.class_time}
                   onChange={(e) => setScheduleForm({ ...scheduleForm, class_time: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">Main classes are {getMainSessionLabel(scheduleForm.program || selectedProgram)} long</p>
@@ -1476,7 +1476,7 @@ const ClassScheduler = () => {
                 <select
                   value={scheduleForm.class_type}
                   onChange={(e) => setScheduleForm({ ...scheduleForm, class_type: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   required
                 >
                   <option value="main">Main Class ({getMainSessionLabel(scheduleForm.program || selectedProgram)})</option>
@@ -1495,7 +1495,7 @@ const ClassScheduler = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+                  className="flex-1 px-4 py-2 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-colors font-medium"
                 >
                   Schedule Class
                 </button>
@@ -1752,7 +1752,7 @@ const ClassScheduler = () => {
               <button
                 onClick={handleGenerateFullSchedule}
                 disabled={generating}
-                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium disabled:opacity-50 inline-flex items-center"
+                className="px-4 py-2 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-colors font-medium disabled:opacity-50 inline-flex items-center"
               >
                 {generating ? (
                   <>

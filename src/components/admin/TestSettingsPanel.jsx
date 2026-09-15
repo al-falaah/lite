@@ -210,7 +210,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
                       type="checkbox"
                       checked={setting.allow_exam_retake}
                       onChange={(e) => handleChange(setting.program_id, 'allow_exam_retake', e.target.checked)}
-                      className="rounded border-gray-300 text-emerald-600"
+                      className="rounded border-gray-300 text-wine-600"
                     />
                     Allow final exam retake
                   </label>
@@ -237,7 +237,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
                       type="checkbox"
                       checked={setting.show_wrong_answers}
                       onChange={(e) => handleChange(setting.program_id, 'show_wrong_answers', e.target.checked)}
-                      className="rounded border-gray-300 text-emerald-600"
+                      className="rounded border-gray-300 text-wine-600"
                     />
                     <Eye className="h-3.5 w-3.5 text-gray-400" />
                     Show wrong answers
@@ -247,7 +247,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
                       type="checkbox"
                       checked={setting.show_correct_answers}
                       onChange={(e) => handleChange(setting.program_id, 'show_correct_answers', e.target.checked)}
-                      className="rounded border-gray-300 text-emerald-600"
+                      className="rounded border-gray-300 text-wine-600"
                     />
                     <Eye className="h-3.5 w-3.5 text-gray-400" />
                     Show correct answers
@@ -257,7 +257,7 @@ export default function TestSettingsPanel({ settings, onSettingsUpdate }) {
                       type="checkbox"
                       checked={setting.show_explanations}
                       onChange={(e) => handleChange(setting.program_id, 'show_explanations', e.target.checked)}
-                      className="rounded border-gray-300 text-emerald-600"
+                      className="rounded border-gray-300 text-wine-600"
                     />
                     <MessageSquare className="h-3.5 w-3.5 text-gray-400" />
                     Show explanations

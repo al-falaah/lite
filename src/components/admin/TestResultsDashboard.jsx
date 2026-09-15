@@ -111,9 +111,9 @@ export default function TestResultsDashboard() {
           <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
           <p className="text-xs text-gray-500 mt-0.5">Total Students</p>
         </div>
-        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-center">
-          <p className="text-2xl font-bold text-emerald-700">{stats.passed}</p>
-          <p className="text-xs text-emerald-600 mt-0.5">Passed</p>
+        <div className="bg-wine-50 border border-wine-200 rounded-lg p-4 text-center">
+          <p className="text-2xl font-bold text-wine-700">{stats.passed}</p>
+          <p className="text-xs text-wine-600 mt-0.5">Passed</p>
         </div>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
           <p className="text-2xl font-bold text-red-700">{stats.failed}</p>
@@ -220,7 +220,7 @@ export default function TestResultsDashboard() {
                         </td>
                         <td className="px-4 py-3 text-center">
                           <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
-                            r.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
+                            r.status === 'passed' ? 'bg-wine-100 text-wine-700' :
                             r.status === 'failed' ? 'bg-red-100 text-red-700' :
                             'bg-amber-100 text-amber-700'
                           }`}>
@@ -252,7 +252,7 @@ export default function TestResultsDashboard() {
                                   <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200">
                                     <div className="flex items-center gap-3">
                                       <span className={`w-2 h-2 rounded-full ${
-                                        a.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'
+                                        a.status === 'completed' ? 'bg-wine-500' : 'bg-amber-500'
                                       }`} />
                                       <div>
                                         <p className="text-sm font-medium text-gray-900">{milestoneName}</p>
@@ -264,7 +264,7 @@ export default function TestResultsDashboard() {
                                     <div className="text-right">
                                       <p className="text-sm font-bold text-gray-900">{a.score}/{a.total_questions}</p>
                                       <p className={`text-xs font-medium ${
-                                        a.percentage >= 50 ? 'text-emerald-600' : 'text-red-600'
+                                        a.percentage >= 50 ? 'text-wine-600' : 'text-red-600'
                                       }`}>{Number(a.percentage).toFixed(1)}%</p>
                                     </div>
                                   </div>
@@ -303,7 +303,7 @@ export default function TestResultsDashboard() {
                         <p className="text-xs text-gray-500">{r.student_email}</p>
                       </div>
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
-                        r.status === 'passed' ? 'bg-emerald-100 text-emerald-700' :
+                        r.status === 'passed' ? 'bg-wine-100 text-wine-700' :
                         r.status === 'failed' ? 'bg-red-100 text-red-700' :
                         'bg-amber-100 text-amber-700'
                       }`}>
@@ -346,7 +346,7 @@ export default function TestResultsDashboard() {
                           <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-3 border border-gray-200">
                             <div className="flex items-center gap-3">
                               <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                                a.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'
+                                a.status === 'completed' ? 'bg-wine-500' : 'bg-amber-500'
                               }`} />
                               <div>
                                 <p className="text-sm font-medium text-gray-900">{milestoneName}</p>
@@ -358,7 +358,7 @@ export default function TestResultsDashboard() {
                             <div className="text-right">
                               <p className="text-sm font-bold text-gray-900">{a.score}/{a.total_questions}</p>
                               <p className={`text-xs font-medium ${
-                                a.percentage >= 50 ? 'text-emerald-600' : 'text-red-600'
+                                a.percentage >= 50 ? 'text-wine-600' : 'text-red-600'
                               }`}>{Number(a.percentage).toFixed(1)}%</p>
                             </div>
                           </div>

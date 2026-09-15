@@ -243,7 +243,7 @@ const AdminRoles = () => {
                 cy="40"
               />
               <circle
-                className="text-emerald-600"
+                className="text-wine-600"
                 strokeWidth="6"
                 strokeDasharray={213.628}
                 strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -285,13 +285,13 @@ const AdminRoles = () => {
           <div className="mb-8">
             <button
               onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium mb-4"
+              className="inline-flex items-center gap-1.5 text-sm text-wine-600 hover:text-wine-700 transition-colors font-medium mb-4"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
             </button>
             <div className="flex items-center gap-3 mb-2">
-              <Shield className="h-8 w-8 text-emerald-600" />
+              <Shield className="h-8 w-8 text-wine-600" />
               <h1 className="text-3xl font-bold text-gray-900">User Control</h1>
             </div>
             <p className="text-gray-600">
@@ -319,13 +319,13 @@ const AdminRoles = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <UserCog className="h-5 w-5 text-emerald-600" />
+                  <UserCog className="h-5 w-5 text-wine-600" />
                   Users ({filteredUsers.length} of {users.length})
                 </h2>
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500"
                 >
                   <option value="admin_only">Admin Users Only</option>
                   <option value="all">All Users</option>
@@ -381,7 +381,7 @@ const AdminRoles = () => {
                               value={user.role || 'registrar'}
                               onChange={(e) => handleUpdateRole(user.id, e.target.value)}
                               disabled={isUpdating || isSuspended}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-wine-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                             >
                               {ROLES.map(role => (
                                 <option key={role.value} value={role.value}>
@@ -398,7 +398,7 @@ const AdminRoles = () => {
                                 <button
                                   onClick={() => setConfirmAction({ userId: user.id, action: 'unsuspend', userName: user.full_name || user.email })}
                                   disabled={isUpdating}
-                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 disabled:opacity-50 transition-colors"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-wine-700 bg-wine-50 border border-wine-200 rounded-lg hover:bg-wine-100 disabled:opacity-50 transition-colors"
                                 >
                                   <RotateCcw className="h-3 w-3" />
                                   Reactivate
@@ -426,7 +426,7 @@ const AdminRoles = () => {
 
                           {isUpdating && (
                             <div className="flex items-center justify-center">
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-wine-600"></div>
                             </div>
                           )}
                         </div>
@@ -461,8 +461,8 @@ const AdminRoles = () => {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setConfirmAction(null)}>
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center gap-3 mb-4">
-              <div className={`p-2 rounded-full ${confirmAction.action === 'delete' ? 'bg-red-100' : confirmAction.action === 'suspend' ? 'bg-amber-100' : 'bg-emerald-100'}`}>
-                <AlertTriangle className={`h-5 w-5 ${confirmAction.action === 'delete' ? 'text-red-600' : confirmAction.action === 'suspend' ? 'text-amber-600' : 'text-emerald-600'}`} />
+              <div className={`p-2 rounded-full ${confirmAction.action === 'delete' ? 'bg-red-100' : confirmAction.action === 'suspend' ? 'bg-amber-100' : 'bg-wine-100'}`}>
+                <AlertTriangle className={`h-5 w-5 ${confirmAction.action === 'delete' ? 'text-red-600' : confirmAction.action === 'suspend' ? 'text-amber-600' : 'text-wine-600'}`} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900">
                 {confirmAction.action === 'delete' ? 'Delete User' : confirmAction.action === 'suspend' ? 'Suspend User' : 'Reactivate User'}
@@ -493,7 +493,7 @@ const AdminRoles = () => {
                     ? 'bg-red-600 hover:bg-red-700'
                     : confirmAction.action === 'suspend'
                     ? 'bg-amber-600 hover:bg-amber-700'
-                    : 'bg-emerald-600 hover:bg-emerald-700'
+                    : 'bg-wine-600 hover:bg-wine-700'
                 }`}
               >
                 {confirmAction.action === 'delete' ? 'Delete' : confirmAction.action === 'suspend' ? 'Suspend' : 'Reactivate'}
