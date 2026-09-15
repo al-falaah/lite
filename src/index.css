@@ -437,11 +437,13 @@ html {
   --mq-ink-dim: #77857f;        /* de-emphasised CONTENT — citations, durations (AA: 4.9:1 on panel) */
   --mq-ink-ghost: #4f5a59;      /* disabled / placeholder / faint icon ONLY (decorative) */
 
-  /* Marker set — bright fluorescent colors that glow on the glass. */
-  --mq-accent: #24e08a;         /* GREEN marker — brand/primary (logo green, lit) */
-  --mq-accent-deep: #16c476;    /* green hover */
-  --mq-accent-deeper: #0fa863;  /* green active */
-  --mq-on-accent: #04160f;      /* text on a green fill */
+  /* Marker set — warm colors that glow on the glass. The brand marker is now a
+     lit GOLD (the maroon brand's partner; maroon itself is too dark to glow on
+     black, gold sings on it and echoes the wordmark's gold). */
+  --mq-accent: #e8b04b;         /* GOLD marker — brand/primary, lit on the glass */
+  --mq-accent-deep: #d99f37;    /* gold hover */
+  --mq-accent-deeper: #c98f28;  /* gold active */
+  --mq-on-accent: #2a1013;      /* deep wine text on a gold fill */
   --mq-pink: #ff5d9e;           /* PINK marker — alerts / destructive / attention */
   --mq-yellow: #ffd23f;         /* YELLOW marker — "now / current focus" + pending (best contrast, 13:1) */
   --mq-cyan: #35d0e6;           /* CYAN marker — info / secondary live state */
@@ -517,7 +519,7 @@ html {
 .mashq .mashq-glyph-ink {
   position: absolute; inset: 0; color: var(--mq-accent);
   /* clean fill — no bloom (a faint hairline glow only, for legibility on glass) */
-  text-shadow: 0 0 2px rgba(36,224,138,0.25);
+  text-shadow: 0 0 2px rgba(232,176,75,0.25);
   -webkit-background-clip: text; background-clip: text;
   clip-path: inset(calc((1 - var(--fill, 1)) * 100%) 0 0 0);
   transition: clip-path 900ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -534,7 +536,7 @@ html {
 }
 .mashq .mashq-stroke.is-done {
   background: var(--mq-accent);
-  box-shadow: 0 0 3px rgba(36,224,138,0.3);
+  box-shadow: 0 0 3px rgba(232,176,75,0.3);
 }
 
 /* Recording indicator — a calm inked pulse (not a flashing red UI). */
