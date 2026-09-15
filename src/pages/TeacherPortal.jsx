@@ -454,7 +454,7 @@ export default function TeacherPortal() {
   if (initialLoading || !teacher) {
     return (
       <div className={`${PAGE} flex items-center justify-center`}>
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent" />
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-wine-600 border-t-transparent" />
       </div>
     );
   }
@@ -477,7 +477,7 @@ export default function TeacherPortal() {
       <nav className="sticky top-0 z-40 bg-white border-b border-slate-200">
         <div className={`${CONTAINER_WIDE} h-14 sm:h-16 flex items-center justify-between gap-3`}>
           <Link to="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
-            <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0" />
+            <img src="/favicon-wine.svg" alt="The FastTrack Madrasah" className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0" />
             <div className="flex flex-col leading-none">
               <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900">The FastTrack</span>
               <span className="text-xs sm:text-sm font-brand font-semibold text-slate-900" style={{ letterSpacing: '0.28em' }}>Madrasah</span>
@@ -620,7 +620,7 @@ export default function TeacherPortal() {
 
           {loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-emerald-600 border-t-transparent mx-auto" />
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-wine-600 border-t-transparent mx-auto" />
               <p className="mt-3 text-sm text-slate-500">Loading students…</p>
             </div>
           ) : displayedStudents.length === 0 ? (
@@ -675,7 +675,7 @@ export default function TeacherPortal() {
                     <p className="text-xs text-slate-500">Assigned {formatDate(assignment.assigned_at)}</p>
 
                     {hasPending && (
-                      <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700">
+                      <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-wine-700">
                         <Mic className="h-3.5 w-3.5" />
                         Recitation to review
                       </p>

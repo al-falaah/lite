@@ -527,8 +527,8 @@ const DirectorDashboard = () => {
         label: 'Graduated',
         value: stats.graduatedStudents,
         icon: GraduationCap,
-        color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50'
+        color: 'text-wine-600',
+        bgColor: 'bg-wine-50'
       },
       {
         label: 'Dropped Out',
@@ -543,8 +543,8 @@ const DirectorDashboard = () => {
         label: 'With Students',
         value: stats.teachersWithStudents,
         icon: TrendingUp,
-        color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50'
+        color: 'text-wine-600',
+        bgColor: 'bg-wine-50'
       },
       {
         label: 'Available',
@@ -568,8 +568,8 @@ const DirectorDashboard = () => {
         label: 'Pending Orders',
         value: stats.pendingOrders,
         icon: ShoppingBag,
-        color: 'text-emerald-600',
-        bgColor: 'bg-emerald-50'
+        color: 'text-wine-600',
+        bgColor: 'bg-wine-50'
       }
     ]
   };
@@ -586,7 +586,7 @@ const DirectorDashboard = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex items-center justify-between h-14">
               <div className="flex items-center gap-3">
-                <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-emerald-600 transition-colors">
+                <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-wine-600 transition-colors">
                   <ArrowLeft className="h-4 w-4" />
                   <span className="hidden sm:inline">Home</span>
                 </Link>
@@ -994,7 +994,7 @@ const DirectorDashboard = () => {
                       <button
                         type="submit"
                         disabled={inviting}
-                        className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 transition-colors"
+                        className="px-4 py-2 bg-wine-600 text-white text-sm font-medium rounded-lg hover:bg-wine-700 disabled:bg-gray-400 transition-colors"
                       >
                         {inviting ? 'Sending...' : 'Send Invitation'}
                       </button>

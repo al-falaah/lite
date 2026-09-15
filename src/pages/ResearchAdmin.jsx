@@ -681,7 +681,7 @@ const ResearchAdmin = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate(-1)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-wine-600 hover:text-wine-700 hover:bg-wine-50 rounded-lg transition-colors font-medium"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">Back</span>
@@ -799,7 +799,7 @@ const ResearchAdmin = () => {
                 <h2 className="font-bold text-gray-900 text-sm uppercase tracking-wide">Courses</h2>
                 <button
                   onClick={() => setShowCourseModal(true)}
-                  className="p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all"
+                  className="p-1.5 text-wine-600 hover:text-wine-700 hover:bg-wine-50 rounded-lg transition-all"
                   title="Add new course"
                 >
                   <Plus className="h-5 w-5" />
@@ -1018,7 +1018,7 @@ const ResearchAdmin = () => {
                           id="published"
                           checked={editingChapter.is_published}
                           onChange={(e) => setEditingChapter({ ...editingChapter, is_published: e.target.checked })}
-                          className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                          className="rounded border-gray-300 text-wine-600 focus:ring-wine-500"
                         />
                         <label htmlFor="published" className="text-sm text-gray-700">
                           Publish this chapter (visible to enrolled students)
@@ -1106,7 +1106,7 @@ const ResearchAdmin = () => {
                               onClick={() => handleTogglePublish(chapter)}
                               className={`p-2 rounded-lg ${
                                 chapter.is_published
-                                  ? 'text-emerald-600 hover:bg-emerald-50'
+                                  ? 'text-wine-600 hover:bg-wine-50'
                                   : 'text-gray-400 hover:bg-gray-100'
                               }`}
                               title={chapter.is_published ? 'Unpublish' : 'Publish'}
@@ -1161,7 +1161,7 @@ const ResearchAdmin = () => {
                               </button>
                               <button
                                 onClick={handleToggleQuizPublish}
-                                className={`px-3 py-1.5 text-sm rounded-lg ${quiz.is_published ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100' : 'text-gray-600 bg-gray-100 hover:bg-gray-200'}`}
+                                className={`px-3 py-1.5 text-sm rounded-lg ${quiz.is_published ? 'text-wine-700 bg-wine-50 hover:bg-wine-100' : 'text-gray-600 bg-gray-100 hover:bg-gray-200'}`}
                               >
                                 {quiz.is_published ? 'Published' : 'Publish'}
                               </button>
@@ -1208,7 +1208,7 @@ const ResearchAdmin = () => {
                               <label className="flex items-center gap-2 text-sm text-gray-700">
                                 <input type="checkbox" checked={quizForm.shuffle_questions}
                                   onChange={(e) => setQuizForm({ ...quizForm, shuffle_questions: e.target.checked })}
-                                  className="rounded border-gray-300 text-emerald-600" />
+                                  className="rounded border-gray-300 text-wine-600" />
                                 Shuffle questions
                               </label>
                             </div>
@@ -1216,7 +1216,7 @@ const ResearchAdmin = () => {
                               <label className="flex items-center gap-2 text-sm text-gray-700">
                                 <input type="checkbox" checked={quizForm.shuffle_options}
                                   onChange={(e) => setQuizForm({ ...quizForm, shuffle_options: e.target.checked })}
-                                  className="rounded border-gray-300 text-emerald-600" />
+                                  className="rounded border-gray-300 text-wine-600" />
                                 Shuffle options
                               </label>
                             </div>
@@ -1264,7 +1264,7 @@ const ResearchAdmin = () => {
                                       'bg-amber-100 text-amber-700'
                                     }`}>{q.difficulty}</span>
                                     {q.section_tag && <span className="text-xs text-gray-500">{q.section_tag}</span>}
-                                    <span className="text-xs text-emerald-600 font-medium">Answer: {q.correct_answer}</span>
+                                    <span className="text-xs text-wine-600 font-medium">Answer: {q.correct_answer}</span>
                                   </div>
                                 </div>
                               </div>
@@ -1320,7 +1320,7 @@ const ResearchAdmin = () => {
                               <div key={idx} className="flex items-center gap-2 mb-2">
                                 <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                                   editingQuestion.correct_answer === String.fromCharCode(65 + idx)
-                                    ? 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-400'
+                                    ? 'bg-wine-100 text-wine-700 ring-2 ring-wine-400'
                                     : 'bg-gray-100 text-gray-600'
                                 }`}>
                                   {String.fromCharCode(65 + idx)}
@@ -1336,8 +1336,8 @@ const ResearchAdmin = () => {
                                   onClick={() => setEditingQuestion({ ...editingQuestion, correct_answer: String.fromCharCode(65 + idx) })}
                                   className={`px-2 py-1.5 rounded-lg text-xs font-medium ${
                                     editingQuestion.correct_answer === String.fromCharCode(65 + idx)
-                                      ? 'bg-emerald-600 text-white'
-                                      : 'bg-gray-200 text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+                                      ? 'bg-wine-600 text-white'
+                                      : 'bg-gray-200 text-gray-600 hover:bg-wine-50 hover:text-wine-700'
                                   }`}
                                 >
                                   {editingQuestion.correct_answer === String.fromCharCode(65 + idx) ? 'Correct' : 'Set correct'}
@@ -1411,7 +1411,7 @@ const ResearchAdmin = () => {
                       slug: generateSlug(newTitle)
                     });
                   }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500"
                 />
               </div>
 
@@ -1425,7 +1425,7 @@ const ResearchAdmin = () => {
                   required
                   value={courseForm.slug}
                   onChange={(e) => setCourseForm({ ...courseForm, slug: generateSlug(e.target.value) })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500"
                   placeholder="e.g., tajweed-basics"
                 />
               </div>
@@ -1435,7 +1435,7 @@ const ResearchAdmin = () => {
                 <select
                   value={courseForm.program_id}
                   onChange={(e) => setCourseForm({ ...courseForm, program_id: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500"
                 >
                   <option value="qari">QARI</option>
                   <option value="tajweed">TMP (Tajweed)</option>
@@ -1449,14 +1449,14 @@ const ResearchAdmin = () => {
                   value={courseForm.description}
                   onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500"
                 />
               </div>
 
               <div className="flex gap-3 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                  className="flex-1 px-4 py-2 bg-wine-600 text-white rounded-lg hover:bg-wine-700"
                 >
                   {editingCourse ? 'Update Course' : 'Create Course'}
                 </button>
@@ -1544,7 +1544,7 @@ const ResearchAdmin = () => {
               </button>
               <button
                 onClick={() => setPreviewChapter(null)}
-                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                className="px-4 py-2 bg-wine-600 text-white rounded-lg hover:bg-wine-700"
               >
                 Close
               </button>

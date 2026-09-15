@@ -42,7 +42,7 @@ export default function AcademicDeanHub() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => navigate(-1)}
-                  className="inline-flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 transition-colors font-medium"
+                  className="inline-flex items-center gap-1.5 text-sm text-wine-600 hover:text-wine-700 transition-colors font-medium"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   <span className="hidden sm:inline">Back</span>

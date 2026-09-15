@@ -1,12 +1,12 @@
 /**
- * Design system primitives — slate + emerald.
+ * Design system primitives — slate + wine (maroon).
  *
  * Used across the redesigned teacher and student portals so every page
  * draws from the same token set. Import the class strings, don't copy
  * them. If we tighten the design later, every page updates from here.
  *
  * Principles (read this before adding a new primitive):
- * - One brand colour: emerald, used assertively and only on:
+ * - One brand colour: wine (maroon), used assertively and only on:
  *     - primary actions (Submit, Save, Continue)
  *     - the active progress fill / live total
  *     - selected-state of grade chips and similar
@@ -37,8 +37,8 @@ export const CARD_FOOTER = 'px-5 py-3 border-t border-slate-100 bg-slate-50';
 // ── Buttons ────────────────────────────────────────────────────
 export const BTN_PRIMARY =
   'inline-flex items-center justify-center px-4 py-2 ' +
-  'bg-emerald-600 text-white text-sm font-medium rounded-md ' +
-  'hover:bg-emerald-700 active:bg-emerald-800 ' +
+  'bg-wine-600 text-white text-sm font-medium rounded-md ' +
+  'hover:bg-wine-700 active:bg-wine-800 ' +
   'disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed ' +
   'transition-colors';
 
@@ -69,14 +69,14 @@ export const BTN_DESTRUCTIVE =
 export const INPUT =
   'w-full text-sm text-slate-900 placeholder-slate-400 ' +
   'border border-slate-300 rounded-md px-3 py-2 bg-white ' +
-  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none ' +
   'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
 
 // Compact numeric input — for inline score / max / weight fields.
 export const INPUT_NUMERIC =
   'text-sm tabular-nums text-slate-900 ' +
   'border border-slate-300 rounded-md px-2 py-1.5 bg-white ' +
-  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none ' +
   'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
 
 // Native select element — same look as INPUT, with a chevron-friendly
@@ -84,7 +84,7 @@ export const INPUT_NUMERIC =
 export const SELECT =
   'w-full text-sm text-slate-900 ' +
   'border border-slate-300 rounded-md pl-3 pr-8 py-2 bg-white ' +
-  'focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 focus:outline-none ' +
+  'focus:border-wine-600 focus:ring-2 focus:ring-wine-600/15 focus:outline-none ' +
   'disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed';
 
 export const TEXTAREA = `${INPUT} resize-y`;
@@ -97,10 +97,10 @@ export const CHIP =
   'hover:bg-slate-50 hover:border-slate-400 ' +
   'transition-colors';
 
-// Selected state — branded emerald, not greyscale.
+// Selected state — branded wine, not greyscale.
 export const CHIP_SELECTED =
   'inline-flex items-center justify-center text-sm px-3 py-1.5 rounded-md ' +
-  'bg-emerald-50 text-emerald-700 border border-emerald-300 font-medium';
+  'bg-wine-50 text-wine-700 border border-wine-300 font-medium';
 
 // ── Typography ─────────────────────────────────────────────────
 export const HEADING = 'text-base font-semibold text-slate-900';
@@ -125,10 +125,10 @@ export const CONTAINER = 'max-w-5xl mx-auto px-4 sm:px-6';
 export const CONTAINER_WIDE = 'max-w-7xl mx-auto px-4 sm:px-6';
 
 // ── Tab bar (horizontal, used on desktop) ──────────────────────
-export const TAB_ACTIVE = 'inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-emerald-600 text-emerald-700';
+export const TAB_ACTIVE = 'inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-wine-600 text-wine-700';
 export const TAB_INACTIVE = 'inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-colors';
 
 // ── Mobile bottom-tab item ─────────────────────────────────────
 export const BOTTOM_TAB = 'flex flex-col items-center justify-center gap-0.5 flex-1 min-h-[44px] py-2 text-[10px] font-medium transition-colors';
-export const BOTTOM_TAB_ACTIVE = `${BOTTOM_TAB} text-emerald-700`;
+export const BOTTOM_TAB_ACTIVE = `${BOTTOM_TAB} text-wine-700`;
 export const BOTTOM_TAB_INACTIVE = `${BOTTOM_TAB} text-slate-500 hover:text-slate-900`;

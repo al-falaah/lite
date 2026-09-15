@@ -586,7 +586,7 @@ const BlogAdmin = () => {
   // Don't wait indefinitely for profile if user exists
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-wine-50 to-white flex items-center justify-center p-4">
         <div className="text-center">
           <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-12 w-12 mx-auto mb-4" />
           <div className="relative w-24 h-24 inline-block">
@@ -601,7 +601,7 @@ const BlogAdmin = () => {
                 cy="40"
               />
               <circle
-                className="text-emerald-600"
+                className="text-wine-600"
                 strokeWidth="6"
                 strokeDasharray={213.628}
                 strokeDashoffset={213.628 - (213.628 * loadingProgress) / 100}
@@ -644,7 +644,7 @@ const BlogAdmin = () => {
   // Wait for profile to load if user exists
   if (!user || (user && !profile) || (user && profile && !profile.is_admin)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-wine-50 to-white flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity mb-4">
@@ -689,7 +689,7 @@ const BlogAdmin = () => {
                   name="email"
                   required
                   disabled={loggingIn}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
               </div>
               <div>
@@ -699,7 +699,7 @@ const BlogAdmin = () => {
                   name="password"
                   required
                   disabled={loggingIn}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
               </div>
               <Button type="submit" variant="primary" className="w-full" disabled={loggingIn}>
@@ -727,7 +727,7 @@ const BlogAdmin = () => {
                     cy="32"
                   />
                   <circle
-                    className="text-emerald-600"
+                    className="text-wine-600"
                     strokeWidth="5"
                     strokeDasharray={175.929}
                     strokeDashoffset={175.929 - (175.929 * loadingProgress) / 100}
@@ -758,7 +758,7 @@ const BlogAdmin = () => {
           ) : null}
 
           <div className="mt-6 text-center">
-            <Link to="/" className="text-sm text-emerald-600 hover:text-emerald-700">
+            <Link to="/" className="text-sm text-wine-600 hover:text-wine-700">
               ← Back to Home
             </Link>
           </div>
@@ -791,14 +791,14 @@ const BlogAdmin = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors font-medium"
+                className="flex items-center gap-1.5 px-3 py-2 text-sm text-wine-600 hover:text-wine-700 hover:bg-wine-50 rounded-lg transition-colors font-medium"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">Back</span>
               </button>
               <Link
                 to="/blog"
-                className="text-sm text-gray-600 hover:text-emerald-600 transition-colors hidden sm:inline"
+                className="text-sm text-gray-600 hover:text-wine-600 transition-colors hidden sm:inline"
               >
                 View Blog
               </Link>
@@ -836,7 +836,7 @@ const BlogAdmin = () => {
                   type="text"
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="Enter post title"
                 />
               </div>
@@ -850,7 +850,7 @@ const BlogAdmin = () => {
                   type="text"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="post-url-slug"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -867,7 +867,7 @@ const BlogAdmin = () => {
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                   rows="3"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="Brief description for preview cards"
                 />
               </div>
@@ -880,7 +880,7 @@ const BlogAdmin = () => {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                 >
                   {CATEGORIES.map((category) => (
                     <option key={category} value={category}>
@@ -913,7 +913,7 @@ const BlogAdmin = () => {
 
                       setFormData({ ...formData, is_pinned: willPin });
                     }}
-                    className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    className="w-4 h-4 text-wine-600 border-gray-300 rounded focus:ring-wine-500"
                   />
                   <span className="text-sm font-medium text-gray-700">
                     Pin this post at the top of the blog page
@@ -933,7 +933,7 @@ const BlogAdmin = () => {
                   type="text"
                   value={formData.featured_image}
                   onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="https://images.unsplash.com/photo-..."
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -967,7 +967,7 @@ const BlogAdmin = () => {
                   type="text"
                   value={formData.author_name}
                   onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="e.g., Ustadh Abdulquadri Alaka"
                 />
               </div>
@@ -981,7 +981,7 @@ const BlogAdmin = () => {
                   value={formData.author_bio}
                   onChange={(e) => setFormData({ ...formData, author_bio: e.target.value })}
                   rows="3"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine-500 focus:border-transparent"
                   placeholder="A brief bio about the author (shown at the bottom of the post)"
                 />
               </div>
@@ -1004,7 +1004,7 @@ const BlogAdmin = () => {
                 <button
                   type="button"
                   onClick={() => handleSave(true)}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-wine-600 hover:bg-wine-700 text-white font-medium rounded-lg transition-colors"
                 >
                   <Eye className="h-4 w-4" />
                   {editingPost && formData.status === 'published' ? 'Update & Republish' : 'Publish'}
@@ -1044,7 +1044,7 @@ const BlogAdmin = () => {
                   {posts.map((post) => (
                     <div
                       key={post.id}
-                      className="border border-gray-200 rounded-lg p-3 hover:border-emerald-300 transition-colors"
+                      className="border border-gray-200 rounded-lg p-3 hover:border-wine-300 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex-1 min-w-0">
@@ -1062,7 +1062,7 @@ const BlogAdmin = () => {
                           <span
                             className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
                               post.status === 'published'
-                                ? 'bg-emerald-100 text-emerald-700'
+                                ? 'bg-wine-100 text-wine-700'
                                 : 'bg-gray-100 text-gray-700'
                             }`}
                           >
@@ -1072,7 +1072,7 @@ const BlogAdmin = () => {
                             onClick={() => handleToggleStatus(post)}
                             className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
                               post.status === 'published'
-                                ? 'bg-emerald-600'
+                                ? 'bg-wine-600'
                                 : 'bg-gray-300'
                             }`}
                             title={post.status === 'published' ? 'Switch to draft' : 'Publish'}
@@ -1089,7 +1089,7 @@ const BlogAdmin = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEdit(post)}
-                            className="text-xs text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                            className="text-xs text-wine-600 hover:text-wine-700 flex items-center gap-1"
                           >
                             <Edit2 className="h-3 w-3" />
                             Edit
