@@ -23,7 +23,7 @@ export default function SplashScreen({ onFinish }) {
     >
       {/* Logo */}
       <img
-        src="/favicon.svg"
+        src="/favicon-wine.svg"
         alt="The FastTrack Madrasah"
         className={`h-20 w-20 transition-all duration-700 ease-out ${
           phase === 'enter' ? 'scale-75 opacity-0' : 'scale-100 opacity-100'

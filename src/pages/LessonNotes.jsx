@@ -410,7 +410,7 @@ const LessonNotes = () => {
                 {theme === 'light' ? 'Light' : theme === 'sepia' ? 'Sepia' : 'Dark'}
               </button>
               <Link to="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-                <img src="/favicon.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
+                <img src="/favicon-wine.svg" alt="The FastTrack Madrasah" className="h-6 w-6" />
               </Link>
             </div>
           </div>

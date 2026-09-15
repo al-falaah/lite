@@ -715,7 +715,7 @@ export default function StudentLessons({
         <div className="flex items-center justify-between h-14 px-3 sm:px-5">
           <div className="flex items-center gap-1.5 min-w-0">
             <img
-              src={theme === 'dark' ? '/favicon-white.svg' : '/favicon.svg'}
+              src={theme === 'dark' ? '/favicon-white.svg' : '/favicon-wine.svg'}
               alt="The FastTrack Madrasah"
               className="h-5 w-5 flex-shrink-0"
             />

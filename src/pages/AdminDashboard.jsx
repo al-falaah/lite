@@ -332,7 +332,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
-            <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-12 w-12 mx-auto mb-6" />
+            <img src="/favicon-wine.svg" alt="The FastTrack Madrasah Logo" className="h-12 w-12 mx-auto mb-6" />
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">Admin Portal</h1>
             <p className="text-sm text-gray-500">The FastTrack Madrasah</p>
           </div>
@@ -397,7 +397,7 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center min-w-0">
-              <img src="/favicon.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8 flex-shrink-0" />
+              <img src="/favicon-wine.svg" alt="The FastTrack Madrasah Logo" className="h-8 w-8 flex-shrink-0" />
               <span className="ml-2 text-base sm:text-xl font-brand font-bold text-gray-900 truncate">
                 <span className="hidden sm:inline">The FastTrack Madrasah </span>Admin
               </span>
