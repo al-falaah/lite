@@ -306,7 +306,7 @@ export default function DrillPlayer() {
           </div>
 
           <button onClick={startGame}
-            className="w-full py-4 bg-[var(--mq-accent)] hover:bg-[var(--mq-accent-deep)] text-[var(--mq-on-accent)] text-lg font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
+            className="w-full py-4 bg-[#e8b04b] hover:bg-[#d99f37] text-[#2a1013] text-lg font-bold rounded-xl transition-colors flex items-center justify-center gap-2">
             <Play className="h-5 w-5" /> Start Drill
           </button>
 
@@ -369,7 +369,7 @@ export default function DrillPlayer() {
                 <RotateCcw className="h-3.5 w-3.5" /> Try again
               </button>
               <button onClick={() => navigate('/student')}
-                className="flex-1 py-3 bg-[var(--mq-accent)] hover:bg-[var(--mq-accent-deep)] text-[var(--mq-on-accent)] text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                className="flex-1 py-3 bg-[#e8b04b] hover:bg-[#d99f37] text-[#2a1013] text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5">
                 Back to portal <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
@@ -421,7 +421,7 @@ export default function DrillPlayer() {
           {/* Progress (questions) */}
           <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[var(--mq-accent)] rounded-full transition-all duration-500"
+              className="h-full bg-[#e8b04b] rounded-full transition-all duration-500"
               style={{ width: `${((index + (isResult ? 1 : 0)) / questions.length) * 100}%` }}
             />
           </div>
