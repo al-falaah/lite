@@ -18,7 +18,7 @@ const FloatingWhatsApp = () => {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-20 sm:bottom-6 left-6 z-50 bg-[#25D366] hover:bg-[#20BA5A] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
+      className="fixed bottom-20 sm:bottom-6 left-6 z-50 bg-wine-700 hover:bg-wine-800 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
     >
@@ -33,12 +33,12 @@ const FloatingWhatsApp = () => {
       </svg>
 
       {/* Tooltip */}
-      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-wine-950 text-white text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         Chat with us
       </span>
 
       {/* Pulse animation */}
-      <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping-slow opacity-75"></span>
+      <span className="absolute inset-0 rounded-full bg-wine-700 animate-ping-slow opacity-75"></span>
     </a>
   );
 };
