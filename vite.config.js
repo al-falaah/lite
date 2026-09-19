@@ -13,7 +13,7 @@ export default defineConfig({
         name: 'The FastTrack Madrasah',
         short_name: 'TFT Madrasah',
         description: 'Online Qur\'anic education for everyone. Structured, time-bound programs with dedicated mentorship.',
-        theme_color: '#0a9369',
+        theme_color: '#7a2e39',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/login',
