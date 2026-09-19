@@ -138,7 +138,7 @@ export default function PricingSettings() {
                 <p className="text-xs text-gray-400 mt-0.5">
                   Market rate: <span className="font-medium text-gray-600">${fullPrice.toLocaleString()} NZD</span>
                   {discount > 0 && (
-                    <span className="ml-2 inline-flex items-center gap-1 text-emerald-600">
+                    <span className="ml-2 inline-flex items-center gap-1 text-wine-600">
                       <TrendingDown className="h-3 w-3" />
                       {discount}% subsidized
                     </span>

@@ -599,7 +599,7 @@ const AdminDashboard = () => {
                   <div className="relative inline-flex items-center justify-center">
                     <svg className="w-16 h-16 transform -rotate-90">
                       <circle cx="32" cy="32" r="28" stroke="#e5e7eb" strokeWidth="4" fill="none" />
-                      <circle cx="32" cy="32" r="28" stroke="#059669" strokeWidth="4" fill="none" strokeLinecap="round"
+                      <circle cx="32" cy="32" r="28" stroke="#7a2e39" strokeWidth="4" fill="none" strokeLinecap="round"
                         strokeDasharray={2 * Math.PI * 28}
                         className="animate-spin" style={{animationDuration: '1.5s'}} />
                     </svg>

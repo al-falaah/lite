@@ -37,10 +37,10 @@ export const MARKETING_TEMPLATES = [
 
         <p class="paragraph">As we continue to grow, we'd love for you to help us reach other families who would benefit from authentic Islamic learning. And we'd like to reward you for doing so.</p>
 
-        <div class="info-box" style="background: #ecfdf5; border-left: 4px solid #059669;">
+        <div class="info-box" style="background: #f9f3f4; border-left: 4px solid #7a2e39;">
           <div class="info-box-title" style="color: #065f46;">Your personal referral code</div>
           <p style="margin: 12px 0; text-align: center;">
-            <span style="display: inline-block; background: white; border: 2px dashed #059669; padding: 12px 20px; border-radius: 8px; font-family: monospace; font-size: 20px; font-weight: 700; color: #059669; letter-spacing: 1px;">{{referral_code}}</span>
+            <span style="display: inline-block; background: white; border: 2px dashed #7a2e39; padding: 12px 20px; border-radius: 8px; font-family: monospace; font-size: 20px; font-weight: 700; color: #7a2e39; letter-spacing: 1px;">{{referral_code}}</span>
           </p>
         </div>
 
@@ -53,13 +53,13 @@ export const MARKETING_TEMPLATES = [
 
         <p class="paragraph" style="margin-top: 32px;">No cap, no fine print — the more people benefit from your referral, the more we'll send your way.</p>
 
-        <p class="paragraph" style="margin-top: 36px;">If you have any questions, just reply to this email or reach out to <a href="mailto:admin@tftmadrasah.nz" style="color: #059669; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>
+        <p class="paragraph" style="margin-top: 36px;">If you have any questions, just reply to this email or reach out to <a href="mailto:admin@tftmadrasah.nz" style="color: #7a2e39; text-decoration: none; font-weight: 600;">admin@tftmadrasah.nz</a>.</p>
 
         <p class="paragraph" style="margin-top: 32px; font-style: italic; color: #6b7280;">May Allah reward you for sharing knowledge with others.</p>
 
         <p class="paragraph" style="margin-top: 36px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
           Jazaakumullaahu Khayran,<br>
-          <strong style="color: #059669;">The FastTrack Madrasah Team</strong>
+          <strong style="color: #7a2e39;">The FastTrack Madrasah Team</strong>
         </p>
       </div>
 
@@ -98,17 +98,17 @@ export const MARKETING_TEMPLATES = [
           </p>
         </div>
 
-        <p class="paragraph">If you know someone who might benefit, feel free to share your referral code <strong style="color: #059669; font-family: monospace;">{{referral_code}}</strong> — they get 25% off.</p>
+        <p class="paragraph">If you know someone who might benefit, feel free to share your referral code <strong style="color: #7a2e39; font-family: monospace;">{{referral_code}}</strong> — they get 25% off.</p>
 
         <center style="margin: 32px 0;">
-          <a href="https://www.tftmadrasah.nz/programs" class="cta-button" style="background: #059669; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">View programs</a>
+          <a href="https://www.tftmadrasah.nz/programs" class="cta-button" style="background: #7a2e39; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block;">View programs</a>
         </center>
 
         <p class="paragraph" style="margin-top: 32px;">Reply to this email with any questions.</p>
 
         <p class="paragraph" style="margin-top: 36px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
           Jazaakumullaahu Khayran,<br>
-          <strong style="color: #059669;">The FastTrack Madrasah Team</strong>
+          <strong style="color: #7a2e39;">The FastTrack Madrasah Team</strong>
         </p>
       </div>
 
@@ -153,7 +153,7 @@ export const MARKETING_TEMPLATES = [
 
         <p class="paragraph" style="margin-top: 36px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
           Jazaakumullaahu Khayran,<br>
-          <strong style="color: #059669;">The FastTrack Madrasah Team</strong>
+          <strong style="color: #7a2e39;">The FastTrack Madrasah Team</strong>
         </p>
       </div>
 

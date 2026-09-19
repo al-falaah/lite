@@ -29,7 +29,7 @@ const Input = ({
         onChange={onChange}
         onBlur={onBlur}
         disabled={disabled}
-        className={`w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent focus:bg-emerald-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${
+        className={`w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-transparent focus:bg-wine-50 disabled:bg-gray-100 disabled:cursor-not-allowed ${
           error ? 'border-red-500' : 'border-gray-300'
         } ${type === 'date' ? 'box-border' : ''} ${className}`}
         style={type === 'date' ? { WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none' } : {}}

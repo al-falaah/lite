@@ -29,7 +29,7 @@ const Textarea = ({
         onBlur={onBlur}
         disabled={disabled}
         rows={rows}
-        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed resize-none ${
+        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-wine-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed resize-none ${
           error ? 'border-red-500' : 'border-gray-300'
         } ${className}`}
         {...props}

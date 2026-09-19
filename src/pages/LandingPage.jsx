@@ -456,8 +456,8 @@ const LandingPage = () => {
                 <span className="text-7xl sm:text-8xl font-black text-red-400/15 uppercase tracking-[0.25em] -rotate-12 select-none">SAMPLE</span>
               </div>
               {/* Borders */}
-              <div className="absolute" style={{ inset: '8px', border: '2px solid #059669', borderRadius: '2px' }} />
-              <div className="absolute" style={{ inset: '14px', border: '1px solid #a7f3d0', borderRadius: '2px' }} />
+              <div className="absolute" style={{ inset: '8px', border: '2px solid #7a2e39', borderRadius: '2px' }} />
+              <div className="absolute" style={{ inset: '14px', border: '1px solid #e3c98f', borderRadius: '2px' }} />
               {/* Watermark logo */}
               <div className="absolute" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.03 }}>
                 <img src="/favicon-wine.svg" alt="" className="w-48 h-48" />

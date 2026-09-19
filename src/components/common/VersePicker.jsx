@@ -215,7 +215,7 @@ export default function VersePicker({ onInsert, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
           <div className="flex items-center gap-2 text-gray-900">
-            <BookOpen className="h-4 w-4 text-emerald-600" />
+            <BookOpen className="h-4 w-4 text-wine-600" />
             <span className="font-semibold">Insert verified āyah</span>
           </div>
           <button type="button" onClick={onClose} className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700">
@@ -234,7 +234,7 @@ export default function VersePicker({ onInsert, onClose }) {
               type="button"
               onClick={() => { setMode(m); setResults(null); setStatus(''); setErrorMsg(''); setPartialInfo(0); }}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                mode === m ? 'bg-emerald-100 text-emerald-700' : 'text-gray-500 hover:bg-gray-100'
+                mode === m ? 'bg-wine-100 text-wine-700' : 'text-gray-500 hover:bg-gray-100'
               }`}
             >
               {label}
@@ -252,7 +252,7 @@ export default function VersePicker({ onInsert, onClose }) {
                   type="number" min="1" max="114" value={sura}
                   onChange={(e) => setSura(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && lookupRef()}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-wine-500 focus:outline-none"
                   placeholder="112"
                 />
               </label>
@@ -262,13 +262,13 @@ export default function VersePicker({ onInsert, onClose }) {
                   type="number" min="1" value={aya}
                   onChange={(e) => setAya(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && lookupRef()}
-                  className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none"
+                  className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-900 focus:border-wine-500 focus:outline-none"
                   placeholder="1"
                 />
               </label>
               <button
                 type="button" onClick={lookupRef} disabled={status === 'loading'}
-                className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-md bg-wine-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-wine-700 disabled:opacity-50"
               >
                 <Search className="h-3.5 w-3.5" /> Look up
               </button>
@@ -278,14 +278,14 @@ export default function VersePicker({ onInsert, onClose }) {
               <textarea
                 dir="rtl" value={pasted}
                 onChange={(e) => setPasted(e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-lg text-gray-900 focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-lg text-gray-900 focus:border-wine-500 focus:outline-none"
                 rows={2}
                 placeholder="الصق الآية هنا…"
                 style={{ fontFamily: "'Amiri Quran', 'Amiri', serif" }}
               />
               <button
                 type="button" onClick={verifyPaste} disabled={status === 'loading'}
-                className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-wine-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-wine-700 disabled:opacity-50"
               >
                 <Check className="h-3.5 w-3.5" /> Verify
               </button>
@@ -341,13 +341,13 @@ export default function VersePicker({ onInsert, onClose }) {
                         </p>
                       )}
                       <div className="mt-2 flex items-center justify-between">
-                        <span className={`inline-flex items-center gap-1 text-xs ${r.partial ? 'text-sky-700' : 'text-emerald-700'}`}>
+                        <span className={`inline-flex items-center gap-1 text-xs ${r.partial ? 'text-sky-700' : 'text-wine-700'}`}>
                           <Check className="h-3.5 w-3.5" /> {r.suraName} {r.sura}:{r.aya}
                           {r.partial && <span className="text-gray-400">· partial</span>}
                         </span>
                         <button
                           type="button" onClick={() => confirm(r)}
-                          className="rounded-md bg-emerald-600 px-3 py-1 text-sm font-medium text-white hover:bg-emerald-700"
+                          className="rounded-md bg-wine-600 px-3 py-1 text-sm font-medium text-white hover:bg-wine-700"
                         >
                           Insert
                         </button>

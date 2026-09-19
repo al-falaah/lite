@@ -61,7 +61,7 @@ export const TEXT_MUTED_DARK = 'text-sm text-[var(--mq-ink-faint)]';
 
 // Tab bar variants with dark mode (alternative to design/ui.js TAB_ACTIVE/INACTIVE if full dark tokenization needed)
 // Currently design/ui.js tabs are light-only; these are backups if needed
-export const TAB_ACTIVE_DARK = `inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-emerald-600 text-emerald-700 dark:text-emerald-400 dark:border-emerald-500`;
+export const TAB_ACTIVE_DARK = `inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-wine-600 text-wine-700 dark:text-wine-400 dark:border-wine-500`;
 
 export const TAB_INACTIVE_DARK = `inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-300 hover:border-slate-300 dark:hover:border-gray-600`;
 

@@ -131,7 +131,7 @@ const Resources = () => {
                 cx="64"
                 cy="64"
                 r="56"
-                stroke="#059669"
+                stroke="#7a2e39"
                 strokeWidth="8"
                 fill="none"
                 strokeLinecap="round"

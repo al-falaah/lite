@@ -80,11 +80,11 @@ export default function CertificateTemplate({ certificate, onDownload }) {
         {/* Borders */}
         <div style={{
           position: 'absolute', inset: '12px',
-          border: '2px solid #059669', borderRadius: '2px',
+          border: '2px solid #7a2e39', borderRadius: '2px',
         }} />
         <div style={{
           position: 'absolute', inset: '18px',
-          border: '1px solid #a7f3d0', borderRadius: '2px',
+          border: '1px solid #e3c98f', borderRadius: '2px',
         }} />
 
         {/* Corner Ornaments */}
@@ -93,7 +93,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
             position: 'absolute',
             ...(pos.includes('t') ? { top: '24px' } : { bottom: '24px' }),
             ...(pos.includes('l') ? { left: '24px' } : { right: '24px' }),
-            width: '60px', height: '60px', opacity: 0.3, color: '#059669',
+            width: '60px', height: '60px', opacity: 0.3, color: '#7a2e39',
             transform: `${pos.includes('r') ? 'scaleX(-1)' : ''} ${pos.includes('b') ? 'scaleY(-1)' : ''}`.trim() || undefined,
           }}>
             <svg viewBox="0 0 60 60" width="60" height="60">
@@ -112,7 +112,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
         }}>
           {/* Logo */}
           <img src="/favicon-wine.svg" alt="" style={{ width: '56px', height: '56px', marginBottom: '6px' }} crossOrigin="anonymous" />
-          <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '14px', fontWeight: 600, letterSpacing: '0.02em', color: '#065f46', marginBottom: '4px' }}>
+          <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '14px', fontWeight: 600, letterSpacing: '0.02em', color: '#57202a', marginBottom: '4px' }}>
             The FastTrack Madrasah
           </div>
           <div style={{ fontSize: '10px', opacity: 0.5, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '20px' }}>
@@ -120,7 +120,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
           </div>
 
           {/* Title */}
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '32px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#065f46', marginBottom: '6px' }}>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '32px', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#57202a', marginBottom: '6px' }}>
             Certificate of Completion
           </div>
           <div style={{ fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.6, marginBottom: '24px' }}>
@@ -131,7 +131,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
           <div style={{ fontSize: '12px', letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.5, marginBottom: '8px' }}>
             This is to certify that
           </div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '36px', fontWeight: 600, fontStyle: 'italic', color: '#065f46', marginBottom: '6px' }}>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '36px', fontWeight: 600, fontStyle: 'italic', color: '#57202a', marginBottom: '6px' }}>
             {certificate.student_name}
           </div>
 
@@ -155,7 +155,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
             ].map(s => (
               <div key={s.label} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5 }}>{s.label}</div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '22px', fontWeight: 700, color: '#059669' }}>{s.value}</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '22px', fontWeight: 700, color: '#7a2e39' }}>{s.value}</div>
               </div>
             ))}
           </div>
@@ -167,7 +167,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
               { name: certificate.teacher_name || 'Assigned Teacher', title: 'Instructor' },
             ].map(sig => (
               <div key={sig.title} style={{ textAlign: 'center', minWidth: '160px' }}>
-                <div style={{ fontFamily: "'Great Vibes', cursive", fontSize: '24px', color: '#065f46', lineHeight: 1.2, marginBottom: '2px' }}>
+                <div style={{ fontFamily: "'Great Vibes', cursive", fontSize: '24px', color: '#57202a', lineHeight: 1.2, marginBottom: '2px' }}>
                   {sig.name}
                 </div>
                 <div style={{ width: '160px', borderBottom: '1px solid rgba(0,0,0,0.3)', marginBottom: '6px' }} />
@@ -190,7 +190,7 @@ export default function CertificateTemplate({ certificate, onDownload }) {
       <div className="mt-4 flex justify-center">
         <button
           onClick={handleDownload}
-          className="inline-flex items-center px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium shadow-sm"
+          className="inline-flex items-center px-6 py-2.5 bg-wine-600 text-white rounded-lg hover:bg-wine-700 transition-colors text-sm font-medium shadow-sm"
         >
           <Download className="h-4 w-4 mr-2" />
           Download Certificate (PDF)

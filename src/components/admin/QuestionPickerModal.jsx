@@ -186,7 +186,7 @@ export default function QuestionPickerModal({
                           <div className="flex flex-wrap gap-1.5 mt-1">
                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
                               q.source === 'lesson_quiz'
-                                ? 'bg-emerald-100 text-emerald-700'
+                                ? 'bg-wine-100 text-wine-700'
                                 : 'bg-blue-100 text-blue-700'
                             }`}>
                               {q.source === 'lesson_quiz' ? 'Lesson quiz' : 'Test bank'}

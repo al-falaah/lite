@@ -38,7 +38,7 @@ const EMAIL_STYLES = `
   .brand-name {
     font-size: 24px;
     font-weight: 700;
-    color: #059669;
+    color: #7a2e39;
     margin: 8px 0 4px;
   }
   .brand-tagline {
@@ -73,7 +73,7 @@ const EMAIL_STYLES = `
   }
   .button {
     display: inline-block;
-    background: #059669;
+    background: #7a2e39;
     color: white !important;
     padding: 14px 32px;
     text-decoration: none;
@@ -99,7 +99,7 @@ const EMAIL_STYLES = `
     margin: 4px 0;
   }
   .footer-link {
-    color: #059669;
+    color: #7a2e39;
     text-decoration: none;
   }
   .info-box {
@@ -159,7 +159,7 @@ const EMAIL_STYLES = `
     font-size: 15px;
   }
   a {
-    color: #059669;
+    color: #7a2e39;
     text-decoration: none;
   }
   a:hover {
@@ -188,7 +188,7 @@ const EMAIL_STYLES = `
 const getLogoSvg = () => `
 <svg width="56" height="56" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="64" height="64" rx="12" fill="#059669"/>
+  <rect width="64" height="64" rx="12" fill="#7a2e39"/>
 
   <!-- Open Book Shape -->
   <!-- Left page -->
@@ -199,7 +199,7 @@ const getLogoSvg = () => `
   <rect x="31" y="18" width="2" height="28" fill="#047857"/>
 
   <!-- AFA Text centered on both pages with stroke -->
-  <text x="32" y="37" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#059669" stroke="white" stroke-width="0.5" text-anchor="middle">
+  <text x="32" y="37" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#7a2e39" stroke="white" stroke-width="0.5" text-anchor="middle">
     AFA
   </text>
 </svg>
@@ -394,7 +394,7 @@ export const inviteEmail = (applicantData, inviteToken, baseUrl = 'https://tftma
             </div>
 
             <p class="paragraph" style="font-size: 13px; color: #6b7280;">If the button doesn't work, copy and paste this link into your browser:</p>
-            <p class="paragraph" style="word-break: break-all; font-size: 13px; color: #059669; background: #f0fdf4; padding: 12px; border-radius: 6px;">${signupUrl}</p>
+            <p class="paragraph" style="word-break: break-all; font-size: 13px; color: #7a2e39; background: #f0fdf4; padding: 12px; border-radius: 6px;">${signupUrl}</p>
 
             <div class="divider"></div>
 
@@ -445,7 +445,7 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
               <table>
                 <tr>
                   <td class="label">Student ID</td>
-                  <td class="value" style="color: #059669; font-size: 16px;">${student_id}</td>
+                  <td class="value" style="color: #7a2e39; font-size: 16px;">${student_id}</td>
                 </tr>
                 <tr>
                   <td class="label">Program</td>
@@ -457,7 +457,7 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
                 </tr>
                 <tr>
                   <td class="label">Status</td>
-                  <td class="value" style="color: #059669;">✓ Active</td>
+                  <td class="value" style="color: #7a2e39;">✓ Active</td>
                 </tr>
               </table>
             </div>
@@ -467,7 +467,7 @@ export const welcomeEmail = (studentData, baseUrl = 'http://localhost:5173') => 
               <table>
                 <tr>
                   <td class="label">Email</td>
-                  <td class="value" style="color: #059669; font-size: 16px; font-family: monospace;">${email}</td>
+                  <td class="value" style="color: #7a2e39; font-size: 16px; font-family: monospace;">${email}</td>
                 </tr>
                 <tr>
                   <td class="label">Temporary Password</td>

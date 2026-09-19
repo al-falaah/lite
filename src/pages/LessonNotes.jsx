@@ -292,7 +292,7 @@ const LessonNotes = () => {
           <div className="relative inline-flex items-center justify-center mb-4">
             <svg className="w-24 h-24 transform -rotate-90">
               <circle cx="48" cy="48" r="40" stroke="#e5e7eb" strokeWidth="6" fill="none" />
-              <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="6" fill="none" strokeLinecap="round"
+              <circle cx="48" cy="48" r="40" stroke="#7a2e39" strokeWidth="6" fill="none" strokeLinecap="round"
                 strokeDasharray={2 * Math.PI * 40}
                 strokeDashoffset={2 * Math.PI * 40 * (1 - loadingProgress / 100)}
                 className="transition-all duration-300 ease-out" />

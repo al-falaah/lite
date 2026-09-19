@@ -18,7 +18,7 @@ const SPINNER_SIZES = {
 export function Spinner({ size = 'md', className = '' }) {
   return (
     <div
-      className={`${SPINNER_SIZES[size] || SPINNER_SIZES.md} animate-spin rounded-full border-2 border-emerald-600 border-t-transparent ${className}`}
+      className={`${SPINNER_SIZES[size] || SPINNER_SIZES.md} animate-spin rounded-full border-2 border-wine-600 border-t-transparent ${className}`}
       role="status"
       aria-label="Loading"
     />

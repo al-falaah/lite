@@ -774,7 +774,7 @@ export default function StudentLessons({
                     type="button"
                     aria-expanded={isOpen}
                     onClick={() => setExpandedSections(prev => ({ ...prev, [sectionKey]: !isOpen }))}
-                    className={`w-full flex items-center justify-between gap-2 px-3 min-h-[44px] rounded-lg border text-left transition-colors ${t.border} ${activeInSection ? t.itemActive : t.hover} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50`}
+                    className={`w-full flex items-center justify-between gap-2 px-3 min-h-[44px] rounded-lg border text-left transition-colors ${t.border} ${activeInSection ? t.itemActive : t.hover} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wine-500/50`}
                   >
                     <span className={`text-sm font-semibold leading-snug ${activeInSection ? '' : t.text}`}>
                       {section.label}
@@ -1072,7 +1072,7 @@ export default function StudentLessons({
            types: .tip-key (Key terms, slate) · .tip-warning (Caution, amber).
            Structure is shared; colour comes from per-theme CSS variables. */
         .lesson-callouts .tip {
-          --c-accent: #059669;
+          --c-accent: #7a2e39;
           --c-tint: rgba(5, 150, 105, 0.05);
           --c-label: #047857;
           --c-icon: '💡';
@@ -1121,21 +1121,21 @@ export default function StudentLessons({
         .lesson-theme-dark .tip.tip-warning { --c-tint: rgba(245, 158, 11, 0.12); --c-accent: #fbbf24; --c-label: #fcd34d; }
 
         /* Authored schematic tables carry pale-green cell fills as INLINE styles
-           (#ecfdf5 / #d1fae5) with no inline text colour, so in dark mode the
+           (#ecfdf5 / #f1e4e6) with no inline text colour, so in dark mode the
            prose forces chalk-white text ONTO those pale fills — white-on-light,
            the cells the reader flagged. Force dark ink back onto exactly those
            authored-green cells (and their spans/links) so the header/label rows
            read. Cells with no authored fill keep the theme's chalk ink. */
         .lesson-theme-dark td[style*="#ecfdf5"],
         .lesson-theme-dark th[style*="#ecfdf5"],
-        .lesson-theme-dark td[style*="#d1fae5"],
-        .lesson-theme-dark th[style*="#d1fae5"] {
+        .lesson-theme-dark td[style*="#f1e4e6"],
+        .lesson-theme-dark th[style*="#f1e4e6"] {
           color: #08301f !important;
         }
         .lesson-theme-dark td[style*="#ecfdf5"] *,
         .lesson-theme-dark th[style*="#ecfdf5"] *,
-        .lesson-theme-dark td[style*="#d1fae5"] *,
-        .lesson-theme-dark th[style*="#d1fae5"] * {
+        .lesson-theme-dark td[style*="#f1e4e6"] *,
+        .lesson-theme-dark th[style*="#f1e4e6"] * {
           color: #08301f !important;
         }
       `}</style>

@@ -852,15 +852,15 @@ const ApplicationPage = () => {
                         borderRadius: '0.5rem',
                         padding: '0.125rem',
                         '&:hover': {
-                          borderColor: '#10b981'
+                          borderColor: '#7a2e39'
                         }
                       }),
                       option: (provided, state) => ({
                         ...provided,
-                        backgroundColor: state.isSelected ? '#10b981' : state.isFocused ? '#d1fae5' : 'white',
+                        backgroundColor: state.isSelected ? '#7a2e39' : state.isFocused ? '#f1e4e6' : 'white',
                         color: state.isSelected ? 'white' : '#1f2937',
                         '&:active': {
-                          backgroundColor: '#059669'
+                          backgroundColor: '#7a2e39'
                         }
                       })
                     }}
