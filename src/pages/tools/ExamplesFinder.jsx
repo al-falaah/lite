@@ -9,6 +9,7 @@ import {
   searchTopics,
 } from '../../utils/topicMap';
 import { normalizeUthmani } from '../../utils/uthmani';
+import HighlightableAyah from '../../components/common/HighlightableAyah';
 
 // Surah names for display
 const SURAH_NAMES = {
@@ -142,25 +143,6 @@ function extractRelevantContent(content, topic) {
   return content;
 }
 
-// Strip Arabic diacritics and normalize alef/ya/ta-marbuta for matching.
-// Handles Uthmani script quirks: superscript alef (ٰ U+0670) is implicit alef
-// pronunciation, so we convert the preceding letter-sequence to include an
-// alef BEFORE stripping diacritics. Also normalizes alef wasla (ٱ).
-function normalizeArabic(text) {
-  if (!text) return '';
-  return text
-    // ى followed by superscript alef = alef sound (Uthmani: مَجْرىٰها → مجراها)
-    .replace(/ى\u0670/g, 'ا')
-    // Any other letter + superscript alef → letter + alef
-    .replace(/(.)\u0670/g, '$1ا')
-    // Strip all tashkeel and Quranic recitation marks
-    .replace(/[\u064B-\u065F\u06D6-\u06ED]/g, '')
-    .replace(/\u0640/g, '') // tatweel
-    .replace(/[ٱإأآ]/g, 'ا') // alef wasla + variants
-    .replace(/ى/g, 'ي')
-    .replace(/ة/g, 'ه')
-    .trim();
-}
 
 // Extract Quranic word references from the relevant content
 // For tajweed: inline {curly braces} refs
@@ -227,87 +209,6 @@ function isDisclaimerClause(clause, searchTerms) {
 // Render ayah text with specified references highlighted in yellow.
 // Matches are done after normalizing diacritics so the highlighted span
 // preserves the original (with tashkeel) text.
-function AyahWithHighlights({ ayahText, refs }) {
-  const segments = useMemo(() => {
-    if (!refs || refs.length === 0) return [{ type: 'plain', text: ayahText }];
-
-    // Build normalized ayah + original chars map (char-by-char, same length after regex replace)
-    const words = ayahText.split(/(\s+)/); // keep whitespace as separate segments
-    const refNorms = refs.map((r) => normalizeArabic(r)).filter(Boolean);
-
-    // Build a list of word-sequences that form each ref
-    // For each ref (which may be multi-word), we'll find a matching window in words
-    const highlightFlags = new Array(words.length).fill(false);
-
-    for (const refNorm of refNorms) {
-      const refWords = refNorm.split(/\s+/).filter(Boolean);
-      if (refWords.length === 0) continue;
-
-      for (let i = 0; i < words.length; i++) {
-        if (!words[i].trim()) continue;
-        // Try matching refWords starting at position i (skipping whitespace)
-        let wi = 0;
-        let matched = [];
-        let idx = i;
-        while (idx < words.length && wi < refWords.length) {
-          const w = words[idx];
-          if (!w.trim()) {
-            matched.push(idx);
-            idx++;
-            continue;
-          }
-          const wNorm = normalizeArabic(w);
-          if (wNorm === refWords[wi] || wNorm.replace(/^[وفبلك]/, '') === refWords[wi]) {
-            matched.push(idx);
-            wi++;
-            idx++;
-          } else {
-            break;
-          }
-        }
-        if (wi === refWords.length) {
-          matched.forEach((mi) => { highlightFlags[mi] = true; });
-        }
-      }
-    }
-
-    // Merge consecutive highlighted words into a single span
-    const result = [];
-    let buffer = '';
-    let bufferHighlight = null;
-    for (let i = 0; i < words.length; i++) {
-      const flag = highlightFlags[i];
-      if (bufferHighlight === null) {
-        bufferHighlight = flag;
-        buffer = words[i];
-      } else if (bufferHighlight === flag) {
-        buffer += words[i];
-      } else {
-        result.push({ type: bufferHighlight ? 'highlight' : 'plain', text: buffer });
-        buffer = words[i];
-        bufferHighlight = flag;
-      }
-    }
-    if (buffer) {
-      result.push({ type: bufferHighlight ? 'highlight' : 'plain', text: buffer });
-    }
-    return result;
-  }, [ayahText, refs]);
-
-  return (
-    <p className="font-arabic text-lg sm:text-xl text-gray-900 leading-loose text-right" dir="rtl">
-      {segments.map((seg, i) =>
-        seg.type === 'highlight' ? (
-          <mark key={i} className="bg-yellow-200 text-gray-900 rounded px-0.5">
-            {seg.text}
-          </mark>
-        ) : (
-          <span key={i}>{seg.text}</span>
-        )
-      )}
-    </p>
-  );
-}
 
 // Single result card
 function ResultCard({ result, topic, isPrimary }) {
@@ -354,9 +255,13 @@ function ResultCard({ result, topic, isPrimary }) {
         )}
       </div>
 
-      {/* Ayah text with highlighted matches */}
-      <div className="px-4 py-3 border-b border-gray-100">
-        <AyahWithHighlights ayahText={normalizeUthmani(result.aya_text)} refs={quranicRefs} />
+      {/* Ayah text — matched pattern pre-highlighted, any word tappable */}
+      <div className="px-4 py-4 border-b border-gray-100">
+        <HighlightableAyah
+          text={result.aya_text}
+          matchRefs={quranicRefs}
+          size="text-lg sm:text-2xl"
+        />
       </div>
 
       {/* Analysis content */}

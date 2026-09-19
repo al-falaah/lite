@@ -42,6 +42,26 @@ export function normalizeUthmani(s) {
   return s.replace(QCF_REGEX, (ch) => QCF_MAP[ch] || ch);
 }
 
+/**
+ * Loose Arabic normaliser for matching a reference phrase against ayah words
+ * (used to auto-highlight the matched portion). Folds superscript alef, strips
+ * tashkeel and recitation marks, unifies alef/yaa/taa-marbuta variants.
+ * @param {string} text
+ * @returns {string}
+ */
+export function normalizeArabic(text) {
+  if (!text) return '';
+  return text
+    .replace(/ىٰ/g, 'ا')
+    .replace(/(.)ٰ/g, '$1ا')
+    .replace(/[ً-ٟۖ-ۭ]/g, '')
+    .replace(/ـ/g, '')
+    .replace(/[ٱإأآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .trim();
+}
+
 // --- Arabic skeleton for reference verification --------------------------
 //
 // To confirm a pasted āyah against the corpus we compare *skeletons*: the
