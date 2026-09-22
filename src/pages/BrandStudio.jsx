@@ -140,18 +140,45 @@ function scale(text, base, min, freeChars, rate = 0.06) {
 }
 
 // ---- Shared card primitives (all take the render context `c`) ------------
+// The brand lockup used on every card: the mark + the two-line "The FastTrack /
+// Madrasah" wordmark, exactly as it reads in the site nav (Space Grotesk, with
+// "Madrasah" letter-spaced to the width of "The FastTrack"). The wordmark ink
+// follows the palette so it stays legible on light and dark cards alike.
+function Wordmark({ c, align = 'right' }) {
+  const { pal, w } = c;
+  const mark = pal.dark ? LOGO_WHITE : LOGO;
+  const markH = w * 0.085;
+  const line = w * 0.024;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: w * 0.018, flexDirection: align === 'right' ? 'row' : 'row-reverse' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          lineHeight: 1.02,
+          textAlign: align === 'right' ? 'right' : 'left',
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontWeight: 600,
+          color: pal.ink,
+        }}
+      >
+        <span style={{ fontSize: line, letterSpacing: '0.005em' }}>The FastTrack</span>
+        <span style={{ fontSize: line, letterSpacing: '0.28em', marginRight: align === 'right' ? '-0.28em' : 0 }}>Madrasah</span>
+      </div>
+      <img src={mark} alt="" crossOrigin="anonymous" style={{ height: markH, width: 'auto' }} />
+    </div>
+  );
+}
+
 function Logo({ c, corner = true }) {
-  const src = c.pal.dark ? LOGO_WHITE : LOGO;
   if (corner) {
     return (
-      <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', minHeight: c.w * 0.11 }}>
-        {c.showLogo && (
-          <img src={src} alt="" crossOrigin="anonymous" style={{ height: c.w * 0.1, width: 'auto' }} />
-        )}
+      <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', minHeight: c.w * 0.1 }}>
+        {c.showLogo && <Wordmark c={c} align="right" />}
       </div>
     );
   }
-  return <img src={src} alt="" crossOrigin="anonymous" style={{ height: c.w * 0.1, width: 'auto' }} />;
+  return <Wordmark c={c} align="right" />;
 }
 
 function Watermark({ c }) {
