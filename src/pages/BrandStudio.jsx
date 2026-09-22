@@ -140,45 +140,59 @@ function scale(text, base, min, freeChars, rate = 0.06) {
 }
 
 // ---- Shared card primitives (all take the render context `c`) ------------
-// The brand lockup used on every card: the mark + the two-line "The FastTrack /
-// Madrasah" wordmark, exactly as it reads in the site nav (Space Grotesk, with
-// "Madrasah" letter-spaced to the width of "The FastTrack"). The wordmark ink
-// follows the palette so it stays legible on light and dark cards alike.
-function Wordmark({ c, align = 'right' }) {
+// The brand lockup used on every card: the mark ON TOP, then the two-line
+// "The FastTrack / Madrasah" wordmark centred beneath it (Space Grotesk, with
+// "Madrasah" letter-spaced to the width of "The FastTrack"). Centred at the top
+// of the card. The wordmark ink follows the palette so it stays legible on
+// light and dark cards alike.
+function Wordmark({ c }) {
   const { pal, w } = c;
   const mark = pal.dark ? LOGO_WHITE : LOGO;
   const markH = w * 0.085;
   const line = w * 0.024;
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: w * 0.018, flexDirection: align === 'right' ? 'row' : 'row-reverse' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: w * 0.014 }}>
+      <img src={mark} alt="" crossOrigin="anonymous" style={{ height: markH, width: 'auto' }} />
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          lineHeight: 1.02,
-          textAlign: align === 'right' ? 'right' : 'left',
+          alignItems: 'center',
+          lineHeight: 1.04,
+          textAlign: 'center',
           fontFamily: "'Space Grotesk', sans-serif",
           fontWeight: 600,
           color: pal.ink,
         }}
       >
         <span style={{ fontSize: line, letterSpacing: '0.005em' }}>The FastTrack</span>
-        <span style={{ fontSize: line, letterSpacing: '0.28em', marginRight: align === 'right' ? '-0.28em' : 0 }}>Madrasah</span>
+        {/* paddingLeft cancels the trailing tracking space so the letter-spaced
+           word stays optically centred under "The FastTrack". */}
+        <span style={{ fontSize: line, letterSpacing: '0.28em', paddingLeft: '0.28em' }}>Madrasah</span>
       </div>
-      <img src={mark} alt="" crossOrigin="anonymous" style={{ height: markH, width: 'auto' }} />
     </div>
   );
 }
 
 function Logo({ c, corner = true }) {
   if (corner) {
+    // Top-centre. The block reserves the lockup's full height plus a gap so the
+    // content below can never ride up into it.
     return (
-      <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', minHeight: c.w * 0.1 }}>
-        {c.showLogo && <Wordmark c={c} align="right" />}
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          minHeight: c.w * 0.165,
+        }}
+      >
+        {c.showLogo && <Wordmark c={c} />}
       </div>
     );
   }
-  return <Wordmark c={c} align="right" />;
+  return <Wordmark c={c} />;
 }
 
 function Watermark({ c }) {
