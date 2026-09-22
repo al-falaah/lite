@@ -199,7 +199,7 @@ export default function VersePicker({ onInsert, onClose }) {
   }, [pasted]);
 
   const confirm = (r) => {
-    onInsert({ sura: r.sura, aya: r.aya, text: r.text, source: ATTRIBUTION, partial: r.partial });
+    onInsert({ sura: r.sura, aya: r.aya, suraName: r.suraName, text: r.text, source: ATTRIBUTION, partial: r.partial });
     onClose();
   };
 

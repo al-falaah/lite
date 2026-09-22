@@ -1,7 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Loader2, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, Image as ImageIcon, BookOpen } from 'lucide-react';
+import VersePicker from '../components/common/VersePicker';
 
 /*
  * Brand Studio — a lightweight Canva-style branded-image generator for the
@@ -110,9 +111,10 @@ const PALETTES = [
 
 // --- Field definitions ----------------------------------------------------
 // kind: 'text' | 'area'  ·  ar: true renders as RTL Arabic input
+// quran: true adds a "Pick from Qurʾān" button that inserts a verified āyah.
 const F = {
-  arabic: { key: 'arabic', label: 'Arabic quote', kind: 'area', ar: true, rows: 3 },
-  ayah: { key: 'ayah', label: 'Āyah (Arabic)', kind: 'area', ar: true, rows: 3 },
+  arabic: { key: 'arabic', label: 'Arabic quote', kind: 'area', ar: true, rows: 3, quran: true },
+  ayah: { key: 'ayah', label: 'Āyah (Arabic)', kind: 'area', ar: true, rows: 3, quran: true },
   english: { key: 'english', label: 'English translation', kind: 'area', rows: 3 },
   meaning: { key: 'meaning', label: 'English meaning', kind: 'area', rows: 3 },
   tafsir: { key: 'tafsir', label: 'Tafsīr excerpt (English)', kind: 'area', rows: 5 },
@@ -557,6 +559,8 @@ export default function BrandStudio() {
   // sections. On desktop every group shows at once (see `showTab`).
   const [tab, setTab] = useState('text');
   const [busy, setBusy] = useState(false);
+  // Which Arabic field the Qurʾān verse picker is filling (null = closed).
+  const [pickerField, setPickerField] = useState(null);
 
   // Field values are keyed per-layout so switching layouts doesn't lose text.
   const [values, setValues] = useState(() => {
@@ -567,6 +571,24 @@ export default function BrandStudio() {
   const f = values[layout.id] || {};
   const set = (k) => (e) =>
     setValues((v) => ({ ...v, [layout.id]: { ...v[layout.id], [k]: e.target.value } }));
+  const setField = (k, val) =>
+    setValues((v) => ({ ...v, [layout.id]: { ...v[layout.id], [k]: val } }));
+
+  // Insert a verified āyah into the target Arabic field, and — for layouts that
+  // carry a reference/source field — fill the citation too, so quoting a verse
+  // is one action. The reference is only auto-filled when it's currently empty
+  // or was the sample, so it never clobbers something the user typed.
+  const insertAyah = (targetKey) => ({ sura, aya, suraName, text }) => {
+    setField(targetKey, text);
+    const cite = `Sūrat ${suraName} ${sura}:${aya}`;
+    const refKey = layout.fields.includes('ayahRef') ? 'ayahRef' : layout.fields.includes('source') ? 'source' : null;
+    if (refKey) {
+      const current = (f[refKey] || '').trim();
+      const isSample = current === (layout.sample[refKey] || '').trim();
+      if (!current || isSample) setField(refKey, cite);
+    }
+    setPickerField(null);
+  };
 
   // The preview is a FIXED AREA the card is fitted inside (contain), so the
   // WHOLE card is always visible whatever its aspect ratio — a square, a tall
@@ -822,8 +844,18 @@ export default function BrandStudio() {
                 {layout.fields.map((key) => {
                   const def = F[key];
                   if (!def) return null;
+                  const action = def.quran ? (
+                    <button
+                      type="button"
+                      onClick={() => setPickerField(key)}
+                      className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-wine-700 hover:bg-wine-50"
+                    >
+                      <BookOpen className="h-3.5 w-3.5" />
+                      Pick from Qurʾān
+                    </button>
+                  ) : null;
                   return (
-                    <Field key={key} label={def.label}>
+                    <Field key={key} label={def.label} action={action}>
                       {def.kind === 'area' ? (
                         <textarea
                           rows={def.rows || 3}
@@ -876,14 +908,24 @@ export default function BrandStudio() {
           </div>
         </div>
       </div>
+
+      {pickerField && (
+        <VersePicker
+          onInsert={insertAyah(pickerField)}
+          onClose={() => setPickerField(null)}
+        />
+      )}
     </>
   );
 }
 
-function Field({ label, children }) {
+function Field({ label, children, action }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[13px] font-medium text-gray-700">{label}</span>
+      <span className="mb-1.5 flex min-h-[26px] items-center justify-between">
+        <span className="text-[13px] font-medium text-gray-700">{label}</span>
+        {action}
+      </span>
       {children}
     </label>
   );
