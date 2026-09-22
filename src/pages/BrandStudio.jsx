@@ -185,7 +185,7 @@ function Logo({ c, corner = true }) {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'flex-start',
-          minHeight: c.w * 0.165,
+          minHeight: c.logoReserve,
         }}
       >
         {c.showLogo && <Wordmark c={c} />}
@@ -663,9 +663,16 @@ export default function BrandStudio() {
   // stay size.w × size.h.
   const aspect = size.h / size.w;
   const u = size.w * Math.min(1, aspect / 0.85);
+  // Square cards have lots of vertical room, so the centred content otherwise
+  // floats low — leaving a gap above the logo and crowding the Arabic below it.
+  // For roughly-square cards, sit the logo higher (less top padding) and give a
+  // bigger logo→content gap; taller/wider cards keep the tighter defaults.
+  const squarish = aspect >= 0.9 && aspect <= 1.15;
+  const topPad = (squarish ? 0.045 : 0.075) * u;
+  const logoReserve = (squarish ? 0.185 : 0.165) * u;
   const c = useMemo(
-    () => ({ f, pal, w: u, h: size.h, cw: size.w, arFont: arabicFont.css, showLogo, showFooter }),
-    [f, pal, u, size.h, size.w, arabicFont.css, showLogo, showFooter]
+    () => ({ f, pal, w: u, h: size.h, cw: size.w, logoReserve, arFont: arabicFont.css, showLogo, showFooter }),
+    [f, pal, u, size.h, size.w, logoReserve, arabicFont.css, showLogo, showFooter]
   );
 
   const download = async () => {
@@ -707,9 +714,9 @@ export default function BrandStudio() {
         flexDirection: 'column',
         fontFamily: "'Figtree', 'Inter', sans-serif",
         boxSizing: 'border-box',
-        // Vertical padding tracks the unit (shrinks for landscape); horizontal
-        // stays a share of the true width so wide cards keep side margins.
-        padding: `${u * 0.075}px ${size.w * 0.075}px`,
+        // Top padding sits the logo higher on square cards; bottom keeps the
+        // footer margin; horizontal is a share of the true width.
+        padding: `${topPad}px ${size.w * 0.075}px ${u * 0.075}px`,
       }}
     >
       <Watermark c={c} />
