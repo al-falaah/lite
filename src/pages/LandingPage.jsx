@@ -319,12 +319,13 @@ const LandingPage = () => {
                 Online · New Zealand · Worldwide
               </p>
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-[#2a1e1a] tracking-tight leading-[1.04] mb-6">
-                A real madrasah,<br />wherever you are
+                The connection of a classroom.<br />The freedom of online.
               </h1>
               <p className="text-base sm:text-lg text-[#584c44] leading-relaxed mb-8">
-                Qur&apos;an, Tajwīd, Arabic, and the Islamic sciences — structured programs
-                with real teachers who know your name, live classes and self-paced courses,
-                and progress you can see.
+                Experience dynamic, face-to-face instruction from anywhere in the world.
+                Master Qur&apos;an, Tajwīd, Arabic, and the Islamic sciences with our highly
+                visual teaching style, offering live classes, self-paced options, and
+                progress you can see.
               </p>
               <div className="flex flex-wrap gap-3 mb-10">
                 <Link to="/apply">
