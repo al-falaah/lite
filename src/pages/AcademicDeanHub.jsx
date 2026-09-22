@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { BookOpen, FileText, LogOut, ArrowRight, ArrowLeft } from 'lucide-react';
+import { BookOpen, FileText, LogOut, ArrowRight, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const areas = [
@@ -21,6 +21,15 @@ const areas = [
     iconBg: 'bg-teal-50',
     iconColor: 'text-teal-600',
     borderColor: 'hover:border-teal-300'
+  },
+  {
+    title: 'Brand Studio',
+    description: 'Generate branded marketing images — quote cards in Arabic & English, multiple templates and sizes',
+    icon: ImageIcon,
+    href: '/academic-dean/studio',
+    iconBg: 'bg-wine-50',
+    iconColor: 'text-wine-600',
+    borderColor: 'hover:border-wine-300'
   },
 ];
 

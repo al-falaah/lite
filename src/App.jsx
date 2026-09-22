@@ -38,6 +38,7 @@ import VerifyCertificate from './pages/VerifyCertificate';
 import OurMission from './pages/OurMission';
 import RegistrarHub from './pages/RegistrarHub';
 import AcademicDeanHub from './pages/AcademicDeanHub';
+import BrandStudio from './pages/BrandStudio';
 import NotFoundPage from './pages/NotFoundPage';
 import DrillPlayer from './components/drills/DrillPlayer';
 
@@ -91,6 +92,9 @@ function App() {
 function AppRoutes() {
   const location = useLocation();
   const isToolsRoute = location.pathname.startsWith('/tools');
+  // Full-screen work surfaces where a marketing WhatsApp FAB has no place and
+  // would overlap the controls.
+  const hideWhatsApp = isToolsRoute || location.pathname.startsWith('/academic-dean/studio');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -146,6 +150,16 @@ function AppRoutes() {
           element={
             <RoleRoute allowedRoles={['academic_dean', 'director']}>
               <AcademicDeanHub />
+            </RoleRoute>
+          }
+        />
+
+        {/* Brand Studio (marketing image generator) - academic_dean or director */}
+        <Route
+          path="/academic-dean/studio"
+          element={
+            <RoleRoute allowedRoles={['academic_dean', 'director']}>
+              <BrandStudio />
             </RoleRoute>
           }
         />
@@ -226,7 +240,7 @@ function AppRoutes() {
 
       <Toaster position="top-right" duration={3000} closeButton />
       <Analytics />
-      {!isToolsRoute && <FloatingWhatsApp />}
+      {!hideWhatsApp && <FloatingWhatsApp />}
     </div>
   );
 }
