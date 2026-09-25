@@ -687,11 +687,56 @@ export default function BrandStudio() {
         useCORS: true,
         backgroundColor: pal.bg,
       });
-      const link = document.createElement('a');
+
       const stamp = new Date().toISOString().slice(0, 10);
-      link.download = `ftm-${layout.id}-${pal.id}-${size.id}-${stamp}.png`;
-      link.href = canvas.toDataURL('image/png');
+      const filename = `ftm-${layout.id}-${pal.id}-${size.id}-${stamp}.png`;
+
+      // A real Blob works everywhere; data: URLs fail in installed PWAs and
+      // hit size limits on mobile.
+      const blob = await new Promise((resolve, reject) =>
+        canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png')
+      );
+      const file = new File([blob], filename, { type: 'image/png' });
+
+      // Installed PWA / mobile: the anchor-download trick silently does nothing
+      // in standalone display mode, so prefer the native share/save sheet. Only
+      // use it when the platform can actually share a file.
+      const standalone =
+        window.matchMedia?.('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+      const canShareFile =
+        typeof navigator !== 'undefined' &&
+        navigator.canShare &&
+        navigator.canShare({ files: [file] });
+
+      if (standalone && canShareFile) {
+        try {
+          await navigator.share({ files: [file], title: 'The FastTrack Madrasah' });
+          return;
+        } catch (shareErr) {
+          if (shareErr?.name === 'AbortError') return; // user dismissed the sheet
+          // fall through to the download fallback
+        }
+      }
+
+      // Desktop / browser tab: object-URL anchor download.
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.rel = 'noopener';
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+      // Revoke after the click has a chance to start the download.
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+      // Last resort for any environment that ignored the download (e.g. an
+      // installed PWA with no share support): offer the image in a new tab so
+      // the user can long-press / right-click to save it.
+      if (standalone && !canShareFile) {
+        window.open(url, '_blank');
+      }
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Image export failed', err);
