@@ -281,7 +281,7 @@ export default function VersePicker({ onInsert, onClose }) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-lg text-gray-900 focus:border-wine-500 focus:outline-none"
                 rows={2}
                 placeholder="الصق الآية هنا…"
-                style={{ fontFamily: "'Amiri Quran', 'Amiri', serif" }}
+                style={{ fontFamily: "'Noto Naskh Arabic', 'Amiri Quran', 'Amiri', serif" }}
               />
               <button
                 type="button" onClick={verifyPaste} disabled={status === 'loading'}
@@ -328,14 +328,14 @@ export default function VersePicker({ onInsert, onClose }) {
                     <li key={`${r.sura}:${r.aya}`} className="rounded-lg border border-gray-200 p-3">
                       <p
                         dir="rtl" className="text-xl leading-loose text-gray-900"
-                        style={{ fontFamily: "'Amiri Quran', 'Amiri', serif" }}
+                        style={{ fontFamily: "'Noto Naskh Arabic', 'Amiri Quran', 'Amiri', serif" }}
                       >
                         {r.text}
                       </p>
                       {r.partial && r.ayahText && (
                         <p
                           dir="rtl" className="mt-1 text-sm leading-loose text-gray-400"
-                          style={{ fontFamily: "'Amiri Quran', 'Amiri', serif" }}
+                          style={{ fontFamily: "'Noto Naskh Arabic', 'Amiri Quran', 'Amiri', serif" }}
                         >
                           {r.ayahText}
                         </p>

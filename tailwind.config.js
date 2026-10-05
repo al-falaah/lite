@@ -44,7 +44,7 @@ export default {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         serif: ['Lora', 'Georgia', 'Cambria', 'serif'],
         display: ['Spectral', 'Georgia', 'Cambria', 'serif'],
-        arabic: ['Amiri Quran', 'Amiri', 'serif'],
+        arabic: ['Noto Naskh Arabic', 'Amiri Quran', 'Amiri', 'serif'],
       }
     },
   },
