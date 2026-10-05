@@ -44,6 +44,8 @@ const ARABIC_FONTS = [
   { id: 'amiri', label: 'Amiri (traditional serif)', css: AR },
   { id: 'quran', label: 'Amiri Quran', css: ARQ },
   { id: 'cairo', label: 'Cairo (modern sans)', css: "'Cairo', 'Amiri', sans-serif" },
+  { id: 'tajawal', label: 'Tajawal (light modern sans)', css: "'Tajawal', 'Amiri', sans-serif" },
+  { id: 'plex', label: 'IBM Plex Sans Arabic (clean sans)', css: "'IBM Plex Sans Arabic', 'Amiri', sans-serif" },
 ];
 
 // --- Palettes (colour schemes) -------------------------------------------
