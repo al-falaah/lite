@@ -41,8 +41,9 @@ const SIZES = [
 
 // --- Arabic script options ------------------------------------------------
 const ARABIC_FONTS = [
-  { id: 'amiri', label: 'Amiri (traditional)', css: AR },
+  { id: 'amiri', label: 'Amiri (traditional serif)', css: AR },
   { id: 'quran', label: 'Amiri Quran', css: ARQ },
+  { id: 'cairo', label: 'Cairo (modern sans)', css: "'Cairo', 'Amiri', sans-serif" },
 ];
 
 // --- Palettes (colour schemes) -------------------------------------------
