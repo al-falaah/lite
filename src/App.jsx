@@ -57,6 +57,7 @@ import ListenMeaning from './pages/tools/ListenMeaning';
 
 // Components
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import UpdatePrompt from './components/common/UpdatePrompt';
 import SplashScreen from './components/SplashScreen';
 
 // Layout
@@ -247,6 +248,7 @@ function AppRoutes() {
       </Routes>
 
       <Toaster position="top-right" duration={3000} closeButton />
+      <UpdatePrompt />
       <Analytics />
       {!hideWhatsApp && <FloatingWhatsApp />}
     </div>

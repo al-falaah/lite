@@ -7,7 +7,13 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 'prompt': a new version waits until the user taps "Reload" in the
+      // in-app UpdatePrompt (src/components/common/UpdatePrompt.jsx), which
+      // also checks for updates hourly and when the app returns to the
+      // foreground — installed PWAs can stay open for days without a reload.
+      // Registration happens in that component (injectRegister: false).
+      registerType: 'prompt',
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'favicon-32x32.png', 'favicon-16x16.png', 'apple-touch-icon.png', 'favicon-maskable-512.png'],
       manifest: {
         name: 'The FastTrack Madrasah',
