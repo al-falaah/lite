@@ -51,6 +51,9 @@ import ArabiyyahWorkbench from './pages/tools/ArabiyyahWorkbench';
 import PageInsights from './pages/tools/PageInsights';
 import TajweedTest from './pages/tools/TajweedTest';
 import HadithEncyclopedia from './pages/tools/HadithEncyclopedia';
+import MeaningMatch from './pages/tools/MeaningMatch';
+import TranslatorsLens from './pages/tools/TranslatorsLens';
+import ListenMeaning from './pages/tools/ListenMeaning';
 
 // Components
 import FloatingWhatsApp from './components/FloatingWhatsApp';
@@ -233,6 +236,9 @@ function AppRoutes() {
           <Route path="arabiyyah" element={<ArabiyyahWorkbench />} />
           <Route path="pages" element={<PageInsights />} />
           <Route path="hadith" element={<HadithEncyclopedia />} />
+          <Route path="meaning-match" element={<MeaningMatch />} />
+          <Route path="lens" element={<TranslatorsLens />} />
+          <Route path="listen" element={<ListenMeaning />} />
           <Route path="tajweed-test/*" element={<TajweedTest />} />
         </Route>
 

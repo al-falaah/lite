@@ -66,6 +66,18 @@ const META = {
     title: 'Mawsūʿah — Hadith Encyclopedia in 70+ languages | The FastTrack Madrasah',
     description: 'Search and read authentic Prophetic hadith in over 70 languages — each with its grade, source, explanation and benefits, beside the original Arabic. Data from HadeethEnc.com.',
   },
+  '/tools/meaning-match': {
+    title: "Meaning Match — Qur'an comprehension drill in 70+ languages | The FastTrack Madrasah",
+    description: "A quick Qur'an comprehension game: read an āyah's meaning in your language and pick the matching Arabic āyah — or the reverse. 76 translations, Juz ʿAmma to the whole Qur'an.",
+  },
+  '/tools/lens': {
+    title: "Translator's Lens — compare Qur'an translations | The FastTrack Madrasah",
+    description: "See one āyah in several Qur'an translations side by side, with each translator's distinctive word choices and footnotes marked — then tap the Arabic for each word's root.",
+  },
+  '/tools/listen': {
+    title: "Listen to the Meaning — Qur'an recitation with spoken translation | The FastTrack Madrasah",
+    description: "Hear each āyah recited, then its meaning spoken in your language — English, French, Persian, Chinese, Somali and more — āyah by āyah through a sūrah. A memorisation companion for every family.",
+  },
   '/tools/pages': {
     title: "Safha — Qur'an Page Insights | The FastTrack Madrasah",
     description: "Browse scholar-curated benefits and lessons from every page of the Qur'an (604 pages) with English translation. Free tool by The FastTrack Madrasah.",

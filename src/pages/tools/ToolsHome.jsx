@@ -31,6 +31,21 @@ const TOOLS = [
     description: "Hadith Encyclopedia — Search and read authentic Prophetic hadith in 70+ languages, each with its grade, source, explanation and benefits beside the original Arabic.",
   },
   {
+    path: '/tools/meaning-match',
+    title: 'Meaning Match',
+    description: "Comprehension drill — read an āyah's meaning in your own language (76 translations) and pick the Arabic it translates, or the reverse. From Juz ʿAmma to the whole Qur'an.",
+  },
+  {
+    path: '/tools/lens',
+    title: "Translator's Lens",
+    description: "One āyah, several translations side by side — see where translators choose different words and read their footnotes, then tap the Arabic for each word's root.",
+  },
+  {
+    path: '/tools/listen',
+    title: 'Listen to the Meaning',
+    description: "Hear each āyah recited, then its meaning spoken in your language (13 languages) — āyah by āyah through a sūrah. A memorisation companion for every family.",
+  },
+  {
     path: '/tools/tajweed-test',
     title: 'Tajweed Test Runner (اختبار)',
     description: "Run a live tajweed quiz for your class. Pick topics, add students, project the number grid — students take turns picking, you score on the fly, and you get a printable leaderboard at the end.",

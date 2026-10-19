@@ -1,6 +1,7 @@
 import ToolSeo from '../../components/tools/ToolSeo';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, BookOpen } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import VerseReader from '../../components/common/VerseReader';
 
 const SURAH_NAMES = {
@@ -67,6 +68,8 @@ function RootExplorer() {
   const [showAllAyahs, setShowAllAyahs] = useState(false);
   const [readingAyah, setReadingAyah] = useState(null); // occurrence opened in the verse reader
   const inputRef = useRef(null);
+  const [params] = useSearchParams();
+  const initialQ = useRef(params.get('q')); // deep link, e.g. from Translator's Lens
 
   useEffect(() => {
     loadRootData()
@@ -74,6 +77,16 @@ function RootExplorer() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  // Run a deep-linked ?q= search once the root data has loaded.
+  useEffect(() => {
+    if (!data || !initialQ.current) return;
+    const q = initialQ.current;
+    initialQ.current = null;
+    setQuery(q);
+    search(q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   const search = useCallback((q) => {
     if (!data || !q.trim()) { setResult(null); return; }

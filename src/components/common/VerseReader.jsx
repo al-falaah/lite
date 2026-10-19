@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ChevronLeft, ChevronRight, Copy, Check, Languages, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, ChevronLeft, ChevronRight, Copy, Check, Languages, Loader2, Columns } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import HighlightableAyah from './HighlightableAyah';
 import { SURAH_NAMES, AYAH_COUNTS } from '../../utils/quran';
@@ -210,6 +211,14 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
             Next <ChevronRight className="h-4 w-4" />
           </button>
           <div className="flex-1" />
+          <Link
+            to={`/tools/lens?s=${sura}&a=${aya}`}
+            onClick={onClose}
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            title="Compare translations of this āyah"
+          >
+            <Columns className="h-4 w-4" /> Compare
+          </Link>
           <button
             onClick={() => setShowMeaning((v) => !v)}
             aria-pressed={showMeaning}
