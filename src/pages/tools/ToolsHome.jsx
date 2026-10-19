@@ -68,8 +68,9 @@ function ToolsHome() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             Learning Tools
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
-            Free tools to help you study tajweed, Arabic grammar, and morphology through the Qur'an.
+          <p className="text-lg md:text-xl text-wine-200 max-w-2xl">
+            Free tools for studying the Qur'an and hadith — tajwīd, Arabic grammar and roots, the meanings
+            in your own language, and authentic hadith in over 70 languages.
           </p>
         </div>
       </div>

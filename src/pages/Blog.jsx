@@ -314,7 +314,7 @@ const Blog = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             The FastTrack Journal
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
+          <p className="text-lg md:text-xl text-wine-200 max-w-2xl">
             Reflections on Arabic and Islamic knowledge
           </p>
         </div>
@@ -347,7 +347,7 @@ const Blog = () => {
                       <span>{category}</span>
                       {count > 0 && (
                         <span className={`text-xs tabular-nums ${
-                          isActive ? 'text-gray-300' : 'text-gray-400'
+                          isActive ? 'text-wine-200' : 'text-gray-400'
                         }`}>
                           {count}
                         </span>

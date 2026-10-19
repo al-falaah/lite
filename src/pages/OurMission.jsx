@@ -14,7 +14,7 @@ const OurMission = () => {
       {/* Header */}
       <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors text-sm">
+          <Link to="/" className="inline-flex items-center gap-2 text-wine-200 hover:text-white mb-8 transition-colors text-sm">
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>

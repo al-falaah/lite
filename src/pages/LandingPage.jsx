@@ -931,7 +931,7 @@ const LandingPage = () => {
                 </li>
                 <li><Link to="/vacancies" className="text-wine-100/70 hover:text-white">Careers</Link></li>
                 <li className="pt-2 border-t border-wine-900">
-                  <Link to="/login" className="text-wine-200/50 hover:text-wine-100 text-xs">Sign In</Link>
+                  <Link to="/login" className="text-wine-200/70 hover:text-wine-100 text-xs">Sign In</Link>
                 </li>
               </ul>
             </div>

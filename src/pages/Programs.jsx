@@ -62,7 +62,7 @@ const Programs = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             Our Programs
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
+          <p className="text-lg md:text-xl text-wine-200 max-w-2xl">
             Choose the learning path that matches your goals
           </p>
         </div>
@@ -1061,7 +1061,7 @@ const Programs = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-wine-100/70 text-sm">
                 Authentic Islamic education rooted in the Qur'an and Sunnah
               </p>
             </div>
@@ -1070,19 +1070,19 @@ const Programs = () => {
             <div>
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link to="/" className="text-gray-400 hover:text-white">Home</Link></li>
-                <li><Link to="/programs" className="text-gray-400 hover:text-white">Programs</Link></li>
-                <li><Link to="/apply" className="text-gray-400 hover:text-white">Apply Now</Link></li>
-                <li><Link to="/blog" className="text-gray-400 hover:text-white">Blog</Link></li>
+                <li><Link to="/" className="text-wine-100/70 hover:text-white">Home</Link></li>
+                <li><Link to="/programs" className="text-wine-100/70 hover:text-white">Programs</Link></li>
+                <li><Link to="/apply" className="text-wine-100/70 hover:text-white">Apply Now</Link></li>
+                <li><Link to="/blog" className="text-wine-100/70 hover:text-white">Blog</Link></li>
                 <li>
-                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-rose-400 flex items-center gap-1.5">
+                  <a href={donationLink} target="_blank" rel="noopener noreferrer" className="text-wine-100/70 hover:text-rose-400 flex items-center gap-1.5">
                     <Heart className="h-3.5 w-3.5" />
                     Support Our Mission
                   </a>
                 </li>
-                <li><Link to="/vacancies" className="text-gray-400 hover:text-white">Careers</Link></li>
+                <li><Link to="/vacancies" className="text-wine-100/70 hover:text-white">Careers</Link></li>
                 <li className="pt-2 border-t border-wine-900">
-                  <Link to="/login" className="text-gray-500 hover:text-gray-300 text-xs">Sign In</Link>
+                  <Link to="/login" className="text-wine-200/70 hover:text-wine-100 text-xs">Sign In</Link>
                 </li>
               </ul>
             </div>
@@ -1090,19 +1090,19 @@ const Programs = () => {
             {/* Contact */}
             <div>
               <h3 className="font-semibold mb-4">Contact</h3>
-              <p className="text-gray-400 text-sm mb-4">
+              <p className="text-wine-100/70 text-sm mb-4">
                 Questions about our programs?
               </p>
               <div className="space-y-2">
-                <a href="mailto:salam@tftmadrasah.nz" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
+                <a href="mailto:salam@tftmadrasah.nz" className="text-wine-50 hover:text-white text-sm flex items-center gap-2">
                   <Mail className="h-4 w-4" />
                   salam@tftmadrasah.nz
                 </a>
-                <a href="tel:+64272131486" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
+                <a href="tel:+64272131486" className="text-wine-50 hover:text-white text-sm flex items-center gap-2">
                   <Phone className="h-4 w-4" />
                   +6427 213 1486
                 </a>
-                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white text-sm flex items-center gap-2">
+                <a href="https://wa.me/64224653509" target="_blank" rel="noopener noreferrer" className="text-wine-50 hover:text-white text-sm flex items-center gap-2">
                   <MessageCircle className="h-4 w-4" />
                   +6422 465 3509
                 </a>

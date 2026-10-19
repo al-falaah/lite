@@ -64,14 +64,14 @@ const FAQs = () => {
       {/* Header */}
       <div className="bg-wine-900 text-white py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors text-sm">
+          <Link to="/" className="inline-flex items-center gap-2 text-wine-200 hover:text-white mb-8 transition-colors text-sm">
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight">
             Frequently Asked Questions
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 max-w-2xl">
+          <p className="text-lg md:text-xl text-wine-200 max-w-2xl">
             Everything you need to know about our programs, admission process, and learning methodology
           </p>
         </div>
