@@ -13,6 +13,7 @@
     { "source": "/tools/roots", "destination": "/api/og?path=/tools/roots" },
     { "source": "/tools/arabiyyah", "destination": "/api/og?path=/tools/arabiyyah" },
     { "source": "/tools/pages", "destination": "/api/og?path=/tools/pages" },
+    { "source": "/tools/hadith", "destination": "/api/og?path=/tools/hadith" },
     {
       "source": "/(.*)",
       "destination": "/index.html"

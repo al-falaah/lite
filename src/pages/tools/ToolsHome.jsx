@@ -26,6 +26,11 @@ const TOOLS = [
     status: 'live',
   },
   {
+    path: '/tools/hadith',
+    title: 'Mawsūʿah (موسوعة)',
+    description: "Hadith Encyclopedia — Search and read authentic Prophetic hadith in 70+ languages, each with its grade, source, explanation and benefits beside the original Arabic.",
+  },
+  {
     path: '/tools/tajweed-test',
     title: 'Tajweed Test Runner (اختبار)',
     description: "Run a live tajweed quiz for your class. Pick topics, add students, project the number grid — students take turns picking, you score on the fly, and you get a printable leaderboard at the end.",
@@ -40,7 +45,7 @@ function ToolsHome() {
         path="/tools"
         title="Free Qur'anic Learning Tools | The FastTrack Madrasah"
         name="Qur'anic Learning Tools"
-        description="Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), Arabiyyah Workbench, and Safha (page insights)."
+        description="Free tools for studying tajweed, Arabic grammar, Qur'anic morphology and hadith — Shawaahid (examples finder), Tasreef (root explorer), Arabiyyah Workbench, Safha (page insights), and Mawsūʿah (hadith encyclopedia)."
       />
       {/* Header — matches Blog page pattern (dark band + diagonal seam) */}
       <div className="bg-wine-900 text-white py-16 md:py-24">

@@ -48,7 +48,7 @@ const META = {
   },
   '/tools': {
     title: "Free Qur'anic Learning Tools | The FastTrack Madrasah",
-    description: "Free tools for studying tajweed, Arabic grammar, and Qur'anic morphology — Shawaahid (examples finder), Tasreef (root explorer), Arabiyyah Workbench, and Safha (page insights).",
+    description: "Free tools for studying tajweed, Arabic grammar, Qur'anic morphology and hadith — Shawaahid (examples finder), Tasreef (root explorer), Arabiyyah Workbench, Safha (page insights), and Mawsūʿah (hadith encyclopedia).",
   },
   '/tools/examples': {
     title: "Shawaahid — Qur'anic Examples Finder | The FastTrack Madrasah",
@@ -61,6 +61,10 @@ const META = {
   '/tools/arabiyyah': {
     title: "Arabiyyah Workbench — Qur'an examples by grammar topic | The FastTrack Madrasah",
     description: "Pick an Arabic grammar topic and find Qur'anic verses that demonstrate it, then tap any word to explore its root and its qirāʾāt (variant readings). Free tool by The FastTrack Madrasah.",
+  },
+  '/tools/hadith': {
+    title: 'Mawsūʿah — Hadith Encyclopedia in 70+ languages | The FastTrack Madrasah',
+    description: 'Search and read authentic Prophetic hadith in over 70 languages — each with its grade, source, explanation and benefits, beside the original Arabic. Data from HadeethEnc.com.',
   },
   '/tools/pages': {
     title: "Safha — Qur'an Page Insights | The FastTrack Madrasah",

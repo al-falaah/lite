@@ -50,6 +50,7 @@ import RootExplorer from './pages/tools/RootExplorer';
 import ArabiyyahWorkbench from './pages/tools/ArabiyyahWorkbench';
 import PageInsights from './pages/tools/PageInsights';
 import TajweedTest from './pages/tools/TajweedTest';
+import HadithEncyclopedia from './pages/tools/HadithEncyclopedia';
 
 // Components
 import FloatingWhatsApp from './components/FloatingWhatsApp';
@@ -231,6 +232,7 @@ function AppRoutes() {
           <Route path="roots" element={<RootExplorer />} />
           <Route path="arabiyyah" element={<ArabiyyahWorkbench />} />
           <Route path="pages" element={<PageInsights />} />
+          <Route path="hadith" element={<HadithEncyclopedia />} />
           <Route path="tajweed-test/*" element={<TajweedTest />} />
         </Route>
 
