@@ -1029,7 +1029,7 @@ export default function StudentLessons({
         }
         .lesson-content-protected *::selection { background: transparent !important; }
         .verse {
-          font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+          font-family: 'KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', 'Traditional Arabic', serif !important;
           font-size: 28px !important;
           line-height: 2 !important;
           text-align: center;
@@ -1040,7 +1040,7 @@ export default function StudentLessons({
           /* background + text color are theme-aware, set via proseTheme [&_.verse] classes */
         }
         .arabic-prose {
-          font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+          font-family: 'Noto Naskh Arabic', 'Amiri Quran', 'Traditional Arabic', serif !important;
           font-size: 1.25rem !important;
           line-height: 2 !important;
           direction: rtl;
@@ -1048,8 +1048,9 @@ export default function StudentLessons({
         }
 
         /* Reading font: in the light/sepia reading modes the Latin body reads
-           as book text — a proper serif (Lora), not the UI sans. Arabic keeps
-           Amiri via the !important rules above; RTL nodes are excluded here so
+           as book text — a proper serif (Lora), not the UI sans. Arabic keeps its
+           own faces (KFGQPC for .verse, Noto Naskh for .arabic-prose) via the
+           !important rules above; RTL nodes are excluded here so
            the override never touches them. Dark mode stays on the crisp sans
            (a serif muddies on near-black). */
         .lesson-theme-light p, .lesson-theme-light li, .lesson-theme-light blockquote, .lesson-theme-light figcaption,
@@ -1062,9 +1063,11 @@ export default function StudentLessons({
         .lesson-theme-light code, .lesson-theme-light pre, .lesson-theme-sepia code, .lesson-theme-sepia pre {
           font-family: revert;
         }
-        .lesson-theme-light .verse, .lesson-theme-sepia .verse,
+        .lesson-theme-light .verse, .lesson-theme-sepia .verse {
+          font-family: 'KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', 'Traditional Arabic', serif !important;
+        }
         .lesson-theme-light .arabic-prose, .lesson-theme-sepia .arabic-prose {
-          font-family: 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+          font-family: 'Noto Naskh Arabic', 'Amiri Quran', 'Traditional Arabic', serif !important;
         }
 
         /* ── Typed callouts ───────────────────────────────────────────

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { X, BookOpen, Check, AlertTriangle, Search } from 'lucide-react';
 import { supabase } from '../../services/supabase';
-import { normalizeUthmani, skeletonArabic, stripDiacritics, isFoldStable } from '../../utils/uthmani';
+import { skeletonArabic, stripDiacritics, isFoldStable } from '../../utils/uthmani';
 
 // Surah names for display (matches the /tools ExamplesFinder set).
 const SURAH_NAMES = {
@@ -41,7 +41,7 @@ function toResult(row, { partial = false, overrideText = null } = {}) {
     sura: row.sura_number,
     aya: row.aya_number,
     suraName: SURAH_NAMES[row.sura_number] || row.sura_name || `Surah ${row.sura_number}`,
-    text: overrideText != null ? overrideText : normalizeUthmani(row.aya_text),
+    text: overrideText != null ? overrideText : row.aya_text,
     partial,
   };
 }
@@ -186,11 +186,11 @@ export default function VersePicker({ onInsert, onClose }) {
     }
     // For partials, insert the pasted fragment (normalized) rather than the
     // whole āyah; the āyah text is still shown so the author can see context.
-    const fragment = normalizeUthmani(pasted.trim());
+    const fragment = pasted.trim();
     const matches = (ayaRows || [])
       .map((row) =>
         isPartial
-          ? { ...toResult(row, { partial: true, overrideText: fragment }), ayahText: normalizeUthmani(row.aya_text) }
+          ? { ...toResult(row, { partial: true, overrideText: fragment }), ayahText: row.aya_text }
           : toResult(row)
       )
       .sort((x, y) => x.sura - y.sura || x.aya - y.aya);
@@ -281,7 +281,7 @@ export default function VersePicker({ onInsert, onClose }) {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-lg text-gray-900 focus:border-wine-500 focus:outline-none"
                 rows={2}
                 placeholder="الصق الآية هنا…"
-                style={{ fontFamily: "'Noto Naskh Arabic', 'Amiri Quran', 'Amiri', serif" }}
+                style={{ fontFamily: "'KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', serif" }}
               />
               <button
                 type="button" onClick={verifyPaste} disabled={status === 'loading'}
@@ -328,14 +328,14 @@ export default function VersePicker({ onInsert, onClose }) {
                     <li key={`${r.sura}:${r.aya}`} className="rounded-lg border border-gray-200 p-3">
                       <p
                         dir="rtl" className="text-xl leading-loose text-gray-900"
-                        style={{ fontFamily: "'Noto Naskh Arabic', 'Amiri Quran', 'Amiri', serif" }}
+                        style={{ fontFamily: "'KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', serif" }}
                       >
                         {r.text}
                       </p>
                       {r.partial && r.ayahText && (
                         <p
                           dir="rtl" className="mt-1 text-sm leading-loose text-gray-400"
-                          style={{ fontFamily: "'Noto Naskh Arabic', 'Amiri Quran', 'Amiri', serif" }}
+                          style={{ fontFamily: "'KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', serif" }}
                         >
                           {r.ayahText}
                         </p>

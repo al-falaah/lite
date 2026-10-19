@@ -3,7 +3,8 @@ import { useState, useMemo, useCallback } from 'react';
 import { ChevronDown, ChevronRight, X, BookOpen, Layers } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import { NAHW_CATEGORIES } from '../../utils/topicMap';
-import { normalizeUthmani } from '../../utils/uthmani';
+import VerseReader from '../../components/common/VerseReader';
+import { toArabicDigits } from '../../utils/quran';
 
 /**
  * Arabiyyah Workbench — pick a grammar (nahw) topic, get Qurʾān verses that
@@ -345,7 +346,9 @@ export default function ArabiyyahWorkbench() {
 function VerseCard({ row, topic, activeWord, enrichment, onWordTap, rootVerses, onLoadRootVerses }) {
   const sura = row.sura_number, aya = row.aya_number;
   const key = `${sura}-${aya}`;
-  const ayahText = normalizeUthmani(row.aya_text || '');
+  // Shown un-normalised: the KFGQPC font renders the mushaf's own encoding.
+  const ayahText = row.aya_text || '';
+  const [reading, setReading] = useState(false);
   const tokens = useMemo(() => ayahText.split(/\s+/).filter(Boolean), [ayahText]);
   const highlight = useMemo(
     () => topicHighlightSet(ayahText, extractNahwRefs(row.content, topic?.search_ar)),
@@ -359,11 +362,20 @@ function VerseCard({ row, topic, activeWord, enrichment, onWordTap, rootVerses, 
         <span className="text-sm font-semibold text-wine-700">
           {SURAH_NAMES[sura]} {sura}:{aya}
         </span>
-        <span className="text-xs text-gray-400">tap a word to explore</span>
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline text-xs text-gray-400">tap a word to explore</span>
+          <button
+            type="button"
+            onClick={() => setReading(true)}
+            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-wine-700 hover:bg-wine-50"
+          >
+            <BookOpen className="h-3.5 w-3.5" /> Read
+          </button>
+        </div>
       </div>
 
       {/* Tappable ayah */}
-      <p className="font-arabic text-xl sm:text-2xl leading-loose text-right" dir="rtl">
+      <p className="font-quran text-[22px] sm:text-[28px] leading-[2.1] text-right" dir="rtl">
         {tokens.map((tok, i) => {
           const wordNumber = i + 1; // 1-based, aligns with word_number
           const on = isActive && activeWord.wordIndex === i;
@@ -386,6 +398,7 @@ function VerseCard({ row, topic, activeWord, enrichment, onWordTap, rootVerses, 
             </span>
           );
         })}
+        <span className="text-wine-700 mx-1" aria-label={`āyah ${aya}`}>{toArabicDigits(aya)}</span>
       </p>
 
       {/* Enrichment panel for the active word in this verse */}
@@ -398,11 +411,21 @@ function VerseCard({ row, topic, activeWord, enrichment, onWordTap, rootVerses, 
           onLoadRootVerses={onLoadRootVerses}
         />
       )}
+
+      {reading && (
+        <VerseReader
+          sura={sura}
+          aya={aya}
+          highlight={activeWord?.key === key ? [tokens[activeWord.wordIndex]] : undefined}
+          onClose={() => setReading(false)}
+        />
+      )}
     </div>
   );
 }
 
 function WordPanel({ word, wordNumber, enrichment, rootVerses, onLoadRootVerses }) {
+  const [readingRef, setReadingRef] = useState(null); // { sura, aya, word } — a root occurrence being read
   const rootRow = enrichment.roots?.[wordNumber];
   const variants = enrichment.qiraat?.[wordNumber] || [];
   const root = rootRow?.root;
@@ -410,7 +433,7 @@ function WordPanel({ word, wordNumber, enrichment, rootVerses, onLoadRootVerses 
   return (
     <div className="mt-3 rounded-lg bg-gray-50 border border-gray-200 p-4">
       <div className="flex items-center gap-2 mb-2">
-        <span className="font-arabic text-lg text-gray-900" dir="rtl">{word}</span>
+        <span className="font-quran text-2xl text-gray-900" dir="rtl">{word}</span>
       </div>
 
       {/* Root */}
@@ -461,15 +484,29 @@ function WordPanel({ word, wordNumber, enrichment, rootVerses, onLoadRootVerses 
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {rootVerses.rows.map((rv, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 text-xs bg-white border border-gray-200 rounded px-1.5 py-0.5">
-                    <span className="text-wine-700">{rv.sura_number}:{rv.aya_number}</span>
-                    <span className="font-arabic text-gray-700" dir="rtl">{rv.word}</span>
-                  </span>
+                  <button
+                    type="button"
+                    key={i}
+                    onClick={() => setReadingRef({ sura: rv.sura_number, aya: rv.aya_number, word: rv.word })}
+                    className="inline-flex items-center gap-1.5 text-xs bg-white border border-gray-200 rounded-md px-2 py-1 hover:border-wine-300 hover:bg-wine-50 transition-colors"
+                    aria-label={`Read ${rv.sura_number}:${rv.aya_number}`}
+                  >
+                    <span className="text-wine-700 font-medium">{rv.sura_number}:{rv.aya_number}</span>
+                    <span className="font-quran text-base text-gray-800" dir="rtl">{rv.word}</span>
+                  </button>
                 ))}
               </div>
             </>
           )}
         </div>
+      )}
+      {readingRef && (
+        <VerseReader
+          sura={readingRef.sura}
+          aya={readingRef.aya}
+          highlight={[readingRef.word]}
+          onClose={() => setReadingRef(null)}
+        />
       )}
     </div>
   );

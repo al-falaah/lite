@@ -1,6 +1,6 @@
 import ToolSeo from '../../components/tools/ToolSeo';
 import { useState, useMemo, useCallback, useRef } from 'react';
-import { ChevronDown, ChevronRight, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, X, BookOpen } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import {
   TAJWEED_CATEGORIES,
@@ -8,8 +8,8 @@ import {
   buildSearchIndex,
   searchTopics,
 } from '../../utils/topicMap';
-import { normalizeUthmani } from '../../utils/uthmani';
 import HighlightableAyah from '../../components/common/HighlightableAyah';
+import VerseReader from '../../components/common/VerseReader';
 
 // Surah names for display
 const SURAH_NAMES = {
@@ -73,7 +73,7 @@ function ContentRenderer({ content }) {
         part.type === 'quran' ? (
           <span
             key={i}
-            className="font-arabic text-wine-700 font-semibold text-base sm:text-lg px-1"
+            className="font-quran text-wine-700 text-lg sm:text-xl px-1"
             dir="rtl"
           >
             ﴿{part.value}﴾
@@ -212,6 +212,7 @@ function isDisclaimerClause(clause, searchTerms) {
 
 // Single result card
 function ResultCard({ result, topic, isPrimary }) {
+  const [reading, setReading] = useState(false);
   const surahName = SURAH_NAMES[result.sura_number] || `Surah ${result.sura_number}`;
   const displayContent = useMemo(
     () => extractRelevantContent(result.content, topic),
@@ -253,6 +254,14 @@ function ResultCard({ result, topic, isPrimary }) {
             Not applied here (warning)
           </span>
         )}
+        <button
+          type="button"
+          onClick={() => setReading(true)}
+          className={`${isPrimary || isDisclaimer ? '' : 'ml-auto'} inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-wine-700 hover:bg-wine-100/60`}
+          aria-label={`Read ${surahName} ${result.sura_number}:${result.aya_number}`}
+        >
+          <BookOpen className="h-3.5 w-3.5" /> Read
+        </button>
       </div>
 
       {/* Ayah text — matched pattern pre-highlighted, any word tappable */}
@@ -260,7 +269,8 @@ function ResultCard({ result, topic, isPrimary }) {
         <HighlightableAyah
           text={result.aya_text}
           matchRefs={quranicRefs}
-          size="text-lg sm:text-2xl"
+          ayahNumber={result.aya_number}
+          size="text-xl sm:text-[26px]"
         />
       </div>
 
@@ -268,6 +278,15 @@ function ResultCard({ result, topic, isPrimary }) {
       <div className="px-4 py-3" dir="rtl">
         <ContentRenderer content={displayContent} />
       </div>
+
+      {reading && (
+        <VerseReader
+          sura={result.sura_number}
+          aya={result.aya_number}
+          highlight={quranicRefs}
+          onClose={() => setReading(false)}
+        />
+      )}
     </div>
   );
 }

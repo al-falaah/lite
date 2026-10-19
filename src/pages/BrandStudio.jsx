@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Download, Loader2, Image as ImageIcon, BookOpen } from 'lucide-react';
 import VersePicker from '../components/common/VersePicker';
+import { normalizeUthmani } from '../utils/uthmani';
 
 /*
  * Brand Studio — a lightweight Canva-style branded-image generator for the
@@ -41,6 +42,9 @@ const SIZES = [
 
 // --- Arabic script options ------------------------------------------------
 const ARABIC_FONTS = [
+  // The King Fahd Complex mushaf font — renders verified āyāt (incl. the
+  // mushaf's open tanwīn forms) exactly as printed. Default.
+  { id: 'kfgqpc', label: 'KFGQPC Hafs (mushaf — best for āyāt)', css: "'KFGQPC Hafs', 'Noto Naskh Arabic', serif", mushaf: true },
   { id: 'amiri', label: 'Amiri (traditional serif)', css: AR },
   { id: 'quran', label: 'Amiri Quran', css: ARQ },
   { id: 'cairo', label: 'Cairo (modern sans)', css: "'Cairo', 'Amiri', sans-serif" },
@@ -249,7 +253,7 @@ function AttributionLine({ c }) {
       {f.honorific && (
         <span style={{ fontFamily: arFont, fontWeight: 400 }} dir="rtl" lang="ar">
           {' '}
-          {f.honorific}
+          {c.ar(f.honorific)}
         </span>
       )}
       {f.attributionSuffix && <span style={{ fontWeight: 700 }}> {f.attributionSuffix}</span>}
@@ -273,7 +277,7 @@ function ArabicBlock({ c, text, framed = false }) {
         fontWeight: 400,
       }}
     >
-      {text}
+      {c.ar(text)}
     </div>
   );
   if (!framed) return el;
@@ -409,7 +413,7 @@ const LAYOUTS = [
                 width: '100%',
               }}
             >
-              {f.ayah}
+              {c.ar(f.ayah)}
             </div>
           )}
           {f.meaning && (
@@ -472,7 +476,7 @@ const LAYOUTS = [
         <Center gap={w * 0.025}>
           {f.term && (
             <div dir="rtl" lang="ar" style={{ fontFamily: c.arFont, fontSize: termSize, color: pal.arabic, lineHeight: 1.4, textAlign: 'center' }}>
-              {f.term}
+              {c.ar(f.term)}
             </div>
           )}
           {f.translit && (
@@ -674,7 +678,12 @@ export default function BrandStudio() {
   const topPad = (squarish ? 0.045 : 0.075) * u;
   const logoReserve = (squarish ? 0.185 : 0.165) * u;
   const c = useMemo(
-    () => ({ f, pal, w: u, h: size.h, cw: size.w, logoReserve, arFont: arabicFont.css, showLogo, showFooter }),
+    () => ({
+      f, pal, w: u, h: size.h, cw: size.w, logoReserve, arFont: arabicFont.css, showLogo, showFooter,
+      // KFGQPC draws the mushaf's open tanwīn (U+0656/0657/065E); other faces
+      // don't, so convert them to standard tanwīn for those fonts only.
+      ar: (t) => (arabicFont.mushaf ? t : normalizeUthmani(t)),
+    }),
     [f, pal, u, size.h, size.w, logoReserve, arabicFont.css, showLogo, showFooter]
   );
 

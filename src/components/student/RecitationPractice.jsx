@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import { Mic, Send, Square, RotateCcw, Clock, Check } from 'lucide-react';
 import * as M from '../../design/mashq';
 import { SpecLabel } from './mashq/Sheet';
-import { normalizeUthmani } from '../../utils/uthmani';
 import VoiceNote from '../common/VoiceNote';
 
 // Number of bars in the live input-level meter (the drilled-strokes motif).
@@ -295,12 +294,12 @@ export default function RecitationPractice({ studentId, programId, teacherId }) 
 
   const fmt = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
 
-  // Is the passage Arabic? (render it in Amirī Qurʾān, RTL, when so)
+  // Is the passage Arabic? (render it in the KFGQPC mushaf font, RTL, when so)
   const isArabic = (t) => /[؀-ۿ]/.test(t || '');
   const PassageText = ({ text, size = 'text-2xl sm:text-[1.9rem]' }) => (
     isArabic(text) ? (
-      <p dir="rtl" className={`${size} leading-[1.9] text-[var(--mq-ink)]`} style={{ fontFamily: "'Amiri Quran', 'Amiri', serif" }}>
-        {normalizeUthmani(text)}
+      <p dir="rtl" className={`font-quran ${size} leading-[2] text-[var(--mq-ink)]`}>
+        {text}
       </p>
     ) : (
       <p className="text-base font-semibold text-[var(--mq-ink)]">{text}</p>

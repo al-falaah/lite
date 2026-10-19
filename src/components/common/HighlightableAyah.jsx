@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { normalizeUthmani, normalizeArabic } from '../../utils/uthmani';
+import { normalizeArabic } from '../../utils/uthmani';
+import { toArabicDigits } from '../../utils/quran';
 
 /** Which word indices of `words` match any of the reference phrases in `refs`. */
 function matchWordIndices(words, refs) {
@@ -25,20 +26,23 @@ function matchWordIndices(words, refs) {
 }
 
 /**
- * HighlightableAyah — renders a Qur'anic ayah word-by-word in Amiri Quran,
+ * HighlightableAyah — renders a Qur'anic ayah word-by-word in the KFGQPC Hafs
+ * mushaf font (`font-quran`), using the corpus text exactly as stored,
  * where each word is tappable to toggle a maroon highlight (the same
  * interaction as the Tajweed Test Runner's present mode).
  *
  * Reusable across the tools so every ayah result reads and behaves the same.
  *
  * Props:
- *  - text: the ayah text (QCF/Uthmani; normalised for Amiri here).
+ *  - text: the ayah text (QCF/Uthmani, shown un-normalised — KFGQPC renders
+ *      its open/stacked tanween and small Qur'anic marks as in the mushaf).
  *  - matchRefs: optional string[] of reference phrases (e.g. the tajweed
  *      pattern) — the matching words are pre-highlighted in a soft tint,
  *      shown UNDER the user's click highlight. Click highlight always wins.
  *  - size: tailwind text-size classes for the Arabic (default reader size).
  *  - hint: show the "tap to highlight" hint line (default true).
  *  - className: extra classes on the wrapper.
+ *  - ayahNumber: optional — appends the mushaf end-of-āyah medallion.
  */
 export default function HighlightableAyah({
   text,
@@ -46,12 +50,13 @@ export default function HighlightableAyah({
   size = 'text-2xl sm:text-3xl',
   hint = true,
   className = '',
+  ayahNumber,
 }) {
   const [picked, setPicked] = useState(() => new Set());
 
   const words = useMemo(() => {
     if (!text) return [];
-    return normalizeUthmani(String(text).trim()).split(/\s+/).filter(Boolean);
+    return String(text).trim().split(/\s+/).filter(Boolean);
   }, [text]);
 
   const autoSet = useMemo(() => matchWordIndices(words, matchRefs), [words, matchRefs]);
@@ -71,7 +76,7 @@ export default function HighlightableAyah({
       <div
         dir="rtl"
         lang="ar"
-        className={`font-arabic ${size} text-gray-900 text-center select-none`}
+        className={`font-quran ${size} text-gray-900 text-center select-none`}
         style={{ lineHeight: '2.4' }}
       >
         {words.map((w, i) => {
@@ -99,6 +104,11 @@ export default function HighlightableAyah({
             </span>
           );
         })}
+        {ayahNumber ? (
+          <span className="inline-block mx-1 text-wine-700" aria-label={`āyah ${ayahNumber}`}>
+            {toArabicDigits(ayahNumber)}
+          </span>
+        ) : null}
       </div>
       {hint && (
         <p className="text-center text-[11px] text-gray-400 mt-3">

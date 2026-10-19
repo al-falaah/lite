@@ -45,6 +45,8 @@ export default {
         serif: ['Lora', 'Georgia', 'Cambria', 'serif'],
         display: ['Spectral', 'Georgia', 'Cambria', 'serif'],
         arabic: ['Noto Naskh Arabic', 'Amiri Quran', 'Amiri', 'serif'],
+        // Qur'anic text only (āyāt). General Arabic labels stay on font-arabic.
+        quran: ['KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', 'serif'],
       }
     },
   },

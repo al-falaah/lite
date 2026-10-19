@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* KFGQPC Uthmanic Script HAFS v18 — the King Fahd Complex mushaf font, served
+   unmodified from /public/fonts (see KFGQPC-NOTICE.txt). Used ONLY for Qur'anic
+   text via the `font-quran` utility. It renders the corpus's original Uthmani
+   encoding (open/stacked tanween U+0656/0657/065E, small high marks, sila waw)
+   exactly as in the Madinah mushaf, so that text is shown un-normalised. */
+@font-face {
+  font-family: 'KFGQPC Hafs';
+  src: url('/fonts/kfgqpc-hafs-v18.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Disable native pull-to-refresh so custom one works */
 html, body {
   overscroll-behavior-y: contain;
@@ -172,7 +185,10 @@ input[type="date"]::-webkit-date-and-time-value {
   text-align: left;
 }
 
-/* RTL Support for Arabic text */
+/* RTL Support for Arabic text.
+   unicode-bidi is ISOLATE (not embed): an inline Arabic run inside an English
+   sentence must not pull neighbouring neutrals — brackets, digits, "(23:2)" —
+   into its right-to-left order. `embed` let them leak and reorder the line. */
 [dir="rtl"],
 .prose [dir="rtl"],
 .prose p[dir="rtl"],
@@ -180,7 +196,7 @@ input[type="date"]::-webkit-date-and-time-value {
 .prose em[dir="rtl"] {
   direction: rtl !important;
   text-align: right !important;
-  unicode-bidi: embed !important;
+  unicode-bidi: isolate !important;
 }
 
 [dir="ltr"],
@@ -265,7 +281,7 @@ input[type="date"]::-webkit-date-and-time-value {
 
 /* Verse/Arabic text blocks in blog content */
 .blog-content .verse {
-  font-family: 'Noto Naskh Arabic', 'Amiri Quran', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+  font-family: 'KFGQPC Hafs', 'Noto Naskh Arabic', 'Amiri Quran', 'Traditional Arabic', serif !important;
   font-size: 28px !important;
   line-height: 2 !important;
   text-align: center !important;

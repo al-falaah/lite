@@ -1,6 +1,7 @@
 import ToolSeo from '../../components/tools/ToolSeo';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, BookOpen } from 'lucide-react';
+import VerseReader from '../../components/common/VerseReader';
 
 const SURAH_NAMES = {
   1: 'Al-Fatihah', 2: 'Al-Baqarah', 3: 'Aal-Imran', 4: 'An-Nisa', 5: 'Al-Maidah',
@@ -64,6 +65,7 @@ function RootExplorer() {
   const [result, setResult] = useState(null);
   const [expandedLemma, setExpandedLemma] = useState(null);
   const [showAllAyahs, setShowAllAyahs] = useState(false);
+  const [readingAyah, setReadingAyah] = useState(null); // occurrence opened in the verse reader
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -344,12 +346,20 @@ function RootExplorer() {
               </h3>
               <div className="space-y-2">
                 {visibleAyahs.map((ayah, i) => (
-                  <div key={`${ayah.s}:${ayah.a}`} className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4">
+                  <button
+                    type="button"
+                    key={`${ayah.s}:${ayah.a}`}
+                    onClick={() => setReadingAyah(ayah)}
+                    aria-label={`Read ${SURAH_NAMES[ayah.s] || `Surah ${ayah.s}`} ${ayah.s}:${ayah.a}`}
+                    className="group block w-full text-left bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:border-wine-300 hover:shadow-sm focus-visible:ring-2 focus-visible:ring-wine-600/40 outline-none transition"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[11px] sm:text-xs text-gray-400 font-medium">
                         {SURAH_NAMES[ayah.s] || `Surah ${ayah.s}`} ({ayah.s}:{ayah.a})
                       </span>
-                      <BookOpen className="h-3.5 w-3.5 text-gray-300" />
+                      <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium text-wine-700 opacity-70 group-hover:opacity-100">
+                        <BookOpen className="h-3.5 w-3.5" /> Read āyah
+                      </span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2" dir="rtl">
                       {ayah.words.map((w, j) => (
@@ -357,7 +367,7 @@ function RootExplorer() {
                           key={j}
                           className="inline-flex flex-col items-center gap-0.5 px-1.5 sm:px-2 py-1 rounded bg-wine-50 border border-wine-100"
                         >
-                          <span className="font-arabic text-sm sm:text-lg text-wine-800">{w.w}</span>
+                          <span className="font-quran text-base sm:text-xl text-wine-800">{w.w}</span>
                           <span className="text-[9px] sm:text-[10px] text-wine-600">
                             {POS_LABELS[w.pos] || w.pos}
                             {w.vf ? ` (${VERB_FORM_LABELS[w.vf]})` : ''}
@@ -365,9 +375,17 @@ function RootExplorer() {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
+              {readingAyah && (
+                <VerseReader
+                  sura={readingAyah.s}
+                  aya={readingAyah.a}
+                  highlight={readingAyah.words.map((w) => w.w)}
+                  onClose={() => setReadingAyah(null)}
+                />
+              )}
               {result.ayahs.length > 10 && !showAllAyahs && (
                 <button
                   onClick={() => setShowAllAyahs(true)}

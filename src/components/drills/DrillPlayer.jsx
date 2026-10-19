@@ -7,6 +7,7 @@ import {
   calcXP, getComboMultiplier, getComboLabel,
 } from '../../utils/drillHelpers';
 import QuizLeaderboard from './QuizLeaderboard';
+import QuranText from '../common/QuranText';
 
 /**
  * Plays a chapter's lesson_quiz as a soft-timed drill game.
@@ -447,7 +448,7 @@ export default function DrillPlayer() {
         <div className="flex-1 flex flex-col justify-center px-4 py-6 max-w-lg mx-auto w-full">
 
           <h2 className="text-lg font-semibold text-white mb-6 text-center leading-relaxed">
-            {currentQuestion.question}
+            <QuranText text={currentQuestion.question} />
           </h2>
 
           <div className={`space-y-3 mb-6 ${resultAnim === 'wrong' ? 'animate-drill-wrong' : ''}`}>
@@ -473,7 +474,7 @@ export default function DrillPlayer() {
                     : isResult ? 'bg-gray-800/30 text-gray-600'
                     : 'bg-gray-700/50 text-gray-400'
                   }`}>{LETTERS[i]}</span>
-                  <span className="flex-1">{opt}</span>
+                  <span className="flex-1"><QuranText text={opt} /></span>
                 </button>
               );
             })}
@@ -500,7 +501,7 @@ export default function DrillPlayer() {
                 )}
               </div>
               {currentQuestion.explanation && (
-                <p className="text-xs text-gray-400 mt-1 leading-relaxed">{currentQuestion.explanation}</p>
+                <p className="text-xs text-gray-400 mt-1 leading-relaxed"><QuranText text={currentQuestion.explanation} /></p>
               )}
             </div>
           )}

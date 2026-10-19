@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '../services/supabase';
 import { CheckCircle, XCircle, ArrowRight, BookOpen, ChevronLeft, Clock, AlertTriangle } from 'lucide-react';
+import QuranText from '../components/common/QuranText';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 
@@ -293,15 +294,15 @@ export default function MilestoneTest() {
                             <XCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                           )}
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">{i + 1}. {q.question_text}</p>
+                            <p className="text-sm font-medium text-gray-900">{i + 1}. <QuranText text={q.question_text} /></p>
                             {!r.is_correct && results.show_wrong_answers && r.your_answer && (
-                              <p className="text-xs text-red-600 mt-1">Your answer: {r.your_answer}</p>
+                              <p className="text-xs text-red-600 mt-1">Your answer: <QuranText text={r.your_answer} /></p>
                             )}
                             {results.show_correct_answers && r.correct_answer && (
-                              <p className="text-xs text-wine-600 mt-0.5">Correct: {r.correct_answer}</p>
+                              <p className="text-xs text-wine-600 mt-0.5">Correct: <QuranText text={r.correct_answer} /></p>
                             )}
                             {results.show_explanations && r.explanation && (
-                              <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{r.explanation}</p>
+                              <p className="text-xs text-gray-500 mt-1.5 leading-relaxed"><QuranText text={r.explanation} /></p>
                             )}
                           </div>
                         </div>
@@ -393,7 +394,7 @@ export default function MilestoneTest() {
           </div>
 
           <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6 leading-relaxed">
-            {currentQuestion.question_text}
+            <QuranText text={currentQuestion.question_text} />
           </h2>
 
           {/* MCQ / True-False Options */}
@@ -421,7 +422,7 @@ export default function MilestoneTest() {
                         {letter}
                       </span>
                       <span className="text-sm sm:text-base text-gray-800 leading-relaxed pt-0.5">
-                        {opt.text}
+                        <QuranText text={opt.text} />
                       </span>
                     </div>
                   </button>

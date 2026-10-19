@@ -20,7 +20,7 @@ import { Link, useNavigate, useParams, Routes, Route } from 'react-router-dom';
 import { ArrowLeft, Play, Users, Hash, ListChecks, Download, Printer, RotateCcw } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import { TAJWEED_CATEGORIES } from '../../utils/topicMap';
-import { normalizeUthmani } from '../../utils/uthmani';
+import { toArabicDigits } from '../../utils/quran';
 
 // ---------- Surah names (matches other tools) ----------
 const SURAH_NAMES = {
@@ -513,12 +513,11 @@ function Present() {
 
   const openQuestionTopic = openQuestion ? TOPIC_BY_ID[openQuestion.topic_id] : null;
 
-  // Split the ayah into words. QCF Uthmani tanwīn marks are normalised to
-  // standard Arabic tanwīn (see src/utils/uthmani.js) so they render in
-  // Amiri Quran without silently changing grammatical case.
+  // Split the ayah into words. Shown un-normalised in the KFGQPC mushaf font,
+  // which renders the corpus's open/stacked tanwīn exactly as in the mushaf.
   const ayahWords = useMemo(() => {
     if (!openQuestion?.aya_text) return [];
-    return normalizeUthmani(openQuestion.aya_text.trim()).split(/\s+/);
+    return openQuestion.aya_text.trim().split(/\s+/);
   }, [openQuestion]);
 
   const toggleWord = (idx) => {
@@ -702,7 +701,7 @@ function Present() {
             <div className="bg-white rounded-2xl shadow-sm border border-wine-100 p-6 sm:p-10 mb-6">
               <div
                 dir="rtl"
-                className="font-arabic text-3xl sm:text-5xl text-gray-900 text-center select-none"
+                className="font-quran text-[34px] sm:text-[56px] text-gray-900 text-center select-none"
                 style={{ lineHeight: '2.6' }}
               >
                 {ayahWords.map((w, i) => (
@@ -718,6 +717,11 @@ function Present() {
                     {w}
                   </span>
                 ))}
+                {openQuestion?.aya_number ? (
+                  <span className="inline-block mx-1 my-1 text-wine-700" aria-label={`āyah ${openQuestion.aya_number}`}>
+                    {toArabicDigits(openQuestion.aya_number)}
+                  </span>
+                ) : null}
               </div>
               <p className="text-center text-xs text-gray-500 mt-6">
                 Click any word to highlight it. Click again to un-highlight.
