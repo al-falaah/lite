@@ -38,9 +38,19 @@ function Marked({ text, distinctive }) {
 
 export default function TranslatorsLens() {
   const [params, setParams] = useSearchParams();
-  const [sura, setSura] = useState(Number(params.get('s')) || 1);
-  const [aya, setAya] = useState(Number(params.get('a')) || 5);
-  const [keys, setKeys] = useState(() => (params.get('t') ? params.get('t').split(',').slice(0, MAX) : DEFAULTS));
+  // Position lives in the URL; moving to another āyah/sūrah or changing the
+  // translations PUSHES history (typing an āyah number only replaces).
+  const sura = Math.min(114, Math.max(1, Number(params.get('s')) || 1));
+  const aya = Number(params.get('a')) || 5;
+  const keys = useMemo(() => (params.get('t') ? params.get('t').split(',').filter(Boolean).slice(0, MAX) : DEFAULTS), [params]);
+  const nav = (patch, replace = false) => {
+    const next = { s: sura, a: aya, t: keys.join(','), ...patch };
+    if (Array.isArray(next.t)) next.t = next.t.join(',');
+    setParams(next, { replace });
+  };
+  const setSura = (n) => nav({ s: n, a: 1 });
+  const setAya = (n, replace = false) => nav({ a: n }, replace);
+  const setKeys = (ks) => nav({ t: ks });
   const [all, setAll] = useState([]);
   const [arabic, setArabic] = useState({ status: 'loading' });
   const [rows, setRows] = useState({}); // key → { status, translation, footnotes }
@@ -53,9 +63,6 @@ export default function TranslatorsLens() {
   const safeAya = Math.min(Math.max(1, aya), last);
 
   useEffect(() => { listTranslations().then(setAll).catch(() => setAll([])); }, []);
-  useEffect(() => {
-    setParams({ s: sura, a: safeAya, t: keys.join(',') }, { replace: true });
-  }, [sura, safeAya, keys, setParams]);
 
   // Arabic (verified corpus) + word roots.
   useEffect(() => {
@@ -102,7 +109,7 @@ export default function TranslatorsLens() {
     let s = sura, a = safeAya + d;
     if (a < 1) { s = Math.max(1, sura - 1); a = s === sura ? 1 : AYAH_COUNTS[s]; }
     if (a > last) { s = Math.min(114, sura + 1); a = s === sura ? last : 1; }
-    setSura(s); setAya(a);
+    nav({ s, a });
   };
 
   const tokens = (arabic.text || '').split(/\s+/).filter(Boolean);
@@ -125,12 +132,12 @@ export default function TranslatorsLens() {
             interpretation — then go back to the Arabic.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-2.5">
-            <SurahSelect value={sura} onChange={(n) => { setSura(n); setAya(1); }} className="sm:w-72" />
+            <SurahSelect value={sura} onChange={(n) => setSura(n)} className="sm:w-72" />
             <div className="flex items-center gap-2">
               <button onClick={() => go(-1)} aria-label="Previous āyah" className="h-11 w-11 inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"><ChevronLeft className="h-4 w-4" /></button>
               <label className="relative">
                 <span className="sr-only">Āyah</span>
-                <input type="number" min={1} max={last} value={safeAya} onChange={(e) => setAya(Number(e.target.value) || 1)}
+                <input type="number" min={1} max={last} value={safeAya} onChange={(e) => setAya(Number(e.target.value) || 1, true)}
                   className="w-24 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base sm:text-sm text-gray-900 shadow-sm focus:border-wine-600 focus:ring-2 focus:ring-wine-600/25 outline-none" />
               </label>
               <span className="text-sm text-gray-500">of {last}</span>

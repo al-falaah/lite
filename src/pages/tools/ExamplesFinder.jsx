@@ -1,5 +1,6 @@
 import ToolSeo from '../../components/tools/ToolSeo';
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, X, BookOpen } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import {
@@ -329,6 +330,14 @@ function ExamplesFinder() {
 
   const PAGE_SIZE = 20;
   const searchIndex = useMemo(() => buildSearchIndex(), []);
+  const topicById = useMemo(() => new Map(searchIndex.map((t) => [t.id, t])), [searchIndex]);
+  // The URL holds where the reader is (?topic=&page=&surah=, or ?subject= when
+  // browsing), and every change PUSHES a history entry so Back/Forward work.
+  const [params, setParams] = useSearchParams();
+  const urlTopic = params.get('topic');
+  const urlPage = Number(params.get('page')) || 0;
+  const urlSurah = Number(params.get('surah')) || null;
+  const urlSubject = params.get('subject');
   const categories = subject === 'tajweed' ? TAJWEED_CATEGORIES : NAHW_CATEGORIES;
 
   // Search suggestions from topic map
@@ -424,17 +433,32 @@ function ExamplesFinder() {
   // Handle topic selection
   const selectTopic = useCallback(
     (topic) => {
-      setSelectedTopic(topic);
       setQuery('');
-      setSurahFilter(null);
-      setPage(0);
       setMobileBrowseOpen(false);
-      fetchExamples(topic, 0, null);
+      if (topic.id !== urlTopic || urlPage || urlSurah) setParams({ topic: topic.id });
       // Scroll to results on mobile
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    [fetchExamples]
+    [setParams, urlTopic, urlPage, urlSurah]
   );
+
+  // Render whatever the URL says (initial load, deep links, Back/Forward).
+  useEffect(() => {
+    const topic = urlTopic ? topicById.get(urlTopic) : null;
+    if (topic) {
+      setSelectedTopic(topic);
+      setSubject(topic.subject);
+      setSurahFilter(urlSurah);
+      fetchExamples(topic, urlPage, urlSurah);
+    } else {
+      setSelectedTopic(null);
+      setResults([]);
+      setTotalCount(0);
+      setPage(0);
+      setSurahFilter(null);
+      if (urlSubject === 'tajweed' || urlSubject === 'nahw') setSubject(urlSubject);
+    }
+  }, [urlTopic, urlPage, urlSurah, urlSubject, topicById, fetchExamples]);
 
   // Handle suggestion click
   const selectSuggestion = useCallback(
@@ -449,12 +473,9 @@ function ExamplesFinder() {
   const handleSurahFilter = useCallback(
     (e) => {
       const val = e.target.value ? parseInt(e.target.value) : null;
-      setSurahFilter(val);
-      if (selectedTopic) {
-        fetchExamples(selectedTopic, 0, val);
-      }
+      if (selectedTopic) setParams(val ? { topic: selectedTopic.id, surah: val } : { topic: selectedTopic.id });
     },
-    [selectedTopic, fetchExamples]
+    [selectedTopic, setParams]
   );
 
   // Pagination
@@ -462,11 +483,14 @@ function ExamplesFinder() {
 
   const goToPage = useCallback(
     (p) => {
-      if (selectedTopic) {
-        fetchExamples(selectedTopic, p, surahFilter);
-      }
+      if (!selectedTopic) return;
+      const next = { topic: selectedTopic.id };
+      if (p) next.page = p;
+      if (surahFilter) next.surah = surahFilter;
+      setParams(next);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    [selectedTopic, fetchExamples, surahFilter]
+    [selectedTopic, surahFilter, setParams]
   );
 
   // Toggle category expand
@@ -475,12 +499,8 @@ function ExamplesFinder() {
   };
 
   // Clear selection
-  const clearSelection = () => {
-    setSelectedTopic(null);
-    setResults([]);
-    setTotalCount(0);
-    setPage(0);
-    setSurahFilter(null);
+  const clearSelection = (nextSubject = subject) => {
+    setParams({ subject: nextSubject });
   };
 
   return (
@@ -573,7 +593,7 @@ function ExamplesFinder() {
           {/* Subject tabs */}
           <div className="flex bg-gray-100 rounded-lg p-0.5 mb-4">
             <button
-              onClick={() => { setSubject('tajweed'); clearSelection(); }}
+              onClick={() => { setSubject('tajweed'); clearSelection('tajweed'); }}
               className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 subject === 'tajweed'
                   ? 'bg-white text-wine-700 shadow-sm'
@@ -583,7 +603,7 @@ function ExamplesFinder() {
               Tajweed
             </button>
             <button
-              onClick={() => { setSubject('nahw'); clearSelection(); }}
+              onClick={() => { setSubject('nahw'); clearSelection('nahw'); }}
               className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 subject === 'nahw'
                   ? 'bg-white text-wine-700 shadow-sm'
@@ -673,7 +693,7 @@ function ExamplesFinder() {
                       ))}
                     </select>
                     <button
-                      onClick={clearSelection}
+                      onClick={() => clearSelection()}
                       className="text-sm text-gray-400 hover:text-gray-600 px-2 whitespace-nowrap"
                     >
                       Clear

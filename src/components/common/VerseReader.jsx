@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { X, ChevronLeft, ChevronRight, Copy, Check, Languages, Loader2, Columns } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import HighlightableAyah from './HighlightableAyah';
@@ -37,7 +37,8 @@ async function fetchMeaning(sura, aya) {
  *  - sura, aya: the starting reference.
  *  - highlight: optional string[] of words/phrases to pre-highlight (only
  *      applied on the starting āyah).
- *  - onClose: called when dismissed (×, backdrop, Esc).
+ *  - onClose: called when the reader closes (×, backdrop, Esc, or the
+ *      phone/browser Back button — opening the reader is a history step).
  */
 export default function VerseReader({ sura: initialSura, aya: initialAya, highlight, onClose }) {
   const [ref, setRef] = useState({ sura: Number(initialSura), aya: Number(initialAya) });
@@ -47,6 +48,31 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
   const [showMeaning, setShowMeaning] = useState(false);
   const [meaning, setMeaning] = useState({ status: 'idle' });
   const closeBtn = useRef(null);
+
+  // Opening the reader is a history step (same URL, marked state), so the
+  // phone/browser Back button closes it instead of leaving the page. Any
+  // navigation away from that step — Back, ×, Esc, or Compare — closes it.
+  const navigate = useNavigate();
+  const location = useLocation();
+  const token = useRef(`vr-${Math.random().toString(36).slice(2)}`);
+  const entered = useRef(false);
+  useEffect(() => {
+    // Guard against React StrictMode's double-invoked mount effect in dev.
+    if (window.history.state?.usr?.verseReader === token.current) return;
+    navigate(`${location.pathname}${location.search}${location.hash}`, {
+      state: { ...(location.state || {}), verseReader: token.current },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // "Entered" only once the router reports our step; after that, leaving it closes.
+  useEffect(() => {
+    if (location.state?.verseReader === token.current) entered.current = true;
+    else if (entered.current) onClose?.();
+  }, [location, onClose]);
+  const dismiss = useCallback(() => {
+    if (window.history.state?.usr?.verseReader === token.current) navigate(-1);
+    else onClose?.();
+  }, [navigate, onClose]);
 
   const { sura, aya } = ref;
   const lastAya = AYAH_COUNTS[sura] || 1;
@@ -94,7 +120,7 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
   // Esc closes; arrow keys match the on-screen buttons (← previous, → next).
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose?.();
+      if (e.key === 'Escape') dismiss();
       else if (e.key === 'ArrowLeft') go(-1);
       else if (e.key === 'ArrowRight') go(1);
     };
@@ -106,7 +132,7 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [go, onClose]);
+  }, [go, dismiss]);
 
   const copy = async () => {
     if (!row) return;
@@ -121,7 +147,7 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
   return createPortal(
     <div
       className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center bg-[#2a1013]/50 sm:p-6"
-      onMouseDown={onClose}
+      onMouseDown={dismiss}
       role="presentation"
     >
       <div
@@ -143,7 +169,7 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
           </div>
           <button
             ref={closeBtn}
-            onClick={onClose}
+            onClick={dismiss}
             aria-label="Close"
             className="h-9 w-9 rounded-full inline-flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-wine-600/40 outline-none"
           >
@@ -213,7 +239,7 @@ export default function VerseReader({ sura: initialSura, aya: initialAya, highli
           <div className="flex-1" />
           <Link
             to={`/tools/lens?s=${sura}&a=${aya}`}
-            onClick={onClose}
+            replace
             className="hidden sm:inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
             title="Compare translations of this āyah"
           >

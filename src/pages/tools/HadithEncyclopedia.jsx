@@ -1,7 +1,7 @@
 import ToolSeo from '../../components/tools/ToolSeo';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, ChevronDown, ChevronRight, X, Loader2, Languages, Link2, Check, BookOpen } from 'lucide-react';
 
 /**
@@ -73,17 +73,23 @@ export default function HadithEncyclopedia() {
   const [params, setParams] = useSearchParams();
   const [languages, setLanguages] = useState([]);
   const [lang, setLang] = useState(() => pickInitialLang(params.get('lang')));
-  const [query, setQuery] = useState(params.get('q') || '');
-  const [submitted, setSubmitted] = useState(params.get('q') || '');
+  const location = useLocation();
+  const routerNavigate = useNavigate();
+  // Where the reader is lives in the URL (?q= / ?cat=&p= / ?h=) and each move
+  // PUSHES history, so Back/Forward walk through searches, topics, pages and
+  // the hadith they opened. (Language is a setting, so it only replaces.)
+  const submitted = params.get('q') || '';
+  const activeCat = submitted ? null : params.get('cat');
+  const page = Math.max(1, Number(params.get('p')) || 1);
+  const openId = params.get('h');
+  const [query, setQuery] = useState(submitted);
+  useEffect(() => { setQuery(submitted); }, [submitted]);
 
   const [categories, setCategories] = useState([]);
   const [catStatus, setCatStatus] = useState('idle');
   const [expanded, setExpanded] = useState({});
-  const [activeCat, setActiveCat] = useState(params.get('cat') || null);
-  const [page, setPage] = useState(1);
 
   const [list, setList] = useState({ status: 'idle', items: [], lastPage: 1, total: 0 });
-  const [openId, setOpenId] = useState(params.get('h') || null);
   const inputRef = useRef(null);
 
   // Languages — fall back to English if the stored/browser language isn't offered.
@@ -102,17 +108,20 @@ export default function HadithEncyclopedia() {
     try { localStorage.setItem(LANG_KEY, lang); } catch { /* ignore */ }
   }, [lang]);
 
-  const syncUrl = useCallback((patch) => {
+  const syncUrl = useCallback((patch, { push = false, state } = {}) => {
     setParams((prev) => {
       const next = new URLSearchParams(prev);
       for (const [k, v] of Object.entries(patch)) {
         if (v == null || v === '') next.delete(k); else next.set(k, String(v));
       }
       return next;
-    }, { replace: true });
+    }, { replace: !push, state });
   }, [setParams]);
 
-  useEffect(() => { syncUrl({ lang }); }, [lang, syncUrl]);
+  // Keep ?lang= in the URL — but only write when it actually differs, so this
+  // never re-replaces (and wipes the state of) a history entry just pushed.
+  const urlLang = params.get('lang');
+  useEffect(() => { if (urlLang !== lang) syncUrl({ lang }); }, [lang, urlLang, syncUrl]);
 
   // Categories in the chosen language.
   useEffect(() => {
@@ -172,22 +181,23 @@ export default function HadithEncyclopedia() {
   const runSearch = (e) => {
     e?.preventDefault();
     const q = query.trim();
-    setSubmitted(q);
-    setPage(1);
-    if (q) setActiveCat(null);
-    syncUrl({ q: q || null, cat: q ? null : activeCat });
+    if (q === submitted) return;
+    syncUrl({ q: q || null, cat: q ? null : activeCat, p: null, h: null }, { push: true });
   };
 
   const chooseCategory = (id) => {
-    setActiveCat(id);
-    setSubmitted('');
     setQuery('');
-    setPage(1);
-    syncUrl({ cat: id, q: null });
+    syncUrl({ cat: id, q: null, p: null, h: null }, { push: true });
   };
 
-  const openHadith = (id) => { setOpenId(id); syncUrl({ h: id }); };
-  const closeHadith = () => { setOpenId(null); syncUrl({ h: null }); };
+  const goPage = (n) => { syncUrl({ p: n > 1 ? n : null }, { push: true }); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  // Opening a hadith is a history step; closing steps back to the list when we
+  // opened it here (so Back and × agree), or just drops ?h= for a deep link.
+  const openHadith = (id) => syncUrl({ h: id }, { push: true, state: { openedFromList: true } });
+  const closeHadith = () => {
+    if (location.state?.openedFromList) routerNavigate(-1);
+    else syncUrl({ h: null });
+  };
 
   const dir = dirOf(lang);
   const langName = languages.find((l) => l.code === lang)?.native || lang;
@@ -220,7 +230,7 @@ export default function HadithEncyclopedia() {
                 <Languages className="h-4 w-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <select
                   value={lang}
-                  onChange={(e) => { setLang(e.target.value); setPage(1); }}
+                  onChange={(e) => { setLang(e.target.value); syncUrl({ p: null }); }}
                   className="w-full appearance-none rounded-lg border border-gray-300 bg-white pl-9 pr-9 py-2.5 text-base sm:text-sm text-gray-900 shadow-sm hover:border-gray-400 focus:border-wine-600 focus:ring-2 focus:ring-wine-600/25 outline-none"
                   aria-label="Language"
                 >
@@ -339,7 +349,7 @@ export default function HadithEncyclopedia() {
           {list.status === 'ready' && list.mode === 'browse' && list.lastPage > 1 && (
             <div className="flex items-center justify-center gap-2 mt-5">
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => goPage(Math.max(1, page - 1))}
                 disabled={page <= 1}
                 className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-40"
               >
@@ -347,7 +357,7 @@ export default function HadithEncyclopedia() {
               </button>
               <span className="text-sm text-gray-500 px-2">Page {page} of {list.lastPage}</span>
               <button
-                onClick={() => setPage((p) => Math.min(list.lastPage, p + 1))}
+                onClick={() => goPage(Math.min(list.lastPage, page + 1))}
                 disabled={page >= list.lastPage}
                 className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-40"
               >

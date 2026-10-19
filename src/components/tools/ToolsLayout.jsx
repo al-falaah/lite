@@ -1,9 +1,15 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home } from 'lucide-react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Home, ArrowLeft } from 'lucide-react';
 
 function ToolsLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHome = location.pathname === '/tools';
+  // In-app Back — essential in the installed app (no browser Back on iOS).
+  // Steps back through the tool's own history (searches, roots, topics…); if
+  // this page was opened directly (no in-app history), goes to the tools home.
+  const canGoBack = location.key !== 'default';
+  const goBack = () => (canGoBack ? navigate(-1) : navigate('/tools'));
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -11,6 +17,17 @@ function ToolsLayout() {
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+            {!isHome && (
+              <button
+                type="button"
+                onClick={goBack}
+                aria-label="Back"
+                className="-ml-2 h-10 w-10 shrink-0 inline-flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 hover:text-wine-700 focus-visible:ring-2 focus-visible:ring-wine-600/40 outline-none"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
             <Link to="/tools" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img
                 src="/favicon-wine.svg"
@@ -22,6 +39,7 @@ function ToolsLayout() {
                 <span className="text-xs sm:text-sm font-brand font-semibold text-gray-900" style={{letterSpacing: "0.28em"}}>Madrasah</span>
               </div>
             </Link>
+            </div>
             <div className="flex items-center gap-4">
               {!isHome && (
                 <Link

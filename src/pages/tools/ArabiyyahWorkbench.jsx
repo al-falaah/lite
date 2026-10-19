@@ -1,5 +1,6 @@
 import ToolSeo from '../../components/tools/ToolSeo';
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, X, BookOpen, Layers } from 'lucide-react';
 import { supabase } from '../../services/supabase';
 import { NAHW_CATEGORIES } from '../../utils/topicMap';
@@ -101,6 +102,16 @@ function TopicCard({ topic, active, onClick }) {
 }
 
 export default function ArabiyyahWorkbench() {
+  // URL holds the topic/page/surah (?topic=&page=&surah=); changes PUSH history
+  // so Back/Forward step through what the reader explored.
+  const [params, setParams] = useSearchParams();
+  const urlTopic = params.get('topic');
+  const urlPage = Number(params.get('page')) || 0;
+  const urlSurah = Number(params.get('surah')) || null;
+  const topicById = useMemo(
+    () => new Map(NAHW_CATEGORIES.flatMap((c) => c.topics.map((t) => [t.id, t]))),
+    []
+  );
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -156,14 +167,35 @@ export default function ArabiyyahWorkbench() {
     }
   }, []);
 
-  const selectTopic = useCallback((topic) => {
-    setSelectedTopic(topic);
-    setSurahFilter(null);
-    setPage(0);
-    setMobileBrowseOpen(false);
-    fetchExamples(topic, 0, null);
+  const navigate = useCallback((topicId, pageNum = 0, surah = null) => {
+    const next = { topic: topicId };
+    if (pageNum) next.page = pageNum;
+    if (surah) next.surah = surah;
+    setParams(next);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [fetchExamples]);
+  }, [setParams]);
+
+  const selectTopic = useCallback((topic) => {
+    setMobileBrowseOpen(false);
+    if (topic.id === urlTopic && !urlPage && !urlSurah) return;
+    navigate(topic.id);
+  }, [navigate, urlTopic, urlPage, urlSurah]);
+
+  // Render whatever the URL says (initial load, deep links, Back/Forward).
+  useEffect(() => {
+    const topic = urlTopic ? topicById.get(urlTopic) : null;
+    if (topic) {
+      setSelectedTopic(topic);
+      setSurahFilter(urlSurah);
+      fetchExamples(topic, urlPage, urlSurah);
+    } else {
+      setSelectedTopic(null);
+      setResults([]);
+      setTotalCount(0);
+      setPage(0);
+      setSurahFilter(null);
+    }
+  }, [urlTopic, urlPage, urlSurah, topicById, fetchExamples]);
 
   // Lazy-fetch a verse's root + qiraat rows once, cache by 'sura-aya'.
   const ensureEnrichment = useCallback(async (sura, aya) => {
@@ -291,7 +323,7 @@ export default function ArabiyyahWorkbench() {
                 <div className="flex items-center gap-2">
                   <select
                     value={surahFilter || ''}
-                    onChange={(e) => { const v = e.target.value ? parseInt(e.target.value) : null; setSurahFilter(v); fetchExamples(selectedTopic, 0, v); }}
+                    onChange={(e) => { const v = e.target.value ? parseInt(e.target.value) : null; navigate(selectedTopic.id, 0, v); }}
                     className="text-sm border border-gray-300 rounded-lg px-2 py-1.5"
                   >
                     <option value="">All sūrahs</option>
@@ -329,10 +361,10 @@ export default function ArabiyyahWorkbench() {
 
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-6">
-                  <button disabled={page === 0} onClick={() => fetchExamples(selectedTopic, page - 1, surahFilter)}
+                  <button disabled={page === 0} onClick={() => navigate(selectedTopic.id, page - 1, surahFilter)}
                     className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 disabled:opacity-40">Previous</button>
                   <span className="text-sm text-gray-500">Page {page + 1} of {totalPages}</span>
-                  <button disabled={page >= totalPages - 1} onClick={() => fetchExamples(selectedTopic, page + 1, surahFilter)}
+                  <button disabled={page >= totalPages - 1} onClick={() => navigate(selectedTopic.id, page + 1, surahFilter)}
                     className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 disabled:opacity-40">Next</button>
                 </div>
               )}

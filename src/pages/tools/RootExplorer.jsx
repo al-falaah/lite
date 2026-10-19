@@ -68,8 +68,10 @@ function RootExplorer() {
   const [showAllAyahs, setShowAllAyahs] = useState(false);
   const [readingAyah, setReadingAyah] = useState(null); // occurrence opened in the verse reader
   const inputRef = useRef(null);
-  const [params] = useSearchParams();
-  const initialQ = useRef(params.get('q')); // deep link, e.g. from Translator's Lens
+  // The URL is the source of truth for what's shown — ?q=<word> for a search,
+  // ?root=<root> for a root opened from a result — and every change PUSHES a
+  // history entry, so Back/Forward step through the user's exploration.
+  const [params, setParams] = useSearchParams();
 
   useEffect(() => {
     loadRootData()
@@ -78,15 +80,6 @@ function RootExplorer() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Run a deep-linked ?q= search once the root data has loaded.
-  useEffect(() => {
-    if (!data || !initialQ.current) return;
-    const q = initialQ.current;
-    initialQ.current = null;
-    setQuery(q);
-    search(q);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   const search = useCallback((q) => {
     if (!data || !q.trim()) { setResult(null); return; }
@@ -139,19 +132,44 @@ function RootExplorer() {
     }
   }, [data]);
 
+  const showRoot = useCallback((rootKey) => {
+    const info = data?.roots[rootKey];
+    if (!info) return false;
+    setResult({ type: 'root', root: rootKey, ...info });
+    setExpandedLemma(null);
+    setShowAllAyahs(false);
+    setQuery(rootKey);
+    return true;
+  }, [data]);
+
+  // Render whatever the URL says (initial load, deep links, Back/Forward).
+  const urlRoot = params.get('root');
+  const urlQ = params.get('q');
+  useEffect(() => {
+    if (!data) return;
+    if (urlRoot && showRoot(urlRoot)) return;
+    if (urlQ) { setQuery(urlQ); search(urlQ); return; }
+    setResult(null);
+    setQuery('');
+  }, [data, urlRoot, urlQ, showRoot, search]);
+
+  // Navigate = push a new history entry. Re-submitting the same search just re-runs it.
+  const goSearch = (q) => {
+    const t = q.trim();
+    if (!t) return;
+    if (t === urlQ && !urlRoot) { search(t); return; }
+    setParams({ q: t });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    search(query);
+    goSearch(query);
   };
 
   const handleSelectRoot = (rootKey) => {
-    const info = data.roots[rootKey];
-    if (info) {
-      setResult({ type: 'root', root: rootKey, ...info });
-      setExpandedLemma(null);
-      setShowAllAyahs(false);
-      setQuery(rootKey);
-    }
+    if (rootKey === urlRoot) return;
+    setParams({ root: rootKey });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const sortedLemmas = useMemo(() => {
@@ -224,7 +242,7 @@ function RootExplorer() {
               <button
                 key={example}
                 type="button"
-                onClick={() => { setQuery(example); search(example); }}
+                onClick={() => goSearch(example)}
                 className="text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 active:bg-wine-50 active:text-wine-700 sm:hover:bg-wine-50 sm:hover:text-wine-700 transition-colors font-arabic"
               >
                 {example}
