@@ -5,6 +5,7 @@ import { supabase } from '../../services/supabase';
 import { NAHW_CATEGORIES } from '../../utils/topicMap';
 import VerseReader from '../../components/common/VerseReader';
 import { toArabicDigits } from '../../utils/quran';
+import { decodeEntities } from '../../utils/text';
 
 /**
  * Arabiyyah Workbench — pick a grammar (nahw) topic, get Qurʾān verses that
@@ -461,7 +462,7 @@ function WordPanel({ word, wordNumber, enrichment, rootVerses, onLoadRootVerses 
           <ul className="mt-1 space-y-2">
             {variants.map((v, i) => (
               <li key={i} className="text-sm text-gray-800 font-arabic leading-relaxed" dir="rtl">
-                {v.content}
+                {decodeEntities(v.content)}
                 {v.note && <span className="block text-xs text-gray-500 mt-0.5">{v.note}</span>}
               </li>
             ))}

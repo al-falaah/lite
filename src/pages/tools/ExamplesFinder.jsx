@@ -10,6 +10,7 @@ import {
 } from '../../utils/topicMap';
 import HighlightableAyah from '../../components/common/HighlightableAyah';
 import VerseReader from '../../components/common/VerseReader';
+import { decodeEntities } from '../../utils/text';
 
 // Surah names for display
 const SURAH_NAMES = {
@@ -215,7 +216,7 @@ function ResultCard({ result, topic, isPrimary }) {
   const [reading, setReading] = useState(false);
   const surahName = SURAH_NAMES[result.sura_number] || `Surah ${result.sura_number}`;
   const displayContent = useMemo(
-    () => extractRelevantContent(result.content, topic),
+    () => extractRelevantContent(decodeEntities(result.content), topic),
     [result.content, topic]
   );
   const quranicRefs = useMemo(
